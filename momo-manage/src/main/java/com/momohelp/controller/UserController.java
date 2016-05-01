@@ -41,6 +41,12 @@ public class UserController {
 		return result;
 	}
 
+	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
+	public ModelAndView profileUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/profile");
+		return result;
+	}
+
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.GET)
 	public ModelAndView changePwdUI() {
 		ModelAndView result = new ModelAndView(changePwd_ftl);
