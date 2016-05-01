@@ -41,7 +41,7 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container-fluid">
-					<a href="#" class="brand">
+					<a href="/" class="brand">
 						<small>
 							<i class="icon-leaf"></i>
 							陌陌黄金24小时互助
@@ -258,42 +258,7 @@
 							</ul>
 						</li>
 
-						<li class="light-blue">
-							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="${(conf_html_cdn)!}js/ace/1.1.2/assets/avatars/user.jpg" alt="Jason's Photo" />
-								<span class="user-info">
-									<small>欢迎您,</small>
-									黄鑫
-								</span>
-
-								<i class="icon-caret-down"></i>
-							</a>
-
-							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
-								<li>
-									<a href="#">
-										<i class="icon-cog"></i>
-										设置 Settings
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<i class="icon-user"></i>
-										修改资料 Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
-
-								<li>
-									<a href="/user/logout">
-										<i class="icon-off"></i>
-										安全退出 Logout
-									</a>
-								</li>
-							</ul>
-						</li>
+						<#include "_pagelet/banner_user_info.html"/>
 					</ul><!--/.ace-nav-->
 				</div><!--/.container-fluid-->
 			</div><!--/.navbar-inner-->
