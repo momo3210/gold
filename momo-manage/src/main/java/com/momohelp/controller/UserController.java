@@ -41,6 +41,12 @@ public class UserController {
 		return result;
 	}
 
+	@RequestMapping(value = { "/user/pasture" }, method = RequestMethod.GET)
+	public ModelAndView pastureUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/pasture");
+		return result;
+	}
+
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
 	public ModelAndView profileUI() {
 		ModelAndView result = new ModelAndView("user/1.0.1/profile");
