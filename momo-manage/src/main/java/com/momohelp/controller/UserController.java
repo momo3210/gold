@@ -41,6 +41,18 @@ public class UserController {
 		return result;
 	}
 
+	@RequestMapping(value = { "/user/recommend" }, method = RequestMethod.GET)
+	public ModelAndView recommendUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/recommend");
+		return result;
+	}
+
+	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.GET)
+	public ModelAndView createAccountUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/createAccount");
+		return result;
+	}
+
 	@RequestMapping(value = { "/user/pasture" }, method = RequestMethod.GET)
 	public ModelAndView pastureUI() {
 		ModelAndView result = new ModelAndView("user/1.0.1/pasture");
