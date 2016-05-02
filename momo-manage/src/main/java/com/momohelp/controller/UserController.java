@@ -41,6 +41,24 @@ public class UserController {
 		return result;
 	}
 
+	@RequestMapping(value = { "/user/sellRecord" }, method = RequestMethod.GET)
+	public ModelAndView sellRecordUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/sellRecord");
+		return result;
+	}
+
+	@RequestMapping(value = { "/user/buyRecord" }, method = RequestMethod.GET)
+	public ModelAndView buyRecordUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/buyRecord");
+		return result;
+	}
+
+	@RequestMapping(value = { "/user/sellmm" }, method = RequestMethod.GET)
+	public ModelAndView sellmmUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/sellmm");
+		return result;
+	}
+
 	@RequestMapping(value = { "/user/buymm" }, method = RequestMethod.GET)
 	public ModelAndView buymmUI() {
 		ModelAndView result = new ModelAndView("user/1.0.1/buymm");

@@ -3,7 +3,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>买入陌陌 | 陌陌黄金24小时互助</title>
+		<title>买入记录 | 陌陌黄金24小时互助</title>
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -35,13 +35,20 @@
 		<![endif]-->
 
 		<!--inline styles related to this page-->
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style>
+		.tit{
+			font-weight: bold;
+			text-align: center;
+		}
+		</style>
+	</head>
 
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container-fluid">
-					<a href="#" class="brand">
+					<a href="/" class="brand">
 						<small>
 							<i class="icon-leaf"></i>
 							陌陌黄金24小时互助
@@ -186,77 +193,7 @@
 							</ul>
 						</li>
 
-						<li class="green">
-							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-								<i class="icon-envelope icon-animated-vertical"></i>
-								<span class="badge badge-success">5</span>
-							</a>
-
-							<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-closer">
-								<li class="nav-header">
-									<i class="icon-envelope-alt"></i>
-									5 Messages
-								</li>
-
-								<li>
-									<a href="#">
-										<img src="${(conf_html_cdn)!}js/ace/1.1.2/assets/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
-										<span class="msg-body">
-											<span class="msg-title">
-												<span class="blue">Alex:</span>
-												Ciao sociis natoque penatibus et auctor ...
-											</span>
-
-											<span class="msg-time">
-												<i class="icon-time"></i>
-												<span>a moment ago</span>
-											</span>
-										</span>
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<img src="${(conf_html_cdn)!}js/ace/1.1.2/assets/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
-										<span class="msg-body">
-											<span class="msg-title">
-												<span class="blue">Susan:</span>
-												Vestibulum id ligula porta felis euismod ...
-											</span>
-
-											<span class="msg-time">
-												<i class="icon-time"></i>
-												<span>20 minutes ago</span>
-											</span>
-										</span>
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										<img src="${(conf_html_cdn)!}js/ace/1.1.2/assets/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
-										<span class="msg-body">
-											<span class="msg-title">
-												<span class="blue">Bob:</span>
-												Nullam quis risus eget urna mollis ornare ...
-											</span>
-
-											<span class="msg-time">
-												<i class="icon-time"></i>
-												<span>3:15 pm</span>
-											</span>
-										</span>
-									</a>
-								</li>
-
-								<li>
-									<a href="#">
-										See all messages
-										<i class="icon-arrow-right"></i>
-									</a>
-								</li>
-							</ul>
-						</li>
+						<#include "/default/1.0.2/_pagelet/banner_user_msg.html"/>
 						<#include "/default/1.0.2/_pagelet/banner_user_info.html"/>
 					</ul><!--/.ace-nav-->
 				</div><!--/.container-fluid-->
@@ -437,7 +374,7 @@
 						</a>
 
 						<ul class="submenu">
-							<li class='active'>
+							<li>
 								<a href="/user/buymm">
 									<i class="icon-double-angle-right"></i>
 									买入陌陌
@@ -445,14 +382,14 @@
 							</li>
 
 							<li>
-								<a href="#">
+								<a href="wysiwyg.html">
 									<i class="icon-double-angle-right"></i>
 									财富通道
 								</a>
 							</li>
 
 							<li>
-								<a href="/user/sellmm">
+								<a href="wysiwyg.html">
 									<i class="icon-double-angle-right"></i>
 									卖出陌陌
 								</a>
@@ -472,15 +409,15 @@
 								</a>
 							</li>
 
-							<li>
-								<a href="wysiwyg.html">
+							<li class='active'>
+								<a href="/user/buyRecord">
 									<i class="icon-double-angle-right"></i>
 									买入记录
 								</a>
 							</li>
 
 							<li>
-								<a href="wysiwyg.html">
+								<a href="/user/sellRecord">
 									<i class="icon-double-angle-right"></i>
 									卖出记录
 								</a>
@@ -681,7 +618,7 @@
 								<i class="icon-angle-right arrow-icon"></i>
 							</span>
 						</li>
-						<li class="active">买入陌陌</li>
+						<li class="active">买入记录</li>
 					</ul><!--.breadcrumb-->
 
 					<div class="nav-search" id="nav-search">
@@ -697,123 +634,50 @@
 				<div class="page-content">
 					<div class="page-header position-relative">
 						<h1>
-							买入陌陌
+							买入记录
 							<small>
 								<i class="icon-double-angle-right"></i>
-								Buy MM
+								Buy Record
 							</small>
 						</h1>
 					</div><!--/.page-header-->
 
+
+
+
+
 					<div class="row-fluid">
-						<div class="span12">
-							<!--PAGE CONTENT BEGINS-->
+						<div class="span12 widget-container-span">
+							<div class="widget-box">
+								<div class="widget-header">
+									<h5>买入的陌陌记录</h5>
 
-							<div class="alert alert-block alert-error">
-								<!-- <button type="button" class="close" data-dismiss="alert">
-									<i class="icon-remove"></i>
-								</button> -->
+									<div class="widget-toolbar">
+										<!-- <a href="#" data-action="settings">
+											<i class="icon-cog"></i>
+										</a>
 
-								<strong>
-									<!-- <i class="icon-remove"></i> -->
-									系统提示：
-								</strong>
-								<ol>
-									<li>M0级别会员可以选择100-1000的M包，M3级别只能选择2000-5000的M包，M4及以上级别只能选择3000-5000的M包。</li>
-									<li>普通通道一天可挂单一次。</li>
-								</ol>
-							</div>
+										<a href="#" data-action="reload">
+											<i class="icon-refresh"></i>
+										</a> -->
 
-							<!-- <div class="row-fluid">
-								<div class="span12">
-									<ul>
-										<li>M0级别会员可以选择100-1000的M包，M3级别只能选择2000-5000的M包，M4及以上级别只能选择3000-5000的M包。</li>
-										<li>普通通道一天可挂单一次。</li>
-									</ul>
-								</div>
-							</div> -->
+										<a href="#" data-action="collapse">
+											<i class="icon-chevron-up"></i>
+										</a>
 
-							<div class="row-fluid">
-								<div class="span12">
-									<div class="tabbable">
-										<ul class="nav nav-tabs" id="myTab">
-											<li class="active">
-												<a data-toggle="tab" href="#home">
-													<!-- <i class="green icon-home bigger-110"></i> -->
-													买入陌陌
-												</a>
-											</li>
-										</ul>
-
-										<div class="tab-content">
-											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal">
-													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">选择陌陌包</label>
-
-														<div class="controls">
-															<select id="form-field-select-1" class='input-large'>
-																<option value="">100~5000</option>
-																<option value="">1000~5000</option>
-																<option value="">2000~5000</option>
-																<option value="">3000~5000</option>
-															</select>
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">安全密码</label>
-
-														<div class="controls">
-															<input type="password" class='input-large' id="editFrm_NEW_PASS_2" placeholder="安全密码" />
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">图形验证码</label>
-
-														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="图形验证码" />
-															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">手机号码</label>
-
-														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" value="18530053050" disabled />
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">短信验证码</label>
-
-														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
-															<button class="btn btn-mini btn-danger">获取短信验证码</button>
-														</div>
-													</div>
-													<div class="form-actions">
-														<button class="btn btn-info" type="button">
-															<i class="icon-ok bigger-110"></i>
-															提交
-														</button>
-
-														&nbsp; &nbsp; &nbsp;
-														<button class="btn" type="reset">
-															<i class="icon-undo bigger-110"></i>
-															重置
-														</button>
-													</div>
-												</form>
-											</div>
-										</div>
+										<!-- <a href="#" data-action="close">
+											<i class="icon-remove"></i>
+										</a> -->
 									</div>
 								</div>
 
-
+								<div class="widget-body">
+								&nbsp;
+								</div>
 							</div>
+						</div>
+					</div>
 
-							<!--PAGE CONTENT ENDS-->
-						</div><!--/.span-->
-					</div><!--/.row-fluid-->
 				</div><!--/.page-content-->
 
 				<div class="ace-settings-container" id="ace-settings-container">
@@ -917,7 +781,6 @@
 
 		<script type="text/javascript">
 			$(function() {
-
 			});
 		</script>
 	</body>
