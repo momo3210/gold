@@ -22,6 +22,7 @@ public class DefaultController {
 	public ModelAndView indexUI(HttpSession session) {
 //		Object obj = session.getAttribute("session.user");
 //		if (null == obj) {
+		
 //			return new ModelAndView("redirect:/user/login");
 //		} // END
 		ModelAndView result = new ModelAndView(index_ftl);
