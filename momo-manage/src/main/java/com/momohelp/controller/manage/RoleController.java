@@ -1,4 +1,4 @@
-package com.momohelp.controller;
+package com.momohelp.controller.manage;
 
 import java.util.List;
 
@@ -24,11 +24,9 @@ public class RoleController {
 	@Autowired
 	private RoleService roleService;
 
-	private String index_ftl = "role/1.0.1/index";
-
-	@RequestMapping(value = { "/role/" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/manage/role/" }, method = RequestMethod.GET)
 	public ModelAndView indexUI() {
-		ModelAndView result = new ModelAndView(index_ftl);
+		ModelAndView result = new ModelAndView("manage/role/1.0.1/index");
 
 		List<Role> list = roleService.selectByExample(new Example(Role.class));
 		result.addObject("data_roles", list);

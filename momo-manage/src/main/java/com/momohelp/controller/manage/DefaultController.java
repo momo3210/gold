@@ -1,4 +1,4 @@
-package com.momohelp.controller;
+package com.momohelp.controller.manage;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,15 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class DefaultController {
 
-	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/manage/" }, method = RequestMethod.GET)
 	public ModelAndView indexUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("default/1.0.2/index");
-		return result;
-	}
-
-	@RequestMapping(value = { "/welcome" }, method = RequestMethod.GET)
-	public ModelAndView welcomeUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("default/1.0.2/welcome");
+		ModelAndView result = new ModelAndView("manage/default/1.0.2/index");
 		return result;
 	}
 }
