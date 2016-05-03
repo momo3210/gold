@@ -18,7 +18,7 @@ public class DefaultController {
 	private String index_ftl = "default/1.0.2/index";
 	private String welcome_ftl = "default/1.0.2/welcome";
 
-	@RequestMapping(value = { "" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "","/" }, method = RequestMethod.GET)
 	public ModelAndView indexUI(HttpSession session) {
 //		Object obj = session.getAttribute("session.user");
 //		if (null == obj) {
