@@ -41,6 +41,12 @@ public class UserController {
 		return result;
 	}
 
+	@RequestMapping(value = { "/user/transferTicket" }, method = RequestMethod.GET)
+	public ModelAndView transferTicketUI() {
+		ModelAndView result = new ModelAndView("user/1.0.1/transferTicket");
+		return result;
+	}
+
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.GET)
 	public ModelAndView buyTicketUI() {
 		ModelAndView result = new ModelAndView("user/1.0.1/buyTicket");
