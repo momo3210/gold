@@ -143,4 +143,27 @@ public class UserController {
 	}
 
 	/**** 后台 ****/
+
+	/**
+	 * 登陆
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.GET)
+	public ModelAndView _manage_loginUI() {
+		ModelAndView result = new ModelAndView("manage/user/1.0.1/login");
+		return result;
+	}
+
+	/**
+	 * 退出
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/manage/user/logout" }, method = RequestMethod.GET)
+	public String _manage_logoutUI(HttpSession session) {
+		session.invalidate();
+		return "redirect:/manage/user/login";
+	}
 }
