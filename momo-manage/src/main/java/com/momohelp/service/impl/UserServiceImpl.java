@@ -3,7 +3,6 @@ package com.momohelp.service.impl;
 import java.util.Date;
 import java.util.List;
 
-import net.foreworld.util.RestUtil;
 import net.foreworld.util.StringUtil;
 import net.foreworld.util.encryptUtil.MD5;
 
@@ -36,8 +35,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		Example example = new Example(User.class);
 		example.setOrderByClause("create_time desc");
 		example.selectProperties("id", "user_name", "email", "create_time",
-				"status", "apikey", "seckey", "real_name", "alipay_account",
-				"invite_user_id", "role_id");
+				"status", "real_name", "alipay_account");
 		// TODO
 		if (null != user) {
 			Example.Criteria criteria = example.createCriteria();
@@ -46,36 +44,18 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			if (null != user_name) {
 				criteria.andLike("user_name", "%" + user_name + "%");
 			}
-
-			// TODO
-			String apikey = StringUtil.isEmpty(user.getApikey());
-			if (null != apikey) {
-				criteria.andEqualTo("apikey", apikey);
-			}
-
-			// TODO
-			String seckey = StringUtil.isEmpty(user.getSeckey());
-			if (null != seckey) {
-				criteria.andEqualTo("seckey", seckey);
-			}
-
 		}
 		PageHelper.startPage(page, rows);
 		return selectByExample(example);
 	}
 
 	@Override
-	public int resetPwdByKeys(String keys) {
-		String[] _keys = keys.split(",");
-		int result = 0;
+	public int resetPwdByKey(String key) {
+		User user = new User();
+		user.setId(key);
+		user.setUser_pass(DEFAULT_USER_PASS);
 		// TODO
-		for (String key : _keys) {
-			User user = new User();
-			user.setId(key);
-			user.setUser_pass(DEFAULT_USER_PASS);
-			result += super.updateNotNull(user);
-		}
-		return result;
+		return super.updateNotNull(user);
 	}
 
 	@Override
@@ -97,9 +77,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setUser_pass(null == user.getUser_pass() ? DEFAULT_USER_PASS : MD5
 				.encode(user.getUser_pass()));
 
-		user.setApikey(genUserApiKey());
-		user.setSeckey(genUserSecKey());
-
 		// TODO
 		save(user);
 
@@ -111,9 +88,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setUser_name(null);
 		user.setUser_pass(null);
 		user.setCreate_time(null);
-
-		user.setApikey(genUserApiKey());
-		user.setSeckey(genUserSecKey());
 
 		// TODO
 		return super.updateNotNull(user);
@@ -140,62 +114,4 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return null;
 	}
 
-	private String genUserApiKey() {
-		String encodedKey = null;
-		User user = null;
-		do {
-			encodedKey = RestUtil.genApiKey();
-			user = findByApiKey(encodedKey);
-		} while (user != null);
-		return encodedKey;
-	}
-
-	private String genUserSecKey() {
-		String encodedKey = null;
-		User user = null;
-		do {
-			encodedKey = RestUtil.genApiKey();
-			user = findBySecKey(encodedKey);
-		} while (user != null);
-		return encodedKey;
-	}
-
-	@Override
-	public User findByApiKey(String apikey) {
-		apikey = StringUtil.isEmpty(apikey);
-		if (null == apikey)
-			return null;
-
-		User user = new User();
-		user.setApikey(apikey);
-
-		List<User> list = findByUser(user, 1, Integer.MAX_VALUE);
-
-		return (null == list || 1 != list.size()) ? null : list.get(0);
-	}
-
-	@Override
-	public User findBySecKey(String seckey) {
-		seckey = StringUtil.isEmpty(seckey);
-		if (null == seckey)
-			return null;
-
-		User user = new User();
-		user.setSeckey(seckey);
-
-		List<User> list = findByUser(user, 1, Integer.MAX_VALUE);
-
-		return (null == list || 1 != list.size()) ? null : list.get(0);
-	}
-
-	@Override
-	public List<User> findByInviteUserId(String invite_user_id) {
-		invite_user_id = StringUtil.isEmpty(invite_user_id);
-		if (null == invite_user_id)
-			return null;
-
-		User user = new User();
-
-		return findByUser(user, 1, Integer.MAX_VALUE);
-	}
 }

@@ -15,15 +15,10 @@ public interface UserService extends IService<User> {
 
 	List<User> findByUser(User user, int page, int rows);
 
-	int resetPwdByKeys(String keys);
+	int resetPwdByKey(String key);
 
 	String[] saveNew(User user);
 
 	String[] changePwd(String user_id, String old_pass, String new_pass);
 
-	User findByApiKey(String apikey);
-
-	User findBySecKey(String seckey);
-
-	List<User> findByInviteUserId(String invite_user_id);
 }
