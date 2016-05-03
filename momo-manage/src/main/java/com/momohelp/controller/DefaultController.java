@@ -16,14 +16,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class DefaultController {
 
 	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
-	public ModelAndView indexUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("default/1.0.2/index");
+	public ModelAndView i_indexUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/default/1.0.2/index");
 		return result;
 	}
 
-	@RequestMapping(value = { "/welcome" }, method = RequestMethod.GET)
-	public ModelAndView welcomeUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("default/1.0.2/welcome");
+	/**** ****/
+
+	@RequestMapping(value = { "/manage/" }, method = RequestMethod.GET)
+	public ModelAndView manage_indexUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("manage/default/1.0.2/index");
 		return result;
 	}
 }
