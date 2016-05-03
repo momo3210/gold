@@ -28,30 +28,6 @@ public class DefaultController {
 	}
 
 	/**
-	 * 新建帐户
-	 *
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = { "/createAccount" }, method = RequestMethod.GET)
-	public ModelAndView _i_createAccountUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/default/1.0.2/createAccount");
-		return result;
-	}
-
-	/**
-	 * 推荐清单
-	 *
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = { "/recommend" }, method = RequestMethod.GET)
-	public ModelAndView _i_recommendUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/default/1.0.2/recommend");
-		return result;
-	}
-
-	/**
 	 * 买入陌陌
 	 *
 	 * @param session

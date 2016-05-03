@@ -69,6 +69,15 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_changePwd(User user, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+		// TODO
+		return result;
+	}
+
 	/**
 	 * 修改资料
 	 *
@@ -80,6 +89,15 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_profile(User user, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+		// TODO
+		return result;
+	}
+
 	/**
 	 * 我的帐户
 	 *
@@ -88,6 +106,39 @@ public class UserController {
 	@RequestMapping(value = { "/user/account" }, method = RequestMethod.GET)
 	public ModelAndView _i_accountUI() {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/account");
+		return result;
+	}
+
+	/**
+	 * 新建帐户
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.GET)
+	public ModelAndView _i_createAccountUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.2/createAccount");
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_createAccount(User user, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+		// TODO
+		return result;
+	}
+
+	/**
+	 * 推荐清单
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/recommend" }, method = RequestMethod.GET)
+	public ModelAndView _i_recommendUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.2/recommend");
 		return result;
 	}
 
