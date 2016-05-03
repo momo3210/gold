@@ -26,32 +26,70 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * 登陆
+	 *
+	 * @return
+	 */
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.GET)
-	public ModelAndView i_loginUI() {
+	public ModelAndView _i_loginUI() {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/login");
 		return result;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> i_login(User user, HttpSession session) {
+	public Map<String, Object> _i_login(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 		// TODO
 		return result;
 	}
 
-	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.GET)
-	public ModelAndView i_changePwdUI() {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/changePwd");
-		return result;
-	}
-
+	/**
+	 * 退出
+	 *
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping(value = { "/user/logout" }, method = RequestMethod.GET)
-	public String i_logoutUI(HttpSession session) {
+	public String _i_logoutUI(HttpSession session) {
 		session.invalidate();
 		return "redirect:/user/login";
 	}
 
-	/**** ****/
+	/**
+	 * 变更密码
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.GET)
+	public ModelAndView _i_changePwdUI() {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/changePwd");
+		return result;
+	}
+
+	/**
+	 * 修改资料
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
+	public ModelAndView _i_profileUI() {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/profile");
+		return result;
+	}
+
+	/**
+	 * 我的帐户
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/account" }, method = RequestMethod.GET)
+	public ModelAndView _i_accountUI() {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/account");
+		return result;
+	}
+
+	/**** 后台 ****/
 }
