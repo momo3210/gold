@@ -23,61 +23,166 @@ public class User implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	/**
+	 * 会员编号 M08351506
+	 */
 	private String user_name;
+
+	/**
+	 * 登陆密码
+	 */
 	private String user_pass;
 
+	/**
+	 * 安全密码
+	 */
+	private String user_pass_safe;
+
+	/**
+	 * 姓名
+	 */
+	private String real_name;
+
+	/**
+	 * 手机号码
+	 */
+	private String mobile;
+
+	/**
+	 * 昵称
+	 */
+	private String nickname;
+
+	/**
+	 * 电子邮箱
+	 */
 	private String email;
+
+	/**
+	 * 支付宝帐号
+	 */
+	private String alipay_account;
+
+	/**
+	 * 微信号
+	 */
+	private String wx_account;
+
 	private Date create_time;
 	private Integer status;
 
 	private String apikey;
 	private String seckey;
-	private String real_name;
-
-	private String alipay_account;
 
 	/**
-	 * 推荐人
+	 * 开户银行
 	 */
-	private String invite_user_id;
+	private String bank;
 
-	private String device_code;
+	/**
+	 * 开户分行
+	 */
+	private String bank_name;
 
-	private String role_id;
+	/**
+	 * 银行帐号
+	 */
+	private String bank_account;
 
+	/**
+	 * 父子关系
+	 */
 	@Transient
-	private Role role;
+	private UserRelation userRelation;
 
-	public Role getRole() {
-		return role;
+	/**
+	 * 门票数量
+	 */
+	private Integer ticket_num;
+
+	/**
+	 * 食物数量
+	 */
+	private Integer food_num;
+
+	public Integer getFood_num() {
+		return food_num;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setFood_num(Integer food_num) {
+		this.food_num = food_num;
 	}
 
-	public String getRole_id() {
-		return role_id;
+	public Integer getTicket_num() {
+		return ticket_num;
 	}
 
-	public void setRole_id(String role_id) {
-		this.role_id = role_id;
+	public void setTicket_num(Integer ticket_num) {
+		this.ticket_num = ticket_num;
 	}
 
-	public String getDevice_code() {
-		return device_code;
+	public String getUser_pass_safe() {
+		return user_pass_safe;
 	}
 
-	public void setDevice_code(String device_code) {
-		this.device_code = device_code;
+	public void setUser_pass_safe(String user_pass_safe) {
+		this.user_pass_safe = user_pass_safe;
 	}
 
-	public String getInvite_user_id() {
-		return invite_user_id;
+	public String getMobile() {
+		return mobile;
 	}
 
-	public void setInvite_user_id(String invite_user_id) {
-		this.invite_user_id = invite_user_id;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getWx_account() {
+		return wx_account;
+	}
+
+	public void setWx_account(String wx_account) {
+		this.wx_account = wx_account;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getBank_name() {
+		return bank_name;
+	}
+
+	public void setBank_name(String bank_name) {
+		this.bank_name = bank_name;
+	}
+
+	public String getBank_account() {
+		return bank_account;
+	}
+
+	public void setBank_account(String bank_account) {
+		this.bank_account = bank_account;
+	}
+
+	public UserRelation getUserRelation() {
+		return userRelation;
+	}
+
+	public void setUserRelation(UserRelation userRelation) {
+		this.userRelation = userRelation;
 	}
 
 	public String getAlipay_account() {

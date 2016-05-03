@@ -59,11 +59,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 				criteria.andEqualTo("seckey", seckey);
 			}
 
-			String invite_user_id = StringUtil
-					.isEmpty(user.getInvite_user_id());
-			if (null != invite_user_id) {
-				criteria.andEqualTo("invite_user_id", invite_user_id);
-			}
 		}
 		PageHelper.startPage(page, rows);
 		return selectByExample(example);
@@ -105,11 +100,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setApikey(genUserApiKey());
 		user.setSeckey(genUserSecKey());
 
-		user.setDevice_code(null);
-
-		// 设置角色
-		user.setRole_id("e4acb256cafa4cb487fa6abf508df073");
-
 		// TODO
 		save(user);
 
@@ -124,9 +114,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		user.setApikey(genUserApiKey());
 		user.setSeckey(genUserSecKey());
-
-		user.setDevice_code(null);
-		user.setInvite_user_id(null);
 
 		// TODO
 		return super.updateNotNull(user);
@@ -208,7 +195,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return null;
 
 		User user = new User();
-		user.setInvite_user_id(invite_user_id);
 
 		return findByUser(user, 1, Integer.MAX_VALUE);
 	}
