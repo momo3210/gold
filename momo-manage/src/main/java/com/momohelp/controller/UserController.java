@@ -98,10 +98,18 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
-	public ModelAndView _i_profileUI() {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/profile");
-		result.addObject("nav_choose", ",03,0301,");
-		return result;
+	public String _i_profileUI(Map<String, Object> map) {
+		map.put("nav_choose", ",03,0301,");
+		// TODO
+		User user = new User();
+		map.put("data_user", user);
+		user.setId("M08351506");
+		user.setReal_name("张三");
+		user.setMobile("13837100001");
+		user.setEmail("10010@qq.com");
+		user.setNickname("哼哈");
+		// TODO
+		return "i/user/1.0.1/profile";
 	}
 
 	@ResponseBody
