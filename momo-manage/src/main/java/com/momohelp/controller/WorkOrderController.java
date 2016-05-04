@@ -36,6 +36,7 @@ public class WorkOrderController {
 	@RequestMapping(value = { "/workOrder/" }, method = RequestMethod.GET)
 	public ModelAndView _i_indexUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/workOrder/1.0.2/index");
+		result.addObject("nav_choose", ",07,0702,");
 		return result;
 	}
 
