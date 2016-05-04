@@ -37,6 +37,7 @@ public class NoticeController {
 	@RequestMapping(value = { "/notice/" }, method = RequestMethod.GET)
 	public ModelAndView _i_indexUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/notice/1.0.2/index");
+		result.addObject("nav_choose", ",07,0701,");
 		return result;
 	}
 
@@ -49,6 +50,7 @@ public class NoticeController {
 	@RequestMapping(value = { "/notice/info" }, method = RequestMethod.GET)
 	public ModelAndView _i_infoUI(@RequestParam(required = true) String id) {
 		ModelAndView result = new ModelAndView("i/notice/1.0.2/info");
+		result.addObject("nav_choose", ",07,0701,");
 		return result;
 	}
 

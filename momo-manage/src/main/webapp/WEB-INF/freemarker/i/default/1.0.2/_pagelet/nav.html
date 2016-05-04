@@ -1,19 +1,19 @@
 <ul class="nav nav-list">
-	<li>
+	<li<#if nav_choose?? && nav_choose?index_of(",01,") != -1> class='active'</#if>>
 		<a href="/pasture">
 			<i class="icon-coffee"></i>
 			<span class="menu-text"> 我的牧场 </span>
 		</a>
 	</li>
 
-	<li class="active">
+	<li<#if nav_choose?? && nav_choose?index_of(",02,") != -1> class='active'</#if>>
 		<a href="/">
 			<i class="icon-home"></i>
 			<span class="menu-text"> 系统首页 </span>
 		</a>
 	</li>
 
-	<li>
+	<li<#if nav_choose?? && nav_choose?index_of(",03,") != -1> class='active open'</#if>>
 		<a href='javascript:;' class="dropdown-toggle">
 			<i class="icon-cog"></i>
 			<span class="menu-text"> 帐户管理 </span>
@@ -22,14 +22,14 @@
 		</a>
 
 		<ul class="submenu">
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0301,") != -1> class='active open'</#if>>
 				<a href="/user/profile">
 					<i class="icon-double-angle-right"></i>
 					修改资料
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0302,") != -1> class='active open'</#if>>
 				<a href="/user/changePwd">
 					<i class="icon-double-angle-right"></i>
 					变更密码
@@ -38,7 +38,7 @@
 		</ul>
 	</li>
 
-	<li>
+	<li<#if nav_choose?? && nav_choose?index_of(",04,") != -1> class='active open'</#if>>
 		<a href='javascript:;' class="dropdown-toggle">
 			<i class="icon-group"></i>
 			<span class="menu-text"> 会员中心 </span>
@@ -47,14 +47,14 @@
 		</a>
 
 		<ul class="submenu">
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0401,") != -1> class='active open'</#if>>
 				<a href="/user/createAccount">
 					<i class="icon-double-angle-right"></i>
 					新建帐户
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0402,") != -1> class='active open'</#if>>
 				<a href="/user/recommend">
 					<i class="icon-double-angle-right"></i>
 					推荐清单
@@ -63,7 +63,7 @@
 		</ul>
 	</li>
 
-	<li>
+	<li<#if nav_choose?? && nav_choose?index_of(",05,") != -1> class='active open'</#if>>
 		<a href='javascript:;' class="dropdown-toggle">
 			<i class="icon-gift"></i>
 			<span class="menu-text"> 陌陌理财 </span>
@@ -72,28 +72,28 @@
 		</a>
 
 		<ul class="submenu">
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0501,") != -1> class='active open'</#if>>
 				<a href="/user/buyMoMo">
 					<i class="icon-double-angle-right"></i>
 					买入鸡苗
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0502,") != -1> class='active open'</#if>>
 				<a href="/user/sellMoMo">
 					<i class="icon-double-angle-right"></i>
 					卖出鸡苗
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0503,") != -1> class='active open'</#if>>
 				<a href="/user/buyRecord">
 					<i class="icon-double-angle-right"></i>
 					买入记录
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0504,") != -1> class='active open'</#if>>
 				<a href="/user/sellRecord">
 					<i class="icon-double-angle-right"></i>
 					卖出记录
@@ -102,7 +102,7 @@
 		</ul>
 	</li>
 
-	<li>
+	<li<#if nav_choose?? && nav_choose?index_of(",06,") != -1> class='active open'</#if>>
 		<a href='javascript:;' class="dropdown-toggle">
 			<i class="icon-cogs"></i>
 			<span class="menu-text"> 财务管理 </span>
@@ -111,63 +111,63 @@
 		</a>
 
 		<ul class="submenu">
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0601,") != -1> class='active open'</#if>>
 				<a href="/user/account">
 					<i class="icon-double-angle-right"></i>
 					我的帐户
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0602,") != -1> class='active open'</#if>>
 				<a href="/user/buyTicket">
 					<i class="icon-double-angle-right"></i>
 					购买门票
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0603,") != -1> class='active open'</#if>>
 				<a href="/user/buyFood">
 					<i class="icon-double-angle-right"></i>
 					购买饲料
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0604,") != -1> class='active open'</#if>>
 				<a href="/user/transferTicket">
 					<i class="icon-double-angle-right"></i>
 					门票转账
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0605,") != -1> class='active open'</#if>>
 				<a href="/user/transferFood">
 					<i class="icon-double-angle-right"></i>
 					饲料转账
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0606,") != -1> class='active open'</#if>>
 				<a href="/user/commission">
 					<i class="icon-double-angle-right"></i>
 					佣金清单
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0607,") != -1> class='active open'</#if>>
 				<a href="/user/staticRecord">
 					<i class="icon-double-angle-right"></i>
 					静态对账单
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0608,") != -1> class='active open'</#if>>
 				<a href="/user/dynamicRecord">
 					<i class="icon-double-angle-right"></i>
 					动态对账单
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0609,") != -1> class='active open'</#if>>
 				<a href="/user/ticketRecord">
 					<i class="icon-double-angle-right"></i>
 					门票对账单
@@ -176,7 +176,7 @@
 		</ul>
 	</li>
 
-	<li>
+	<li<#if nav_choose?? && nav_choose?index_of(",07,") != -1> class='active open'</#if>>
 		<a href='javascript:;' class="dropdown-toggle">
 			<i class="icon-comments "></i>
 			<span class="menu-text"> 交流中心 </span>
@@ -185,14 +185,14 @@
 		</a>
 
 		<ul class="submenu">
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0701,") != -1> class='active open'</#if>>
 				<a href="/notice/">
 					<i class="icon-double-angle-right"></i>
 					网站公告
 				</a>
 			</li>
 
-			<li>
+			<li<#if nav_choose?? && nav_choose?index_of(",0702,") != -1> class='active open'</#if>>
 				<a href="/workOrder/">
 					<i class="icon-double-angle-right"></i>
 					在线工单
