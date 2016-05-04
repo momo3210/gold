@@ -16,18 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class DefaultController {
 
 	/**
-	 * 我的牧场
-	 *
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = { "/pasture" }, method = RequestMethod.GET)
-	public ModelAndView _i_pastureUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/default/1.0.2/pasture");
-		return result;
-	}
-
-	/**
 	 * 首页
 	 *
 	 * @param session

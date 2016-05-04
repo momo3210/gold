@@ -27,6 +27,19 @@ public class UserController {
 	private UserService userService;
 
 	/**
+	 * 我的牧场
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/pasture" }, method = RequestMethod.GET)
+	public ModelAndView _i_pastureUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/pasture");
+		result.addObject("nav_choose", ",01,");
+		return result;
+	}
+
+	/**
 	 * 登陆
 	 *
 	 * @return
