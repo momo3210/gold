@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
@@ -90,12 +89,6 @@ public class User implements Serializable {
 	private String bank_account;
 
 	/**
-	 * 父子关系
-	 */
-	@Transient
-	private UserRelation userRelation;
-
-	/**
 	 * 门票数量
 	 */
 	private Integer ticket_num;
@@ -104,6 +97,58 @@ public class User implements Serializable {
 	 * 食物数量
 	 */
 	private Integer food_num;
+
+	/**
+	 * 父ID
+	 */
+	private String pid;
+
+	/**
+	 * 家族（最顶端的用户id）
+	 */
+	private String family_id;
+
+	/**
+	 * 深度， 从1开始（最顶端为1）
+	 */
+	private Integer deepth;
+
+	/**
+	 * level 级别（4贫农、3中农、2富农、1农场主）
+	 */
+	private Integer lv;
+
+	public String getPid() {
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+
+	public String getFamily_id() {
+		return family_id;
+	}
+
+	public void setFamily_id(String family_id) {
+		this.family_id = family_id;
+	}
+
+	public Integer getDeepth() {
+		return deepth;
+	}
+
+	public void setDeepth(Integer deepth) {
+		this.deepth = deepth;
+	}
+
+	public Integer getLv() {
+		return lv;
+	}
+
+	public void setLv(Integer lv) {
+		this.lv = lv;
+	}
 
 	public Integer getFood_num() {
 		return food_num;
@@ -175,14 +220,6 @@ public class User implements Serializable {
 
 	public void setBank_account(String bank_account) {
 		this.bank_account = bank_account;
-	}
-
-	public UserRelation getUserRelation() {
-		return userRelation;
-	}
-
-	public void setUserRelation(UserRelation userRelation) {
-		this.userRelation = userRelation;
 	}
 
 	public String getAlipay_account() {
