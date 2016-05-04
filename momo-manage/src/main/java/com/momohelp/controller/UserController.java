@@ -132,7 +132,8 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.GET)
 	public ModelAndView _i_createAccountUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.2/createAccount");
+		ModelAndView result = new ModelAndView("i/user/1.0.1/createAccount");
+		result.addObject("nav_choose", ",04,0401,");
 		return result;
 	}
 
@@ -153,7 +154,8 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/recommend" }, method = RequestMethod.GET)
 	public ModelAndView _i_recommendUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.2/recommend");
+		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
+		result.addObject("nav_choose", ",04,0402,");
 		return result;
 	}
 
