@@ -15,7 +15,7 @@ import javax.persistence.Table;
  *
  */
 @Table(name = "w_work_order")
-public class WorkOrder implements Serializable {
+public class Message implements Serializable {
 	private static final long serialVersionUID = 6286684205702978092L;
 
 	@Id

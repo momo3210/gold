@@ -1,6 +1,5 @@
 package com.momohelp.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import net.foreworld.util.StringUtil;
@@ -40,9 +39,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		if (null != user) {
 			Example.Criteria criteria = example.createCriteria();
 			// TODO
-			String user_name = StringUtil.isEmpty(user.getUser_name());
-			if (null != user_name) {
-				criteria.andLike("user_name", "%" + user_name + "%");
+			String nickname = StringUtil.isEmpty(user.getNickname());
+			if (null != nickname) {
+				criteria.andLike("nickname", "%" + nickname + "%");
 			}
 		}
 		PageHelper.startPage(page, rows);
@@ -61,31 +60,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	@Override
 	public String[] saveNew(User user) {
 		// TODO
-		String user_name = StringUtil.isEmpty(user.getUser_name());
-		if (null == user_name)
-			return new String[] { "用户名不能为空", "user_name" };
-
-		// TODO
-		User _user = findByName(user_name);
-		if (null != _user)
-			return new String[] { "用户名已经存在", "user_name" };
-
-		// TODO
-		user.setUser_name(user_name);
-		user.setId(null);
-		user.setCreate_time(new Date());
-		user.setUser_pass(null == user.getUser_pass() ? DEFAULT_USER_PASS : MD5
-				.encode(user.getUser_pass()));
-
-		// TODO
-		save(user);
-
 		return null;
 	}
 
 	@Override
 	public int updateNotNull(User user) {
-		user.setUser_name(null);
 		user.setUser_pass(null);
 		user.setCreate_time(null);
 

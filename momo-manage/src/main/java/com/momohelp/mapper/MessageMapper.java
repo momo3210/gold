@@ -1,6 +1,6 @@
 package com.momohelp.mapper;
 
-import com.momohelp.model.WorkOrder;
+import com.momohelp.model.Message;
 import com.momohelp.util.MyMapper;
 
 /**
@@ -8,6 +8,6 @@ import com.momohelp.util.MyMapper;
  * @author Administrator
  *
  */
-public interface WorkOrderMapper extends MyMapper<WorkOrder> {
+public interface MessageMapper extends MyMapper<Message> {
 
 }

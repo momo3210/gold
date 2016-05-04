@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.momohelp.model.WorkOrder;
-import com.momohelp.service.WorkOrderService;
+import com.momohelp.model.Message;
+import com.momohelp.service.MessageService;
 
 /**
  *
@@ -22,10 +22,10 @@ import com.momohelp.service.WorkOrderService;
  *
  */
 @Controller
-public class WorkOrderController {
+public class MessageController {
 
 	@Autowired
-	private WorkOrderService workOrderService;
+	private MessageService messageService;
 
 	/**
 	 * 在线工单
@@ -33,9 +33,9 @@ public class WorkOrderController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = { "/workOrder/" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/message/" }, method = RequestMethod.GET)
 	public ModelAndView _i_indexUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/workOrder/1.0.2/index");
+		ModelAndView result = new ModelAndView("i/message/1.0.2/index");
 		result.addObject("nav_choose", ",07,0702,");
 		return result;
 	}
@@ -43,13 +43,13 @@ public class WorkOrderController {
 	/**
 	 * 发起留言
 	 *
-	 * @param workOrder
+	 * @param message
 	 * @param session
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = { "/workOrder/add" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_add(WorkOrder workOrder, HttpSession session) {
+	@RequestMapping(value = { "/message/add" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_add(Message message, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 		// TODO
@@ -64,23 +64,22 @@ public class WorkOrderController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = { "/manage/workOrder/" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/manage/message/" }, method = RequestMethod.GET)
 	public ModelAndView _manage_indexUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("manage/workOrder/1.0.2/index");
+		ModelAndView result = new ModelAndView("manage/message/1.0.2/index");
 		return result;
 	}
 
 	/**
 	 * 回复留言
 	 *
-	 * @param workOrder
+	 * @param message
 	 * @param session
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = { "/manage/workOrder/edit" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _manage_edit(WorkOrder workOrder,
-			HttpSession session) {
+	@RequestMapping(value = { "/manage/message/edit" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_edit(Message message, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 		// TODO
@@ -94,7 +93,7 @@ public class WorkOrderController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = { "/manage/workOrder/remove" }, method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = { "/manage/message/remove" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _manage_remove(
 			@RequestParam(required = true) String id) {
 		Map<String, Object> result = new HashMap<String, Object>();

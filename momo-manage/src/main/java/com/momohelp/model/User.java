@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,15 +16,12 @@ import javax.persistence.Table;
 public class User implements Serializable {
 	private static final long serialVersionUID = -1453141126844138706L;
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(generator = "UUID")
-	private String id;
-
 	/**
 	 * 会员编号 M08351506
 	 */
-	private String user_name;
+	@Id
+	@Column(name = "id")
+	private String id;
 
 	/**
 	 * 登陆密码
@@ -276,14 +272,6 @@ public class User implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getUser_name() {
-		return user_name;
-	}
-
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
 	}
 
 	public String getUser_pass() {
