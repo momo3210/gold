@@ -159,6 +159,19 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 买入鸡苗
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/buyMo" }, method = RequestMethod.GET)
+	public ModelAndView _i_buyMoUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/buyMo");
+		result.addObject("nav_choose", ",05,0501,");
+		return result;
+	}
+
 	/**** 后台 ****/
 
 	/**
