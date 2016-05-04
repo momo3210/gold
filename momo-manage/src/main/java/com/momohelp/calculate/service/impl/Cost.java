@@ -1,18 +1,18 @@
-package com.momohelp.calculate.service;
+package com.momohelp.calculate.service.impl;
 
 import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
+import com.momohelp.calculate.service.ICost;
 import com.momohelp.model.User;
 
-public class Cost implements Serializable {
+public class Cost implements Serializable, ICost {
 
 	private static Logger log = Logger.getLogger(Cost.class);
 
@@ -22,86 +22,43 @@ public class Cost implements Serializable {
 			.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 32);
 	// 存储需要计算会员推荐奖和管理奖
 	private static final BlockingQueue<User> queue = new LinkedBlockingQueue<User>(
-			8192);
-	// 存储需要计算烧伤奖
-	private static final BlockingQueue<User> burn = new LinkedBlockingQueue<User>(
-			8192);
+			32768);
 
-	public void put(User user) {
+	// 存储需要计算烧伤奖
+	// private static final BlockingQueue<User> burn = new
+	// LinkedBlockingQueue<User>(8192);
+
+	public void produce(User user) {
 		try {
 			queue.put(user);
 		} catch (InterruptedException e) {
+			// http://www.ibm.com/developerworks/cn/java/j-jtp05236.html
+			Thread.currentThread().interrupt();
 			e.printStackTrace();
 		}
 	}
-	
-	public void take(){
-		Task task;
+
+	public void start() {
 		try {
-			task = new Task(queue.take());
-			service.submit(task);
+			User user = null;
+			while (true) {
+				user = queue.take();
+				service.submit(new Task(user));
+			}
 		} catch (InterruptedException e) {
-
-			
+			// http://www.ibm.com/developerworks/cn/java/j-jtp05236.html
+			Thread.currentThread().interrupt();
+			log.info("----------", e);
 		}
-		
-	}
-
-	/**
-	 * 
-	 * @param user
-	 *            当前会员
-	 * @return boolean true 表示计算成功 false 计算失败
-	 */
-	public boolean premium(User user) {
-		log.info("premium(User user):::::" + user.toString());
-		boolean bool = false;
-		// 推荐奖计算
-		// 管理奖计算
-		// 烧伤奖计算 这部分特例
-
-		return bool;
 
 	}
 
-	// 推荐奖计算
-	public void recommend(User user) {
-
+	public void stop() {
+		service.shutdown();
 	}
 
-	// 管理奖计算
-	public void manage(User user) {
-
-	}
-
-	// 烧伤奖计算
-
-	public void burn(User user) {
-
-	}
-
-	// 鸡饲料计算
-	public void feed(User user) {
-
-	}
-
-	// 下蛋利息计算
-	public void egg() {
-
-	}
-
-	// 鸡苗饲养利息计算
-	public void keepe() {
-
-	}
-
-	public static void main(String[] args) {
-
-	}
-
-	private static class Task implements Callable<Boolean> {
-
-		private User user = null;
+	private class Task implements Callable<Boolean> {
+		User user = null;
 
 		public Task(User user) {
 			this.user = user;
@@ -109,10 +66,61 @@ public class Cost implements Serializable {
 
 		@Override
 		public Boolean call() throws Exception {
-			Boolean bool = false;
-			log.info("-------call-------------"+user.toString());
-			return bool;
+
+			return premium(this.user);
 		}
+
+	}
+
+	@Override
+	public boolean premium(User user) {
+		log.info("premium(User user):::::" + user.toString());
+		boolean bool = false;
+		// 推荐奖计算
+		// 管理奖计算
+		// 烧伤奖计算 这部分特例 判断是否在上一排单20天之内 再次排单
+
+		return bool;
+
+	}
+
+	// 推荐奖计算
+	@Override
+	public void recommend(User user) {
+
+	}
+
+	// 管理奖计算
+	@Override
+	public void manage(User user) {
+
+	}
+
+	// 烧伤奖计算
+	@Override
+	public void burn(User user) {
+
+	}
+
+	// 鸡饲料计算
+	@Override
+	public void feed(User user) {
+
+	}
+
+	// 下蛋利息计算
+	@Override
+	public void egg() {
+
+	}
+
+	// 鸡苗饲养利息计算
+	@Override
+	public void keepe() {
+
+	}
+
+	public static void main(String[] args) {
 
 	}
 
