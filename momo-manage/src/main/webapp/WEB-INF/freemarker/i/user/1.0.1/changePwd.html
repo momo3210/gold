@@ -2,14 +2,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>网站公告 | 陌陌黄金24小时互助</title>
+		<title>变更密码 | 陌陌黄金24小时互助</title>
 		<#include "/_pagelet/header.html"/>
 		<style>
-		#notice_list tbody tr td:nth-child(1) {
-			color: #bbb;
-			width: 100px;
+		.form-horizontal {
+			margin-bottom: 0;
 		}
-		.pagination {
+		.form-horizontal .form-actions {
 			margin-bottom: 0;
 		}
 		</style>
@@ -19,7 +18,7 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container-fluid">
-					<a href="/" class="brand">
+					<a href="#" class="brand">
 						<small>
 							<i class="icon-leaf"></i>
 							陌陌黄金24小时互助
@@ -221,7 +220,7 @@
 								<i class="icon-angle-right arrow-icon"></i>
 							</span>
 						</li>
-						<li class="active">网站公告</li>
+						<li class="active">变更密码</li>
 					</ul><!--.breadcrumb-->
 
 					<div class="nav-search" id="nav-search">
@@ -237,125 +236,135 @@
 				<div class="page-content">
 					<div class="page-header position-relative">
 						<h1>
-							网站公告
+							变更密码
 							<small>
 								<i class="icon-double-angle-right"></i>
-								Notice
+								Change Password
 							</small>
 						</h1>
 					</div><!--/.page-header-->
 
 					<div class="row-fluid">
-						<div class="span12 widget-container-span">
-							<div class="widget-box">
-								<div class="widget-header">
-									<h5>网站公告 Notice</h5>
+						<div class="span12">
+							<!--PAGE CONTENT BEGINS-->
 
-									<!-- <div class="widget-toolbar">
-										<a href="#" data-action="settings">
-											<i class="icon-cog"></i>
-										</a>
+							<div class="alert alert-block alert-error">
+								<button type="button" class="close" data-dismiss="alert">
+									<i class="icon-remove"></i>
+								</button>
 
-										<a href="#" data-action="reload">
-											<i class="icon-refresh"></i>
-										</a>
+								<strong>
+									<!-- <i class="icon-remove"></i> -->
+									系统提示：
+								</strong>
 
-										<a href="#" data-action="collapse">
-											<i class="icon-chevron-up"></i>
-										</a>
+								为了您的账户安全，请及时修改密码，尽量保持登录密码和安全密码的不同。
+							</div>
 
-										<a href="#" data-action="close">
-											<i class="icon-remove"></i>
-										</a>
-									</div> -->
-								</div>
+							<div class="row-fluid">
+								<div class="span12">
+									<div class="tabbable">
+										<ul class="nav nav-tabs" id="myTab">
+											<li class="active">
+												<a data-toggle="tab" href="#home">
+													<!-- <i class="green icon-home bigger-110"></i> -->
+													变更登陆密码
+												</a>
+											</li>
 
-								<div class="widget-body">
-									<div class="widget-main">
-										<table id="notice_list" class="table table-striped table-bordered table-hover" style='margin-bottom:0'>
-											<tbody>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='./info?id=123456'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-												<tr>
-													<td>2016-05-01</td>
-													<td><a href='#'>公告公告公告公告公告公告公告公告公告公告公告公告公告</a></td>
-												</tr>
-											</tbody>
-										</table>
-										<div class="pagination">
-											<ul>
-												<li class="disabled">
-													<a href="#">
-														<i class="icon-double-angle-left"></i>
-													</a>
-												</li>
+											<li>
+												<a data-toggle="tab" href="#profile">
+													变更安全密码
+												</a>
+											</li>
+										</ul>
 
-												<li class="active">
-													<a href="#">1</a>
-												</li>
+										<div class="tab-content">
+											<div id="home" class="tab-pane in active">
+												<form class="form-horizontal">
+													<div class="control-group">
+														<label class="control-label" for="editFrm_OLD_PASS">原登录密码</label>
 
-												<li>
-													<a href="#">2</a>
-												</li>
+														<div class="controls">
+															<input type="password" class='input-large' id="editFrm_OLD_PASS" placeholder="原登录密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="editFrm_USER_PASS">新登录密码</label>
 
-												<li>
-													<a href="#">3</a>
-												</li>
+														<div class="controls">
+															<input type="password" class='input-large' id="editFrm_USER_PASS" placeholder="新登录密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="editFrm_NEW_PASS_2">确认登录密码</label>
 
-												<li>
-													<a href="#">4</a>
-												</li>
+														<div class="controls">
+															<input type="password" class='input-large' id="editFrm_NEW_PASS_2" placeholder="确认登录密码" />
+														</div>
+													</div>
+													<div class="form-actions">
+														<button class="btn btn-info" type="button">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
 
-												<li>
-													<a href="#">5</a>
-												</li>
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</form>
+											</div>
 
-												<li>
-													<a href="#">
-														<i class="icon-double-angle-right"></i>
-													</a>
-												</li>
-											</ul>
+											<div id="profile" class="tab-pane">
+												<form class="form-horizontal">
+													<div class="control-group">
+														<label class="control-label" for="editFrm2_OLD_PASS">原安全密码</label>
+
+														<div class="controls">
+															<input type="password" class='input-large' id="editFrm2_OLD_PASS" placeholder="原安全密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="editFrm2_USER_PASS">新安全密码</label>
+
+														<div class="controls">
+															<input type="password" class='input-large' id="editFrm2_USER_PASS" placeholder="新安全密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="editFrm2_NEW_PASS_2">确认安全密码</label>
+
+														<div class="controls">
+															<input type="password" class='input-large' id="editFrm2_NEW_PASS_2" placeholder="确认安全密码" />
+														</div>
+													</div>
+													<div class="form-actions">
+														<button class="btn btn-info" type="button">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</form>
+											</div>
 										</div>
 									</div>
 								</div>
+
+
 							</div>
-						</div>
-					</div>
+
+							<!--PAGE CONTENT ENDS-->
+						</div><!--/.span-->
+					</div><!--/.row-fluid-->
 				</div><!--/.page-content-->
 
 				<div class="ace-settings-container" id="ace-settings-container">
@@ -403,6 +412,7 @@
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-small btn-inverse">
 			<i class="icon-double-angle-up icon-only bigger-110"></i>
 		</a>
+
 		<#include "/_pagelet/js.html"/>
 	</body>
 </html>
