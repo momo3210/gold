@@ -79,6 +79,7 @@ public class UserController {
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.GET)
 	public ModelAndView _i_changePwdUI() {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/changePwd");
+		result.addObject("nav_choose", ",03,0302,");
 		return result;
 	}
 
@@ -99,6 +100,7 @@ public class UserController {
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
 	public ModelAndView _i_profileUI() {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/profile");
+		result.addObject("nav_choose", ",03,0301,");
 		return result;
 	}
 
