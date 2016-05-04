@@ -40,6 +40,18 @@ public class NoticeController {
 		return result;
 	}
 
+	/**
+	 * 公告信息
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/notice/info" }, method = RequestMethod.GET)
+	public ModelAndView _i_infoUI(@RequestParam(required = true) String id) {
+		ModelAndView result = new ModelAndView("i/notice/1.0.2/info");
+		return result;
+	}
+
 	/**** 后台 ****/
 
 	/**
@@ -82,7 +94,7 @@ public class NoticeController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/manage/notice/edit" }, method = RequestMethod.GET)
-	public ModelAndView _manage_editUI(HttpSession session) {
+	public ModelAndView _manage_editUI(@RequestParam(required = true) String id) {
 		ModelAndView result = new ModelAndView("manage/notice/1.0.2/edit");
 		return result;
 	}
