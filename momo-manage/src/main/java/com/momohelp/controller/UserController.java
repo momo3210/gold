@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import net.foreworld.util.encryptUtil.MD5;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,12 +58,17 @@ public class UserController {
 	public Map<String, Object> _i_login(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		User _user = new User();
-		_user.setId("M08351506");
-		_user.setReal_name("张三");
-		_user.setMobile("13837100001");
-		_user.setEmail("10010@qq.com");
-		_user.setNickname("哼哈");
+		User _user = userService.getByName(user.getEmail());
+		if (null == _user) {
+			result.put("msg", new String[] { "用户名或密码输入错误" });
+			return result;
+		}
+
+		String user_pass = MD5.encode(user.getUser_pass());
+		if (!user_pass.equals(_user.getUser_pass())) {
+			result.put("msg", new String[] { "用户名或密码输入错误" });
+			return result;
+		} // END
 
 		// TODO
 		session.setAttribute("session.user", _user);
@@ -108,19 +115,16 @@ public class UserController {
 	/**
 	 * 修改资料
 	 *
+	 * @param map
+	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
-	public String _i_profileUI(Map<String, Object> map) {
-		map.put("nav_choose", ",03,0301,");
+	public String _i_profileUI(Map<String, Object> map, HttpSession session) {
+		Object obj = session.getAttribute("session.user");
 		// TODO
-		User user = new User();
-		map.put("data_user", user);
-		user.setId("M08351506");
-		user.setReal_name("张三");
-		user.setMobile("13837100001");
-		user.setEmail("10010@qq.com");
-		user.setNickname("哼哈");
+		map.put("data_user", obj);
+		map.put("nav_choose", ",03,0301,");
 		// TODO
 		return "i/user/1.0.1/profile";
 	}
@@ -299,7 +303,7 @@ public class UserController {
 	}
 
 	/**
-	 * 佣金清单
+	 * 静态对账单
 	 *
 	 * @param session
 	 * @return
@@ -308,6 +312,45 @@ public class UserController {
 	public ModelAndView _i_staticRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
 		result.addObject("nav_choose", ",06,0607,");
+		return result;
+	}
+
+	/**
+	 * 动态对账单
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/dynamicRecord" }, method = RequestMethod.GET)
+	public ModelAndView _i_dynamicRecordUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
+		result.addObject("nav_choose", ",06,0608,");
+		return result;
+	}
+
+	/**
+	 * 门票对账单
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/ticketRecord" }, method = RequestMethod.GET)
+	public ModelAndView _i_ticketRecordUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
+		result.addObject("nav_choose", ",06,0609,");
+		return result;
+	}
+
+	/**
+	 * 饲料对账单
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/foodRecord" }, method = RequestMethod.GET)
+	public ModelAndView _i_foodRecordUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
+		result.addObject("nav_choose", ",06,0610,");
 		return result;
 	}
 

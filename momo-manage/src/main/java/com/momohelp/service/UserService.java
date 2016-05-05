@@ -11,7 +11,7 @@ import com.momohelp.model.User;
  */
 public interface UserService extends IService<User> {
 
-	User findByName(String name);
+	User getByName(String name);
 
 	List<User> findByUser(User user, int page, int rows);
 

@@ -24,7 +24,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	private static final String DEFAULT_USER_PASS = MD5.encode("123456");
 
 	@Override
-	public User findByName(String name) {
+	public User getByName(String name) {
 		User user = null;
 
 		// TODO
