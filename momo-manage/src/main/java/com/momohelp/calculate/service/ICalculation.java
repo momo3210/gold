@@ -2,7 +2,7 @@ package com.momohelp.calculate.service;
 
 import com.momohelp.model.User;
 
-public interface ICost {
+public interface ICalculation {
 
 	// 推荐奖计算
 	public abstract void recommend(User user);

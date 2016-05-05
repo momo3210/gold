@@ -10,10 +10,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
-import com.momohelp.calculate.service.ICost;
+import com.momohelp.calculate.service.ICalculation;
 import com.momohelp.model.User;
 //动态奖金计算
-public class DynamicCalculation implements Serializable, ICost {
+public class DynamicCalculation implements Serializable, ICalculation {
 
 	private static Logger log = Logger.getLogger(DynamicCalculation.class);
 
