@@ -1,5 +1,6 @@
 package com.momohelp.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +55,20 @@ public class UserController {
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_login(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
+
+		User _user = new User();
+		_user.setId("M08351506");
+		_user.setReal_name("张三");
+		_user.setMobile("13837100001");
+		_user.setEmail("10010@qq.com");
+		_user.setNickname("哼哈");
+
 		// TODO
+		session.setAttribute("session.user", _user);
+		session.setAttribute("session.user.id", _user.getId());
+		session.setAttribute("session.time", (new Date()).toString());
+
+		result.put("success", true);
 		return result;
 	}
 
@@ -190,6 +203,58 @@ public class UserController {
 	public ModelAndView _i_sellMoUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellMo");
 		result.addObject("nav_choose", ",05,0502,");
+		return result;
+	}
+
+	/**
+	 * 买入记录
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/buyRecord" }, method = RequestMethod.GET)
+	public ModelAndView _i_buyRecordUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
+		result.addObject("nav_choose", ",05,0503,");
+		return result;
+	}
+
+	/**
+	 * 卖出记录
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/sellRecord" }, method = RequestMethod.GET)
+	public ModelAndView _i_sellRecordUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
+		result.addObject("nav_choose", ",05,0504,");
+		return result;
+	}
+
+	/**
+	 * 购买门票
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.GET)
+	public ModelAndView _i_buyTicketUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/buyTicket");
+		result.addObject("nav_choose", ",06,0602,");
+		return result;
+	}
+
+	/**
+	 * 购买饲料
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.GET)
+	public ModelAndView _i_buyFoodUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/buyFood");
+		result.addObject("nav_choose", ",06,0603,");
 		return result;
 	}
 

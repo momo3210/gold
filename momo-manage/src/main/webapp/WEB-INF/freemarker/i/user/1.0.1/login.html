@@ -37,18 +37,18 @@
 
 												<div class="space-6"></div>
 
-												<form />
+												<form id='loginFrm' role='form' onsubmit='return false;' data-url=''>
 													<fieldset>
 														<label>
 															<span class="block input-icon input-icon-right">
-																<input type="text" class="span12" placeholder="用户名 / 手机号" />
+																<input type="text" class="span12" id='loginfrm_email' name='email' placeholder="用户名 / 手机号" />
 																<i class="icon-user"></i>
 															</span>
 														</label>
 
 														<label>
 															<span class="block input-icon input-icon-right">
-																<input type="password" class="span12" placeholder="登陆密码" />
+																<input type="password" class="span12" id='loginfrm_user_pass' name='user_pass' placeholder="登陆密码" />
 																<i class="icon-lock"></i>
 															</span>
 														</label>
@@ -61,7 +61,7 @@
 																<span class="lbl"> 记住我</span>
 															</label>
 
-															<button onclick="return false;" class="width-35 pull-right btn btn-small btn-primary">
+															<button id='btn_login' class="width-35 pull-right btn btn-small btn-primary">
 																<i class="icon-key"></i>
 																登陆
 															</button>
@@ -231,13 +231,35 @@
 			</div>
 		</div><!--/.main-container-->
 
-		<#include "/_pagelet/header.html"/>
+		<#include "/_pagelet/js.html"/>
 
 		<script type="text/javascript">
 			function show_box(id) {
 			 /* $('.widget-box.visible').removeClass('visible');
 			 $('#'+id).addClass('visible'); */
 			}
+
+			$(function() {
+				$('#btn_login').click(function() {
+					$.ajax({
+						url : '${(conf_html_virtualPath)!}user/login',
+						type : 'POST',
+						dataType : 'JSON',
+						data : $('#loginFrm').serializeObjectForm(),
+						success : function(data) {
+							if (data.success) {
+								location.href = '${(conf_html_virtualPath)!}';
+								return;
+							} // END
+							if (data.msg)
+								alert(data.msg[0]);
+						},
+						error : function() {
+							alert(arguments[2]);
+						}
+					});
+				});
+			});
 		</script>
 	</body>
 </html>
