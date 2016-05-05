@@ -258,6 +258,32 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 门票转账
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/virementTicket" }, method = RequestMethod.GET)
+	public ModelAndView _i_virementTicketUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/virementTicket");
+		result.addObject("nav_choose", ",06,0604,");
+		return result;
+	}
+
+	/**
+	 * 饲料转账
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/virementFood" }, method = RequestMethod.GET)
+	public ModelAndView _i_virementFoodUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/virementFood");
+		result.addObject("nav_choose", ",06,0605,");
+		return result;
+	}
+
 	/**** 后台 ****/
 
 	/**
