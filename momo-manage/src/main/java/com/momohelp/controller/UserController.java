@@ -142,6 +142,7 @@ public class UserController {
 	@RequestMapping(value = { "/user/account" }, method = RequestMethod.GET)
 	public ModelAndView _i_accountUI() {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/account");
+		result.addObject("nav_choose", ",06,0601,");
 		return result;
 	}
 
