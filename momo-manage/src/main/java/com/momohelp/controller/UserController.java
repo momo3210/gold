@@ -284,6 +284,32 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 佣金清单
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/commission" }, method = RequestMethod.GET)
+	public ModelAndView _i_commissionUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/commission");
+		result.addObject("nav_choose", ",06,0606,");
+		return result;
+	}
+
+	/**
+	 * 佣金清单
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/staticRecord" }, method = RequestMethod.GET)
+	public ModelAndView _i_staticRecordUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
+		result.addObject("nav_choose", ",06,0607,");
+		return result;
+	}
+
 	/**** 后台 ****/
 
 	/**
