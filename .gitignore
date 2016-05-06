@@ -18,3 +18,5 @@ hs_err_pid*
 **/webapp/logs/*.*
 **/WEB-INF/classes/**
 **/WEB-INF/classes/**/*.*
+
+*.pdb

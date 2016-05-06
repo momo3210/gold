@@ -10,7 +10,7 @@ import com.momohelp.service.MessageService;
  * @author Administrator
  *
  */
-@Service("workOrderService")
+@Service("messageService")
 public class MessageServiceImpl extends BaseService<Message> implements
 		MessageService {
 
