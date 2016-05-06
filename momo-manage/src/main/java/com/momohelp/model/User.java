@@ -114,6 +114,19 @@ public class User implements Serializable {
 	 */
 	private Integer lv;
 
+	/**
+	 * 1为后台管理用户 2为会员
+	 */
+	private Integer type_id;
+
+	public Integer getType_id() {
+		return type_id;
+	}
+
+	public void setType_id(Integer type_id) {
+		this.type_id = type_id;
+	}
+
 	public String getPid() {
 		return pid;
 	}
