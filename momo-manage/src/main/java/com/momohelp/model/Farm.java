@@ -36,6 +36,19 @@ public class Farm implements Serializable {
 	 */
 	private Integer calc_bonus;
 
+	/**
+	 * 实际的出局时间
+	 */
+	private Date out_time_actual;
+
+	public Date getOut_time_actual() {
+		return out_time_actual;
+	}
+
+	public void setOut_time_actual(Date out_time_actual) {
+		this.out_time_actual = out_time_actual;
+	}
+
 	public Integer getCalc_bonus() {
 		return calc_bonus;
 	}

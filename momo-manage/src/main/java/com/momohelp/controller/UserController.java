@@ -227,8 +227,16 @@ public class UserController {
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_createAccount(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-		// TODO
+
+		String[] msg = userService.saveNew(user);
+
+		if (null != msg) {
+			result.put("success", false);
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
 		return result;
 	}
 
