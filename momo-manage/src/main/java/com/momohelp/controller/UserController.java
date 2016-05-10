@@ -57,6 +57,7 @@ public class UserController {
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_login(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
 		User _user = userService.getByName(user.getEmail());
 		if (null == _user) {

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
-import com.github.pagehelper.PageHelper;
 import com.momohelp.model.User;
 import com.momohelp.service.UserService;
 
@@ -29,12 +28,14 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		// TODO
 		user = getByEmail(name);
-		if (null != user)
+		if (null != user) {
 			return user;
+		}
 
 		user = getByMobile(name);
-		if (null != user)
+		if (null != user) {
 			return user;
+		}
 
 		return null;
 	}
@@ -82,15 +83,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public List<User> findByUser(User user, int page, int rows) {
-		Example example = new Example(User.class);
-		example.setOrderByClause("create_time desc");
-		// TODO
-		PageHelper.startPage(page, rows);
-		return selectByExample(example);
-	}
-
-	@Override
 	public int resetPwdByKey(String key) {
 		User user = new User();
 		user.setId(key);
@@ -115,20 +107,23 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public String[] changePwd(String user_id, String old_pass, String new_pass) {
+	public String[] changePwd(String key, String old_pass, String new_pass) {
+		// TODO
+		User user = selectByKey(key);
+		if (null == user) {
+			return new String[] { "用户不存在" };
+		}
+
+		// TODO
 		old_pass = StringUtil.isEmpty(old_pass);
 
 		// TODO
-		User user = selectByKey(user_id);
-		if (null == user)
-			return new String[] { "用户不存在" };
-
-		// TODO
-		if (!MD5.encode(old_pass).equals(user.getUser_pass()))
+		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
 			return new String[] { "原始密码错误" };
+		}
 
 		User _user = new User();
-		_user.setId(user_id);
+		_user.setId(key);
 		_user.setUser_pass(MD5.encode(new_pass));
 		super.updateNotNull(_user);
 
@@ -145,25 +140,26 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public String[] changePwdSafe(String user_id, String old_pass,
-			String new_pass) {
+	public String[] changePwdSafe(String key, String old_pass, String new_pass) {
+		// TODO
+		User user = selectByKey(key);
+		if (null == user) {
+			return new String[] { "用户不存在" };
+		}
+
+		// TODO
 		old_pass = StringUtil.isEmpty(old_pass);
 
 		// TODO
-		User user = selectByKey(user_id);
-		if (null == user)
-			return new String[] { "用户不存在" };
-
-		// TODO
-		if (!MD5.encode(old_pass).equals(user.getUser_pass_safe()))
+		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
 			return new String[] { "原始密码错误" };
+		}
 
 		User _user = new User();
-		_user.setId(user_id);
+		_user.setId(key);
 		_user.setUser_pass_safe(MD5.encode(new_pass));
 		super.updateNotNull(_user);
 
 		return null;
 	}
-
 }

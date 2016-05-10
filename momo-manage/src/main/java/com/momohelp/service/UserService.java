@@ -1,7 +1,5 @@
 package com.momohelp.service;
 
-import java.util.List;
-
 import com.momohelp.model.User;
 
 /**
@@ -12,8 +10,6 @@ import com.momohelp.model.User;
 public interface UserService extends IService<User> {
 
 	User getByName(String name);
-
-	List<User> findByUser(User user, int page, int rows);
 
 	/**
 	 * 登陆密码重置
@@ -36,20 +32,20 @@ public interface UserService extends IService<User> {
 	/**
 	 * 登陆密码修改
 	 *
-	 * @param user_id
+	 * @param key
 	 * @param old_pass
 	 * @param new_pass
 	 * @return
 	 */
-	String[] changePwd(String user_id, String old_pass, String new_pass);
+	String[] changePwd(String key, String old_pass, String new_pass);
 
 	/**
 	 * 安全密码修改
 	 *
-	 * @param user_id
+	 * @param key
 	 * @param old_pass
 	 * @param new_pass
 	 * @return
 	 */
-	String[] changePwdSafe(String user_id, String old_pass, String new_pass);
+	String[] changePwdSafe(String key, String old_pass, String new_pass);
 }
