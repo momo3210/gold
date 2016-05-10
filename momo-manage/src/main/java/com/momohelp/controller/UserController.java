@@ -71,6 +71,11 @@ public class UserController {
 			return result;
 		} // END
 
+		if (0 == _user.getStatus()) {
+			result.put("msg", new String[] { "您已被限制登陆，请联系管理员" });
+			return result;
+		}
+
 		// TODO
 		session.setAttribute("session.user", _user);
 		session.setAttribute("session.user.id", _user.getId());

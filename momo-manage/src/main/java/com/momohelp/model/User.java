@@ -90,16 +90,6 @@ public class User implements Serializable {
 	private String bank_account;
 
 	/**
-	 * 门票数量
-	 */
-	private Integer ticket_num;
-
-	/**
-	 * 食物数量
-	 */
-	private Integer food_num;
-
-	/**
 	 * 父ID
 	 */
 	private String pid;
@@ -231,22 +221,6 @@ public class User implements Serializable {
 
 	public void setLv(Integer lv) {
 		this.lv = lv;
-	}
-
-	public Integer getFood_num() {
-		return food_num;
-	}
-
-	public void setFood_num(Integer food_num) {
-		this.food_num = food_num;
-	}
-
-	public Integer getTicket_num() {
-		return ticket_num;
-	}
-
-	public void setTicket_num(Integer ticket_num) {
-		this.ticket_num = ticket_num;
 	}
 
 	public String getUser_pass_safe() {
