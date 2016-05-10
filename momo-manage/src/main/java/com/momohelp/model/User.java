@@ -102,7 +102,7 @@ public class User implements Serializable {
 	/**
 	 * 深度， 从1开始（最顶端为1）
 	 */
-	private Integer deepth;
+	private Integer depth;
 
 	/**
 	 * level 级别（4贫农、3中农、2富农、1农场主）
@@ -207,12 +207,12 @@ public class User implements Serializable {
 		this.family_id = family_id;
 	}
 
-	public Integer getDeepth() {
-		return deepth;
+	public Integer getDepth() {
+		return depth;
 	}
 
-	public void setDeepth(Integer deepth) {
-		this.deepth = deepth;
+	public void setDepth(Integer depth) {
+		this.depth = depth;
 	}
 
 	public Integer getLv() {
