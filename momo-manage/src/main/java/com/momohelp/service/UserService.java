@@ -27,7 +27,21 @@ public interface UserService extends IService<User> {
 	 */
 	int resetPwdSafeByKey(String key);
 
+	/**
+	 * 创建新用户
+	 *
+	 * @param user
+	 * @return
+	 */
 	String[] saveNew(User user);
+
+	/**
+	 * 修改资料
+	 *
+	 * @param user
+	 * @return
+	 */
+	String[] editInfo(User user);
 
 	/**
 	 * 登陆密码修改

@@ -93,6 +93,28 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] saveNew(User user) {
+		User _user = null;
+
+		_user = getByMobile(user.getMobile());
+		if (null != _user) {
+			return new String[] { "手机号码已存在" };
+		} // IF
+
+		_user = getByEmail(user.getEmail());
+		if (null != _user) {
+			return new String[] { "电子邮箱已存在" };
+		} // IF
+
+		User newUser = new User();
+		newUser.setNickname(user.getNickname());
+		newUser.setReal_name(user.getReal_name());
+		newUser.setMobile(user.getMobile());
+		newUser.setEmail(user.getEmail());
+		newUser.setUser_pass(MD5.encode(user.getUser_pass()));
+		newUser.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
+
+		save(newUser);
+
 		// TODO
 		return null;
 	}
@@ -161,5 +183,38 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		super.updateNotNull(_user);
 
 		return null;
+	}
+
+	@Override
+	public String[] editInfo(User user) {
+		String[] checkSafe = checkSafe(user.getId(), user.getUser_pass_safe());
+		if (null != checkSafe) {
+			return checkSafe;
+		}
+
+		User newUser = new User();
+		newUser.setNickname(user.getNickname());
+		newUser.setAlipay_account(user.getAlipay_account());
+		newUser.setWx_account(user.getWx_account());
+		newUser.setBank(user.getBank());
+		newUser.setBank_account(user.getBank_account());
+		newUser.setBank_name(user.getBank_name());
+
+		super.updateNotNull(newUser);
+
+		return null;
+	}
+
+	private String[] checkSafe(String key, String pass_safe) {
+		return new String[] { "安全密码错误" };
+	}
+
+	/**
+	 * 生成主键
+	 *
+	 * @return
+	 */
+	private String genId() {
+		return "08351506";
 	}
 }
