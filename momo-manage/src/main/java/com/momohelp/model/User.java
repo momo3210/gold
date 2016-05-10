@@ -34,6 +34,11 @@ public class User implements Serializable {
 	private String user_pass_safe;
 
 	/**
+	 * 1为后台管理用户 2为会员
+	 */
+	private Integer role_id;
+
+	/**
 	 * 姓名
 	 */
 	private String real_name;
@@ -114,17 +119,86 @@ public class User implements Serializable {
 	 */
 	private Integer lv;
 
-	/**
-	 * 1为后台管理用户 2为会员
-	 */
-	private Integer type_id;
+	private Double num_static;
+	private Double num_dynamic;
+	private Integer num_ticket;
+	private Integer num_food;
 
-	public Integer getType_id() {
-		return type_id;
+	private Double total_static;
+	private Double total_dynamic;
+	private Integer total_ticket;
+	private Integer total_food;
+
+	public Double getNum_static() {
+		return num_static;
 	}
 
-	public void setType_id(Integer type_id) {
-		this.type_id = type_id;
+	public void setNum_static(Double num_static) {
+		this.num_static = num_static;
+	}
+
+	public Double getNum_dynamic() {
+		return num_dynamic;
+	}
+
+	public void setNum_dynamic(Double num_dynamic) {
+		this.num_dynamic = num_dynamic;
+	}
+
+	public Integer getNum_ticket() {
+		return num_ticket;
+	}
+
+	public void setNum_ticket(Integer num_ticket) {
+		this.num_ticket = num_ticket;
+	}
+
+	public Integer getNum_food() {
+		return num_food;
+	}
+
+	public void setNum_food(Integer num_food) {
+		this.num_food = num_food;
+	}
+
+	public Double getTotal_static() {
+		return total_static;
+	}
+
+	public void setTotal_static(Double total_static) {
+		this.total_static = total_static;
+	}
+
+	public Double getTotal_dynamic() {
+		return total_dynamic;
+	}
+
+	public void setTotal_dynamic(Double total_dynamic) {
+		this.total_dynamic = total_dynamic;
+	}
+
+	public Integer getTotal_ticket() {
+		return total_ticket;
+	}
+
+	public void setTotal_ticket(Integer total_ticket) {
+		this.total_ticket = total_ticket;
+	}
+
+	public Integer getTotal_food() {
+		return total_food;
+	}
+
+	public void setTotal_food(Integer total_food) {
+		this.total_food = total_food;
+	}
+
+	public Integer getRole_id() {
+		return role_id;
+	}
+
+	public void setRole_id(Integer role_id) {
+		this.role_id = role_id;
 	}
 
 	public String getPid() {
