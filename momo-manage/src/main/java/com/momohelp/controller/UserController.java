@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -63,18 +64,18 @@ public class UserController {
 		if (null == _user) {
 			result.put("msg", new String[] { "用户名或密码输入错误" });
 			return result;
-		}
+		} // IF
 
 		String user_pass = MD5.encode(user.getUser_pass());
 		if (!user_pass.equals(_user.getUser_pass())) {
 			result.put("msg", new String[] { "用户名或密码输入错误" });
 			return result;
-		} // END
+		} // IF
 
 		if (0 == _user.getStatus()) {
 			result.put("msg", new String[] { "您已被限制登陆，请联系管理员" });
 			return result;
-		}
+		} // IF
 
 		// TODO
 		session.setAttribute("session.user", _user);
@@ -109,12 +110,63 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 普通密码
+	 *
+	 * @param session
+	 * @param old_pass
+	 * @param new_pass
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_changePwd(User user, HttpSession session) {
+	public Map<String, Object> _i_changePwd(HttpSession session,
+			@RequestParam(required = true) String old_pass,
+			@RequestParam(required = true) String new_pass) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
+
 		// TODO
+		String[] msg = userService.changePwd(
+				session.getAttribute("session.user.id").toString(), old_pass,
+				new_pass);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			result.put("success", false);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 安全密码
+	 *
+	 * @param session
+	 * @param old_pass
+	 * @param new_pass
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/user/changePwdSafe" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_changePwdSafe(HttpSession session,
+			@RequestParam(required = true) String old_pass,
+			@RequestParam(required = true) String new_pass) {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// TODO
+		String[] msg = userService.changePwdSafe(
+				session.getAttribute("session.user.id").toString(), old_pass,
+				new_pass);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			result.put("success", false);
+			return result;
+		}
+
+		result.put("success", true);
 		return result;
 	}
 
@@ -139,7 +191,9 @@ public class UserController {
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_profile(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
+
+		userService.editInfo(user);
+		result.put("success", true);
 		// TODO
 		return result;
 	}

@@ -120,20 +120,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public int updateNotNull(User user) {
-		user.setUser_pass(null);
-		user.setCreate_time(null);
-
-		// TODO
-		return super.updateNotNull(user);
-	}
-
-	@Override
 	public String[] changePwd(String key, String old_pass, String new_pass) {
 		// TODO
 		User user = selectByKey(key);
 		if (null == user) {
-			return new String[] { "用户不存在" };
+			return new String[] { "没有找到此用户" };
 		}
 
 		// TODO
@@ -166,7 +157,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		// TODO
 		User user = selectByKey(key);
 		if (null == user) {
-			return new String[] { "用户不存在" };
+			return new String[] { "没有找到此用户" };
 		}
 
 		// TODO
@@ -190,7 +181,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		String[] checkSafe = checkSafe(user.getId(), user.getUser_pass_safe());
 		if (null != checkSafe) {
 			return checkSafe;
-		}
+		} // IF
 
 		User newUser = new User();
 		newUser.setNickname(user.getNickname());
@@ -200,13 +191,15 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		newUser.setBank_account(user.getBank_account());
 		newUser.setBank_name(user.getBank_name());
 
+		newUser.setId(user.getId());
+
 		super.updateNotNull(newUser);
 
 		return null;
 	}
 
 	private String[] checkSafe(String key, String pass_safe) {
-		return new String[] { "安全密码错误" };
+		return new String[] { "安全密码输入错误" };
 	}
 
 	/**
