@@ -31,6 +31,19 @@ public class Farm implements Serializable {
 	private Integer num_buy;
 	private Integer num_deal;
 
+	/**
+	 * 计算奖金（0未计算，1已计算）
+	 */
+	private Integer calc_bonus;
+
+	public Integer getCalc_bonus() {
+		return calc_bonus;
+	}
+
+	public void setCalc_bonus(Integer calc_bonus) {
+		this.calc_bonus = calc_bonus;
+	}
+
 	public String getId() {
 		return id;
 	}
