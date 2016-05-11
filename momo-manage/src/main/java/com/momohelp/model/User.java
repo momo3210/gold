@@ -105,9 +105,9 @@ public class User implements Serializable {
 	private Integer depth;
 
 	/**
-	 * level 级别（4贫农、3中农、2富农、1农场主）
+	 * level 级别（05贫农、06中农、07富农、08农场主）
 	 */
-	private Integer lv;
+	private String lv;
 
 	private Double num_static;
 	private Double num_dynamic;
@@ -215,11 +215,11 @@ public class User implements Serializable {
 		this.depth = depth;
 	}
 
-	public Integer getLv() {
+	public String getLv() {
 		return lv;
 	}
 
-	public void setLv(Integer lv) {
+	public void setLv(String lv) {
 		this.lv = lv;
 	}
 

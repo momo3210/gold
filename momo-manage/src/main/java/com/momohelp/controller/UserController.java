@@ -80,6 +80,7 @@ public class UserController {
 		// TODO
 		session.setAttribute("session.user", _user);
 		session.setAttribute("session.user.id", _user.getId());
+		session.setAttribute("session.lv", 1);
 		session.setAttribute("session.time", (new Date()).toString());
 
 		result.put("success", true);
