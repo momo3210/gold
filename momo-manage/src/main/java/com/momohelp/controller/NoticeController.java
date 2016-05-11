@@ -58,10 +58,18 @@ public class NoticeController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/notice/info" }, method = RequestMethod.GET)
-	public ModelAndView _i_infoUI(@RequestParam(required = true) String id) {
-		ModelAndView result = new ModelAndView("i/notice/1.0.2/info");
-		result.addObject("nav_choose", ",07,0701,");
-		return result;
+	public String _i_infoUI(Map<String, Object> map,
+			@RequestParam(required = true) String id) {
+		Notice notice = noticeService.selectByKey(id);
+		if (null == notice) {
+			return "redirect:/notice/";
+		}
+
+		map.put("data_doc", notice);
+
+		// TODO
+		map.put("nav_choose", ",07,0701,");
+		return "i/notice/1.0.2/info";
 	}
 
 	/**** 后台 ****/
