@@ -278,7 +278,7 @@
 
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal">
+												<form id='frm' class="form-horizontal">
 													<!-- <div class="control-group">
 														<label class="control-label" for="editFrm_OLD_PASS">新用户编号</label>
 
@@ -288,72 +288,65 @@
 														</div>
 													</div> -->
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">昵称</label>
+														<label class="control-label" for="frm_nickname">昵称</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" placeholder="昵称" />
+															<input type="text" class='input-large' id="frm_nickname" name='nickname' placeholder="昵称" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">推荐人编号</label>
+														<label class="control-label" for="frm_real_name">姓名</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" placeholder="推荐人编号" value='M08351506' />
+															<input type="text" class='input-large' id="frm_real_name" name='real_name' placeholder="姓名" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">姓名</label>
+														<label class="control-label" for="frm_mobile">手机号码</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" placeholder="姓名" />
+															<input type="text" class='input-large' id="frm_mobile" name='mobile' placeholder="手机号码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_USER_PASS">手机号码</label>
+														<label class="control-label" for="frm_email">电子邮箱</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_USER_PASS" placeholder="手机号码" />
+															<input type="text" class='input-large' id="frm_email" name='email' placeholder="电子邮箱" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">电子邮箱</label>
+														<label class="control-label" for="frm_user_pass">登录密码</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_NEW_PASS_2" placeholder="电子邮箱" />
+															<input type="text" class='input-small' id="frm_user_pass" name='user_pass' placeholder="登录密码" />
+															<input type="text" class='input-small' id="frm_user_pass_2" placeholder="重复登录密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">登录密码</label>
+														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="登录密码" />
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="重复登录密码" />
+															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+															<input type="password" class='input-small' id="frm_user_pass_safe_2" placeholder="重复安全密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">安全密码</label>
+														<label class="control-label" for="frm_verifyCode">图形验证码</label>
 
 														<div class="controls">
-															<input type="password" class='input-small' id="editFrm_NEW_PASS_2" placeholder="安全密码" />
-															<input type="password" class='input-small' id="editFrm_NEW_PASS_2" placeholder="重复安全密码" />
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">图形验证码</label>
-
-														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="图形验证码" />
+															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
 															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
 														</div>
 													</div>
-													<div class="control-group">
+													<!-- <div class="control-group">
 														<label class="control-label" for="editFrm_NEW_PASS_2">短信验证码</label>
 
 														<div class="controls">
 															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
 															<a href='javascript:;' class="btn btn-mini btn-danger">获取短信验证码</a>
 														</div>
-													</div>
+													</div> -->
 													<div class="form-actions">
 														<button class="btn btn-info" type="button">
 															<i class="icon-ok bigger-110"></i>
