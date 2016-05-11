@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.List;
+
 import com.momohelp.model.User;
 
 /**
@@ -10,6 +12,8 @@ import com.momohelp.model.User;
 public interface UserService extends IService<User> {
 
 	User getByName(String name);
+
+	List<User> findByUser(User user, int page, int rows);
 
 	/**
 	 * 登陆密码重置

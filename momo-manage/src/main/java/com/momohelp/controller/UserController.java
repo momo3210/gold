@@ -2,6 +2,7 @@ package com.momohelp.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -249,8 +250,20 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/recommend" }, method = RequestMethod.GET)
-	public ModelAndView _i_recommendUI(HttpSession session) {
+	public ModelAndView _i_recommendUI(HttpSession session,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "100") int rows) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
+
+		String user_id = session.getAttribute("session.user.id").toString();
+		// TODO
+		User user = new User();
+		user.setPid(user_id);
+
+		List<User> list = userService.findByUser(user, page, Integer.MAX_VALUE);
+		result.addObject("data_list", list);
+
+		// TODO
 		result.addObject("nav_choose", ",04,0402,");
 		return result;
 	}

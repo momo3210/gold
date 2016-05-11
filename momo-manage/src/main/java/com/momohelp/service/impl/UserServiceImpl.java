@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.github.pagehelper.PageHelper;
 import com.momohelp.model.User;
 import com.momohelp.service.UserService;
 
@@ -209,5 +210,36 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 */
 	private String genId() {
 		return "08351506";
+	}
+
+	@Override
+	public List<User> findByUser(User user, int page, int rows) {
+		Example example = new Example(User.class);
+		example.setOrderByClause("create_time desc");
+		// TODO
+		if (null != user) {
+			Example.Criteria criteria = example.createCriteria();
+
+			// TODO
+			String apikey = StringUtil.isEmpty(user.getApikey());
+			if (null != apikey) {
+				criteria.andEqualTo("apikey", apikey);
+			}
+
+			// TODO
+			String seckey = StringUtil.isEmpty(user.getSeckey());
+			if (null != seckey) {
+				criteria.andEqualTo("seckey", seckey);
+			}
+
+			// TODO
+			String pid = StringUtil.isEmpty(user.getPid());
+			if (null != pid) {
+				criteria.andEqualTo("pid", pid);
+			}
+
+		}
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
 	}
 }
