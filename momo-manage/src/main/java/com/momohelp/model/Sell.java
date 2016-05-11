@@ -23,9 +23,20 @@ public class Sell implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	/**
+	 * 卖出数量
+	 */
 	private Integer num_sell;
+
+	/**
+	 * 卖出时间
+	 */
 	private Date create_time;
 	private String user_id;
+
+	/**
+	 * 1静态钱包</br> 2动态钱包
+	 */
 	private Integer type_id;
 
 	public String getId() {

@@ -23,9 +23,19 @@ public class FarmFeed implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	/**
+	 * 喂食时间
+	 */
 	private Date create_time;
 
+	/**
+	 * 喂食数量
+	 */
 	private Integer num_feed;
+
+	/**
+	 * 关联批次
+	 */
 	private String w_farm_chick_id;
 
 	public String getId() {

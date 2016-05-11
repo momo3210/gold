@@ -26,35 +26,57 @@ public class Farm implements Serializable {
 	private String user_id;
 	private Date create_time;
 
-	private Date out_time;
+	/**
+	 * 出局时间（理论）
+	 */
+	private Date time_out;
+	/**
+	 * 成熟时间
+	 */
+	private Date time_ripe;
+
+	/**
+	 * 当前鸡数量
+	 */
 	private Integer num_current;
+
+	/**
+	 * 购买时数量
+	 */
 	private Integer num_buy;
+
+	/**
+	 * 已成交数量
+	 */
 	private Integer num_deal;
 
 	/**
 	 * 计算奖金（0未计算，1已计算）
 	 */
-	private Integer calc_bonus;
+	private Integer flag_calc_bonus;
 
-	/**
-	 * 实际的出局时间
-	 */
-	private Date out_time_actual;
-
-	public Date getOut_time_actual() {
-		return out_time_actual;
+	public Integer getFlag_calc_bonus() {
+		return flag_calc_bonus;
 	}
 
-	public void setOut_time_actual(Date out_time_actual) {
-		this.out_time_actual = out_time_actual;
+	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
+		this.flag_calc_bonus = flag_calc_bonus;
 	}
 
-	public Integer getCalc_bonus() {
-		return calc_bonus;
+	public Date getTime_out() {
+		return time_out;
 	}
 
-	public void setCalc_bonus(Integer calc_bonus) {
-		this.calc_bonus = calc_bonus;
+	public void setTime_out(Date time_out) {
+		this.time_out = time_out;
+	}
+
+	public Date getTime_ripe() {
+		return time_ripe;
+	}
+
+	public void setTime_ripe(Date time_ripe) {
+		this.time_ripe = time_ripe;
 	}
 
 	public String getId() {
@@ -79,14 +101,6 @@ public class Farm implements Serializable {
 
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
-	}
-
-	public Date getOut_time() {
-		return out_time;
-	}
-
-	public void setOut_time(Date out_time) {
-		this.out_time = out_time;
 	}
 
 	public Integer getNum_current() {

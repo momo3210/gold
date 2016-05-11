@@ -23,9 +23,19 @@ public class Buy implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	/**
+	 * 关联批次
+	 */
 	private String w_farm_chick_id;
 
+	/**
+	 * 购买数量
+	 */
 	private Integer num_buy;
+
+	/**
+	 * 购买时间
+	 */
 	private Date create_time;
 
 	public String getId() {

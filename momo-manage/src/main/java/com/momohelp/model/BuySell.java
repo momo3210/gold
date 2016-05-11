@@ -23,10 +23,29 @@ public class BuySell implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	/**
+	 * 匹配数量（双方）
+	 */
 	private Integer num_matching;
+
+	/**
+	 * 匹配时间
+	 */
 	private Date create_time;
+
+	/**
+	 * 卖盘ID
+	 */
 	private String p_buy_id;
+
+	/**
+	 * 卖盘ID
+	 */
 	private String p_sell_id;
+
+	/**
+	 * 0初始化</br> 1A打款B</br> 2B确认</br> 3问题单（双方谁不确认都会变成问题单）
+	 */
 	private Integer status;
 
 	public String getId() {

@@ -17,14 +17,39 @@ import javax.persistence.Table;
 public class FarmHatch implements Serializable {
 
 	private static final long serialVersionUID = 4120592353591992995L;
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	/**
+	 * 孵化时间
+	 */
 	private Date create_time;
+
+	/**
+	 * 孵化数量
+	 */
 	private Integer num_hatch;
+
+	/**
+	 * 关联批次
+	 */
 	private String w_farm_chick_id;
+
+	/**
+	 * 最后一笔卖出
+	 */
+	private Integer flag_is_last;
+
+	public Integer getFlag_is_last() {
+		return flag_is_last;
+	}
+
+	public void setFlag_is_last(Integer flag_is_last) {
+		this.flag_is_last = flag_is_last;
+	}
 
 	public String getId() {
 		return id;
