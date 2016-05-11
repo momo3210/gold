@@ -180,11 +180,12 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
 	public String _i_profileUI(Map<String, Object> map, HttpSession session) {
-		Object obj = session.getAttribute("session.user");
+		String user_id = session.getAttribute("session.user.id").toString();
 		// TODO
-		map.put("data_user", obj);
+		User user = userService.selectByKey(user_id);
+		map.put("data_user", user);
+		// TODO
 		map.put("nav_choose", ",03,0301,");
-		// TODO
 		return "i/user/1.0.1/profile";
 	}
 
