@@ -1,6 +1,7 @@
 package com.momohelp.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.momohelp.model.User;
 
@@ -66,4 +67,15 @@ public interface UserService extends IService<User> {
 	 * @return
 	 */
 	String[] changePwdSafe(String key, String old_pass, String new_pass);
+
+	/**
+	 * 获取当前用户下 对应的直接一代 各个等级人员数量
+	 *
+	 * @param key
+	 *            当前用户id
+	 *
+	 * @return
+	 */
+	Map<String, Object> countMemberNOAndlevel(String key);
+
 }

@@ -1,6 +1,7 @@
 package com.momohelp.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import net.foreworld.util.StringUtil;
 import net.foreworld.util.encryptUtil.MD5;
@@ -241,5 +242,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 		PageHelper.startPage(page, rows);
 		return selectByExample(example);
+	}
+
+	@Override
+	public Map<String, Object> countMemberNOAndlevel(String key) {
+		return ((UserService) mapper).countMemberNOAndlevel(key);
 	}
 }
