@@ -138,35 +138,35 @@
 
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal">
+												<form class="form-horizontal" id='frm'>
 													<div class="control-group">
 														<label class="control-label" for='frm_select'>买入鸡苗</label>
 
 														<div class="controls">
 															<select class='input-large' id='frm_select'>
-																<option value="">RMB：${(data_lv_min)!} 至 ${(data_lv_max)!} 的鸡苗</option>
+																<option>RMB：${(data_lv_min)!} 至 ${(data_lv_max)!} 只鸡苗</option>
 															</select>
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">具体数量</label>
+														<label class="control-label" for="frm_num_buy">具体数量</label>
 
 														<div class="controls">
-															<input type="text" class="input-small" id="spinner3" />
+															<input type="text" class="input-small" id="frm_num_buy" name='num_buy' />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">安全密码</label>
+														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm_NEW_PASS_2" placeholder="安全密码" />
+															<input type="password" class='input-large' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">图形验证码</label>
+														<label class="control-label" for="frm_verifyCode">图形验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="图形验证码" />
+															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
 															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
 														</div>
 													</div>
@@ -260,7 +260,7 @@
 		<#include "/_pagelet/js.html"/>
 		<script>
 		$(function(){
-			$('#spinner3').ace_spinner({
+			$('#frm_num_buy').ace_spinner({
 				value: ${(data_lv_min)!},
 				min: ${(data_lv_min)!},
 				max: ${(data_lv_max)!},
