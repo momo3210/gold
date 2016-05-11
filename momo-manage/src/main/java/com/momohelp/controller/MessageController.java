@@ -1,6 +1,7 @@
 package com.momohelp.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -34,8 +35,18 @@ public class MessageController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/message/" }, method = RequestMethod.GET)
-	public ModelAndView _i_indexUI(HttpSession session) {
+	public ModelAndView _i_indexUI(HttpSession session,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "100") int rows) {
 		ModelAndView result = new ModelAndView("i/message/1.0.2/index");
+
+		Message message = new Message();
+
+		List<Message> list = messageService.findByMessage(message, page,
+				Integer.MAX_VALUE);
+		result.addObject("data_list", list);
+
+		// TODO
 		result.addObject("nav_choose", ",07,0702,");
 		return result;
 	}

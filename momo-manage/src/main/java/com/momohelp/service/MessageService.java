@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.List;
+
 import com.momohelp.model.Message;
 
 /**
@@ -9,4 +11,5 @@ import com.momohelp.model.Message;
  */
 public interface MessageService extends IService<Message> {
 
+	List<Message> findByMessage(Message message, int page, int rows);
 }
