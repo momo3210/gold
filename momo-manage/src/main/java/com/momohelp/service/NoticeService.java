@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.List;
+
 import com.momohelp.model.Notice;
 
 /**
@@ -9,4 +11,5 @@ import com.momohelp.model.Notice;
  */
 public interface NoticeService extends IService<Notice> {
 
+	List<Notice> findByNotice(Notice notice, int page, int rows);
 }

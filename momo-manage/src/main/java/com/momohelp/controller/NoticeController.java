@@ -1,6 +1,7 @@
 package com.momohelp.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -35,8 +36,17 @@ public class NoticeController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/notice/" }, method = RequestMethod.GET)
-	public ModelAndView _i_indexUI(HttpSession session) {
+	public ModelAndView _i_indexUI(HttpSession session,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "100") int rows) {
 		ModelAndView result = new ModelAndView("i/notice/1.0.2/index");
+
+		Notice notice = new Notice();
+
+		List<Notice> list = noticeService.findByNotice(notice, page,
+				Integer.MAX_VALUE);
+		result.addObject("data_list", list);
+
 		result.addObject("nav_choose", ",07,0701,");
 		return result;
 	}
