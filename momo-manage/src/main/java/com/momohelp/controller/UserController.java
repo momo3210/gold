@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.momohelp.model.Cfg;
 import com.momohelp.model.User;
+import com.momohelp.service.CfgService;
 import com.momohelp.service.UserService;
 
 /**
@@ -30,6 +32,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CfgService cfgService;
 
 	/**
 	 * 我的牧场
@@ -277,6 +282,34 @@ public class UserController {
 	@RequestMapping(value = { "/user/buyMo" }, method = RequestMethod.GET)
 	public ModelAndView _i_buyMoUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyMo");
+
+		User user = (User) session.getAttribute("session.user");
+
+		String lv = user.getLv();
+
+		String min = null, max = null;
+
+		if ("05".equals(lv)) {
+			min = "2001";
+			max = "2002";
+		} else if ("06".equals(lv)) {
+			min = "2003";
+			max = "2004";
+		} else if ("07".equals(lv)) {
+			min = "2005";
+			max = "2006";
+		} else if ("08".equals(lv)) {
+			min = "2007";
+			max = "2008";
+		}
+
+		Cfg minObj = cfgService.selectByKey(min);
+		Cfg maxObj = cfgService.selectByKey(max);
+
+		result.addObject("data_lv_min", minObj.getValue_());
+		result.addObject("data_lv_max", maxObj.getValue_());
+
+		// TODO
 		result.addObject("nav_choose", ",05,0501,");
 		return result;
 	}

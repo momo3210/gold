@@ -140,14 +140,11 @@
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal">
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">买入鸡苗</label>
+														<label class="control-label" for='frm_select'>买入鸡苗</label>
 
 														<div class="controls">
-															<select id="form-field-select-1" class='input-large'>
-																<option value="">RMB：100 至 5000 的鸡苗</option>
-																<option value="">RMB：1000 至 5000 的鸡苗</option>
-																<option value="">RMB：2000 至 5000 的鸡苗</option>
-																<option value="">RMB：3000 至 5000 的鸡苗</option>
+															<select class='input-large' id='frm_select'>
+																<option value="">RMB：${(data_lv_min)!} 至 ${(data_lv_max)!} 的鸡苗</option>
 															</select>
 														</div>
 													</div>
@@ -173,7 +170,7 @@
 															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
 														</div>
 													</div>
-													<div class="control-group">
+													<#-- <!-- <div class="control-group">
 														<label class="control-label" for="editFrm_OLD_PASS">手机号码</label>
 
 														<div class="controls">
@@ -187,7 +184,7 @@
 															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
 															<button class="btn btn-mini btn-danger">获取短信验证码</button>
 														</div>
-													</div>
+													</div> -->
 													<div class="form-actions">
 														<button class="btn btn-info" type="button">
 															<i class="icon-ok bigger-110"></i>
