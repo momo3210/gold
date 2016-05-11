@@ -1,0 +1,174 @@
+<#include "/_pagelet/constant.html"/>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>网站公告 | 陌陌黄金24小时互助</title>
+		<#include "/_pagelet/header.html"/>
+	</head>
+
+	<body>
+		<div class="navbar">
+			<div class="navbar-inner">
+				<#include "../../default/1.0.2/_pagelet/banner.html"/>
+			</div><!--/.navbar-inner-->
+		</div>
+
+		<div class="main-container container-fluid">
+			<a class="menu-toggler" id="menu-toggler" href="#">
+				<span class="menu-text"></span>
+			</a>
+
+			<div class="sidebar" id="sidebar">
+				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+						<button class="btn btn-small btn-success">
+							<i class="icon-signal"></i>
+						</button>
+
+						<button class="btn btn-small btn-info">
+							<i class="icon-pencil"></i>
+						</button>
+
+						<button class="btn btn-small btn-warning">
+							<i class="icon-group"></i>
+						</button>
+
+						<button class="btn btn-small btn-danger">
+							<i class="icon-cogs"></i>
+						</button>
+					</div>
+
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success"></span>
+
+						<span class="btn btn-info"></span>
+
+						<span class="btn btn-warning"></span>
+
+						<span class="btn btn-danger"></span>
+					</div>
+				</div><!--#sidebar-shortcuts-->
+
+				<#include "../../default/1.0.2/_pagelet/nav.html"/>
+			</div>
+
+			<div class="main-content">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="icon-home home-icon"></i>
+							<a href="/">首页</a>
+
+							<span class="divider">
+								<i class="icon-angle-right arrow-icon"></i>
+							</span>
+						</li>
+						<li class="active">网站公告</li>
+					</ul><!--.breadcrumb-->
+
+					<div class="nav-search" id="nav-search">
+						<form class="form-search" />
+							<span class="input-icon">
+								<input type="text" placeholder="搜索" class="input-small nav-search-input" id="nav-search-input" autocomplete="off" />
+								<i class="icon-search nav-search-icon"></i>
+							</span>
+						</form>
+					</div><!--#nav-search-->
+				</div>
+
+				<div class="page-content">
+					<div class="page-header position-relative">
+						<h1>
+							网站公告
+							<small>
+								<i class="icon-double-angle-right"></i>
+								Notice List
+							</small>
+						</h1>
+					</div><!--/.page-header-->
+
+					<div class="row-fluid">
+						<div class="span12 widget-container-span">
+							<div class="widget-box">
+								<div class="widget-header">
+									<h5>网站公告 Notice</h5>
+
+									<!-- <div class="widget-toolbar">
+										<a href="#" data-action="settings">
+											<i class="icon-cog"></i>
+										</a>
+
+										<a href="#" data-action="reload">
+											<i class="icon-refresh"></i>
+										</a>
+
+										<a href="#" data-action="collapse">
+											<i class="icon-chevron-up"></i>
+										</a>
+
+										<a href="#" data-action="close">
+											<i class="icon-remove"></i>
+										</a>
+									</div> -->
+								</div>
+
+								<div class="widget-body">
+									<div class="widget-main">
+										<p>${(data_doc.title)!}</p>
+										<p>${(data_doc.content)!}</p>
+										<p>${(data_doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!--/.page-content-->
+
+				<div class="ace-settings-container" id="ace-settings-container">
+					<div class="btn btn-app btn-mini btn-warning ace-settings-btn" id="ace-settings-btn">
+						<i class="icon-cog bigger-150"></i>
+					</div>
+
+					<div class="ace-settings-box" id="ace-settings-box">
+						<div>
+							<div class="pull-left">
+								<select id="skin-colorpicker" class="hide">
+									<option data-class="default" value="#438EB9" />#438EB9
+									<option data-class="skin-1" value="#222A2D" />#222A2D
+									<option data-class="skin-2" value="#C6487E" />#C6487E
+									<option data-class="skin-3" value="#D0D0D0" />#D0D0D0
+								</select>
+							</div>
+							<span>&nbsp; Choose Skin</span>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace-checkbox-2" id="ace-settings-header" />
+							<label class="lbl" for="ace-settings-header"> Fixed Header</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace-checkbox-2" id="ace-settings-sidebar" />
+							<label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace-checkbox-2" id="ace-settings-breadcrumbs" />
+							<label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace-checkbox-2" id="ace-settings-rtl" />
+							<label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
+						</div>
+					</div>
+				</div><!--/#ace-settings-container-->
+			</div><!--/.main-content-->
+		</div><!--/.main-container-->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-small btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+		<#include "/_pagelet/js.html"/>
+	</body>
+</html>
