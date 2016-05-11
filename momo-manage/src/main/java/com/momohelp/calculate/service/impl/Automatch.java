@@ -3,10 +3,7 @@ package com.momohelp.calculate.service.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -93,6 +90,7 @@ public class Automatch implements Serializable {
 		int length = order.getMoney();
 		// 查询最先待匹配的前十单
 		// 模拟10单
+		System.out.println(length);
 
 	}
 
@@ -159,7 +157,7 @@ public class Automatch implements Serializable {
 				return;
 			}
 		}
-
+		System.out.println(middle+ "=====middle=======");
 	}
 
 }

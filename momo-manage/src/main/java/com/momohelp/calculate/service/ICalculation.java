@@ -1,24 +1,19 @@
 package com.momohelp.calculate.service;
 
-import com.momohelp.model.User;
+import java.util.List;
+
+import com.momohelp.model.Farm;
+
 
 public interface ICalculation {
 
-	// 推荐奖计算
-	public abstract void recommend(User user);
+    //奖金基数计算
+	public abstract int base();
 
-	// 管理奖计算
-	public abstract void manage(User user);
-    //烧伤奖计算
-	public abstract void burn(User user);
-
-	// 鸡饲料计算
-	public abstract void feed(User user);
-
-	// 下蛋利息计算
-	public abstract void egg();
-
-	// 鸡苗饲养利息计算
-	public abstract void keepe();
+	//买卖盘自动匹配
+	public abstract  boolean automatch();
+	
+	//等级计算
+	public abstract  boolean calculateLevel(List<Farm> farms);
 
 }
