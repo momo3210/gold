@@ -323,6 +323,12 @@ public class UserController {
 	@RequestMapping(value = { "/user/sellMo" }, method = RequestMethod.GET)
 	public ModelAndView _i_sellMoUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellMo");
+
+		// 卖出鸡苗上限
+		Cfg maxObj = cfgService.selectByKey("2011");
+
+		result.addObject("data_sell_max", maxObj.getValue_());
+
 		result.addObject("nav_choose", ",05,0502,");
 		return result;
 	}
