@@ -327,10 +327,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.GET)
-	public ModelAndView _i_buyTicketUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/buyTicket");
-		result.addObject("nav_choose", ",06,0602,");
-		return result;
+	public String _i_buyTicketUI(Map<String, Object> map, HttpSession session) {
+		String user_id = session.getAttribute("session.user.id").toString();
+		// TODO
+		User user = userService.selectByKey(user_id);
+		map.put("data_user", user);
+		// TODO
+		map.put("nav_choose", ",06,0602,");
+		return "i/user/1.0.1/buyTicket";
 	}
 
 	/**
@@ -342,6 +346,12 @@ public class UserController {
 	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.GET)
 	public ModelAndView _i_buyFoodUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyFood");
+
+		String user_id = session.getAttribute("session.user.id").toString();
+		// TODO
+		User user = userService.selectByKey(user_id);
+		result.addObject("data_user", user);
+
 		result.addObject("nav_choose", ",06,0603,");
 		return result;
 	}

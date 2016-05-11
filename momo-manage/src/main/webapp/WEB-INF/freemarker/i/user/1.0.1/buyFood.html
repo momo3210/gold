@@ -127,17 +127,17 @@
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal">
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">饲料余额</label>
+														<label class="control-label">饲料余额</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" placeholder="饲料余额" value='0' disabled />
+															<input type="text" class='input-large' value='${(data_user.num_food)!}' disabled />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">充值张数</label>
+														<label class="control-label" for="frm_num_food">充值张数</label>
 
 														<div class="controls">
-															<input type="text" class="input-small" id="spinner3" />
+															<input type="text" class="input-small" id="frm_num_food" name='num_food' />
 														</div>
 													</div>
 													<div class="form-actions">
@@ -215,7 +215,7 @@
 		<#include "/_pagelet/js.html"/>
 		<script>
 		$(function(){
-			$('#spinner3').ace_spinner({
+			$('#frm_num_food').ace_spinner({
 				value: 1,
 				min: 1,
 				max: 10000,
