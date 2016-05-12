@@ -201,6 +201,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	private String[] checkSafe(String key, String pass_safe) {
+		User user = selectByKey(key);
+
+		if (MD5.encode(pass_safe).equals(user.getUser_pass_safe())) {
+			return null;
+		} // IF
+
 		return new String[] { "安全密码输入错误" };
 	}
 

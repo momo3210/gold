@@ -197,12 +197,31 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_profile(User user, HttpSession session) {
+	public Map<String, Object> _i_profile(
+			@RequestParam(required = true) String verifyCode, User user,
+			HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		userService.editInfo(user);
-		result.put("success", true);
 		// TODO
+		String svc = session.getAttribute("session.verifyCode").toString();
+		if (!verifyCode.equals(svc)) {
+			result.put("msg", new String[] { "验证码输入错误" });
+			result.put("success", false);
+			return result;
+		} // IF
+
+		// 设置主键
+		user.setId(session.getAttribute("session.user.id").toString());
+
+		String[] msg = userService.editInfo(user);
+		if (null != msg) {
+			result.put("msg", msg);
+			result.put("success", false);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
 		return result;
 	}
 
