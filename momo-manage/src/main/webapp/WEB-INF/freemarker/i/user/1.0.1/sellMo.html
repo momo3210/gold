@@ -260,7 +260,7 @@
 								静态得到帮助金额100的整数倍；动态得到帮助金额每天最低1000元最高5000元，500的整数倍。
 							</div>
 
-							<!-- <div class="row-fluid">
+							<#-- <!-- <div class="row-fluid">
 								<div class="span12">
 									<ul>
 										<li>M0级别会员可以选择100-1000的M包，M3级别只能选择2000-5000的M包，M4及以上级别只能选择3000-5000的M包。</li>
@@ -306,6 +306,14 @@
 
 														<div class="controls">
 															<input type="password" class='input-large' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm_verifyCode">图形验证码</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
+															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
 														</div>
 													</div>
 													<div class="form-actions">
@@ -381,8 +389,19 @@
 		</a>
 
 		<#include "/_pagelet/js.html"/>
+
 		<script>
+		$('#img_verifyCode').click(function(){
+			showVerifyCode();
+		});
+
+		function showVerifyCode(){
+			$('#img_verifyCode').attr('src', '/verifyCode.jpg?ts='+ (new Date()).valueOf());
+		}
+
 		$(function(){
+			showVerifyCode();
+
 			$('#frm_num_sell').ace_spinner({
 				value: 10,
 				min: 10,
