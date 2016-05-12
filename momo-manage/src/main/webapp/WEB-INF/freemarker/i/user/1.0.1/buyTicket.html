@@ -274,7 +274,7 @@
 
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal">
+												<form class="form-horizontal" id='frm'>
 													<div class="control-group">
 														<label class="control-label">门票余额</label>
 
@@ -283,21 +283,21 @@
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_num_ticket">充值张数</label>
+														<label class="control-label" for="frm_num_use">充值张数</label>
 
 														<div class="controls">
-															<input type="text" class="input-small" id="frm_num_ticket" name='num_ticket' />
+															<input type="text" class="input-small" id="frm_num_use" name='num_use' />
 														</div>
 													</div>
 													<div class="control-group">
 														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+															<input type="password" class='input-small' id='frm_user_pass_safe' name='user_pass_safe' placeholder="安全密码" />
 														</div>
 													</div>
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -372,7 +372,7 @@
 
 		<script>
 		$(function(){
-			$('#frm_num_ticket').ace_spinner({
+			$('#frm_num_use').ace_spinner({
 				value: 1,
 				min: 1,
 				max: 10000,
@@ -381,6 +381,27 @@
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,
 				btn_down_class: 'btn-danger'
+			});
+
+			$('#btn_submit').click(function() {
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/buyTicket',
+					type : 'POST',
+					dataType : 'JSON',
+					data : $('#frm').serializeObjectForm(),
+					success : function(data) {
+						if (data.success) {
+							alert('购买门票成功')
+							location.href = '${(conf_html_virtualPath)!}user/buyTicket';
+							return;
+						} // END
+						if (data.msg)
+							alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
 			});
 		});
 		</script>

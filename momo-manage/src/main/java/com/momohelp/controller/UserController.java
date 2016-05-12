@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Cfg;
+import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.UserService;
 
 /**
@@ -35,6 +37,9 @@ public class UserController {
 
 	@Autowired
 	private CfgService cfgService;
+
+	@Autowired
+	private MaterialRecordService materialRecordService;
 
 	/**
 	 * 我的牧场
@@ -410,6 +415,32 @@ public class UserController {
 		// TODO
 		map.put("nav_choose", ",06,0602,");
 		return "i/user/1.0.1/buyTicket";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_buyTicket(
+			@RequestParam(required = true) String user_pass_safe,
+			MaterialRecord materialRecord, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// 组合数据
+		materialRecord.setUser_id(session.getAttribute("session.user.id")
+				.toString());
+		materialRecord.setStatus(0);
+		materialRecord.setType_id(1);
+		materialRecord.setComment("购买门票 +1");
+
+		String[] msg = materialRecordService.saveNew(materialRecord);
+		if (null != msg) {
+			result.put("msg", msg);
+			result.put("success", false);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
+		return result;
 	}
 
 	/**
