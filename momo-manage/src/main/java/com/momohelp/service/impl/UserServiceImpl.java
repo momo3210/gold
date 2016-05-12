@@ -235,11 +235,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] editInfo(User user) {
-		String[] checkSafe = checkSafe(user.getId(), user.getUser_pass_safe());
-		if (null != checkSafe) {
-			return checkSafe;
-		} // IF
-
 		User newUser = new User();
 		newUser.setNickname(user.getNickname());
 		newUser.setAlipay_account(user.getAlipay_account());
@@ -251,18 +246,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		newUser.setId(user.getId());
 
 		super.updateNotNull(newUser);
-
 		return null;
-	}
-
-	private String[] checkSafe(String key, String pass_safe) {
-		User user = selectByKey(key);
-
-		if (MD5.encode(pass_safe).equals(user.getUser_pass_safe())) {
-			return null;
-		} // IF
-
-		return new String[] { "安全密码输入错误" };
 	}
 
 	/**

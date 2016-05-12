@@ -42,6 +42,23 @@ public class UserController {
 	private MaterialRecordService materialRecordService;
 
 	/**
+	 * 安全密码验证
+	 *
+	 * @param key
+	 * @param pass_safe
+	 * @return
+	 */
+	private String[] checkSafe(String key, String pass_safe) {
+		User user = userService.selectByKey(key);
+
+		if (MD5.encode(pass_safe).equals(user.getUser_pass_safe())) {
+			return null;
+		} // IF
+
+		return new String[] { "安全密码输入错误" };
+	}
+
+	/**
 	 * 我的牧场
 	 *
 	 * @param session
@@ -217,6 +234,13 @@ public class UserController {
 
 		// 设置主键
 		user.setId(session.getAttribute("session.user.id").toString());
+
+		String[] checkSafe = checkSafe(user.getId(), user.getUser_pass_safe());
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			result.put("success", false);
+			return result;
+		} // IF
 
 		String[] msg = userService.editInfo(user);
 		if (null != msg) {
@@ -424,6 +448,15 @@ public class UserController {
 			MaterialRecord materialRecord, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
+				.toString(), user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			result.put("success", false);
+			return result;
+		} // IF
+
 		// 组合数据
 		materialRecord.setUser_id(session.getAttribute("session.user.id")
 				.toString());
@@ -459,6 +492,41 @@ public class UserController {
 		result.addObject("data_user", user);
 
 		result.addObject("nav_choose", ",06,0603,");
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_buyFood(
+			@RequestParam(required = true) String user_pass_safe,
+			MaterialRecord materialRecord, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
+				.toString(), user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			result.put("success", false);
+			return result;
+		} // IF
+
+		// 组合数据
+		materialRecord.setUser_id(session.getAttribute("session.user.id")
+				.toString());
+		materialRecord.setStatus(0);
+		materialRecord.setType_id(2);
+		materialRecord.setComment("购买饲料 +1");
+
+		String[] msg = materialRecordService.saveNew(materialRecord);
+		if (null != msg) {
+			result.put("msg", msg);
+			result.put("success", false);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
 		return result;
 	}
 
