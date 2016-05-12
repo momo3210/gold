@@ -1,5 +1,6 @@
 package com.momohelp.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +115,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		newUser.setEmail(user.getEmail());
 		newUser.setUser_pass(MD5.encode(user.getUser_pass()));
 		newUser.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
+		newUser.setCreate_time(new Date());
+
+		newUser.setPid(user.getPid());
+		newUser.setFamily_id(user.getFamily_id());
+		newUser.setDepth(user.getDepth());
 
 		newUser.setTotal_dynamic(0.00);
 		newUser.setTotal_food(0);
@@ -127,6 +133,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		// 贫农
 		newUser.setLv("05");
+		newUser.setStatus(1);
+		newUser.setRole_id(2);
 
 		newUser.setId(genId());
 		save(newUser);

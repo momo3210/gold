@@ -252,8 +252,25 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_createAccount(User user, HttpSession session) {
+	public Map<String, Object> _i_createAccount(
+			@RequestParam(required = true) String verifyCode, User user,
+			HttpSession session) {
+		// TODO
 		Map<String, Object> result = new HashMap<String, Object>();
+
+		// TODO
+		String svc = session.getAttribute("session.verifyCode").toString();
+		if (!verifyCode.equals(svc)) {
+			result.put("msg", new String[] { "验证码输入错误" });
+			result.put("success", false);
+			return result;
+		} // IF
+
+		// 我的信息
+		User my = (User) session.getAttribute("session.user");
+		user.setDepth(my.getDepth() + 1);
+		user.setFamily_id(my.getFamily_id());
+		user.setPid(my.getId());
 
 		String[] msg = userService.saveNew(user);
 
