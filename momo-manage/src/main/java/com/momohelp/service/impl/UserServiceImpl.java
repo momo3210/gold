@@ -271,7 +271,16 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 * @return
 	 */
 	private String genId() {
-		return "08351506";
+		String id = null;
+		User user = null;
+		do {
+			// 算法
+			int i = (int) ((Math.random() * 9 + 1) * 10000000);
+			id = String.valueOf(i);
+			// END
+			user = selectByKey(id);
+		} while (null != user);
+		return id;
 	}
 
 	@Override
