@@ -40,12 +40,21 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>AuthImage</servlet-name>
+		<servlet-class>com.momohelp.util.AuthImage</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthImage</servlet-name>
+		<url-pattern>/verifyCode.jpg</url-pattern>
+	</servlet-mapping>
+
 	<filter>
 		<filter-name>PermitFilter</filter-name>
 		<filter-class>com.momohelp.filter.PermitFilter</filter-class>
 		<init-param>
 			<param-name>url-suffix</param-name>
-			<param-value>js,css,html</param-value>
+			<param-value>js,css,html,jpg</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

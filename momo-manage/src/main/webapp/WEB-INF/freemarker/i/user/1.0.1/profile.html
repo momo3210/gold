@@ -358,7 +358,7 @@
 
 														<div class="controls">
 															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
-															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
+															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
 														</div>
 													</div>
 													<!-- <div class="control-group">
@@ -442,5 +442,19 @@
 		</a>
 
 		<#include "/_pagelet/js.html"/>
+
+		<script>
+		$('#img_verifyCode').click(function(){
+			showVerifyCode();
+		});
+
+		function showVerifyCode(){
+			$('#img_verifyCode').attr('src', '/verifyCode.jpg?ts='+ (new Date()).valueOf());
+		}
+
+		$(function(){
+			showVerifyCode();
+		});
+		</script>
 	</body>
 </html>
