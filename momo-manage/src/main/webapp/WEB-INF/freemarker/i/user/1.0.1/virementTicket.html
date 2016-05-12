@@ -293,11 +293,11 @@
 														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+															<input type="password" class='input-small' id='frm_user_pass_safe' name='user_pass_safe' placeholder="安全密码" />
 														</div>
 													</div>
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -380,6 +380,27 @@
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,
 				btn_down_class: 'btn-danger'
+			});
+
+			$('#btn_submit').click(function() {
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/virementTicket',
+					type : 'POST',
+					dataType : 'JSON',
+					data : $('#frm').serializeObjectForm(),
+					success : function(data) {
+						if (data.success) {
+							alert('门票转账成功')
+							location.href = '${(conf_html_virtualPath)!}user/virementTicket';
+							return;
+						} // END
+						if (data.msg)
+							alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
 			});
 		});
 		</script>

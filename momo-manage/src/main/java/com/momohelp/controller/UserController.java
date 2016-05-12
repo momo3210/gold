@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import net.foreworld.util.StringUtil;
 import net.foreworld.util.encryptUtil.MD5;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -543,6 +544,53 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/user/virementTicket" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_virementTicket(
+			@RequestParam(required = true) String user_pass_safe,
+			MaterialRecord materialRecord, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 参数验证
+		materialRecord.setTrans_user_id(StringUtil.isEmpty(materialRecord
+				.getTrans_user_id()));
+		if (null == materialRecord.getTrans_user_id()) {
+			result.put("msg", new String[] { "接收人不能为空" });
+			return result;
+		} // IF
+
+		// TODO
+		String my_id = session.getAttribute("session.user.id").toString();
+		if (my_id.equals(materialRecord.getTrans_user_id())) {
+			result.put("msg", new String[] { "接收人不能是自己" });
+			return result;
+		} // IF
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
+				.toString(), user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		// 组合数据
+		materialRecord.setUser_id(my_id);
+		materialRecord.setStatus(1);
+		materialRecord.setType_id(1);
+
+		String[] msg = materialRecordService.saveNew(materialRecord);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
+		return result;
+	}
+
 	/**
 	 * 饲料转账
 	 *
@@ -553,6 +601,53 @@ public class UserController {
 	public ModelAndView _i_virementFoodUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/virementFood");
 		result.addObject("nav_choose", ",06,0605,");
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/virementFood" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_virementFood(
+			@RequestParam(required = true) String user_pass_safe,
+			MaterialRecord materialRecord, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 参数验证
+		materialRecord.setTrans_user_id(StringUtil.isEmpty(materialRecord
+				.getTrans_user_id()));
+		if (null == materialRecord.getTrans_user_id()) {
+			result.put("msg", new String[] { "接收人不能为空" });
+			return result;
+		} // IF
+
+		// TODO
+		String my_id = session.getAttribute("session.user.id").toString();
+		if (my_id.equals(materialRecord.getTrans_user_id())) {
+			result.put("msg", new String[] { "接收人不能是自己" });
+			return result;
+		} // IF
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
+				.toString(), user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		// 组合数据
+		materialRecord.setUser_id(my_id);
+		materialRecord.setStatus(1);
+		materialRecord.setType_id(2);
+
+		String[] msg = materialRecordService.saveNew(materialRecord);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
 		return result;
 	}
 
