@@ -115,6 +115,20 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		newUser.setUser_pass(MD5.encode(user.getUser_pass()));
 		newUser.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
 
+		newUser.setTotal_dynamic(0.00);
+		newUser.setTotal_food(0);
+		newUser.setTotal_static(0.00);
+		newUser.setTotal_ticket(0);
+
+		newUser.setNum_dynamic(0.00);
+		newUser.setNum_food(0);
+		newUser.setNum_static(0.00);
+		newUser.setNum_ticket(0);
+
+		// 贫农
+		newUser.setLv("05");
+
+		newUser.setId(genId());
 		save(newUser);
 
 		// TODO

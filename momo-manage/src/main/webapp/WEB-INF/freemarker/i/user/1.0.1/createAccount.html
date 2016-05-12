@@ -348,7 +348,7 @@
 														</div>
 													</div> -->
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -432,6 +432,34 @@
 
 		$(function(){
 			showVerifyCode();
+
+			$('#btn_submit').click(function() {
+				if ($('#frm_user_pass').val() !== $('#frm_user_pass_2').val()) {
+					return alert('两次输入的登陆密码不一致');
+				}
+
+				if ($('#frm_user_pass_safe').val() !== $('#frm_user_pass_safe_2').val()) {
+					return alert('两次输入的安全密码不一致');
+				}
+
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/createAccount',
+					type : 'POST',
+					dataType : 'JSON',
+					data : $('#frm').serializeObjectForm(),
+					success : function(data) {
+						if (data.success){
+							alert('操作成功');
+							location.href = '${(conf_html_virtualPath)!}user/createAccount';
+							return;
+						}
+						alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
+			});
 		});
 		</script>
 	</body>
