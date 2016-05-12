@@ -279,7 +279,7 @@
 														<label class="control-label">门票余额</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' value='${(data_user.num_ticket)!}' disabled />
+															<input type="text" class='input-medium' value='${(data_user.num_ticket)!}' disabled />
 														</div>
 													</div>
 													<div class="control-group">
@@ -287,6 +287,13 @@
 
 														<div class="controls">
 															<input type="text" class="input-small" id="frm_num_ticket" name='num_ticket' />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
+
+														<div class="controls">
+															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
 														</div>
 													</div>
 													<div class="form-actions">
@@ -362,6 +369,7 @@
 		</a>
 
 		<#include "/_pagelet/js.html"/>
+
 		<script>
 		$(function(){
 			$('#frm_num_ticket').ace_spinner({

@@ -274,26 +274,26 @@
 
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal">
+												<form class="form-horizontal" id='frm'>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">接收人编号</label>
+														<label class="control-label" for="frm_trans_user_id">接收人编号</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" placeholder="接收人编号" />
+															<input type="text" class='input-medium' id="frm_trans_user_id" name='trans_user_id' placeholder="接收人编号" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">转账金额</label>
+														<label class="control-label" for="frm_num_use">转账金额</label>
 
 														<div class="controls">
-															<input type="text" class="input-small" id="spinner3" />
+															<input type="text" class="input-small" id="frm_num_use" name='num_use' />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_NEW_PASS_2">安全密码</label>
+														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-small' id="frm_NEW_PASS_2" placeholder="安全密码" />
+															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
 														</div>
 													</div>
 													<div class="form-actions">
@@ -371,7 +371,7 @@
 		<#include "/_pagelet/js.html"/>
 		<script>
 		$(function(){
-			$('#spinner3').ace_spinner({
+			$('#frm_num_use').ace_spinner({
 				value: 1,
 				min: 1,
 				max: 10000,
