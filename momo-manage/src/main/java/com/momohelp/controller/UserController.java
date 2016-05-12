@@ -267,10 +267,10 @@ public class UserController {
 		} // IF
 
 		// 我的信息
-		User my = (User) session.getAttribute("session.user");
-		user.setDepth(my.getDepth() + 1);
-		user.setFamily_id(my.getFamily_id());
-		user.setPid(my.getId());
+		User myInfo = (User) session.getAttribute("session.user");
+		user.setDepth(1 + myInfo.getDepth());
+		user.setFamily_id(myInfo.getFamily_id());
+		user.setPid(myInfo.getId());
 
 		String[] msg = userService.saveNew(user);
 

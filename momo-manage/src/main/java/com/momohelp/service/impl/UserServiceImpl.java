@@ -25,64 +25,55 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	private static final String DEFAULT_USER_PASS = MD5.encode("123456");
 
+	private User findByUser(User user) {
+		Example example = new Example(User.class);
+		// TODO
+		if (null != user) {
+			Example.Criteria criteria = example.createCriteria();
+
+			// TODO
+			String email = StringUtil.isEmpty(user.getEmail());
+			if (null != email) {
+				criteria.andEqualTo("email", email);
+			}
+
+			// TODO
+			String mobile = StringUtil.isEmpty(user.getMobile());
+			if (null != mobile) {
+				criteria.andEqualTo("mobile", mobile);
+			}
+
+			// TODO
+			String nickname = StringUtil.isEmpty(user.getNickname());
+			if (null != nickname) {
+				criteria.andEqualTo("nickname", nickname);
+			}
+		}
+
+		// TODO
+		List<User> list = selectByExample(example);
+		return (null == list || 0 == list.size()) ? null : list.get(0);
+	}
+
 	@Override
 	public User getByName(String name) {
 		User user = null;
 
-		// TODO
-		user = getByEmail(name);
+		user = new User();
+		user.setEmail(name);
+		user = findByUser(user);
 		if (null != user) {
 			return user;
 		}
 
-		user = getByMobile(name);
+		user = new User();
+		user.setMobile(name);
+		user = findByUser(user);
 		if (null != user) {
 			return user;
 		}
 
 		return null;
-	}
-
-	/**
-	 * 查询用户
-	 *
-	 * @param email
-	 * @return
-	 */
-	private User getByEmail(String email) {
-		Example example = new Example(User.class);
-		// TODO
-		Example.Criteria criteria = example.createCriteria();
-		// TODO
-		String _email = StringUtil.isEmpty(email);
-		if (null != _email)
-			criteria.andEqualTo("email", _email);
-
-		List<User> list = selectByExample(example);
-
-		// TODO
-		return (null == list || 0 == list.size()) ? null : list.get(0);
-	}
-
-	/**
-	 * 查询用户
-	 *
-	 * @param mobile
-	 * @return
-	 */
-	private User getByMobile(String mobile) {
-		Example example = new Example(User.class);
-		// TODO
-		Example.Criteria criteria = example.createCriteria();
-		// TODO
-		String _mobile = StringUtil.isEmpty(mobile);
-		if (null != _mobile)
-			criteria.andEqualTo("mobile", _mobile);
-
-		List<User> list = selectByExample(example);
-
-		// TODO
-		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
 	@Override
@@ -96,48 +87,86 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] saveNew(User user) {
+		// 参数验证
+		user.setNickname(StringUtil.isEmpty(user.getNickname()));
+		if (null == user.getNickname()) {
+			return new String[] { "昵称不能为空" };
+		}
+
+		user.setReal_name(StringUtil.isEmpty(user.getReal_name()));
+		if (null == user.getReal_name()) {
+			return new String[] { "姓名不能为空" };
+		}
+
+		user.setMobile(StringUtil.isEmpty(user.getMobile()));
+		if (null == user.getMobile()) {
+			return new String[] { "手机号码不能为空" };
+		}
+
+		user.setEmail(StringUtil.isEmpty(user.getEmail()));
+		if (null == user.getEmail()) {
+			return new String[] { "电子邮箱不能为空" };
+		}
+
+		user.setUser_pass(StringUtil.isEmpty(user.getUser_pass()));
+		if (null == user.getUser_pass()) {
+			return new String[] { "登陆密码不能为空" };
+		}
+
+		user.setUser_pass_safe(StringUtil.isEmpty(user.getUser_pass_safe()));
+		if (null == user.getUser_pass_safe()) {
+			return new String[] { "安全密码不能为空" };
+		}
+
+		/**********/
+
 		User _user = null;
 
-		_user = getByMobile(user.getMobile());
+		_user = new User();
+		_user.setNickname(user.getNickname());
+		_user = findByUser(_user);
+		if (null != _user) {
+			return new String[] { "昵称已存在" };
+		} // IF
+
+		_user = new User();
+		_user.setMobile(user.getMobile());
+		_user = findByUser(_user);
 		if (null != _user) {
 			return new String[] { "手机号码已存在" };
 		} // IF
 
-		_user = getByEmail(user.getEmail());
+		_user = new User();
+		_user.setEmail(user.getEmail());
+		_user = findByUser(_user);
 		if (null != _user) {
 			return new String[] { "电子邮箱已存在" };
 		} // IF
 
-		User newUser = new User();
-		newUser.setNickname(user.getNickname());
-		newUser.setReal_name(user.getReal_name());
-		newUser.setMobile(user.getMobile());
-		newUser.setEmail(user.getEmail());
-		newUser.setUser_pass(MD5.encode(user.getUser_pass()));
-		newUser.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
-		newUser.setCreate_time(new Date());
+		/**********/
 
-		newUser.setPid(user.getPid());
-		newUser.setFamily_id(user.getFamily_id());
-		newUser.setDepth(user.getDepth());
+		// 附加数据
+		user.setUser_pass(MD5.encode(user.getUser_pass()));
+		user.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
+		user.setCreate_time(new Date());
 
-		newUser.setTotal_dynamic(0.00);
-		newUser.setTotal_food(0);
-		newUser.setTotal_static(0.00);
-		newUser.setTotal_ticket(0);
+		user.setTotal_dynamic(0.00);
+		user.setTotal_food(0);
+		user.setTotal_static(0.00);
+		user.setTotal_ticket(0);
 
-		newUser.setNum_dynamic(0.00);
-		newUser.setNum_food(0);
-		newUser.setNum_static(0.00);
-		newUser.setNum_ticket(0);
+		user.setNum_dynamic(0.00);
+		user.setNum_food(0);
+		user.setNum_static(0.00);
+		user.setNum_ticket(0);
 
 		// 贫农
-		newUser.setLv("05");
-		newUser.setStatus(1);
-		newUser.setRole_id(2);
+		user.setLv("05");
+		user.setStatus(1);
+		user.setRole_id(2);
 
-		newUser.setId(genId());
-		save(newUser);
+		user.setId(genId());
+		save(user);
 
 		// TODO
 		return null;
