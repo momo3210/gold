@@ -281,30 +281,30 @@
 
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal">
+												<form class="form-horizontal" id='frm1'>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">原登录密码</label>
+														<label class="control-label" for="frm1_user_pass_old">原登录密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm_OLD_PASS" placeholder="原登录密码" />
+															<input type="password" class='input-large' id="frm1_user_pass_old" placeholder="原登录密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_USER_PASS">新登录密码</label>
+														<label class="control-label" for="frm1_user_pass">新登录密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm_USER_PASS" placeholder="新登录密码" />
+															<input type="password" class='input-large' id="frm1_user_pass" placeholder="新登录密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">确认登录密码</label>
+														<label class="control-label" for="frm1_user_pass_2">确认登录密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm_NEW_PASS_2" placeholder="确认登录密码" />
+															<input type="password" class='input-large' id="frm1_user_pass_2" placeholder="确认登录密码" />
 														</div>
 													</div>
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit1'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -319,30 +319,30 @@
 											</div>
 
 											<div id="profile" class="tab-pane">
-												<form class="form-horizontal">
+												<form class="form-horizontal" id='frm2'>
 													<div class="control-group">
-														<label class="control-label" for="editFrm2_OLD_PASS">原安全密码</label>
+														<label class="control-label" for="frm2_user_pass_safe_old">原安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm2_OLD_PASS" placeholder="原安全密码" />
+															<input type="password" class='input-large' id="frm2_user_pass_safe_old" placeholder="原安全密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm2_USER_PASS">新安全密码</label>
+														<label class="control-label" for="frm2_user_pass_safe">新安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm2_USER_PASS" placeholder="新安全密码" />
+															<input type="password" class='input-large' id="frm2_user_pass_safe" placeholder="新安全密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="editFrm2_NEW_PASS_2">确认安全密码</label>
+														<label class="control-label" for="frm2_user_pass_safe_2">确认安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="editFrm2_NEW_PASS_2" placeholder="确认安全密码" />
+															<input type="password" class='input-large' id="frm2_user_pass_safe_2" placeholder="确认安全密码" />
 														</div>
 													</div>
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit2'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -414,5 +414,63 @@
 		</a>
 
 		<#include "/_pagelet/js.html"/>
+
+		<script>
+		$(function() {
+			$('#btn_submit1').click(function() {
+				if ($('#frm1_user_pass').val() !== $('#frm1_user_pass_2').val()) {
+					return alert('两次输入的密码不一致');
+				}
+
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/changePwd',
+					type : 'POST',
+					dataType : 'JSON',
+					data : {
+						old_pass: $('#frm1_user_pass_old').val(),
+						new_pass: $('#frm1_user_pass').val()
+					},
+					success : function(data) {
+						if (data.success){
+							alert('操作成功');
+							location.href = '${(conf_html_virtualPath)!}user/changePwd';
+							return;
+						}
+						alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
+			});
+
+			$('#btn_submit2').click(function() {
+				if ($('#frm2_user_pass_safe').val() !== $('#frm2_user_pass_safe_2').val()) {
+					return alert('两次输入的密码不一致');
+				}
+
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/changePwdSafe',
+					type : 'POST',
+					dataType : 'JSON',
+					data : {
+						old_pass: $('#frm2_user_pass_safe_old').val(),
+						new_pass: $('#frm2_user_pass_safe').val()
+					},
+					success : function(data) {
+						if (data.success){
+							alert('操作成功');
+							location.href = '${(conf_html_virtualPath)!}user/changePwd';
+							return;
+						}
+						alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
+			});
+		});
+		</script>
 	</body>
 </html>

@@ -124,17 +124,19 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	@Override
 	public String[] changePwd(String key, String old_pass, String new_pass) {
 		// TODO
+		if ("".equals(new_pass.trim())) {
+			return new String[] { "新登陆密码不能为空" };
+		}
+
+		// TODO
 		User user = selectByKey(key);
 		if (null == user) {
 			return new String[] { "没有找到此用户" };
 		}
 
 		// TODO
-		old_pass = StringUtil.isEmpty(old_pass);
-
-		// TODO
 		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
-			return new String[] { "原始密码错误" };
+			return new String[] { "原登陆密码错误" };
 		}
 
 		User _user = new User();
@@ -157,17 +159,19 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	@Override
 	public String[] changePwdSafe(String key, String old_pass, String new_pass) {
 		// TODO
+		if ("".equals(new_pass.trim())) {
+			return new String[] { "新安全密码不能为空" };
+		}
+
+		// TODO
 		User user = selectByKey(key);
 		if (null == user) {
 			return new String[] { "没有找到此用户" };
 		}
 
 		// TODO
-		old_pass = StringUtil.isEmpty(old_pass);
-
-		// TODO
-		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
-			return new String[] { "原始密码错误" };
+		if (!MD5.encode(old_pass).equals(user.getUser_pass_safe())) {
+			return new String[] { "原安全密码错误" };
 		}
 
 		User _user = new User();
