@@ -580,7 +580,7 @@ public class UserController {
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(1);
 
-		String[] msg = materialRecordService.saveNew(materialRecord);
+		String[] msg = materialRecordService.virement(materialRecord);
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
@@ -640,7 +640,7 @@ public class UserController {
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(2);
 
-		String[] msg = materialRecordService.saveNew(materialRecord);
+		String[] msg = materialRecordService.virement(materialRecord);
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;

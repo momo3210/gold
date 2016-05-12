@@ -42,4 +42,22 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		save(materialRecord);
 		return null;
 	}
+
+	@Override
+	public String[] virement(MaterialRecord materialRecord) {
+		materialRecord
+				.setNum_use((0 < materialRecord.getNum_use()) ? materialRecord
+						.getNum_use() : 1);
+
+		// 获取我的余额进行比对
+		User user = userService.selectByKey(materialRecord.getUser_id());
+		int num_curr = (1 == materialRecord.getType_id()) ? user
+				.getNum_ticket() : user.getNum_food();
+
+		if (num_curr < materialRecord.getNum_use()) {
+			return new String[] { "您的帐号余额不足" };
+		}
+
+		return saveNew(materialRecord);
+	}
 }
