@@ -138,39 +138,42 @@
 
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
-												<form class="form-horizontal" id='frm'>
+												<form class="form-horizontal">
 													<div class="control-group">
-														<label class="control-label" for='frm_select'>买入鸡苗</label>
+														<label class="control-label" for="editFrm_OLD_PASS">买入鸡苗</label>
 
 														<div class="controls">
-															<select class='input-large' id='frm_select'>
-																<option>RMB：${(data_lv_min)!} 至 ${(data_lv_max)!} 只鸡苗</option>
+															<select id="form-field-select-1" class='input-large'>
+																<option value="">RMB：100 至 5000 的鸡苗</option>
+																<option value="">RMB：1000 至 5000 的鸡苗</option>
+																<option value="">RMB：2000 至 5000 的鸡苗</option>
+																<option value="">RMB：3000 至 5000 的鸡苗</option>
 															</select>
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_num_buy">具体数量</label>
+														<label class="control-label" for="editFrm_NEW_PASS_2">具体数量</label>
 
 														<div class="controls">
-															<input type="text" class="input-small" id="frm_num_buy" name='num_buy' />
+															<input type="text" class="input-small" id="spinner3" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
+														<label class="control-label" for="editFrm_NEW_PASS_2">安全密码</label>
 
 														<div class="controls">
-															<input type="password" class='input-large' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+															<input type="password" class='input-large' id="editFrm_NEW_PASS_2" placeholder="安全密码" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_verifyCode">图形验证码</label>
+														<label class="control-label" for="editFrm_NEW_PASS_2">图形验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
+															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="图形验证码" />
 															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
 														</div>
 													</div>
-													<#-- <!-- <div class="control-group">
+													<div class="control-group">
 														<label class="control-label" for="editFrm_OLD_PASS">手机号码</label>
 
 														<div class="controls">
@@ -184,7 +187,7 @@
 															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
 															<button class="btn btn-mini btn-danger">获取短信验证码</button>
 														</div>
-													</div> -->
+													</div>
 													<div class="form-actions">
 														<button class="btn btn-info" type="button">
 															<i class="icon-ok bigger-110"></i>
@@ -260,10 +263,10 @@
 		<#include "/_pagelet/js.html"/>
 		<script>
 		$(function(){
-			$('#frm_num_buy').ace_spinner({
-				value: ${(data_lv_min)!},
-				min: ${(data_lv_min)!},
-				max: ${(data_lv_max)!},
+			$('#spinner3').ace_spinner({
+				value: 100,
+				min: 100,
+				max: 5000,
 				step: 100,
 				icon_up: 'icon-plus',
 				icon_down: 'icon-minus',

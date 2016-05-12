@@ -3,7 +3,6 @@ package com.momohelp.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -16,11 +15,8 @@ public class Cfg implements Serializable {
 
 	private static final long serialVersionUID = -1784574080098740265L;
 
-	@Id
 	private String key_;
-
 	private String value_;
-
 	private Date create_time;
 
 	public String getKey_() {

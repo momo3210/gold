@@ -1,6 +1,8 @@
 package com.momohelp.calculate.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,33 +36,41 @@ public class DynamicCalculation implements Serializable, ICalculation {
 		boolean bool = false;
 		for (Farm farm : farms) {
 			User user = userService.selectByKey(farm.getUser_id());// 当前用户id
-			// user.getPid() 获取当前用户的领导
-			Map<String, Object> childs = userService.countMemberNOAndlevel(user
-					.getPid());
-			// 用户等级判断
-			String lv = user.getLv();
+			String pid = user.getPid();// 获取当前用户的领导
+			Map<String, Object> childs = userService.countMemberNOAndlevel(pid);
 			/**
 			 * level 级别（05贫农、06中农、07富农、08农场主）
 			 */
-			
-			switch (lv) {
-			case Parameter.POOR_PEASANT:// 05贫农
-				childs.get("lv");
-				break;
-			case Parameter.MIDDLE_PEASANT:// 06中农
-
-				break;
-			case Parameter.RICH_PEASANT:// 07富农
-
-				break;
-			case Parameter.FARMERS:// 08农场主
-
-				break;
-			default:
-				break;
+			List<String> list = new ArrayList<String>(8);
+			list.add(Parameter.POOR_PEASANT);
+			for (int i = 0; i < childs.size(); i++) {
+				if (childs.get("lv").equals(Parameter.POOR_PEASANT)) {
+					if (Integer.parseInt(childs.get("no").toString()) >= 4) {
+						list.add(Parameter.MIDDLE_PEASANT);
+					}
+				}
+				if (childs.get("lv").equals(Parameter.MIDDLE_PEASANT)) {
+					if (Integer.parseInt(childs.get("no").toString()) >= 8) {
+						list.add(Parameter.RICH_PEASANT);
+					}
+				}
+				if (childs.get("lv").equals(Parameter.RICH_PEASANT)) {
+					if (Integer.parseInt(childs.get("no").toString()) >= 12) {
+						list.add(Parameter.FARMERS);
+					}
+				}
+				if (childs.get("lv").equals(Parameter.FARMERS)) {
+					if (Integer.parseInt(childs.get("no").toString()) >= 1) {
+						list.add(Parameter.FARMERS);
+					}
+				}
 			}
-
+			user = new User();
+			user.setId(pid);
+			user.setLv(Collections.max(list));
+			userService.updateNotNull(user);
 		}
+		bool = true;
 		return bool;
 	}
 
@@ -79,15 +89,62 @@ public class DynamicCalculation implements Serializable, ICalculation {
 		int base = 0;
 		log.info("-------------------奖金基数计算------------------------");
 		List<Farm> farms = farmService.getUntreatedFarm();
-		// 等级计算
+		// 用户等级计算
 		if (calculateLevel(farms)) {
 			// 计算奖金基数
+			for (Farm farm : farms) {
+				farm.getUser_id();// 用户id
+				farm.getNum_buy(); // 购买数量
+				// 获取当前用户的领导【用户】
+				User user = userService.selectByKey(farm.getUser_id());// 1
+				User leader = userService.selectByKey(user.getPid());
+				//此处计算主体错误 ！！！！！！
+				List<Farm> leaderLastFarm = farmService
+						.selectLastFarmByDate(leader.getId());
+
+				int tempBase = farm.getNum_buy();
+				Farm f = leaderLastFarm.get(1);// 最近一单
+				// 判断当前用户是否出局
+				if (farm.getTime_out().after(f.getTime_out())) {// 这里判断还是有问题！！！！！！！！！！
+
+					// 提成基数计算
+					// 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人上一单所得利息
+					// tempBase=leader.
+					// 小端金额
+					int small = farm.getNum_buy() > f.getNum_buy() ? f
+							.getNum_buy() : farm.getNum_buy();
+				   //推荐人获取被推荐人最近一单的推荐奖
+			       /***
+			        * 获取当前单的用户排单时间【creat_time】 查询当前用户小于当前时间最近一单
+			        */
+				  // double 
+				   //被推荐人上一单所得利息
+							
+				}
+				int temp = user.getDepth();
+				User userTemp = user;
+				while (true) {// 这样可能数据不统一： 正在执行的过程中突然断电
+					userTemp = userService.selectByKey(userTemp.getPid());// 2
+					if (null == userTemp
+							|| userTemp.getId().trim().length() == 0) {// 死循环终止条件
+						break;
+					}
+					double number = calculateRoyalty(tempBase,
+							userTemp.getLv(), temp - userTemp.getDepth());
+					userTemp.setNum_dynamic(userTemp.getNum_dynamic() + number);
+					userTemp.setTotal_dynamic(userTemp.getTotal_dynamic()
+							+ number);
+					userService.save(userTemp);
+				}
+				farm.setFlag_calc_bonus(1);
+				farmService.save(farm);
+			}
 
 		} else {
-			// 计算等级失败
+			// 计算用户等级失败
 			return -1;
 		}
-        
+
 		return base;
 	}
 

@@ -22,4 +22,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return ((FarmService) mapper).getUntreatedFarm();
 	}
 
+	@Override
+	public List<Farm> selectLastFarmByDate(String key) {
+		
+		return ((FarmService) mapper).selectLastFarmByDate(key);
+	}
+
 }

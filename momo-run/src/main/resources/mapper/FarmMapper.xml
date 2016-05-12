@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.FarmMapper">
-
+	 <resultMap id="farm" type="com.momohelp.model.Farm">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="timeDate" />
+		<result column="time_out" property="time_out" jdbcType="timeDate" />
+		<result  column="time_ripe"  property="time_ripe"  jdbcType="timeDate"/>
+		<result  column="num_current"  property="num_current"  jdbcType="int"/>
+		<result  column="num_buy"  property="num_buy"  jdbcType="int"/>
+		<result  column="num_deal"  property="num_deal"  jdbcType="int"/>
+		<result  column="flag_calc_bonus"  property="flag_calc_bonus"  jdbcType="int"/>
+	</resultMap>
+	<select id="getUntreatedFarm" resultType="farm">
+		SELECT w.* FROM
+		w_farm_chick as w WHERE w.num_buy=w.num_deal and w.flag_calc_bonus=0
+	</select>
+	<select id="selectLastFarmByDate" parameterMap="java.lang.String" 
+		resultMap="farm">
+		SELECT w.* FROM w_farm_chick as w WHERE w.user_id=#{0} ORDER BY w.create_time DESC LIMIT 0,2
+	</select>
 </mapper>

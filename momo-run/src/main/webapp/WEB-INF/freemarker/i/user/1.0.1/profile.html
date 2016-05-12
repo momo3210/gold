@@ -298,13 +298,6 @@
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label">电子邮箱</label>
-
-														<div class="controls">
-															<input type="text" class='input-large' value='${(data_user.email)!}' disabled />
-														</div>
-													</div>
-													<div class="control-group">
 														<label class="control-label" for="frm_nickname">昵称</label>
 
 														<div class="controls">
@@ -312,63 +305,70 @@
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_alipay_account">支付宝帐号</label>
+														<label class="control-label" for="frm_email">电子邮箱</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="frm_alipay_account" name='alipay_account' placeholder="支付宝帐号" value='${(data_user.alipay_account)!}' />
+															<input type="text" class='input-large' id="frm_email" name='email' placeholder="电子邮箱" value='${(data_user.email)!}' />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_wx_account">微信号</label>
+														<label class="control-label" for="frm_NEW_PASS_2">支付宝帐号</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="frm_wx_account" name='wx_account' placeholder="微信号" value='${(data_user.wx_account)!}' />
+															<input type="text" class='input-large' id="frm_NEW_PASS_2" placeholder="支付宝帐号" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_bank">开户银行</label>
+														<label class="control-label" for="frm_NEW_PASS_2">微信号</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="frm_bank" name='bank' placeholder="开户银行" value='${(data_user.bank)!}' />
+															<input type="text" class='input-large' id="frm_NEW_PASS_2" placeholder="微信号" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_bank_name">开户分行</label>
+														<label class="control-label" for="frm_NEW_PASS_2">开户银行</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="frm_bank_name" name='bank_name' placeholder="开户分行" value='${(data_user.bank_name)!}' />
+															<input type="text" class='input-large' id="frm_NEW_PASS_2" placeholder="开户银行" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_bank_account">银行帐号</label>
+														<label class="control-label" for="frm_NEW_PASS_2">开户分行</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="frm_bank_account" name='bank_account' placeholder="银行帐号" value='${(data_user.bank_account)!}' />
+															<input type="text" class='input-large' id="frm_NEW_PASS_2" placeholder="开户分行" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
+														<label class="control-label" for="frm_NEW_PASS_2">银行帐号</label>
 
 														<div class="controls">
-															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+															<input type="text" class='input-large' id="frm_NEW_PASS_2" placeholder="银行帐号" />
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_verifyCode">图形验证码</label>
+														<label class="control-label" for="frm_NEW_PASS_2">安全密码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
+															<input type="password" class='input-small' id="frm_NEW_PASS_2" placeholder="安全密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm_NEW_PASS_2">图形验证码</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' id="frm_NEW_PASS_2" placeholder="图形验证码" />
 															<img id='img_VerifyCode' style='height:34px' src='http://www.foreworld.net/public/user/images/verifyCode.jpg?ts=1462071178894' title='点击更换验证码'>
 														</div>
 													</div>
-													<!-- <div class="control-group">
+													<div class="control-group">
 														<label class="control-label" for="frm_NEW_PASS_2">短信验证码</label>
 
 														<div class="controls">
 															<input type="text" class='input-small' id="frm_NEW_PASS_2" placeholder="短信验证码" />
 															<button class="btn btn-mini btn-danger">获取短信验证码</button>
 														</div>
-													</div> -->
+													</div>
 													<div class="form-actions">
 														<button class="btn btn-info" type="button">
 															<i class="icon-ok bigger-110"></i>

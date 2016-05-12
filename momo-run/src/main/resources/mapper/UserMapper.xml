@@ -1,10 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.UserMapper">
-	<resultMap id="baseResultMap" type="com.momohelp.model.User">
+	<resultMap id="userlist" type="com.momohelp.model.User">
 		<id column="id" property="id" jdbcType="VARCHAR" />
-		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+
 		<result column="user_pass" property="user_pass" jdbcType="VARCHAR" />
+
+		<result column="user_pass_safe" property="user_pass_safe"
+			jdbcType="VARCHAR" />
+
+		<result column="role_id" property="role_id" jdbcType="int" />
+
+		<result column="real_name" property="real_name" jdbcType="VARCHAR" />
+
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+
 		<result column="email" property="email" jdbcType="VARCHAR" />
+
+		<result column="alipay_account" property="alipay_account"
+			jdbcType="VARCHAR" />
+
+		<result column="wx_account" property="wx_account" jdbcType="VARCHAR" />
+
+		<result column="create_time" property="create_time" jdbcType="datetime" />
+
+		<result column="status" property="status" jdbcType="int" />
+
+		<result column="apikey" property="apikey" jdbcType="VARCHAR" />
+
+		<result column="seckey" property="seckey" jdbcType="VARCHAR" />
+
+		<result column="bank" property="bank" jdbcType="VARCHAR" />
+
+		<result column="bank_name" property="bank_name" jdbcType="VARCHAR" />
+
+		<result column="bank_account" property="bank_account" jdbcType="VARCHAR" />
+
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+
+		<result column="family_id" property="family_id" jdbcType="VARCHAR" />
+
+		<result column="depth" property="depth" jdbcType="int" />
+
+		<result column="lv" property="lv" jdbcType="VARCHAR" />
+
+		<result column="num_static" property="num_static" jdbcType="double" />
+
+		<result column="num_dynamic" property="num_dynamic" jdbcType="double" />
+
+		<result column="num_ticket" property="num_ticket" jdbcType="int" />
+
+		<result column="num_food" property="num_food" jdbcType="int" />
+
+		<result column="total_static" property="total_static" jdbcType="double" />
+
+		<result column="total_dynamic" property="total_dynamic"
+			jdbcType="double" />
+
+		<result column="total_ticket" property="total_ticket" jdbcType="int" />
+
+		<result column="total_food" property="total_food" jdbcType="int" />
 	</resultMap>
+	<select id="countMemberNOAndlevel" resultType="java.util.HashMap"
+		parameterType="String">
+		SELECT u.lv as lv ,COUNT(u.lv) as no FROM s_user as u
+		where u.pid=#{id} order by u.lv
+		GROUP BY u.lv
+
+	</select>
+
 </mapper>

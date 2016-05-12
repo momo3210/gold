@@ -11,9 +11,15 @@ import com.momohelp.model.Farm;
  */
 public interface FarmService extends IService<Farm> {
 	/***
-	 * δ��������ɵĵ���
+	 * 未处理的提成的单据
 	 * 
 	 * @return
 	 */
 	List<Farm> getUntreatedFarm();
+	/***
+	 * 根据用户id 获取最新排单
+	 * 
+	 * @return
+	 */
+	List<Farm> selectLastFarmByDate(String key);
 }

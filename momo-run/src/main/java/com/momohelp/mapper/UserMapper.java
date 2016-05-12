@@ -11,11 +11,11 @@ import com.momohelp.util.MyMapper;
  *
  */
 public interface UserMapper extends MyMapper<User> {
-	// »ñÈ¡µ±Ç°ÓÃ»§ÏÂ ¶ÔÓ¦µÄÖ±½ÓÒ»´ú ¸÷¸öµÈ¼¶ÈËÔ±ÊıÁ¿
+	// è·å–å½“å‰ç”¨æˆ·ä¸‹ å¯¹åº”çš„ç›´æ¥ä¸€ä»£ å„ä¸ªç­‰çº§äººå‘˜æ•°é‡
 	/***
 	 * 
 	 * @param key
-	 *            µ±Ç°ÓÃ»§id
+	 *            å½“å‰ç”¨æˆ·id
 	 * @return
 	 */
 	Map<String, Object> countMemberNOAndlevel(String key);
