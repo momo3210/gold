@@ -49,7 +49,8 @@ public class UserController {
 	 * @param pass_safe
 	 * @return
 	 */
-	private String[] checkSafe(String key, String pass_safe) {
+	private String[] checkSafe(HttpSession session, String pass_safe) {
+		String key = session.getAttribute("session.user.id").toString();
 		User user = userService.selectByKey(key);
 
 		if (MD5.encode(pass_safe).equals(user.getUser_pass_safe())) {
@@ -224,29 +225,27 @@ public class UserController {
 			@RequestParam(required = true) String verifyCode, User user,
 			HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
 		// TODO
 		String svc = session.getAttribute("session.verifyCode").toString();
 		if (!verifyCode.equals(svc)) {
 			result.put("msg", new String[] { "验证码输入错误" });
-			result.put("success", false);
+			return result;
+		} // IF
+
+		String[] checkSafe = checkSafe(session, user.getUser_pass_safe());
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
 			return result;
 		} // IF
 
 		// 设置主键
 		user.setId(session.getAttribute("session.user.id").toString());
 
-		String[] checkSafe = checkSafe(user.getId(), user.getUser_pass_safe());
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
-			result.put("success", false);
-			return result;
-		} // IF
-
 		String[] msg = userService.editInfo(user);
 		if (null != msg) {
 			result.put("msg", msg);
-			result.put("success", false);
 			return result;
 		}
 
@@ -450,8 +449,7 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
-				.toString(), user_pass_safe);
+		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			result.put("success", false);
@@ -502,13 +500,12 @@ public class UserController {
 			@RequestParam(required = true) String user_pass_safe,
 			MaterialRecord materialRecord, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
-				.toString(), user_pass_safe);
+		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
-			result.put("success", false);
 			return result;
 		} // IF
 
@@ -522,7 +519,6 @@ public class UserController {
 		String[] msg = materialRecordService.saveNew(materialRecord);
 		if (null != msg) {
 			result.put("msg", msg);
-			result.put("success", false);
 			return result;
 		}
 
@@ -568,8 +564,7 @@ public class UserController {
 		} // IF
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
-				.toString(), user_pass_safe);
+		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
@@ -628,8 +623,7 @@ public class UserController {
 		} // IF
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session.getAttribute("session.user.id")
-				.toString(), user_pass_safe);
+		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
