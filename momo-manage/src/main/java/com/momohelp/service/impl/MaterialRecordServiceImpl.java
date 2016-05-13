@@ -1,10 +1,14 @@
 package com.momohelp.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.momohelp.mapper.MaterialRecordMapper;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.MaterialRecordService;
@@ -57,5 +61,17 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		}
 
 		return saveNew(materialRecord);
+	}
+
+	@Override
+	public List<MaterialRecord> findByTypeId(MaterialRecord materialRecord) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("user_id", materialRecord.getUser_id());
+		map.put("trans_user_id", materialRecord.getTrans_user_id());
+		map.put("type_id", materialRecord.getType_id());
+
+		return ((MaterialRecordMapper) getMapper()).findByTypeId(map);
 	}
 }

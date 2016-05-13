@@ -660,7 +660,23 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/ticketRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_ticketRecordUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
+		ModelAndView result = new ModelAndView("i/user/1.0.1/ticketRecord");
+
+		String my_user_id = session.getAttribute("session.user.id").toString();
+
+		// TODO
+		MaterialRecord materialRecord = new MaterialRecord();
+		materialRecord.setUser_id(my_user_id);
+		materialRecord.setTrans_user_id(my_user_id);
+		materialRecord.setType_id(1);
+
+		List<MaterialRecord> list = materialRecordService
+				.findByTypeId(materialRecord);
+
+		result.addObject("data_list", list);
+
+		result.addObject("data_user", session.getAttribute("session.user"));
+
 		result.addObject("nav_choose", ",06,0609,");
 		return result;
 	}
@@ -673,7 +689,23 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/foodRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_foodRecordUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
+		ModelAndView result = new ModelAndView("i/user/1.0.1/foodRecord");
+
+		String my_user_id = session.getAttribute("session.user.id").toString();
+
+		// TODO
+		MaterialRecord materialRecord = new MaterialRecord();
+		materialRecord.setUser_id(my_user_id);
+		materialRecord.setTrans_user_id(my_user_id);
+		materialRecord.setType_id(2);
+
+		List<MaterialRecord> list = materialRecordService
+				.findByTypeId(materialRecord);
+
+		result.addObject("data_list", list);
+
+		result.addObject("data_user", session.getAttribute("session.user"));
+
 		result.addObject("nav_choose", ",06,0610,");
 		return result;
 	}

@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.momohelp.model.MaterialRecord;
@@ -21,4 +23,6 @@ public interface MaterialRecordService extends IService<MaterialRecord> {
 	 */
 	@Transactional
 	String[] virement(MaterialRecord materialRecord);
+
+	List<MaterialRecord> findByTypeId(MaterialRecord materialRecord);
 }
