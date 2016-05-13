@@ -24,11 +24,10 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 
 	@Override
 	public String[] saveNew(MaterialRecord materialRecord) {
-		materialRecord.setCreate_time(new Date());
 		materialRecord
 				.setNum_use((0 < materialRecord.getNum_use()) ? materialRecord
 						.getNum_use() : 1);
-		// TODO
+		materialRecord.setCreate_time(new Date());
 		save(materialRecord);
 		return null;
 	}

@@ -432,10 +432,10 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.GET)
 	public String _i_buyTicketUI(Map<String, Object> map, HttpSession session) {
-		String user_id = session.getAttribute("session.user.id").toString();
+		String my_user_id = session.getAttribute("session.user.id").toString();
 		// TODO
-		User user = userService.selectByKey(user_id);
-		map.put("data_user", user);
+		User my_user = userService.selectByKey(my_user_id);
+		map.put("data_user", my_user);
 		// TODO
 		map.put("nav_choose", ",06,0602,");
 		return "i/user/1.0.1/buyTicket";
@@ -446,33 +446,9 @@ public class UserController {
 	public Map<String, Object> _i_buyTicket(
 			@RequestParam(required = true) String user_pass_safe,
 			MaterialRecord materialRecord, HttpSession session) {
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
-			result.put("success", false);
-			return result;
-		} // IF
-
-		// 组合数据
-		materialRecord.setUser_id(session.getAttribute("session.user.id")
-				.toString());
-		materialRecord.setStatus(0);
-		materialRecord.setType_id(1);
-		materialRecord.setComment("购买门票 +1");
-
-		String[] msg = materialRecordService.saveNew(materialRecord);
-		if (null != msg) {
-			result.put("msg", msg);
-			result.put("success", false);
-			return result;
-		}
-
 		// TODO
-		result.put("success", true);
-		return result;
+		materialRecord.setType_id(1);
+		return _i_buy(user_pass_safe, materialRecord, session);
 	}
 
 	/**
@@ -485,19 +461,24 @@ public class UserController {
 	public ModelAndView _i_buyFoodUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyFood");
 
-		String user_id = session.getAttribute("session.user.id").toString();
+		String my_user_id = session.getAttribute("session.user.id").toString();
 		// TODO
-		User user = userService.selectByKey(user_id);
-		result.addObject("data_user", user);
+		User my_user = userService.selectByKey(my_user_id);
+		result.addObject("data_user", my_user);
 
 		result.addObject("nav_choose", ",06,0603,");
 		return result;
 	}
 
-	@ResponseBody
-	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_buyFood(
-			@RequestParam(required = true) String user_pass_safe,
+	/**
+	 * 购买
+	 *
+	 * @param user_pass_safe
+	 * @param materialRecord
+	 * @param session
+	 * @return
+	 */
+	private Map<String, Object> _i_buy(String user_pass_safe,
 			MaterialRecord materialRecord, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
@@ -513,8 +494,6 @@ public class UserController {
 		materialRecord.setUser_id(session.getAttribute("session.user.id")
 				.toString());
 		materialRecord.setStatus(0);
-		materialRecord.setType_id(2);
-		materialRecord.setComment("购买饲料 +1");
 
 		String[] msg = materialRecordService.saveNew(materialRecord);
 		if (null != msg) {
@@ -525,6 +504,16 @@ public class UserController {
 		// TODO
 		result.put("success", true);
 		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_buyFood(
+			@RequestParam(required = true) String user_pass_safe,
+			MaterialRecord materialRecord, HttpSession session) {
+		// TODO
+		materialRecord.setType_id(2);
+		return _i_buy(user_pass_safe, materialRecord, session);
 	}
 
 	/**
@@ -545,45 +534,9 @@ public class UserController {
 	public Map<String, Object> _i_virementTicket(
 			@RequestParam(required = true) String user_pass_safe,
 			MaterialRecord materialRecord, HttpSession session) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		// 参数验证
-		materialRecord.setTrans_user_id(StringUtil.isEmpty(materialRecord
-				.getTrans_user_id()));
-		if (null == materialRecord.getTrans_user_id()) {
-			result.put("msg", new String[] { "接收人不能为空" });
-			return result;
-		} // IF
-
 		// TODO
-		String my_id = session.getAttribute("session.user.id").toString();
-		if (my_id.equals(materialRecord.getTrans_user_id())) {
-			result.put("msg", new String[] { "接收人不能是自己" });
-			return result;
-		} // IF
-
-		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
-			return result;
-		} // IF
-
-		// 组合数据
-		materialRecord.setUser_id(my_id);
-		materialRecord.setStatus(1);
 		materialRecord.setType_id(1);
-
-		String[] msg = materialRecordService.virement(materialRecord);
-		if (null != msg) {
-			result.put("msg", msg);
-			return result;
-		}
-
-		// TODO
-		result.put("success", true);
-		return result;
+		return _i_virement(user_pass_safe, materialRecord, session);
 	}
 
 	/**
@@ -599,11 +552,17 @@ public class UserController {
 		return result;
 	}
 
-	@ResponseBody
-	@RequestMapping(value = { "/user/virementFood" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_virementFood(
-			@RequestParam(required = true) String user_pass_safe,
+	/**
+	 * 转账
+	 *
+	 * @param user_pass_safe
+	 * @param materialRecord
+	 * @param session
+	 * @return
+	 */
+	private Map<String, Object> _i_virement(String user_pass_safe,
 			MaterialRecord materialRecord, HttpSession session) {
+		// BEGIN
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -616,8 +575,8 @@ public class UserController {
 		} // IF
 
 		// TODO
-		String my_id = session.getAttribute("session.user.id").toString();
-		if (my_id.equals(materialRecord.getTrans_user_id())) {
+		String my_user_id = session.getAttribute("session.user.id").toString();
+		if (my_user_id.equals(materialRecord.getTrans_user_id())) {
 			result.put("msg", new String[] { "接收人不能是自己" });
 			return result;
 		} // IF
@@ -630,9 +589,8 @@ public class UserController {
 		} // IF
 
 		// 组合数据
-		materialRecord.setUser_id(my_id);
+		materialRecord.setUser_id(my_user_id);
 		materialRecord.setStatus(1);
-		materialRecord.setType_id(2);
 
 		String[] msg = materialRecordService.virement(materialRecord);
 		if (null != msg) {
@@ -643,6 +601,16 @@ public class UserController {
 		// TODO
 		result.put("success", true);
 		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/virementFood" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_virementFood(
+			@RequestParam(required = true) String user_pass_safe,
+			MaterialRecord materialRecord, HttpSession session) {
+		// TODO
+		materialRecord.setType_id(2);
+		return _i_virement(user_pass_safe, materialRecord, session);
 	}
 
 	/**
