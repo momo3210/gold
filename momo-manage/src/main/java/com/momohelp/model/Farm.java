@@ -55,6 +55,19 @@ public class Farm implements Serializable {
 	 */
 	private Integer flag_calc_bonus;
 
+	/**
+	 * 实际成交时间
+	 */
+	private Date time_deal;
+
+	public Date getTime_deal() {
+		return time_deal;
+	}
+
+	public void setTime_deal(Date time_deal) {
+		this.time_deal = time_deal;
+	}
+
 	public Integer getFlag_calc_bonus() {
 		return flag_calc_bonus;
 	}
