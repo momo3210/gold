@@ -1,8 +1,24 @@
 <#include "/_pagelet/constant.html"/>
+<#switch data_type_id>
+	<#case 1>
+		<#assign type_name="门票"/>
+		<#break>
+	<#case 2>
+		<#assign type_name="饲料"/>
+		<#break>
+	<#case 3>
+		<#assign type_name="静态"/>
+		<#break>
+	<#case 4>
+		<#assign type_name="动态"/>
+		<#break>
+	<#default>
+		<#assign type_name="门票"/>
+</#switch>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>门票对账单 | 陌陌黄金24小时互助</title>
+		<title>${type_name}对账单 | 陌陌黄金24小时互助</title>
 		<#include "/_pagelet/header.html"/>
 		<style>
 		#table_1 th {
@@ -223,7 +239,7 @@
 								<i class="icon-angle-right arrow-icon"></i>
 							</span>
 						</li>
-						<li class="active">门票对账单</li>
+						<li class="active">${type_name}对账单</li>
 					</ul><!--.breadcrumb-->
 
 					<div class="nav-search" id="nav-search">
@@ -239,7 +255,7 @@
 				<div class="page-content">
 					<div class="page-header position-relative">
 						<h1>
-							门票对账单
+							${type_name}对账单
 							<small>
 								<i class="icon-double-angle-right"></i>
 								StaticRecord List
@@ -251,7 +267,7 @@
 						<div class="span12 widget-container-span">
 							<div class="widget-box">
 								<div class="widget-header">
-									<h5>门票对账单</h5>
+									<h5>${type_name}对账单</h5>
 
 									<div class="widget-toolbar">
 										<!-- <a href="#" data-action="settings">
@@ -278,6 +294,7 @@
 											<thead>
 												<tr>
 													<th>#</th>
+													<th>会员编号</th>
 													<th>变动数额</th>
 													<th>当期余额</th>
 													<th>备注详情</th>
@@ -288,34 +305,21 @@
 											<#list data_list! as doc>
 												<tr>
 													<td>${doc_index+1}</td>
-													<td>
-														<#if data_user.id == (doc.trans_user_id)!>
-															+${doc.num_use?string('#.00')}
-														<#else>
-															<#if (doc.trans_user_id)??>
-																-${doc.num_use?string('#.00')}
-															<#else>
-																<#if (0 < (doc.flag_plus_minus)!)>
-																	+${doc.num_use?string('#.00')}
-																<#else>
-																	-${doc.num_use?string('#.00')}
-																</#if>
-															</#if>
-														</#if>
-													</td>
-													<td>${(doc.num_balance)!}.00</td>
+													<td>M${(doc.user_id)!}</td>
+													<td><#if (0 < (doc.flag_plus_minus)!)>+<#else>-</#if>${doc.num_use?string('#.00')}</td>
+													<td>${doc.num_balance?string('#.00')}</td>
 													<td>
 														<#if (doc.comment)?? && '' != (doc.comment)!>
 															${(doc.comment)!}
 														<#else>
-															<#if data_user.id == (doc.trans_user_id)!>
-																接受 M${(doc.user_id)!} 数额 ${(doc.num_use)!}
-															<#else>
-																<#if (doc.trans_user_id)??>
-																	转给 M${(doc.trans_user_id)!} 数额 ${(doc.num_use)!}
+															<#if (doc.trans_user_id)??>
+																<#if (0 < (doc.flag_plus_minus)!)>
+																	接受 M${(doc.trans_user_id)!} 数额 ${(doc.num_use)!}
 																<#else>
-																	购买门票  ${(doc.num_use)!}
+																	转给 M${(doc.trans_user_id)!} 数额 ${(doc.num_use)!}
 																</#if>
+															<#else>
+																购买${type_name}  ${(doc.num_use)!}
 															</#if>
 														</#if>
 													</td>

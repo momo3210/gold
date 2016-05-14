@@ -37,7 +37,7 @@ public class MaterialRecord implements Serializable {
 	private Integer status;
 
 	/**
-	 * 1门票 2饲料
+	 * 1门票 2饲料 3静态 4动态
 	 */
 	private Integer type_id;
 	private String comment;

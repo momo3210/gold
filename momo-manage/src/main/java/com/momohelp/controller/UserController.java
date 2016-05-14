@@ -658,26 +658,47 @@ public class UserController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = { "/user/ticketRecord" }, method = RequestMethod.GET)
-	public ModelAndView _i_ticketRecordUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/ticketRecord");
+	@RequestMapping(value = { "/user/bill" }, method = RequestMethod.GET)
+	public ModelAndView _i_ticketRecordUI(
+			@RequestParam(required = true) int type_id, HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/bill");
+
+		String nav_choose = null;
+		// TODO
+		switch (type_id) {
+		case 1:
+			nav_choose = ",06,0609,";
+			break;
+		case 2:
+			nav_choose = ",06,0610,";
+			break;
+		case 3:
+			nav_choose = ",06,0607,";
+			break;
+		case 4:
+			nav_choose = ",06,0608,";
+			break;
+		default:
+			type_id = 1;
+			nav_choose = ",06,0609,";
+			break;
+		}
 
 		String my_user_id = session.getAttribute("session.user.id").toString();
 
 		// TODO
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(my_user_id);
-		materialRecord.setTrans_user_id(my_user_id);
-		materialRecord.setType_id(1);
+		materialRecord.setType_id(type_id);
 
 		List<MaterialRecord> list = materialRecordService
 				.findByTypeId(materialRecord);
 
 		result.addObject("data_list", list);
+		result.addObject("data_type_id", type_id);
 
-		result.addObject("data_user", session.getAttribute("session.user"));
-
-		result.addObject("nav_choose", ",06,0609,");
+		// TODO
+		result.addObject("nav_choose", nav_choose);
 		return result;
 	}
 

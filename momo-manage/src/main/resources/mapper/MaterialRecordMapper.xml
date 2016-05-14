@@ -17,7 +17,12 @@
 	<select id="findByTypeId" resultMap="baseResultMap"
 		parameterType="java.util.Map">
 
-		SELECT a.* FROM (
+		SELECT * FROM w_material_use WHERE
+		type_id=#{type_id} AND
+		user_id=#{user_id}
+		ORDER BY create_time DESC
+
+		<!-- SELECT a.* FROM (
 
 		SELECT * FROM w_material_use WHERE
 		type_id=#{type_id} AND
@@ -31,6 +36,6 @@
 		trans_user_id=#{trans_user_id}
 		) a
 
-		ORDER BY a.create_time DESC
+		ORDER BY a.create_time DESC -->
 	</select>
 </mapper>

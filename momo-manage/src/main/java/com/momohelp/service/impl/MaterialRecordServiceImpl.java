@@ -79,11 +79,9 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 
 	@Override
 	public List<MaterialRecord> findByTypeId(MaterialRecord materialRecord) {
-
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("user_id", materialRecord.getUser_id());
-		map.put("trans_user_id", materialRecord.getTrans_user_id());
 		map.put("type_id", materialRecord.getType_id());
 
 		return ((MaterialRecordMapper) getMapper()).findByTypeId(map);
