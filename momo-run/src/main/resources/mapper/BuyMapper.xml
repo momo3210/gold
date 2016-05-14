@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.BuyMapper">
+	<resultMap id="buy" type="com.momohelp.model.Buy">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+
+		<result column="w_farm_chick_id" property="w_farm_chick_id" jdbcType="VARCHAR" />
+
+		<result column="num_buy" property="num_buy" jdbcType="int" />
+
+		<result column="create_time" property="create_time" jdbcType="datetime" />
+	</resultMap>
+	<select id="selectByCycles" resultType="buySell">
+		SELECT * FROM p_buy as p WHERE p.create_time between #{0} and #{1}
+	</select>
 
 </mapper>

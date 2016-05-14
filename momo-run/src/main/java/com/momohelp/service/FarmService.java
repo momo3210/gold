@@ -1,5 +1,6 @@
 package com.momohelp.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.momohelp.model.Farm;
@@ -21,5 +22,5 @@ public interface FarmService extends IService<Farm> {
 	 * 
 	 * @return
 	 */
-	List<Farm> selectLastFarmByDate(String key);
+	List<Farm> selectLastFarmByDate(String id, Date create_time);
 }

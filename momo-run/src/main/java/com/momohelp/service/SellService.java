@@ -1,5 +1,8 @@
 package com.momohelp.service;
 
+import java.util.Date;
+import java.util.List;
+
 import com.momohelp.model.Sell;
 
 /**
@@ -8,5 +11,12 @@ import com.momohelp.model.Sell;
  *
  */
 public interface SellService extends IService<Sell> {
+    /**
+     * 查询时间周期内所有的数据
+     * @param time 开始时间
+     * @param date 当前时间
+     * @return
+     */
+	List<Sell> selectByCycles(Date time, Date date);
 
 }

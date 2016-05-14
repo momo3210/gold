@@ -2,4 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.SellMapper">
 
+
+
+	<resultMap id="shell" type="com.momohelp.model.Sell">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+
+		<result column="num_sell" property="num_sell" jdbcType="int" />
+
+		<result column="create_time" property="create_time"
+			jdbcType="datetime" />
+
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+
+		<result column="type_id" property="type_id" jdbcType="int" />
+	</resultMap>
+	<select id="selectByCycles" resultType="shell">
+		SELECT * FROM p_sell as p WHERE p.create_time time between #{0} and #{1} 
+	</select>
+
+	
+
 </mapper>
