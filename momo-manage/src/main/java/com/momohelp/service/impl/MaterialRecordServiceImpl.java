@@ -27,11 +27,25 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	private UserService userService;
 
 	@Override
+	public int save(MaterialRecord entity) {
+		entity.setCreate_time(new Date());
+		// TODO
+		return super.save(entity);
+	}
+
+	@Override
+	public int updateNotNull(MaterialRecord entity) {
+		entity.setCreate_time(null);
+		// TODO
+		return super.updateNotNull(entity);
+	}
+
+	@Override
 	public String[] saveNew(MaterialRecord materialRecord) {
 		materialRecord
 				.setNum_use((0 < materialRecord.getNum_use()) ? materialRecord
 						.getNum_use() : 1);
-		materialRecord.setCreate_time(new Date());
+
 		save(materialRecord);
 		return null;
 	}

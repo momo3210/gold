@@ -279,6 +279,7 @@
 												<tr>
 													<th>#</th>
 													<th>变动数额</th>
+													<th>当期余额</th>
 													<th>备注详情</th>
 													<th>日期</th>
 												</tr>
@@ -294,10 +295,15 @@
 															<#if (doc.trans_user_id)??>
 																-${(doc.num_use)!}.00
 															<#else>
-																+${(doc.num_use)!}.00
+																<#if (0 < (doc.flag_plus_minus)!)>
+																	+${(doc.num_use)!}.00
+																<#else>
+																	-${(doc.num_use)!}.00
+																</#if>
 															</#if>
 														</#if>
 													</td>
+													<td>${(doc.num_balance)!}.00</td>
 													<td>
 														<#if (doc.comment)?? && '' != (doc.comment)!>
 															${(doc.comment)!}
