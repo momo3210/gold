@@ -60,6 +60,32 @@ public class Farm implements Serializable {
 	 */
 	private Date time_deal;
 
+	/**
+	 * 0初始化 1未出局 2已出局 3强制出局
+	 */
+	private Integer flag_out;
+
+	/**
+	 * 上一单的ID
+	 */
+	private String pid;
+
+	public Integer getFlag_out() {
+		return flag_out;
+	}
+
+	public void setFlag_out(Integer flag_out) {
+		this.flag_out = flag_out;
+	}
+
+	public String getPid() {
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+
 	public Date getTime_deal() {
 		return time_deal;
 	}
