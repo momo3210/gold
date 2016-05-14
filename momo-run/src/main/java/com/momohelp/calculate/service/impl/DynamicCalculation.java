@@ -384,9 +384,10 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			buySellService.save(entity);
 		}
 		if (buySell.getNum_matching() > 0) {
-			buySellService.delete(buySell.getId());
+			//buySellService.delete(buySell.getId());
 			buySell.setCreate_time(new Date());
-			buySellService.save(buySell);
+			//buySellService.save(buySell);
+			buySellService.updateNotNull(buySell);
 		} else {
 			buySellService.delete(buySell.getId());
 		}
@@ -428,9 +429,10 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			buySellService.save(entity);
 		}
 		if (buySell.getNum_matching() > 0) {
-			buySellService.delete(buySell.getId());
+			//buySellService.delete(buySell.getId());
 			buySell.setCreate_time(new Date());
-			buySellService.save(buySell);
+			//buySellService.save(buySell);
+			buySellService.updateNotNull(buySell);
 		} else {
 			buySellService.delete(buySell.getId());
 		}
