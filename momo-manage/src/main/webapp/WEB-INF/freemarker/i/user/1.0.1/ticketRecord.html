@@ -290,15 +290,15 @@
 													<td>${doc_index+1}</td>
 													<td>
 														<#if data_user.id == (doc.trans_user_id)!>
-															+${(doc.num_use)!}.00
+															+${doc.num_use?string('#.00')}
 														<#else>
 															<#if (doc.trans_user_id)??>
-																-${(doc.num_use)!}.00
+																-${doc.num_use?string('#.00')}
 															<#else>
 																<#if (0 < (doc.flag_plus_minus)!)>
-																	+${(doc.num_use)!}.00
+																	+${doc.num_use?string('#.00')}
 																<#else>
-																	-${(doc.num_use)!}.00
+																	-${doc.num_use?string('#.00')}
 																</#if>
 															</#if>
 														</#if>

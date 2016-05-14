@@ -29,7 +29,7 @@ public class MaterialRecord implements Serializable {
 	/**
 	 * 本次使用的数额
 	 */
-	private Integer num_use;
+	private Double num_use;
 
 	/**
 	 * 0未打款 1打款成功（购买时使用）
@@ -97,11 +97,11 @@ public class MaterialRecord implements Serializable {
 		this.create_time = create_time;
 	}
 
-	public Integer getNum_use() {
+	public Double getNum_use() {
 		return num_use;
 	}
 
-	public void setNum_use(Integer num_use) {
+	public void setNum_use(Double num_use) {
 		this.num_use = num_use;
 	}
 
