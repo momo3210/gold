@@ -26,11 +26,52 @@ public class MaterialRecord implements Serializable {
 	private String user_id;
 	private Date create_time;
 
-	private Integer num_use;
+	/**
+	 * 本次使用的数额
+	 */
+	private Double num_use;
+
+	/**
+	 * 0未打款 1打款成功（购买时使用）
+	 */
 	private Integer status;
+
+	/**
+	 * 1门票 2饲料 3静态 4动态
+	 */
 	private Integer type_id;
 	private String comment;
+
+	/**
+	 * 转给某某的用户ID
+	 */
 	private String trans_user_id;
+
+	/**
+	 * 当前余额
+	 */
+	private Integer num_balance;
+
+	/**
+	 * 正负标记（0负 1正）
+	 */
+	private Integer flag_plus_minus;
+
+	public Integer getNum_balance() {
+		return num_balance;
+	}
+
+	public void setNum_balance(Integer num_balance) {
+		this.num_balance = num_balance;
+	}
+
+	public Integer getFlag_plus_minus() {
+		return flag_plus_minus;
+	}
+
+	public void setFlag_plus_minus(Integer flag_plus_minus) {
+		this.flag_plus_minus = flag_plus_minus;
+	}
 
 	public String getId() {
 		return id;
@@ -56,11 +97,11 @@ public class MaterialRecord implements Serializable {
 		this.create_time = create_time;
 	}
 
-	public Integer getNum_use() {
+	public Double getNum_use() {
 		return num_use;
 	}
 
-	public void setNum_use(Integer num_use) {
+	public void setNum_use(Double num_use) {
 		this.num_use = num_use;
 	}
 
