@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.BuySellMapper">
+	<resultMap id="buySell" type="com.momohelp.model.BuySell">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+
+		<result column="num_matching" property="num_matching" jdbcType="int" />
+
+		<result column="create_time" property="create_time" jdbcType="datetime" />
+
+		<result column="p_buy_id" property="p_buy_id" jdbcType="VARCHAR" />
+
+		<result column="p_sell_id" property="p_sell_id" jdbcType="VARCHAR" />
+
+		<result column="status" property="status" jdbcType="int" />
+	</resultMap>
+	<select id="selectBySellAndBuyId" resultType="buySell">
+		SELECT * FROM
+		p_buy_sell as p WHERE (p.'p_buy_id' ='null' or p.'p_sell_id'='null')
+		and p.`status`='0'
+	</select>
 
 </mapper>

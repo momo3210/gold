@@ -1,5 +1,6 @@
 package com.momohelp.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.momohelp.model.Farm;
@@ -22,6 +23,6 @@ public interface FarmMapper extends MyMapper<Farm> {
 	 * 
 	 * @return
 	 */
-	List<Farm> selectLastFarmByDate(String key);
+	List<Farm> selectLastFarmByDate(String id, Date create_time);
 	
 }
