@@ -3,7 +3,9 @@ package com.momohelp.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
+import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
@@ -43,6 +45,40 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 */
 	@Override
 	public String[] buy(Farm farm) {
+		farm.setNum_buy((null == farm.getNum_buy()) ? 0 : farm.getNum_buy());
+
+		// 获取我的帐户信息（实时）
+		User user = userService.selectByKey(farm.getUser_id());
+
+		String[] checkMyTicket = checkMyTicket(user, farm.getUser_id());
+		if (null != checkMyTicket) {
+			return checkMyTicket;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 检测我的门票还有没有？
+	 *
+	 * @param user
+	 * @param user_id
+	 * @return
+	 */
+	private String[] checkMyTicket(User user, String user_id) {
+		return (0 < user.getNum_ticket()) ? null : new String[] { "没有门票了，请购买" };
+	}
+
+	/**
+	 * 检测购买的鸡苗数量是否合法
+	 *
+	 * @param user
+	 * @param num_buy
+	 * @return
+	 */
+	private String[] checkNum(User user, int num_buy) {
+		Cfg cfg = cfgService.selectByKey("0106");
+
 		return null;
 	}
 
