@@ -29,23 +29,23 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	@Override
 	public int save(MaterialRecord entity) {
 		entity.setCreate_time(new Date());
-		// TODO
+		entity.setNum_use((0 < entity.getNum_use()) ? entity.getNum_use() : 1);
 		return super.save(entity);
 	}
 
 	@Override
 	public int updateNotNull(MaterialRecord entity) {
+		entity.setUser_id(null);
 		entity.setCreate_time(null);
-		// TODO
+		entity.setNum_use(null);
+		entity.setType_id(null);
+		entity.setTrans_user_id(null);
+		entity.setFlag_plus_minus(null);
 		return super.updateNotNull(entity);
 	}
 
 	@Override
 	public String[] saveNew(MaterialRecord materialRecord) {
-		materialRecord
-				.setNum_use((0 < materialRecord.getNum_use()) ? materialRecord
-						.getNum_use() : 1);
-
 		save(materialRecord);
 		return null;
 	}
@@ -85,5 +85,48 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		map.put("type_id", materialRecord.getType_id());
 
 		return ((MaterialRecordMapper) getMapper()).findByTypeId(map);
+	}
+
+	/**
+	 * 买入门票（饲料），只插入一条记录
+	 */
+	@Override
+	public String[] buy(MaterialRecord materialRecord) {
+		materialRecord.setStatus(0);
+		materialRecord.setComment(null);
+		materialRecord.setTrans_user_id(null);
+
+		// 设置余额
+		materialRecord.setNum_balance(getBalanceByTypeId(
+				materialRecord.getUser_id(), materialRecord.getType_id()));
+		materialRecord.setFlag_plus_minus(1);
+
+		save(materialRecord);
+
+		return null;
+	}
+
+	/**
+	 * 获取此类型的余额
+	 *
+	 * @param user_id
+	 * @param type_id
+	 * @return
+	 */
+	private double getBalanceByTypeId(String user_id, int type_id) {
+		User my_user = userService.selectByKey(user_id);
+		// TODO
+		switch (type_id) {
+		case 1:
+			return my_user.getNum_ticket();
+		case 2:
+			return my_user.getNum_food();
+		case 3:
+			return my_user.getNum_static();
+		case 4:
+			return my_user.getNum_dynamic();
+		default:
+			return 0;
+		}
 	}
 }

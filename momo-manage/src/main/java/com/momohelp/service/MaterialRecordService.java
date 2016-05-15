@@ -16,6 +16,14 @@ public interface MaterialRecordService extends IService<MaterialRecord> {
 	String[] saveNew(MaterialRecord materialRecord);
 
 	/**
+	 * 买入
+	 *
+	 * @param materialRecord
+	 * @return
+	 */
+	String[] buy(MaterialRecord materialRecord);
+
+	/**
 	 * 转账
 	 *
 	 * @param materialRecord

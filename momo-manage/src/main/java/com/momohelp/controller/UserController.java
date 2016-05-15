@@ -45,19 +45,16 @@ public class UserController {
 	/**
 	 * 安全密码验证
 	 *
-	 * @param key
+	 * @param session
 	 * @param pass_safe
 	 * @return
 	 */
 	private String[] checkSafe(HttpSession session, String pass_safe) {
-		String key = session.getAttribute("session.user.id").toString();
-		User user = userService.selectByKey(key);
-
-		if (MD5.encode(pass_safe).equals(user.getUser_pass_safe())) {
-			return null;
-		} // IF
-
-		return new String[] { "安全密码输入错误" };
+		String my_user_id = session.getAttribute("session.user.id").toString();
+		User my_user = userService.selectByKey(my_user_id);
+		// TODO
+		return (MD5.encode(pass_safe).equals(my_user.getUser_pass_safe())) ? null
+				: new String[] { "安全密码输入错误" };
 	}
 
 	/**
