@@ -29,12 +29,22 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	@Override
 	public int save(User entity) {
 		entity.setCreate_time(new Date());
+		// 默认为普通用户
+		entity.setRole_id(2);
+		// 默认禁用，需要通过邮箱或手机号验证
+		entity.setStatus(0);
+		// 默认为贫农
+		entity.setLv("05");
 		return super.save(entity);
 	}
 
 	@Override
 	public int updateNotNull(User entity) {
 		entity.setCreate_time(null);
+		entity.setRole_id(null);
+		entity.setPid(null);
+		entity.setFamily_id(null);
+		entity.setDepth(null);
 		return super.updateNotNull(entity);
 	}
 
@@ -99,37 +109,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public User findByUser(User user) {
-		Example example = new Example(User.class);
-		// TODO
-		if (null != user) {
-			Example.Criteria criteria = example.createCriteria();
-
-			// TODO
-			String email = StringUtil.isEmpty(user.getEmail());
-			if (null != email) {
-				criteria.andEqualTo("email", email);
-			}
-
-			// TODO
-			String mobile = StringUtil.isEmpty(user.getMobile());
-			if (null != mobile) {
-				criteria.andEqualTo("mobile", mobile);
-			}
-
-			// TODO
-			String nickname = StringUtil.isEmpty(user.getNickname());
-			if (null != nickname) {
-				criteria.andEqualTo("nickname", nickname);
-			}
-		}
-
-		// TODO
-		List<User> list = selectByExample(example);
-		return (null == list || 1 != list.size()) ? null : list.get(0);
-	}
-
-	@Override
 	public int resetPwdByKey(String key) {
 		User user = new User();
 		user.setId(key);
@@ -138,8 +117,17 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return updateNotNull(user);
 	}
 
+	/**
+	 * 新用户注册
+	 *
+	 * 1、一堆验证
+	 *
+	 * 2、判断用户是否存在
+	 *
+	 * 3、创建新用户
+	 */
 	@Override
-	public String[] saveNew(User user) {
+	public String[] register(User user) {
 		// 参数验证
 		user.setNickname(StringUtil.isEmpty(user.getNickname()));
 		if (null == user.getNickname()) {
@@ -171,37 +159,36 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return new String[] { "安全密码不能为空" };
 		}
 
-		/**********/
+		/***** 临时用户对象 *****/
 
-		User _user = null;
+		User tmp_user = null;
 
-		_user = new User();
-		_user.setNickname(user.getNickname());
-		_user = findByUser(_user);
-		if (null != _user) {
+		tmp_user = new User();
+		tmp_user.setNickname(user.getNickname());
+		tmp_user = findByUser(tmp_user);
+		if (null != tmp_user) {
 			return new String[] { "昵称已存在" };
 		} // IF
 
-		_user = new User();
-		_user.setMobile(user.getMobile());
-		_user = findByUser(_user);
-		if (null != _user) {
+		tmp_user = new User();
+		tmp_user.setMobile(user.getMobile());
+		tmp_user = findByUser(tmp_user);
+		if (null != tmp_user) {
 			return new String[] { "手机号码已存在" };
 		} // IF
 
-		_user = new User();
-		_user.setEmail(user.getEmail());
-		_user = findByUser(_user);
-		if (null != _user) {
+		tmp_user = new User();
+		tmp_user.setEmail(user.getEmail());
+		tmp_user = findByUser(tmp_user);
+		if (null != tmp_user) {
 			return new String[] { "电子邮箱已存在" };
 		} // IF
 
-		/**********/
+		/***** 临时用户对象 *****/
 
 		// 附加数据
 		user.setUser_pass(MD5.encode(user.getUser_pass()));
 		user.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
-		user.setCreate_time(new Date());
 
 		user.setTotal_dynamic(0.00);
 		user.setTotal_food(0);
@@ -213,11 +200,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setNum_static(0.00);
 		user.setNum_ticket(0);
 
-		// 贫农
-		user.setLv("05");
-		user.setStatus(1);
-		user.setRole_id(2);
-
 		user.setId(genId());
 		save(user);
 
@@ -225,10 +207,14 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return null;
 	}
 
+	/**
+	 * 修改登陆密码
+	 */
 	@Override
 	public String[] changePwd(String key, String old_pass, String new_pass) {
 		// TODO
-		if ("".equals(new_pass.trim())) {
+		new_pass = StringUtil.isEmpty(new_pass);
+		if (null == new_pass) {
 			return new String[] { "新登陆密码不能为空" };
 		}
 
@@ -243,11 +229,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return new String[] { "原登陆密码错误" };
 		}
 
-		User _user = new User();
-		_user.setId(key);
-		_user.setUser_pass(MD5.encode(new_pass));
-		updateNotNull(_user);
+		User new_user = new User();
+		new_user.setId(key);
+		new_user.setUser_pass(MD5.encode(new_pass));
 
+		updateNotNull(new_user);
 		return null;
 	}
 
@@ -260,10 +246,14 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return updateNotNull(user);
 	}
 
+	/**
+	 * 修改安全密码
+	 */
 	@Override
 	public String[] changePwdSafe(String key, String old_pass, String new_pass) {
 		// TODO
-		if ("".equals(new_pass.trim())) {
+		new_pass = StringUtil.isEmpty(new_pass);
+		if (null == new_pass) {
 			return new String[] { "新安全密码不能为空" };
 		}
 
@@ -278,27 +268,37 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return new String[] { "原安全密码错误" };
 		}
 
-		User _user = new User();
-		_user.setId(key);
-		_user.setUser_pass_safe(MD5.encode(new_pass));
+		User new_user = new User();
+		new_user.setId(key);
+		new_user.setUser_pass_safe(MD5.encode(new_pass));
 
-		updateNotNull(_user);
+		updateNotNull(new_user);
 		return null;
 	}
 
+	/**
+	 * 修改用户信息
+	 *
+	 * 1、创建一个新用户对象
+	 *
+	 * 2、把参数赋值到新用户对象（增加安全性）
+	 */
 	@Override
 	public String[] editInfo(User user) {
-		User newUser = new User();
-		newUser.setNickname(user.getNickname());
-		newUser.setAlipay_account(user.getAlipay_account());
-		newUser.setWx_account(user.getWx_account());
-		newUser.setBank(user.getBank());
-		newUser.setBank_account(user.getBank_account());
-		newUser.setBank_name(user.getBank_name());
 
-		newUser.setId(user.getId());
+		User new_user = new User();
 
-		updateNotNull(newUser);
+		// TODO
+		new_user.setNickname(user.getNickname());
+		new_user.setAlipay_account(user.getAlipay_account());
+		new_user.setWx_account(user.getWx_account());
+		new_user.setBank(user.getBank());
+		new_user.setBank_account(user.getBank_account());
+		new_user.setBank_name(user.getBank_name());
+
+		new_user.setId(user.getId());
+
+		updateNotNull(new_user);
 		return null;
 	}
 
@@ -349,6 +349,37 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 		PageHelper.startPage(page, rows);
 		return selectByExample(example);
+	}
+
+	@Override
+	public User findByUser(User user) {
+		Example example = new Example(User.class);
+		// TODO
+		if (null != user) {
+			Example.Criteria criteria = example.createCriteria();
+
+			// TODO
+			String email = StringUtil.isEmpty(user.getEmail());
+			if (null != email) {
+				criteria.andEqualTo("email", email);
+			}
+
+			// TODO
+			String mobile = StringUtil.isEmpty(user.getMobile());
+			if (null != mobile) {
+				criteria.andEqualTo("mobile", mobile);
+			}
+
+			// TODO
+			String nickname = StringUtil.isEmpty(user.getNickname());
+			if (null != nickname) {
+				criteria.andEqualTo("nickname", nickname);
+			}
+		}
+
+		// TODO
+		List<User> list = selectByExample(example);
+		return (null == list || 1 != list.size()) ? null : list.get(0);
 	}
 
 }

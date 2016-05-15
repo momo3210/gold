@@ -61,7 +61,7 @@ public interface UserService extends IService<User> {
 	 * @param user
 	 * @return
 	 */
-	String[] saveNew(User user);
+	String[] register(User user);
 
 	/**
 	 * 修改资料

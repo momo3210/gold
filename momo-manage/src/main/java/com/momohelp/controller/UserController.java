@@ -58,6 +58,19 @@ public class UserController {
 	}
 
 	/**
+	 * 验证码
+	 *
+	 * @param session
+	 * @param verifyCode
+	 * @return
+	 */
+	private String[] verify(HttpSession session, String verifyCode) {
+		String code = session.getAttribute("session.verifyCode").toString();
+		// TODO
+		return (verifyCode.equals(code)) ? null : new String[] { "验证码输入错误" };
+	}
+
+	/**
 	 * 我的牧场
 	 *
 	 * @param session
@@ -146,6 +159,7 @@ public class UserController {
 			@RequestParam(required = true) String old_pass,
 			@RequestParam(required = true) String new_pass) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
 		// TODO
 		String[] msg = userService.changePwd(
@@ -154,7 +168,6 @@ public class UserController {
 
 		if (null != msg) {
 			result.put("msg", msg);
-			result.put("success", false);
 			return result;
 		}
 
@@ -176,6 +189,7 @@ public class UserController {
 			@RequestParam(required = true) String old_pass,
 			@RequestParam(required = true) String new_pass) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
 		// TODO
 		String[] msg = userService.changePwdSafe(
@@ -184,7 +198,6 @@ public class UserController {
 
 		if (null != msg) {
 			result.put("msg", msg);
-			result.put("success", false);
 			return result;
 		}
 
@@ -218,12 +231,11 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		// TODO
-		String svc = session.getAttribute("session.verifyCode").toString();
-		if (!verifyCode.equals(svc)) {
-			result.put("msg", new String[] { "验证码输入错误" });
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
 			return result;
-		} // IF
+		}
 
 		String[] checkSafe = checkSafe(session, user.getUser_pass_safe());
 		if (null != checkSafe) {
@@ -277,25 +289,24 @@ public class UserController {
 			HttpSession session) {
 		// TODO
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
 		// TODO
-		String svc = session.getAttribute("session.verifyCode").toString();
-		if (!verifyCode.equals(svc)) {
-			result.put("msg", new String[] { "验证码输入错误" });
-			result.put("success", false);
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
 			return result;
-		} // IF
+		}
 
 		// 我的信息
-		User myInfo = (User) session.getAttribute("session.user");
-		user.setDepth(1 + myInfo.getDepth());
-		user.setFamily_id(myInfo.getFamily_id());
-		user.setPid(myInfo.getId());
+		User my_user = (User) session.getAttribute("session.user");
+		user.setDepth(1 + my_user.getDepth());
+		user.setFamily_id(my_user.getFamily_id());
+		user.setPid(my_user.getId());
 
-		String[] msg = userService.saveNew(user);
+		String[] msg = userService.register(user);
 
 		if (null != msg) {
-			result.put("success", false);
 			result.put("msg", msg);
 			return result;
 		}
