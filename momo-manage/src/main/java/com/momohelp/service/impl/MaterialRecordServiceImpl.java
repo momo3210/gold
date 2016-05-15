@@ -197,4 +197,46 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 			return 0;
 		}
 	}
+
+	/**
+	 * 买入确认
+	 */
+	@Override
+	public String[] buy_establish(String key) {
+		MaterialRecord materialRecord = selectByKey(key);
+
+		if (null == materialRecord) {
+			return new String[] { "没有找到此记录" };
+		}
+
+		User user = userService.selectByKey(materialRecord.getUser_id());
+
+		/***** 更新用户帐户信息 *****/
+		User new_user = new User();
+		new_user.setId(user.getId());
+		if (1 == materialRecord.getType_id()) {
+			new_user.setNum_ticket(user.getNum_ticket()
+					+ materialRecord.getNum_use().intValue());
+			new_user.setTotal_ticket(user.getTotal_ticket()
+					+ materialRecord.getNum_use().intValue());
+		} else {
+			new_user.setNum_food(user.getTotal_food()
+					+ materialRecord.getNum_use().intValue());
+			new_user.setTotal_food(user.getTotal_food()
+					+ materialRecord.getNum_use().intValue());
+		}
+		userService.updateNotNull(new_user);
+
+		/***** 更新转账信息 *****/
+		MaterialRecord new_materialRecord = new MaterialRecord();
+		new_materialRecord.setId(key);
+		new_materialRecord.setStatus(1);
+
+		double d = (1 == materialRecord.getType_id()) ? new_user
+				.getNum_ticket() : new_user.getNum_food();
+		new_materialRecord.setNum_balance(d);
+		updateNotNull(new_materialRecord);
+
+		return null;
+	}
 }

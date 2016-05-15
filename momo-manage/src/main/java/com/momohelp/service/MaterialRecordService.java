@@ -22,6 +22,15 @@ public interface MaterialRecordService extends IService<MaterialRecord> {
 	String[] buy(MaterialRecord materialRecord);
 
 	/**
+	 * 买入后管理员确认
+	 *
+	 * @param key
+	 * @return
+	 */
+	@Transactional
+	String[] buy_establish(String key);
+
+	/**
 	 * 转账
 	 *
 	 * @param materialRecord
