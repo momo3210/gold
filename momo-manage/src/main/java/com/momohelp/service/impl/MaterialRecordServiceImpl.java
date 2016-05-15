@@ -62,8 +62,9 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	@Override
 	public String[] virement(MaterialRecord materialRecord) {
 
-		if (null == materialRecord.getTrans_user_id()) {
-			return new String[] { "请选择接收人" };
+		if (materialRecord.getUser_id().equals(
+				materialRecord.getTrans_user_id())) {
+			return new String[] { "接收人不能是自己" };
 		}
 
 		User trans_user = userService.selectByKey(materialRecord
@@ -77,22 +78,66 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		int num_current = (1 == materialRecord.getType_id()) ? my_user
 				.getNum_ticket() : my_user.getNum_food();
 
-		materialRecord
-				.setNum_use((0 < materialRecord.getNum_use()) ? materialRecord
-						.getNum_use() : 1);
-
 		if (num_current < materialRecord.getNum_use()) {
 			return new String[] { "您的帐号余额不足" };
 		}
 
-		// 增加一条我的
+		/***** 增加一条我的 *****/
 		materialRecord.setStatus(1);
 		materialRecord.setComment(null);
-		materialRecord.setFlag_plus_minus(1);
+		// 转出
+		materialRecord.setFlag_plus_minus(0);
 		// 更新我的本次余额
 		materialRecord
 				.setNum_balance(num_current - materialRecord.getNum_use());
 		save(materialRecord);
+
+		/***** 更新我的帐户信息 *****/
+		User new_my_user = new User();
+		if (1 == materialRecord.getType_id()) {
+			new_my_user.setNum_ticket(materialRecord.getNum_balance()
+					.intValue());
+		} else {
+			new_my_user.setNum_food(materialRecord.getNum_balance().intValue());
+		}
+		new_my_user.setId(materialRecord.getUser_id());
+		userService.updateNotNull(new_my_user);
+
+		/***** 增加一条接受人的 *****/
+		MaterialRecord new_trans_materialRecord = new MaterialRecord();
+		new_trans_materialRecord.setUser_id(materialRecord.getTrans_user_id());
+		new_trans_materialRecord.setNum_use(materialRecord.getNum_use());
+		new_trans_materialRecord.setStatus(materialRecord.getStatus());
+		new_trans_materialRecord.setType_id(materialRecord.getType_id());
+		new_trans_materialRecord.setComment(materialRecord.getComment());
+		new_trans_materialRecord.setTrans_user_id(materialRecord.getUser_id());
+
+		if (1 == new_trans_materialRecord.getType_id()) {
+			new_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
+					+ trans_user.getNum_ticket());
+		} else {
+			new_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
+					+ trans_user.getNum_food());
+		}
+		// 转入
+		new_trans_materialRecord.setFlag_plus_minus(1);
+		save(new_trans_materialRecord);
+
+		/***** 更新接收人的帐户信息 *****/
+		User new_trans_user = new User();
+		if (1 == new_trans_materialRecord.getType_id()) {
+			new_trans_user.setNum_ticket(new_trans_materialRecord
+					.getNum_balance().intValue());
+			new_trans_user.setTotal_ticket(trans_user.getTotal_ticket()
+					+ new_trans_materialRecord.getNum_use().intValue());
+		} else {
+			new_trans_user.setNum_food(new_trans_materialRecord
+					.getNum_balance().intValue());
+			new_trans_user.setTotal_food(trans_user.getTotal_ticket()
+					+ new_trans_materialRecord.getNum_use().intValue());
+		}
+		new_trans_user.setId(new_trans_materialRecord.getUser_id());
+		userService.updateNotNull(new_trans_user);
 
 		return null;
 	}
@@ -125,7 +170,6 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		materialRecord.setFlag_plus_minus(1);
 
 		save(materialRecord);
-
 		return null;
 	}
 

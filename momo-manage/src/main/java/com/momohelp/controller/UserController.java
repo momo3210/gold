@@ -572,16 +572,9 @@ public class UserController {
 		materialRecord.setTrans_user_id(StringUtil.isEmpty(materialRecord
 				.getTrans_user_id()));
 		if (null == materialRecord.getTrans_user_id()) {
-			result.put("msg", new String[] { "接收人不能为空" });
+			result.put("msg", new String[] { "请选择接收人" });
 			return result;
-		} // IF
-
-		// TODO
-		String my_user_id = session.getAttribute("session.user.id").toString();
-		if (my_user_id.equals(materialRecord.getTrans_user_id())) {
-			result.put("msg", new String[] { "接收人不能是自己" });
-			return result;
-		} // IF
+		}
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
@@ -591,8 +584,8 @@ public class UserController {
 		} // IF
 
 		// 组合数据
-		materialRecord.setUser_id(my_user_id);
-		materialRecord.setStatus(1);
+		materialRecord.setUser_id(session.getAttribute("session.user.id")
+				.toString());
 
 		String[] msg = materialRecordService.virement(materialRecord);
 		if (null != msg) {
