@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Cfg;
+import com.momohelp.model.Farm;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.UserService;
 
@@ -41,6 +43,9 @@ public class UserController {
 
 	@Autowired
 	private MaterialRecordService materialRecordService;
+
+	@Autowired
+	private FarmService farmService;
 
 	/**
 	 * 安全密码验证
@@ -343,6 +348,49 @@ public class UserController {
 
 		// TODO
 		result.addObject("nav_choose", ",04,0402,");
+		return result;
+	}
+
+	/**
+	 * 买入鸡苗
+	 *
+	 * @param verifyCode
+	 * @param user_pass_safe
+	 * @param farm
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/user/buyMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_buyMo(
+			@RequestParam(required = true) String verifyCode,
+			@RequestParam(required = true) String user_pass_safe, Farm farm,
+			HttpSession session) {
+		// TODO
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
+			return result;
+		}
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session, user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		String[] msg = farmService.buy(farm);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
 		return result;
 	}
 

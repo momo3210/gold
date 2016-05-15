@@ -186,7 +186,7 @@
 														</div>
 													</div> -->
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -279,6 +279,27 @@
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,
 				btn_down_class: 'btn-danger'
+			});
+
+			$('#btn_submit').click(function() {
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/buyMo',
+					type : 'POST',
+					dataType : 'JSON',
+					data : $('#frm').serializeObjectForm(),
+					success : function(data) {
+						if (data.success) {
+							alert('购买鸡苗成功')
+							location.href = '${(conf_html_virtualPath)!}user/buyMo';
+							return;
+						} // END
+						if (data.msg)
+							alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
 			});
 		});
 		</script>
