@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.momohelp.model.Farm;
 
 /**
@@ -15,5 +17,6 @@ public interface FarmService extends IService<Farm> {
 	 * @param farm
 	 * @return
 	 */
+	@Transactional
 	String[] buy(Farm farm);
 }
