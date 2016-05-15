@@ -319,7 +319,7 @@
 																	转给 M${(doc.trans_user_id)!} 数额 ${(doc.num_use)!}
 																</#if>
 															<#else>
-																购买${type_name}  ${(doc.num_use)!}
+																购买数额 ${(doc.num_use)!}，<#if (0 < (doc.status)!)>已入账<#else>等待入账</#if>
 															</#if>
 														</#if>
 													</td>

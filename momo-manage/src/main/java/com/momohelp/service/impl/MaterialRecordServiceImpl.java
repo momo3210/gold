@@ -112,13 +112,10 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		new_trans_materialRecord.setComment(materialRecord.getComment());
 		new_trans_materialRecord.setTrans_user_id(materialRecord.getUser_id());
 
-		if (1 == new_trans_materialRecord.getType_id()) {
-			new_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
-					+ trans_user.getNum_ticket());
-		} else {
-			new_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
-					+ trans_user.getNum_food());
-		}
+		new_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
+				+ ((1 == new_trans_materialRecord.getType_id()) ? trans_user
+						.getNum_ticket() : trans_user.getNum_food()));
+
 		// 转入
 		new_trans_materialRecord.setFlag_plus_minus(1);
 		save(new_trans_materialRecord);
@@ -133,7 +130,7 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		} else {
 			new_trans_user.setNum_food(new_trans_materialRecord
 					.getNum_balance().intValue());
-			new_trans_user.setTotal_food(trans_user.getTotal_ticket()
+			new_trans_user.setTotal_food(trans_user.getTotal_food()
 					+ new_trans_materialRecord.getNum_use().intValue());
 		}
 		new_trans_user.setId(new_trans_materialRecord.getUser_id());
@@ -220,7 +217,7 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 			new_user.setTotal_ticket(user.getTotal_ticket()
 					+ materialRecord.getNum_use().intValue());
 		} else {
-			new_user.setNum_food(user.getTotal_food()
+			new_user.setNum_food(user.getNum_food()
 					+ materialRecord.getNum_use().intValue());
 			new_user.setTotal_food(user.getTotal_food()
 					+ materialRecord.getNum_use().intValue());
