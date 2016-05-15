@@ -13,8 +13,6 @@ import com.momohelp.model.MaterialRecord;
  */
 public interface MaterialRecordService extends IService<MaterialRecord> {
 
-	String[] saveNew(MaterialRecord materialRecord);
-
 	/**
 	 * 买入
 	 *

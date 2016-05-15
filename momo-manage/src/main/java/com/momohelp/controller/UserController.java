@@ -87,26 +87,20 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		User _user = userService.getByName(user.getEmail());
-		if (null == _user) {
-			result.put("msg", new String[] { "用户名或密码输入错误" });
-			return result;
-		} // IF
+		Map<String, Object> login = userService.login(user.getEmail(),
+				user.getUser_pass());
 
-		String user_pass = MD5.encode(user.getUser_pass());
-		if (!user_pass.equals(_user.getUser_pass())) {
-			result.put("msg", new String[] { "用户名或密码输入错误" });
+		if (login.containsKey("msg")) {
+			result.put("msg", login.get("msg"));
 			return result;
-		} // IF
+		}
 
-		if (0 == _user.getStatus()) {
-			result.put("msg", new String[] { "您已被限制登陆，请联系管理员" });
-			return result;
-		} // IF
+		// 获取用户对象
+		user = (User) login.get("data");
 
 		// TODO
-		session.setAttribute("session.user", _user);
-		session.setAttribute("session.user.id", _user.getId());
+		session.setAttribute("session.user", user);
+		session.setAttribute("session.user.id", user.getId());
 		session.setAttribute("session.lv", 1);
 		session.setAttribute("session.time", (new Date()).toString());
 
@@ -492,7 +486,7 @@ public class UserController {
 				.toString());
 		materialRecord.setStatus(0);
 
-		String[] msg = materialRecordService.saveNew(materialRecord);
+		String[] msg = materialRecordService.buy(materialRecord);
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;

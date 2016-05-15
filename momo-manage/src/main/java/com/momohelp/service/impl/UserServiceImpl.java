@@ -1,6 +1,7 @@
 package com.momohelp.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,80 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	private static final String DEFAULT_USER_PASS = MD5.encode("123456");
 
-	private User findByUser(User user) {
+	@Override
+	public int save(User entity) {
+		entity.setCreate_time(new Date());
+		return super.save(entity);
+	}
+
+	@Override
+	public int updateNotNull(User entity) {
+		entity.setCreate_time(null);
+		return super.updateNotNull(entity);
+	}
+
+	/**
+	 * 获取用户对象
+	 *
+	 * @param user_name
+	 *            邮箱、手机号
+	 * @return
+	 */
+	private User getByName(String user_name) {
+		User user = null;
+
+		user = new User();
+		user.setEmail(user_name);
+		user = findByUser(user);
+		if (null != user) {
+			return user;
+		}
+
+		user = new User();
+		user.setMobile(user_name);
+		user = findByUser(user);
+		if (null != user) {
+			return user;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 普通用户登陆
+	 *
+	 * 1、先是一堆验证
+	 *
+	 * 2、最后返回用户对象
+	 */
+	@Override
+	public Map<String, Object> login(String user_name, String user_pass) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		User user = getByName(user_name);
+
+		if (null == user) {
+			result.put("msg", new String[] { "用户名或密码输入错误" });
+			return result;
+		}
+
+		if (!MD5.encode(user_pass).equals(user.getUser_pass())) {
+			result.put("msg", new String[] { "用户名或密码输入错误" });
+			return result;
+		}
+
+		if (0 == user.getStatus()) {
+			result.put("msg", new String[] { "您已被限制登陆，请联系管理员" });
+			return result;
+		} // IF
+
+		result.put("data", user);
+		return result;
+	}
+
+	@Override
+	public User findByUser(User user) {
 		Example example = new Example(User.class);
 		// TODO
 		if (null != user) {
@@ -52,28 +126,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		// TODO
 		List<User> list = selectByExample(example);
-		return (null == list || 0 == list.size()) ? null : list.get(0);
-	}
-
-	@Override
-	public User getByName(String name) {
-		User user = null;
-
-		user = new User();
-		user.setEmail(name);
-		user = findByUser(user);
-		if (null != user) {
-			return user;
-		}
-
-		user = new User();
-		user.setMobile(name);
-		user = findByUser(user);
-		if (null != user) {
-			return user;
-		}
-
-		return null;
+		return (null == list || 1 != list.size()) ? null : list.get(0);
 	}
 
 	@Override
@@ -82,7 +135,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setId(key);
 		user.setUser_pass(DEFAULT_USER_PASS);
 		// TODO
-		return super.updateNotNull(user);
+		return updateNotNull(user);
 	}
 
 	@Override
@@ -193,7 +246,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		User _user = new User();
 		_user.setId(key);
 		_user.setUser_pass(MD5.encode(new_pass));
-		super.updateNotNull(_user);
+		updateNotNull(_user);
 
 		return null;
 	}
@@ -204,7 +257,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setId(key);
 		user.setUser_pass_safe(DEFAULT_USER_PASS);
 		// TODO
-		return super.updateNotNull(user);
+		return updateNotNull(user);
 	}
 
 	@Override
@@ -228,8 +281,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		User _user = new User();
 		_user.setId(key);
 		_user.setUser_pass_safe(MD5.encode(new_pass));
-		super.updateNotNull(_user);
 
+		updateNotNull(_user);
 		return null;
 	}
 
@@ -245,7 +298,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		newUser.setId(user.getId());
 
-		super.updateNotNull(newUser);
+		updateNotNull(newUser);
 		return null;
 	}
 
@@ -298,8 +351,4 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return selectByExample(example);
 	}
 
-	@Override
-	public Map<String, Object> countMemberNOAndlevel(String key) {
-		return ((UserService) mapper).countMemberNOAndlevel(key);
-	}
 }

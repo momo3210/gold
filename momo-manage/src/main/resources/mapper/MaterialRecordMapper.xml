@@ -12,6 +12,9 @@
 		<result column="type_id" property="type_id" />
 		<result column="comment" property="comment" />
 		<result column="trans_user_id" property="trans_user_id" />
+
+		<result column="num_balance" property="num_balance" />
+		<result column="flag_plus_minus" property="flag_plus_minus" />
 	</resultMap>
 
 	<select id="findByTypeId" resultMap="baseResultMap"

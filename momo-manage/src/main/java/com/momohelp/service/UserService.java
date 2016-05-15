@@ -12,8 +12,31 @@ import com.momohelp.model.User;
  */
 public interface UserService extends IService<User> {
 
-	User getByName(String name);
+	/**
+	 * 普通用户登陆
+	 *
+	 * @param user_name
+	 * @param user_pass
+	 * @return
+	 */
+	Map<String, Object> login(String user_name, String user_pass);
 
+	/**
+	 * 单个
+	 *
+	 * @param user
+	 * @return
+	 */
+	User findByUser(User user);
+
+	/**
+	 * 多个
+	 *
+	 * @param user
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
 	List<User> findByUser(User user, int page, int rows);
 
 	/**
@@ -67,15 +90,5 @@ public interface UserService extends IService<User> {
 	 * @return
 	 */
 	String[] changePwdSafe(String key, String old_pass, String new_pass);
-
-	/**
-	 * 获取当前用户下 对应的直接一代 各个等级人员数量
-	 *
-	 * @param key
-	 *            当前用户id
-	 *
-	 * @return
-	 */
-	Map<String, Object> countMemberNOAndlevel(String key);
 
 }
