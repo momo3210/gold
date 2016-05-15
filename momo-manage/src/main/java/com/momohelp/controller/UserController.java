@@ -263,8 +263,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/account" }, method = RequestMethod.GET)
-	public ModelAndView _i_accountUI() {
+	public ModelAndView _i_accountUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/account");
+
+		User user = userService.selectByKey(session.getAttribute(
+				"session.user.id").toString());
+
+		result.addObject("data_user", user);
+
 		result.addObject("nav_choose", ",06,0601,");
 		return result;
 	}

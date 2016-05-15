@@ -139,30 +139,30 @@
 												<tr>
 													<td>1</td>
 													<td>静态帐户</td>
-													<td>0.00</td>
-													<td>0.00</td>
-													<td><a href='./staticRecord'>查看对账单</a></td>
+													<td>${data_user.total_static?string('0.00')}</td>
+													<td>${data_user.num_static?string('0.00')}</td>
+													<td><a href='./bill?type_id=3'>查看对账单</a></td>
 												</tr>
 												<tr>
 													<td>2</td>
 													<td>动态帐户</td>
-													<td>0.00</td>
-													<td>0.00</td>
-													<td><a href='./staticRecord'>查看对账单</a></td>
+													<td>${data_user.total_dynamic?string('0.00')}</td>
+													<td>${data_user.num_dynamic?string('0.00')}</td>
+													<td><a href='./bill?type_id=4'>查看对账单</a></td>
 												</tr>
 												<tr>
 													<td>3</td>
 													<td>门票帐户</td>
-													<td>0.00</td>
-													<td>0.00 <a href='./buyTicket'>充值</a></td>
-													<td><a href='./staticRecord'>查看对账单</a></td>
+													<td>${data_user.total_ticket?string('0.00')}</td>
+													<td>${data_user.num_ticket?string('0.00')} <a href='./buyTicket'>充值</a></td>
+													<td><a href='./bill?type_id=1'>查看对账单</a></td>
 												</tr>
 												<tr>
 													<td>4</td>
 													<td>饲料帐户</td>
-													<td>0.00</td>
-													<td>0.00 <a href='./buyFood'>充值</a></td>
-													<td><a href='./staticRecord'>查看对账单</a></td>
+													<td>${data_user.total_food?string('0.00')}</td>
+													<td>${data_user.num_food?string('0.00')} <a href='./buyFood'>充值</a></td>
+													<td><a href='./bill?type_id=2'>查看对账单</a></td>
 												</tr>
 											</tbody>
 										</table>
