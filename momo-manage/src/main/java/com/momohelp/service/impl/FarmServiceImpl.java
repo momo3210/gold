@@ -14,6 +14,7 @@ import tk.mybatis.mapper.entity.Example;
 import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
+import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmService;
@@ -109,7 +110,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 *
 	 * 3、验证购买的数量是否符合我的身份
 	 *
-	 * 3、验证最后一笔排单，买卖双方是否完全交易成功
+	 * 3、验证最后一笔排单，买卖双方是否完全交易成功（未完）
 	 *
 	 * 4、更新我的帐户信息--门票数量-1
 	 *
@@ -124,7 +125,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		// 获取我的帐户信息（实时）
 		User user = userService.selectByKey(farm.getUser_id());
 
-		String[] checkMyTicket = checkMyTicket(user, farm.getUser_id());
+		String[] checkMyTicket = checkMyTicket(user);
 		if (null != checkMyTicket) {
 			return checkMyTicket;
 		}
@@ -133,6 +134,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		if (null != checkNum) {
 			return checkNum;
 		}
+
+		/***** 收集数据 *****/
 
 		// 取当前日期
 		Date date = new Date();
@@ -152,6 +155,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Farm last_farm = findLast(farm.getUser_id());
 		farm.setPid((null == last_farm) ? "0" : last_farm.getId());
 
+		/***** 添加一条操作记录 *****/
+		saveMaterialRecord(farm);
+
+		updateUserTicket(user);
+
 		save(farm);
 		return null;
 	}
@@ -159,12 +167,51 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	/**
 	 * 检测我的门票还有没有？
 	 *
+	 * 1、没有，则返回
+	 *
+	 * 2、 更新用户表门票 -1
+	 *
 	 * @param user
 	 * @param user_id
 	 * @return
 	 */
-	private String[] checkMyTicket(User user, String user_id) {
-		return (0 < user.getNum_ticket()) ? null : new String[] { "没有门票了，请购买" };
+	private String[] checkMyTicket(User user) {
+		return (1 > user.getNum_ticket()) ? new String[] { "没有门票了，请购买" } : null;
+	}
+
+	/**
+	 * 更新用户门票数量
+	 *
+	 * @param user
+	 */
+	private void updateUserTicket(User user) {
+		User new_user = new User();
+		new_user.setId(user.getId());
+		new_user.setNum_ticket(user.getNum_ticket() - 1);
+		userService.updateNotNull(new_user);
+	}
+
+	/**
+	 * 添加操作记录
+	 *
+	 * w_material_use 添加一条操作记录
+	 *
+	 * @param farm
+	 */
+	private void saveMaterialRecord(Farm farm) {
+		MaterialRecord materialRecord = new MaterialRecord();
+		materialRecord.setUser_id(farm.getUser_id());
+		double d = farm.getNum_buy();
+		materialRecord.setNum_use(d);
+		materialRecord.setStatus(1);
+		materialRecord.setType_id(5);
+		materialRecord.setComment(null);
+		materialRecord.setTrans_user_id(null);
+		// 后续再说
+		materialRecord.setNum_balance(null);
+		materialRecord.setFlag_plus_minus(1);
+
+		materialRecordService.save(materialRecord);
 	}
 
 	/**
@@ -175,9 +222,51 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @return
 	 */
 	private String[] checkNum(User user, int num_buy) {
+		// 100 的倍数
 		Cfg cfg = cfgService.selectByKey("0106");
 
-		return null;
+		if (0 != num_buy % Integer.valueOf(cfg.getValue_())) {
+			return new String[] { "输入的数量不正确" };
+		}
+
+		// 获取上下限
+		Integer[] range = getRangeByUserLv(user.getLv());
+
+		if (range[0] <= num_buy && num_buy <= range[1]) {
+			return null;
+		}
+
+		return new String[] { "请输入正确的数量范围" };
+	}
+
+	/**
+	 * 获取会员能买入鸡苗的上下限
+	 *
+	 * @param lv
+	 * @return
+	 */
+	private Integer[] getRangeByUserLv(String lv) {
+		String min = null, max = null;
+
+		if ("05".equals(lv)) {
+			min = "2001";
+			max = "2002";
+		} else if ("06".equals(lv)) {
+			min = "2003";
+			max = "2004";
+		} else if ("07".equals(lv)) {
+			min = "2005";
+			max = "2006";
+		} else if ("08".equals(lv)) {
+			min = "2007";
+			max = "2008";
+		}
+
+		Cfg minObj = cfgService.selectByKey(min);
+		Cfg maxObj = cfgService.selectByKey(max);
+
+		return new Integer[] { Integer.valueOf(minObj.getValue_()),
+				Integer.valueOf(maxObj.getValue_()) };
 	}
 
 	@Override
