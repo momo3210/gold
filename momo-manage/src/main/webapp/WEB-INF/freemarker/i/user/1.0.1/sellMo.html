@@ -295,11 +295,18 @@
 															</select>
 														</div>
 													</div>
-													<div class="control-group">
+													<div class="control-group" id='frm_div_1'>
 														<label class="control-label" for="frm_num_sell">填写申请金额</label>
 
 														<div class="controls">
-															<input type="text" class="input-small" id="frm_num_sell" name='num_sell' />
+															<input type="text" class="input-small" id="frm_num_sell_1" />
+														</div>
+													</div>
+													<div class="control-group" id='frm_div_2' style='display:none;'>
+														<label class="control-label" for="frm_num_sell">填写申请金额</label>
+
+														<div class="controls">
+															<input type="text" class="input-small" id="frm_num_sell_2" />
 														</div>
 													</div>
 													<div class="control-group">
@@ -401,9 +408,19 @@
 		}
 
 		$(function(){
+			$('#frm_type_id').change(function(){
+				if(1 == $(this).val()){
+					$('#frm_div_1').css('display', 'block');
+					$('#frm_div_2').css('display', 'none');
+				}else{
+					$('#frm_div_1').css('display', 'none');
+					$('#frm_div_2').css('display', 'block');
+				}
+			});
+
 			showVerifyCode();
 
-			$('#frm_num_sell').ace_spinner({
+			$('#frm_num_sell_1').ace_spinner({
 				value: 10,
 				min: 10,
 				max: ${(data_sell_max)!},
@@ -414,12 +431,30 @@
 				btn_down_class: 'btn-danger'
 			});
 
+			$('#frm_num_sell_2').ace_spinner({
+				value: 500,
+				min: 500,
+				max: ${(data_sell_max)!},
+				step: 500,
+				icon_up: 'icon-plus',
+				icon_down: 'icon-minus',
+				btn_up_class: 'btn-success' ,
+				btn_down_class: 'btn-danger'
+			});
+
 			$('#btn_submit').click(function() {
+				var data = $('#frm').serializeObjectForm();
+				if('1' === data.type_id){
+					data.num_sell = $('#frm_num_sell_1').val();
+				}else{
+					data.num_sell = $('#frm_num_sell_2').val();
+				}
+
 				$.ajax({
 					url : '${(conf_html_virtualPath)!}user/sellMo',
 					type : 'POST',
 					dataType : 'JSON',
-					data : $('#frm').serializeObjectForm(),
+					data : data,
 					success : function(data) {
 						if (data.success) {
 							alert('卖出鸡苗成功')
