@@ -331,6 +331,7 @@ public class UserController {
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.GET)
 	public ModelAndView _i_createAccountUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/createAccount");
+		result.addObject("data_token", genToken(session));
 		result.addObject("nav_choose", ",04,0401,");
 		return result;
 	}
@@ -338,11 +339,18 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_createAccount(
+			@RequestParam(required = true) String token,
 			@RequestParam(required = true) String verifyCode, User user,
 			HttpSession session) {
 		// TODO
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
+
+		String[] validateToken = validateToken(session, token);
+		if (null != validateToken) {
+			result.put("msg", validateToken);
+			return result;
+		}
 
 		// TODO
 		String[] verify = verify(session, verifyCode);
@@ -352,10 +360,7 @@ public class UserController {
 		}
 
 		// 我的信息
-		User my_user = (User) session.getAttribute("session.user");
-		user.setDepth(1 + my_user.getDepth());
-		user.setFamily_id(my_user.getFamily_id());
-		user.setPid(my_user.getId());
+		user.setPid(session.getAttribute("session.user.id").toString());
 
 		String[] msg = userService.register(user);
 

@@ -159,6 +159,13 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return new String[] { "安全密码不能为空" };
 		}
 
+		/***** 验证父级用户 *****/
+
+		User parent_user = selectByKey(user.getPid());
+		if (null == parent_user) {
+			return new String[] { "您输入的会员编号不存在，请重新输入" };
+		}
+
 		/***** 临时用户对象 *****/
 
 		User tmp_user = null;
@@ -199,6 +206,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setNum_food(0);
 		user.setNum_static(0.00);
 		user.setNum_ticket(0);
+
+		user.setDepth(1 + parent_user.getDepth());
+		user.setFamily_id(parent_user.getFamily_id());
 
 		user.setId(genId());
 		save(user);

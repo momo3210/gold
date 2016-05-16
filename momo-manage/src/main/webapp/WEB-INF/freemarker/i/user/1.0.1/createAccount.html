@@ -279,6 +279,7 @@
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal" id='frm'>
+													<input type="hidden" name='token' value='${(data_token)!}' />
 													<#-- <!-- <div class="control-group">
 														<label class="control-label" for="editFrm_OLD_PASS">新用户编号</label>
 
@@ -448,12 +449,12 @@
 					dataType : 'JSON',
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
-						if (data.success){
+						if (data.success) {
 							alert('新建帐户成功');
-							location.href = '${(conf_html_virtualPath)!}user/createAccount';
-							return;
+						}else{
+							if (data.msg) alert(data.msg[0]);
 						}
-						alert(data.msg[0]);
+						location.href = '${(conf_html_virtualPath)!}user/createAccount';
 					},
 					error : function() {
 						alert(arguments[2]);
