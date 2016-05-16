@@ -410,12 +410,19 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value = { "/user/buyMo" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_buyMo(
+			@RequestParam(required = true) String token,
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe, Farm farm,
 			HttpSession session) {
 		// TODO
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
+
+		String[] validateToken = validateToken(session, token);
+		if (null != validateToken) {
+			result.put("msg", validateToken);
+			return result;
+		}
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
@@ -429,6 +436,8 @@ public class UserController {
 			result.put("msg", checkSafe);
 			return result;
 		} // IF
+
+		farm.setUser_id(session.getAttribute("session.user.id").toString());
 
 		String[] msg = farmService.buy(farm);
 		if (null != msg) {
@@ -476,6 +485,7 @@ public class UserController {
 
 		result.addObject("data_lv_min", minObj.getValue_());
 		result.addObject("data_lv_max", maxObj.getValue_());
+		result.addObject("data_token", genToken(session));
 
 		// TODO
 		result.addObject("nav_choose", ",05,0501,");

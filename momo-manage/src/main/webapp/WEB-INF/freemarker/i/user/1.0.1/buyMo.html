@@ -139,6 +139,7 @@
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal" id='frm'>
+													<input type="hidden" name='token' value='${(data_token)!}' />
 													<div class="control-group">
 														<label class="control-label" for='frm_select'>买入鸡苗</label>
 
@@ -290,11 +291,10 @@
 					success : function(data) {
 						if (data.success) {
 							alert('购买鸡苗成功')
-							location.href = '${(conf_html_virtualPath)!}user/buyMo';
-							return;
-						} // END
-						if (data.msg)
-							alert(data.msg[0]);
+						}else{
+							if (data.msg) alert(data.msg[0]);
+						}
+						location.href = '${(conf_html_virtualPath)!}user/buyMo';
 					},
 					error : function() {
 						alert(arguments[2]);

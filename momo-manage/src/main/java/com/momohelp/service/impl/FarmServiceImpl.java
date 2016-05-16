@@ -1,5 +1,7 @@
 package com.momohelp.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,18 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	@Autowired
 	private MaterialRecordService materialRecordService;
 
+	@Override
+	public int save(Farm entity) {
+		entity.setCreate_time(new Date());
+		return super.save(entity);
+	}
+
+	@Override
+	public int updateNotNull(Farm entity) {
+		entity.setCreate_time(null);
+		return super.updateNotNull(entity);
+	}
+
 	/**
 	 * 买入鸡苗
 	 *
@@ -36,6 +50,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * 2、验证购买的数量是否是100的倍数
 	 *
 	 * 3、验证购买的数量是否符合我的身份
+	 *
+	 * 3、验证最后一笔排单，买卖双方是否完全交易成功
 	 *
 	 * 4、更新我的帐户信息--门票数量-1
 	 *
@@ -55,6 +71,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return checkMyTicket;
 		}
 
+		save(farm);
 		return null;
 	}
 
