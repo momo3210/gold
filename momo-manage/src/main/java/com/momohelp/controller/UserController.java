@@ -566,6 +566,7 @@ public class UserController {
 		// TODO
 		User my_user = userService.selectByKey(my_user_id);
 		result.addObject("data_user", my_user);
+		result.addObject("data_token", genToken(session));
 
 		result.addObject("nav_choose", ",06,0603,");
 		return result;

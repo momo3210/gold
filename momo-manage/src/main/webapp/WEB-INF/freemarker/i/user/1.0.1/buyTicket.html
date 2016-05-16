@@ -393,11 +393,10 @@
 					success : function(data) {
 						if (data.success) {
 							alert('购买门票成功')
-							location.href = '${(conf_html_virtualPath)!}user/buyTicket';
-							return;
-						} // END
-						if (data.msg)
-							alert(data.msg[0]);
+						}else{
+							if (data.msg) alert(data.msg[0]);
+						}
+						location.href = '${(conf_html_virtualPath)!}user/buyTicket';
 					},
 					error : function() {
 						alert(arguments[2]);
