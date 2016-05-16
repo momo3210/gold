@@ -59,7 +59,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
-	 * 获取出局时间
+	 * 获取出局时间 20天
 	 *
 	 * @param date
 	 * @return
@@ -72,7 +72,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
-	 * 获取成熟时间
+	 * 获取成熟时间 7天
 	 *
 	 * @param date
 	 * @return
