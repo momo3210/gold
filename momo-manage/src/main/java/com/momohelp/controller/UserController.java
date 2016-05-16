@@ -48,6 +48,48 @@ public class UserController {
 	private FarmService farmService;
 
 	/**
+	 * 验证令牌
+	 *
+	 * @param session
+	 * @param token
+	 * @return
+	 */
+	private String[] validateToken(HttpSession session, String token) {
+		token = StringUtil.isEmpty(token);
+
+		if (null == token) {
+			session.removeAttribute("token");
+			return new String[] { "请不要重复提交" };
+		}
+
+		Object session_token = session.getAttribute("token");
+		if (null == session_token) {
+			return new String[] { "请不要重复提交" };
+		}
+
+		if (!token.equals(session_token.toString())) {
+			session.removeAttribute("token");
+			return new String[] { "请不要重复提交" };
+		}
+
+		session.removeAttribute("token");
+		return null;
+	}
+
+	/**
+	 * 生成令牌
+	 *
+	 * @param session
+	 * @return
+	 */
+	private String genToken(HttpSession session) {
+		int i = (int) ((Math.random() * 5 + 1) * 1000);
+		String token = String.valueOf(i);
+		session.setAttribute("token", token);
+		return token;
+	}
+
+	/**
 	 * 安全密码验证
 	 *
 	 * @param session
@@ -492,6 +534,8 @@ public class UserController {
 		// TODO
 		User my_user = userService.selectByKey(my_user_id);
 		map.put("data_user", my_user);
+		map.put("data_token", genToken(session));
+
 		// TODO
 		map.put("nav_choose", ",06,0602,");
 		return "i/user/1.0.1/buyTicket";
@@ -501,10 +545,11 @@ public class UserController {
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_buyTicket(
 			@RequestParam(required = true) String user_pass_safe,
+			@RequestParam(required = true) String token,
 			MaterialRecord materialRecord, HttpSession session) {
 		// TODO
 		materialRecord.setType_id(1);
-		return _i_buy(user_pass_safe, materialRecord, session);
+		return _i_buy(user_pass_safe, token, materialRecord, session);
 	}
 
 	/**
@@ -530,14 +575,21 @@ public class UserController {
 	 * 购买
 	 *
 	 * @param user_pass_safe
+	 * @param token
 	 * @param materialRecord
 	 * @param session
 	 * @return
 	 */
-	private Map<String, Object> _i_buy(String user_pass_safe,
+	private Map<String, Object> _i_buy(String user_pass_safe, String token,
 			MaterialRecord materialRecord, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
+
+		String[] validateToken = validateToken(session, token);
+		if (null != validateToken) {
+			result.put("msg", validateToken);
+			return result;
+		}
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
@@ -566,10 +618,12 @@ public class UserController {
 	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_buyFood(
 			@RequestParam(required = true) String user_pass_safe,
+
+			@RequestParam(required = true) String token,
 			MaterialRecord materialRecord, HttpSession session) {
 		// TODO
 		materialRecord.setType_id(2);
-		return _i_buy(user_pass_safe, materialRecord, session);
+		return _i_buy(user_pass_safe, token, materialRecord, session);
 	}
 
 	/**
