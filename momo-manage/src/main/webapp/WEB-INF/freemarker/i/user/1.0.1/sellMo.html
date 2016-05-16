@@ -284,6 +284,7 @@
 										<div class="tab-content">
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal" id='frm'>
+													<input type="hidden" name='token' value='${(data_token)!}' />
 													<div class="control-group">
 														<label class="control-label" for="frm_type_id">选择钱包</label>
 
@@ -317,7 +318,7 @@
 														</div>
 													</div>
 													<div class="form-actions">
-														<button class="btn btn-info" type="button">
+														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
 															提交
 														</button>
@@ -411,6 +412,26 @@
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,
 				btn_down_class: 'btn-danger'
+			});
+
+			$('#btn_submit').click(function() {
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/sellMo',
+					type : 'POST',
+					dataType : 'JSON',
+					data : $('#frm').serializeObjectForm(),
+					success : function(data) {
+						if (data.success) {
+							alert('卖出鸡苗成功')
+						}else{
+							if (data.msg) alert(data.msg[0]);
+						}
+						location.href = '${(conf_html_virtualPath)!}user/sellMo';
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
 			});
 		});
 		</script>

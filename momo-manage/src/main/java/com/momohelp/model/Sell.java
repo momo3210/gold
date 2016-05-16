@@ -35,7 +35,9 @@ public class Sell implements Serializable {
 	private String user_id;
 
 	/**
-	 * 1静态钱包</br> 2动态钱包
+	 * 1静态钱包
+	 *
+	 * 2动态钱包
 	 */
 	private Integer type_id;
 
