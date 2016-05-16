@@ -19,4 +19,12 @@ public interface FarmService extends IService<Farm> {
 	 */
 	@Transactional
 	String[] buy(Farm farm);
+
+	/**
+	 * 获取用户的最后一单
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	Farm findLast(String user_id);
 }

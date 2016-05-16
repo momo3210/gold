@@ -36,7 +36,7 @@ public class Farm implements Serializable {
 	private Date time_ripe;
 
 	/**
-	 * 当前鸡数量
+	 * 当前鸡数量（还有多少可以卖出，应在已经成交后才能操作）
 	 */
 	private Integer num_current;
 
@@ -56,12 +56,18 @@ public class Farm implements Serializable {
 	private Integer flag_calc_bonus;
 
 	/**
-	 * 实际成交时间
+	 * 实际成交时间（当最后一笔钱卖家确认后，更新此字段）
 	 */
 	private Date time_deal;
 
 	/**
-	 * 0初始化 1未出局 2已出局 3强制出局
+	 * 0初始化
+	 *
+	 * 1未出局
+	 *
+	 * 2已出局
+	 *
+	 * 3强制出局
 	 */
 	private Integer flag_out;
 

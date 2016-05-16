@@ -1,10 +1,14 @@
 package com.momohelp.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.entity.Example;
+
+import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.User;
@@ -33,11 +37,16 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	@Override
 	public int save(Farm entity) {
 		entity.setCreate_time(new Date());
+		entity.setFlag_out(0);
+		entity.setFlag_calc_bonus(0);
+		entity.setNum_current(entity.getNum_buy());
+		entity.setNum_deal(0);
 		return super.save(entity);
 	}
 
 	@Override
 	public int updateNotNull(Farm entity) {
+		entity.setUser_id(null);
 		entity.setCreate_time(null);
 		return super.updateNotNull(entity);
 	}
@@ -71,6 +80,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return checkMyTicket;
 		}
 
+		/***** 获取会员的最后一单 *****/
+		Farm last_farm = findLast(farm.getUser_id());
+		farm.setPid((null == last_farm) ? "0" : last_farm.getId());
+
 		save(farm);
 		return null;
 	}
@@ -97,6 +110,19 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Cfg cfg = cfgService.selectByKey("0106");
 
 		return null;
+	}
+
+	@Override
+	public Farm findLast(String user_id) {
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time desc");
+		// TODO
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+
+		PageHelper.startPage(1, 1);
+		List<Farm> list = selectByExample(example);
+		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
 }
