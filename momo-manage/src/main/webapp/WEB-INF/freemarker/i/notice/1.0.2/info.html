@@ -93,7 +93,7 @@
 								<div class="widget-header">
 									<h5>网站公告 Notice</h5>
 
-									<!-- <div class="widget-toolbar">
+									<#-- <!-- <div class="widget-toolbar">
 										<a href="#" data-action="settings">
 											<i class="icon-cog"></i>
 										</a>
@@ -114,9 +114,14 @@
 
 								<div class="widget-body">
 									<div class="widget-main">
-										<p>${(data_doc.title)!}</p>
-										<p>${(data_doc.content)!}</p>
-										<p>${(data_doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</p>
+										<div class="row-fluid">
+											<div class="span12">
+												<h3 style='text-align:center'>${(data_doc.title)!}</h3>
+												<h6 style='text-align:center;font-style:italic;color:#bbb;margin-bottom:5px'>发布时间：${(data_doc.create_time?string("yyyy-MM-dd"))!}</h6>
+												<hr style='margin-top:0' />
+												<p style='font-size:16px'>${(data_doc.content)!}</p>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -169,6 +174,7 @@
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-small btn-inverse">
 			<i class="icon-double-angle-up icon-only bigger-110"></i>
 		</a>
+
 		<#include "/_pagelet/js.html"/>
 	</body>
 </html>
