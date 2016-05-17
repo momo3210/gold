@@ -28,25 +28,49 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	@Override
 	public int save(Sell entity) {
 		entity.setCreate_time(new Date());
+		entity.setId(genId());
 		return super.save(entity);
 	}
 
 	@Override
 	public int updateNotNull(Sell entity) {
-		entity.setUser_id(null);
-		entity.setNum_sell(null);
-		entity.setCreate_time(null);
-		entity.setType_id(null);
+		entity.setId(null);
 		return super.updateNotNull(entity);
+	}
+
+	/**
+	 * 生成主键
+	 *
+	 * @return
+	 */
+	private String genId() {
+		String id = null;
+		Sell sell = null;
+		do {
+			// 算法
+			int i = (int) ((Math.random() * 10 + 1) * 100000000);
+			id = String.valueOf(i);
+			// END
+			sell = selectByKey(id);
+		} while (null != sell);
+		return id;
 	}
 
 	/**
 	 * 步骤
 	 *
-	 * 2、验证购买的数量是否是10的倍数
+	 * 1、验证购买的数量是否是10的倍数
+	 *
+	 * 2、根据动静调用不同的方法
+	 *
+	 * 3、判断用户的存款是否够卖
 	 */
 	@Override
 	public String[] sell(Sell sell) {
+		sell.setNum_sell((null == sell.getNum_sell()) ? 0 : sell.getNum_sell());
+		if (1 > sell.getNum_sell()) {
+			return new String[] { "卖出鸡苗数量不能为 0" };
+		}
 
 		// 获取我的帐户信息（实时）
 		User user = userService.selectByKey(sell.getUser_id());
@@ -56,7 +80,38 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return checkNum;
 		}
 
-		save(sell);
+		if (1 == sell.getType_id()) {
+			return sell_static(user, sell);
+		} else { // 动态钱包
+			return sell_dynamic(user, sell);
+		}
+	}
+
+	/**
+	 * 卖出动态钱包
+	 *
+	 * @param user
+	 * @param sell
+	 * @return
+	 */
+	private String[] sell_dynamic(User user, Sell sell) {
+		if (sell.getNum_sell() > user.getNum_dynamic()) {
+			return new String[] { "动态钱包余额不足" };
+		}
+		return null;
+	}
+
+	/**
+	 * 卖出静态钱包
+	 *
+	 * @param user
+	 * @param sell
+	 * @return
+	 */
+	private String[] sell_static(User user, Sell sell) {
+		if (sell.getNum_sell() > user.getNum_static()) {
+			return new String[] { "静态钱包余额不足" };
+		}
 		return null;
 	}
 

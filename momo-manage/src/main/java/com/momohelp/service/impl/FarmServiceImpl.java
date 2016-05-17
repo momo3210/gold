@@ -130,7 +130,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	public String[] buy(Farm farm) {
 		farm.setNum_buy((null == farm.getNum_buy()) ? 0 : farm.getNum_buy());
 		if (1 > farm.getNum_buy()) {
-			return new String[] { "买入数量不能为 0" };
+			return new String[] { "买入鸡苗数量不能为 0" };
 		}
 
 		// 获取我的帐户信息（实时）
