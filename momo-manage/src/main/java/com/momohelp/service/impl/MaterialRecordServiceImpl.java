@@ -196,7 +196,11 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	}
 
 	/**
-	 * 买入确认
+	 * 买入后确认
+	 *
+	 * 1、更新用户帐户信息
+	 *
+	 * 2、更新转账记录 status 为1
 	 */
 	@Override
 	public String[] buy_establish(String key) {
