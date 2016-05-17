@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.momohelp.mapper.BuyMapper;
 import com.momohelp.model.Buy;
 import com.momohelp.service.BuyService;
 
@@ -19,7 +20,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 	@Override
 	public List<Buy> selectByCycles(Date time, Date time2) {
 		
-		return ((BuyService)mapper).selectByCycles(time, time2);
+		return ((BuyMapper)mapper).selectByCycles(time, time2);
 	}
 
 }

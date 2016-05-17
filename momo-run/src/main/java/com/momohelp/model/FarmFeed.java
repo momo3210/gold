@@ -38,6 +38,19 @@ public class FarmFeed implements Serializable {
 	 */
 	private String w_farm_chick_id;
 
+	/**
+	 * 总金额
+	 */
+	private Double price;
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
 	public String getId() {
 		return id;
 	}

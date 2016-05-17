@@ -1,13 +1,14 @@
 package com.momohelp.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.mapper.UserMapper;
+import com.momohelp.model.ModelLV;
 import com.momohelp.model.User;
 import com.momohelp.service.UserService;
 
@@ -218,7 +219,13 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public Map<String, Object> countMemberNOAndlevel(String key) {
-		return ((UserService) mapper).countMemberNOAndlevel(key);
+	public List<ModelLV> countMemberNOAndlevel(String key) {
+		return ((UserMapper) mapper).countMemberNOAndlevel(key);
+	}
+
+	@Override
+	public Integer countLvNO(String pid, String poorPeasant) {
+		
+		return ((UserMapper) mapper).countLvNO(pid, poorPeasant);
 	}
 }

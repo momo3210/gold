@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.momohelp.mapper.FarmMapper;
 import com.momohelp.model.Farm;
 import com.momohelp.service.FarmService;
 
@@ -19,13 +20,18 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	@Override
 	public List<Farm> getUntreatedFarm() {
 
-		return ((FarmService) mapper).getUntreatedFarm();
+		return ((FarmMapper) mapper).getUntreatedFarm();
 	}
 
 	@Override
 	public List<Farm> selectLastFarmByDate(String id, Date create_time) {
 
-		return ((FarmService) mapper).selectLastFarmByDate(id, create_time);
+		return ((FarmMapper) mapper).selectLastFarmByDate(id, create_time);
+	}
+
+	@Override
+	public List<Farm> selectForceLogout(Date date) {
+		return ((FarmMapper) mapper).selectForceLogout(date);
 	}
 
 }

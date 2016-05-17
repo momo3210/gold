@@ -25,4 +25,10 @@ public interface FarmMapper extends MyMapper<Farm> {
 	 */
 	List<Farm> selectLastFarmByDate(String id, Date create_time);
 	
+	/**
+	 * 获取自动到期 ，出局排单
+	 * @return
+	 */
+	List<Farm> selectForceLogout(Date date);
+	
 }

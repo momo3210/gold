@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.UserMapper">
-	<resultMap id="userlist" type="com.momohelp.model.User">
+	<resultMap id="user" type="com.momohelp.model.User">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 
 		<result column="user_pass" property="user_pass" jdbcType="VARCHAR" />
@@ -9,7 +9,7 @@
 		<result column="user_pass_safe" property="user_pass_safe"
 			jdbcType="VARCHAR" />
 
-		<result column="role_id" property="role_id" jdbcType="int" />
+		<result column="role_id" property="role_id" jdbcType="INTEGER" />
 
 		<result column="real_name" property="real_name" jdbcType="VARCHAR" />
 
@@ -24,9 +24,9 @@
 
 		<result column="wx_account" property="wx_account" jdbcType="VARCHAR" />
 
-		<result column="create_time" property="create_time" jdbcType="datetime" />
+		<result column="create_time" property="create_time" jdbcType="DATE" />
 
-		<result column="status" property="status" jdbcType="int" />
+		<result column="status" property="status" jdbcType="INTEGER" />
 
 		<result column="apikey" property="apikey" jdbcType="VARCHAR" />
 
@@ -42,33 +42,36 @@
 
 		<result column="family_id" property="family_id" jdbcType="VARCHAR" />
 
-		<result column="depth" property="depth" jdbcType="int" />
+		<result column="depth" property="depth" jdbcType="INTEGER" />
 
 		<result column="lv" property="lv" jdbcType="VARCHAR" />
 
-		<result column="num_static" property="num_static" jdbcType="double" />
+		<result column="num_static" property="num_static" jdbcType="DOUBLE" />
 
-		<result column="num_dynamic" property="num_dynamic" jdbcType="double" />
+		<result column="num_dynamic" property="num_dynamic" jdbcType="DOUBLE" />
 
-		<result column="num_ticket" property="num_ticket" jdbcType="int" />
+		<result column="num_ticket" property="num_ticket" jdbcType="INTEGER" />
 
-		<result column="num_food" property="num_food" jdbcType="int" />
+		<result column="num_food" property="num_food" jdbcType="INTEGER" />
 
-		<result column="total_static" property="total_static" jdbcType="double" />
+		<result column="total_static" property="total_static" jdbcType="DOUBLE" />
 
 		<result column="total_dynamic" property="total_dynamic"
-			jdbcType="double" />
+			jdbcType="DOUBLE" />
 
-		<result column="total_ticket" property="total_ticket" jdbcType="int" />
+		<result column="total_ticket" property="total_ticket" jdbcType="INTEGER" />
 
-		<result column="total_food" property="total_food" jdbcType="int" />
+		<result column="total_food" property="total_food" jdbcType="INTEGER" />
 	</resultMap>
-	<select id="countMemberNOAndlevel" resultType="java.util.HashMap"
-		parameterType="String">
-		SELECT u.lv as lv ,COUNT(u.lv) as no FROM s_user as u
-		where u.pid=#{id} order by u.lv
-		GROUP BY u.lv
+	<select id="countMemberNOAndlevel" resultType="com.momohelp.model.ModelLV">
+		SELECT u.lv as lv
+		,COUNT(u.lv) as no FROM s_user as u where u.pid=#{0} GROUP BY u.lv
+	</select>
+	<select id="countLvNO"  resultType="java.lang.Integer" >
+	<!-- 查询当前用户下 贫农已经排单而且首次排单 ，并且打款成功的人数  -->
+		SELECT COUNT(s.id) as no FROM s_user as s , w_farm_chick as w where
+		(s.lv=#{1} and s.pid=#{0}) and (s.id=w.user_id) and
+		(w.num_buy=w.num_deal) and w.pid='0'
 
 	</select>
-
 </mapper>

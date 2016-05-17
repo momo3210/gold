@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.momohelp.mapper.BuySellMapper;
 import com.momohelp.model.BuySell;
 import com.momohelp.service.BuySellService;
 
@@ -18,8 +19,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 
 	@Override
 	public List<BuySell> selectBySellAndBuyId() {
-		
-		return ((BuySellService) mapper).selectBySellAndBuyId();
+		return ((BuySellMapper) mapper).selectBySellAndBuyId();
 	}
 
 }

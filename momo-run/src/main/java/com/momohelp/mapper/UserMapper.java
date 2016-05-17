@@ -1,7 +1,8 @@
 package com.momohelp.mapper;
 
-import java.util.Map;
+import java.util.List;
 
+import com.momohelp.model.ModelLV;
 import com.momohelp.model.User;
 import com.momohelp.util.MyMapper;
 
@@ -18,5 +19,8 @@ public interface UserMapper extends MyMapper<User> {
 	 *            当前用户id
 	 * @return
 	 */
-	Map<String, Object> countMemberNOAndlevel(String key);
+	List<ModelLV> countMemberNOAndlevel(String key);
+
+	// 查询当前用户下 贫农已经排单而且首次排单 ，并且打款成功的人数
+	Integer countLvNO(String pid, String poorPeasant);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.momohelp.mapper.SellMapper;
 import com.momohelp.model.Sell;
 import com.momohelp.service.SellService;
 
@@ -18,7 +19,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Override
 	public List<Sell> selectByCycles(Date time, Date date) {
-		return ((SellService) mapper).selectByCycles(time, date);
+		return ((SellMapper)mapper).selectByCycles(time, date);
 	}
 
 }

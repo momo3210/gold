@@ -23,4 +23,10 @@ public interface FarmService extends IService<Farm> {
 	 * @return
 	 */
 	List<Farm> selectLastFarmByDate(String id, Date create_time);
+	/**
+	 * 获取自动到期 ，出局排单
+	 * @param date 
+	 * @return
+	 */
+	List<Farm> selectForceLogout(Date date);
 }
