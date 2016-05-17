@@ -1,10 +1,16 @@
 package com.momohelp.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.entity.Example;
+
+import com.github.pagehelper.PageHelper;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
@@ -77,6 +83,17 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return new String[] { "卖出鸡苗数量不能为 0" };
 		}
 
+		if (2 == sell.getType_id()) {
+			if (5000 < sell.getNum_sell()) {
+				return new String[] { "动态钱包金额上限不能大于 5000" };
+			}
+		}
+
+		String[] checkCeilingNumMonth = checkCeilingNumMonth(sell.getUser_id());
+		if (null != checkCeilingNumMonth) {
+			return checkCeilingNumMonth;
+		}
+
 		// 获取我的帐户信息（实时）
 		User user = userService.selectByKey(sell.getUser_id());
 
@@ -85,11 +102,67 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return checkNum;
 		}
 
+		String[] checkTodaySell = checkTodaySell(user);
+		if (null != checkTodaySell) {
+			return checkTodaySell;
+		}
+
 		if (1 == sell.getType_id()) {
 			return sell_static(user, sell);
 		} else { // 动态钱包
 			return sell_dynamic(user, sell);
 		}
+	}
+
+	/**
+	 * 判断每月的卖出上限不能超过12次
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	private String[] checkCeilingNumMonth(String user_id) {
+		Calendar ca = Calendar.getInstance();
+		ca.set(Calendar.DAY_OF_MONTH, 1);
+		Date first_day = ca.getTime();
+
+		// TODO
+		Example example = new Example(Sell.class);
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andGreaterThan("create_time", first_day);
+		criteria.andEqualTo("user_id", user_id);
+		List<Sell> list = selectByExample(example);
+
+		if (null == list) {
+			return new String[] { "读取数据异常" };
+		}
+
+		return (12 > list.size()) ? null : new String[] { "每月卖出鸡苗上线不能超过 12 次" };
+	}
+
+	private static final SimpleDateFormat sdf = new SimpleDateFormat(
+			"yyyy-MM-dd");
+
+	/**
+	 * 判断今天是否已经卖出过鸡苗了（不管是动态还是静态）
+	 *
+	 * 比较最后一次的卖出记录（年月日）和当前（年月日）进行比对
+	 *
+	 * @param user
+	 * @return
+	 */
+	private String[] checkTodaySell(User user) {
+		Sell sell = findLast(user.getId());
+		if (null == sell) {
+			return null;
+		}
+
+		String date_1 = sdf.format(new Date());
+		String date_2 = sdf.format(sell.getCreate_time());
+
+		if (date_1.equals(date_2)) {
+			return new String[] { "今天已经卖出过鸡苗了" };
+		}
+		return null;
 	}
 
 	/**
@@ -161,6 +234,24 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		int radix = (1 == sell.getType_id()) ? 10 : 500;
 		return (0 == sell.getNum_sell() % Integer.valueOf(radix)) ? null
 				: new String[] { "输入的数量不正确" };
+	}
+
+	/**
+	 * 获取用户最后一次的卖出记录
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	private Sell findLast(String user_id) {
+		Example example = new Example(Sell.class);
+		example.setOrderByClause("create_time desc");
+		// TODO
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+
+		PageHelper.startPage(1, 1);
+		List<Sell> list = selectByExample(example);
+		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
 }
