@@ -15,5 +15,7 @@ public interface ICalculation {
 	
 	//等级计算
 	public abstract  boolean calculateLevel(List<Farm> farms);
+	//用户强制出局计算
+	boolean calculateForceLogout();
 
 }

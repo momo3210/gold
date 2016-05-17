@@ -6,11 +6,11 @@
 
 		<result column="w_farm_chick_id" property="w_farm_chick_id" jdbcType="VARCHAR" />
 
-		<result column="num_buy" property="num_buy" jdbcType="int" />
+		<result column="num_buy" property="num_buy" jdbcType="INTEGER" />
 
-		<result column="create_time" property="create_time" jdbcType="datetime" />
+		<result column="create_time" property="create_time" jdbcType="DATE" />
 	</resultMap>
-	<select id="selectByCycles" resultType="buySell">
+	<select id="selectByCycles" resultType="buy">
 		SELECT * FROM p_buy as p WHERE p.create_time between #{0} and #{1}
 	</select>
 

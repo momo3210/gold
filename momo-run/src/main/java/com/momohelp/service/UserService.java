@@ -1,8 +1,8 @@
 package com.momohelp.service;
 
 import java.util.List;
-import java.util.Map;
 
+import com.momohelp.model.ModelLV;
 import com.momohelp.model.User;
 
 /**
@@ -76,6 +76,8 @@ public interface UserService extends IService<User> {
 	 *
 	 * @return
 	 */
-	Map<String, Object> countMemberNOAndlevel(String key);
+	List<ModelLV> countMemberNOAndlevel(String key);
+	// 查询当前用户下 贫农已经排单而且首次排单 ，并且打款成功的人数  
+	Integer countLvNO(String pid, String poorPeasant);
 
 }

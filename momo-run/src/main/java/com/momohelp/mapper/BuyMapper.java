@@ -1,6 +1,7 @@
 package com.momohelp.mapper;
 
 import java.util.Date;
+import java.util.List;
 
 import com.momohelp.model.Buy;
 import com.momohelp.util.MyMapper;
@@ -17,5 +18,5 @@ public interface BuyMapper extends MyMapper<Buy> {
 	 * @param time2
 	 * @return
 	 */
-	Buy selectByCycles(Date time, Date time2);
+	List<Buy> selectByCycles(Date time, Date time2);
 }

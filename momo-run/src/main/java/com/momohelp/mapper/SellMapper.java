@@ -1,6 +1,7 @@
 package com.momohelp.mapper;
 
 import java.util.Date;
+import java.util.List;
 
 import com.momohelp.model.Sell;
 import com.momohelp.util.MyMapper;
@@ -17,5 +18,5 @@ public interface SellMapper extends MyMapper<Sell> {
      * @param date 当前时间
      * @return
      */
-	Sell selectByCycles(Date time, Date date);
+	List<Sell> selectByCycles(Date time, Date date);
 }

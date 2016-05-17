@@ -4,20 +4,20 @@
 
 
 
-	<resultMap id="shell" type="com.momohelp.model.Sell">
+	<resultMap id="sell" type="com.momohelp.model.Sell">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 
-		<result column="num_sell" property="num_sell" jdbcType="int" />
+		<result column="num_sell" property="num_sell" jdbcType="INTEGER" />
 
 		<result column="create_time" property="create_time"
-			jdbcType="datetime" />
+			jdbcType="DATE" />
 
 		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
 
-		<result column="type_id" property="type_id" jdbcType="int" />
+		<result column="type_id" property="type_id" jdbcType="INTEGER" />
 	</resultMap>
-	<select id="selectByCycles" resultType="shell">
-		SELECT * FROM p_sell as p WHERE p.create_time time between #{0} and #{1} 
+	<select id="selectByCycles" resultType="sell">
+		SELECT * FROM p_sell as p WHERE p.create_time  between #{0} and #{1} 
 	</select>
 
 	
