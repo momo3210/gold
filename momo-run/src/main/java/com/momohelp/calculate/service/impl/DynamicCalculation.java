@@ -13,18 +13,22 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import tk.mybatis.mapper.entity.Example;
+
 import com.momohelp.calculate.service.ICalculation;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.ModelLV;
+import com.momohelp.model.Prize;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmService;
+import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 
@@ -50,6 +54,31 @@ public class DynamicCalculation implements Serializable, ICalculation {
 	@Resource
 	private BuySellService buySellService;
 
+	@Resource
+	private PrizeService prizeService;
+
+	// 自动转换到期奖金金额
+	public boolean triggerConversion() {
+		Example example = new Example(Prize.class);
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("flag", 0);
+		Calendar cr = Calendar.getInstance();
+		cr.add(Calendar.DAY_OF_MONTH, -1);
+		criteria.andGreaterThan("trigger_time", cr.getTime());
+		criteria.andLessThan("trigger_time", Calendar.getInstance().getTime());
+		List<Prize> prizes = prizeService.selectByExample(example);
+		User userTemp = null;
+		for (Prize prize : prizes) {
+			userTemp = userService.selectByKey(prize.getUser_id());
+			userTemp.setNum_dynamic(userTemp.getNum_dynamic() + prize.getMoney());
+			userTemp.setTotal_dynamic(userTemp.getTotal_dynamic() + prize.getMoney());
+			userService.updateNotNull(userTemp);
+			prize.setFlag(1);
+			prizeService.updateNotNull(prize);
+		}
+		return true;
+	}
+
 	// 用户强制出局计算
 	@Override
 	public boolean calculateForceLogout() {
@@ -69,7 +98,7 @@ public class DynamicCalculation implements Serializable, ICalculation {
 		boolean bool = false;
 		for (Farm farm : farms) {
 			User user = userService.selectByKey(farm.getUser_id());// 当前用户id
-			if (user==null) {
+			if (user == null) {
 				break;
 			}
 			String pid = user.getPid();// 获取当前用户的领导
@@ -81,10 +110,13 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			List<String> list = new ArrayList<String>(8);
 			list.add(Parameter.POOR_PEASANT);
 			for (ModelLV modelLV : childsList) {
-				//System.err.println(modelLV.getLv() + "---" + modelLV.getNo());
+				// System.err.println(modelLV.getLv() + "---" +
+				// modelLV.getNo());
 				switch (modelLV.getLv()) {
 				case Parameter.POOR_PEASANT:
-					if (modelLV.getNo() >= 4 &&userService.countLvNO(pid,Parameter.POOR_PEASANT)>=4) {
+					if (modelLV.getNo() >= 4
+							&& userService.countLvNO(pid,
+									Parameter.POOR_PEASANT) >= 4) {
 						list.add(Parameter.MIDDLE_PEASANT);
 					}
 					break;
@@ -144,7 +176,7 @@ public class DynamicCalculation implements Serializable, ICalculation {
 				List<Farm> leaderLastFarm = farmService.selectLastFarmByDate(
 						leader.getId(), farm.getCreate_time());
 				double tempBase = farm.getNum_buy();
-				if (leaderLastFarm==null||leaderLastFarm.size()==0) {
+				if (leaderLastFarm == null || leaderLastFarm.size() == 0) {
 					break;
 				}
 				Farm f = leaderLastFarm.get(0);// 领导最近一单
@@ -201,18 +233,39 @@ public class DynamicCalculation implements Serializable, ICalculation {
 				}
 				int temp = user.getDepth();
 				User userTemp = user;
-				while (true) {// 这样可能数据不统一： 正在执行的过程中突然断电
+				Prize entity = null;
+				while (true) {// 这样可能数据不统一： 
 					userTemp = userService.selectByKey(userTemp.getPid());// 2
-					if (null == userTemp
-							|| userTemp.getId().trim().length() == 0) {// 死循环终止条件
+					if (null == userTemp ) {// 死循环终止条件
 						break;
 					}
+					if (userTemp.getId().trim().length() == 0) {
+						continue;
+					}
+					int depth = temp - userTemp.getDepth();
 					double number = calculateRoyalty(tempBase,
-							userTemp.getLv(), temp - userTemp.getDepth());
-					userTemp.setNum_dynamic(userTemp.getNum_dynamic() + number);
-					userTemp.setTotal_dynamic(userTemp.getTotal_dynamic()
-							+ number);
-					userService.updateNotNull(userTemp);
+							userTemp.getLv(), depth);
+					// userTemp.setNum_dynamic(userTemp.getNum_dynamic() +
+					// number);
+					// userTemp.setTotal_dynamic(userTemp.getTotal_dynamic()+
+					// number);
+					// userService.updateNotNull(userTemp);
+					entity = new Prize();
+					entity.setId(UUID.randomUUID().toString().replace("-", ""));
+					entity.setCreate_time(new Date());
+					entity.setDepth(depth);
+					entity.setMoney(number);
+					entity.setFlag(0);
+					entity.setUser_id(userTemp.getId());
+					Calendar cr = Calendar.getInstance();
+
+					if (depth == 1) {
+						cr.add(Calendar.DAY_OF_MONTH, 7);
+					} else {
+						cr.add(Calendar.DAY_OF_MONTH, 15);
+					}
+					entity.setTrigger_time(cr.getTime());
+					prizeService.save(entity);
 				}
 				farm.setFlag_calc_bonus(1);
 				farmService.updateNotNull(farm);

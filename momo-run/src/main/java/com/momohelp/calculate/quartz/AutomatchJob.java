@@ -31,6 +31,7 @@ public class AutomatchJob implements Job {
 		new DynamicCalculation().automatch();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void runJob()throws Exception {
 		log.info("------- Initializing ----------------------");
 
