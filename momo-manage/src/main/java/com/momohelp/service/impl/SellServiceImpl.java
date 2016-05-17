@@ -5,9 +5,11 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 
@@ -24,6 +26,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Autowired
 	private CfgService cfgService;
+
+	@Autowired
+	private MaterialRecordService materialRecordService;
 
 	@Override
 	public int save(Sell entity) {
@@ -98,7 +103,36 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		if (sell.getNum_sell() > user.getNum_dynamic()) {
 			return new String[] { "动态钱包余额不足" };
 		}
+
+		sell_dynamic_material(user, sell);
+		save(sell);
 		return null;
+	}
+
+	/**
+	 * 存入记录并更新用户的动态余额
+	 *
+	 * @param user
+	 * @param sell
+	 */
+	private void sell_dynamic_material(User user, Sell sell) {
+		MaterialRecord mr = new MaterialRecord();
+		mr.setUser_id(user.getId());
+		double d = sell.getNum_sell();
+		mr.setNum_use(d);
+		mr.setStatus(1);
+		mr.setType_id(4);
+		mr.setComment(null);
+		mr.setTrans_user_id(null);
+		mr.setNum_balance(user.getNum_dynamic() - sell.getNum_sell());
+		mr.setFlag_plus_minus(0);
+
+		materialRecordService.save(mr);
+
+		User new_user = new User();
+		new_user.setId(user.getId());
+		new_user.setNum_dynamic(mr.getNum_balance());
+		userService.updateNotNull(new_user);
 	}
 
 	/**

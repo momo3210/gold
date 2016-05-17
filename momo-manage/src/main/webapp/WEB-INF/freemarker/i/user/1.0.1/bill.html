@@ -319,7 +319,22 @@
 																	转给 M${(doc.trans_user_id)!} 数额 ${(doc.num_use)!}
 																</#if>
 															<#else>
-																购买数额 ${(doc.num_use)!}，<#if (0 < (doc.status)!)>已入账<#else>等待入账</#if>
+																<#switch data_type_id>
+																	<#case 1>
+																		购买数额 ${(doc.num_use)!}，<#if (0 < (doc.status)!)>已入账<#else>等待入账</#if>
+																		<#break>
+																	<#case 2>
+																		购买数额 ${(doc.num_use)!}，<#if (0 < (doc.status)!)>已入账<#else>等待入账</#if>
+																		<#break>
+																	<#case 3>
+																		卖出静态钱包 - ${doc.num_use?string('#.00')}
+																		<#break>
+																	<#case 4>
+																		卖出动态钱包 - ${doc.num_use?string('#.00')}
+																		<#break>
+																	<#default>
+																		购买数额 ${(doc.num_use)!}，<#if (0 < (doc.status)!)>已入账<#else>等待入账</#if>
+																</#switch>
 															</#if>
 														</#if>
 													</td>
