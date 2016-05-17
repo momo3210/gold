@@ -207,7 +207,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		if (null == farm) {
 			return null;
 		}
-		return farm.getNum_buy() == farm.getNum_deal() ? null
+		return farm.getNum_buy().intValue() == farm.getNum_deal().intValue() ? null
 				: new String[] { "有未完成的交易" };
 	}
 
