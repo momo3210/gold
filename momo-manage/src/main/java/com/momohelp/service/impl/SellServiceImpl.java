@@ -68,6 +68,25 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	/**
+	 * 营业时间 1点 - 23点
+	 *
+	 * @return
+	 */
+	private String[] checkShopHour() {
+		Calendar ca_1 = Calendar.getInstance();
+		ca_1.set(Calendar.HOUR_OF_DAY, 1);
+
+		Calendar ca_23 = Calendar.getInstance();
+		ca_23.set(Calendar.HOUR_OF_DAY, 23);
+
+		// 当前时间
+		Date date = new Date();
+
+		return (date.after(ca_1.getTime()) && date.before(ca_23.getTime())) ? null
+				: new String[] { "营业时间 1点 - 23点" };
+	}
+
+	/**
 	 * 步骤
 	 *
 	 * 1、验证购买的数量是否是10的倍数
@@ -75,9 +94,28 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * 2、根据动静调用不同的方法
 	 *
 	 * 3、判断用户的存款是否够卖
+	 *
+	 * 4、1点到23点可以卖，其他时间都不能卖
+	 *
+	 * 5、动态钱包每月上限 6 万，动态钱包上限 20 万（假设）
+	 *
+	 * 6、卖出标记（出局前排单24小时，出局后48小时）
 	 */
 	@Override
 	public String[] sell(Sell sell) {
+		switch (sell.getType_id()) {
+		case 1:
+		case 2:
+			break;
+		default:
+			return new String[] { "非法操作" };
+		}
+
+		String[] checkShopHours = checkShopHour();
+		if (null != checkShopHours) {
+			return checkShopHours;
+		}
+
 		sell.setNum_sell((null == sell.getNum_sell()) ? 0 : sell.getNum_sell());
 		if (1 > sell.getNum_sell()) {
 			return new String[] { "卖出鸡苗数量不能为 0" };
@@ -89,9 +127,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			}
 		}
 
-		String[] checkCeilingNumMonth = checkCeilingNumMonth(sell.getUser_id());
-		if (null != checkCeilingNumMonth) {
-			return checkCeilingNumMonth;
+		String[] checkCeilingMonth = checkCeilingMonth(sell.getUser_id(), sell);
+		if (null != checkCeilingMonth) {
+			return checkCeilingMonth;
 		}
 
 		// 获取我的帐户信息（实时）
@@ -115,12 +153,16 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	/**
+	 *
 	 * 判断每月的卖出上限不能超过12次
 	 *
+	 * 动态钱包每月上限6万，动态钱包上限度20万（假设）
+	 *
 	 * @param user_id
+	 * @param sell
 	 * @return
 	 */
-	private String[] checkCeilingNumMonth(String user_id) {
+	private String[] checkCeilingMonth(String user_id, Sell sell) {
 		Calendar ca = Calendar.getInstance();
 		ca.set(Calendar.DAY_OF_MONTH, 1);
 		Date first_day = ca.getTime();
@@ -136,7 +178,27 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return new String[] { "读取数据异常" };
 		}
 
-		return (12 > list.size()) ? null : new String[] { "每月卖出鸡苗上线不能超过 12 次" };
+		if (12 == list.size()) {
+			return new String[] { "每月卖出鸡苗上线不能超过 12 次" };
+		}
+
+		// 汇总每月的静态、动态
+		int num_static = 0, num_dynamic = 0;
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Sell item = list.get(i);
+			if (1 == item.getType_id()) {
+				num_static += item.getNum_sell();
+			} else {
+				num_dynamic += item.getNum_sell();
+			}
+		}
+
+		if (60000 < (num_dynamic + sell.getNum_sell())) {
+			return new String[] { "动态钱包每月不能超过 60000" };
+		}
+
+		return null;
 	}
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
@@ -159,10 +221,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		String date_1 = sdf.format(new Date());
 		String date_2 = sdf.format(sell.getCreate_time());
 
-		if (date_1.equals(date_2)) {
-			return new String[] { "今天已经卖出过鸡苗了" };
-		}
-		return null;
+		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了" } : null;
 	}
 
 	/**

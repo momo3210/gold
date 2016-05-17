@@ -61,6 +61,13 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	 */
 	@Override
 	public String[] virement(MaterialRecord materialRecord) {
+		switch (materialRecord.getType_id()) {
+		case 3:
+		case 4:
+			break;
+		default:
+			return new String[] { "非法操作" };
+		}
 
 		if (materialRecord.getUser_id().equals(
 				materialRecord.getTrans_user_id())) {
@@ -157,6 +164,14 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	 */
 	@Override
 	public String[] buy(MaterialRecord materialRecord) {
+		switch (materialRecord.getType_id()) {
+		case 1:
+		case 2:
+			break;
+		default:
+			return new String[] { "非法操作" };
+		}
+
 		materialRecord.setStatus(0);
 		materialRecord.setComment(null);
 		materialRecord.setTrans_user_id(null);
