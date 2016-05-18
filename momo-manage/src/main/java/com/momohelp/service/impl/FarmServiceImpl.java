@@ -116,6 +116,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	/**
 	 * 买入鸡苗参数验证
 	 *
+	 * @param farm
 	 * @return
 	 */
 	private Map<String, Object> buy_validationParameter(Farm farm) {
@@ -169,10 +170,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return result;
 		}
 
+		farm.setCreate_time(new Date());
 		farm.setPid((null == my_last_farm) ? "0" : my_last_farm.getId());
 
 		// 当前排单是否接上气儿了
-		farm.setFlag_out_self(checkFarmOut(my_last_farm));
+		farm.setFlag_out_self(checkFarmOut(my_last_farm, farm.getCreate_time()));
 
 		result.put("data", farm);
 		return result;
@@ -191,8 +193,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 */
 	@Override
 	public String[] buy(Farm farm) {
+		// TODO
 		Map<String, Object> buy_validationParameter = buy_validationParameter(farm);
-
 		if (buy_validationParameter.containsKey("msg")) {
 			return (String[]) buy_validationParameter.get("msg");
 		}
@@ -201,28 +203,26 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		// 获取我的帐户信息（实时）
 		User user = userService.selectByKey(farm.getUser_id());
 
+		// TODO
 		Map<String, Object> buy_validation = buy_validation(farm, user);
-
 		if (buy_validation.containsKey("msg")) {
 			return (String[]) buy_validation.get("msg");
 		}
-		farm = (Farm) buy_validationParameter.get("data");
+		farm = (Farm) buy_validation.get("data");
 
 		/***** 整理数据 *****/
 
-		Date today = new Date();
 		Date tomorrow = null;
 
 		try {
-			tomorrow = getTomorrow(today);
+			tomorrow = getTomorrow(farm.getCreate_time());
 		} catch (ParseException e) {
 			return new String[] { "日期异常" };
 		}
 
 		farm.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-		farm.setCreate_time(today);
 		farm.setTime_out(getTimeOut(tomorrow));
-		farm.setTime_ripe(getTimeRipe(tomorrow));
+		// farm.setTime_ripe(getTimeRipe(tomorrow));
 		farm.setNum_current(farm.getNum_buy());
 
 		farm.setNum_deal(0);
@@ -233,7 +233,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		if (!"0".equals(user.getPid())) {
 			Farm my_parent_last_farm = getLastByUserId(user.getPid());
 			farm.setPid_higher_ups(my_parent_last_farm.getId());
-			farm.setFlag_out_p(checkFarmOut(my_parent_last_farm));
+			farm.setFlag_out_p(checkFarmOut(my_parent_last_farm,
+					farm.getCreate_time()));
 		}
 
 		/***** 整理数据 *****/
@@ -254,11 +255,15 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Buy buy = new Buy();
 		buy.setNum_buy(farm.getNum_buy() / 10);
 		buy.setW_farm_chick_id(farm.getId());
+		buy.setCreate_time(farm.getCreate_time());
+		buy.setCalc_time(farm.getCreate_time());
 
-		Calendar c = Calendar.getInstance();
-		// 出局前排单 24 小时，出局后排单 48 小时
-		c.add(Calendar.HOUR_OF_DAY, 24 * (1 == farm.getFlag_out_self() ? 1 : 2));
-		buy.setCalc_time(c.getTime());
+		// Calendar c = Calendar.getInstance();
+		// c.setTime(farm.getCreate_time());
+		// // 出局前排单 24 小时，出局后排单 48 小时
+		// c.add(Calendar.HOUR_OF_DAY, 24 * (1 == farm.getFlag_out_self() ? 1 :
+		// 2));
+		// buy.setCalc_time(c.getTime());
 
 		buyService.save(buy);
 	}
@@ -302,8 +307,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		double d = farm.getNum_buy();
 		materialRecord.setNum_use(d);
 		materialRecord.setStatus(1);
-		materialRecord.setType_id(5);
-		materialRecord.setComment(null);
+		materialRecord.setType_id(1);
+		materialRecord.setComment("购买鸡苗 " + materialRecord.getNum_use()
+				+ " 使用1张");
 		materialRecord.setTrans_user_id(null);
 		// 后续再说
 		materialRecord.setNum_balance(null);
@@ -377,6 +383,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
+	 *
 	 * 判断排单在当前时间是否出局
 	 *
 	 * 1未出局（接上气儿）
@@ -386,9 +393,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * 3自然出局
 	 *
 	 * @param farm
+	 * @param current_time
 	 * @return
 	 */
-	private int checkFarmOut(Farm farm) {
+	private int checkFarmOut(Farm farm, Date current_time) {
 		if (null == farm) {
 			return 1;
 		}
@@ -399,9 +407,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return 2;
 		}
 
-		Date date = new Date();
-
-		if (date.after(farm.getTime_out())) {
+		if (current_time.after(farm.getTime_out())) {
 			return 3;
 		}
 
