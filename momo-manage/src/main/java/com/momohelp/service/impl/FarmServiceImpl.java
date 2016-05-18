@@ -254,6 +254,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Buy buy = new Buy();
 		buy.setNum_buy(farm.getNum_buy() / 10);
 		buy.setW_farm_chick_id(farm.getId());
+
+		Calendar c = Calendar.getInstance();
+		// 出局前排单 24 小时，出局后排单 48 小时
+		c.add(Calendar.HOUR_OF_DAY, 24 * (1 == farm.getFlag_out_self() ? 1 : 2));
+		buy.setCalc_time(c.getTime());
+
 		buyService.save(buy);
 	}
 

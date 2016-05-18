@@ -36,6 +36,19 @@ public class Buy implements Serializable {
 	 */
 	private Date create_time;
 
+	/**
+	 * 计算时间
+	 */
+	private Date calc_time;
+
+	public Date getCalc_time() {
+		return calc_time;
+	}
+
+	public void setCalc_time(Date calc_time) {
+		this.calc_time = calc_time;
+	}
+
 	public String getId() {
 		return id;
 	}
