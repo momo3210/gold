@@ -11,7 +11,7 @@
 		<result column="create_time" property="create_time" jdbcType="DATE" />
 	</resultMap>
 	<select id="selectByCycles" resultType="buy">
-		SELECT * FROM p_buy as p WHERE p.create_time between #{0} and #{1}
+		SELECT * FROM p_buy as p WHERE p.calc_time between #{0} and #{1}
 	</select>
 
 </mapper>

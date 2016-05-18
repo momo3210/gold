@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,7 +19,6 @@ public class Buy implements Serializable {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(generator = "UUID")
 	private String id;
 
 	/**
@@ -37,6 +35,19 @@ public class Buy implements Serializable {
 	 * 购买时间
 	 */
 	private Date create_time;
+
+	/**
+	 * 计算时间
+	 */
+	private Date calc_time;
+
+	public Date getCalc_time() {
+		return calc_time;
+	}
+
+	public void setCalc_time(Date calc_time) {
+		this.calc_time = calc_time;
+	}
 
 	public String getId() {
 		return id;
