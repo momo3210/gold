@@ -43,9 +43,23 @@ public class Prize implements Serializable {
 	 * 计算标志 0： 初始数据  1：已经计算
 	 */
 	private int flag;
-	
+	/**
+	 * 拿提成的用户
+	 */
 	private String user_id;
+	/**
+	 * 被提成的排单id
+	 */
+	private String relation_id;
 	
+	public String getRelation_id() {
+		return relation_id;
+	}
+
+	public void setRelation_id(String relation_id) {
+		this.relation_id = relation_id;
+	}
+
 	public String getUser_id() {
 		return user_id;
 	}

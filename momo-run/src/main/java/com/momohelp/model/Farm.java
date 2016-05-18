@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,7 +19,6 @@ public class Farm implements Serializable {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(generator = "UUID")
 	private String id;
 
 	private String user_id;
@@ -36,7 +34,7 @@ public class Farm implements Serializable {
 	private Date time_ripe;
 
 	/**
-	 * 当前鸡数量
+	 * 当前鸡数量（还有多少可以卖出，应在已经成交后才能操作）
 	 */
 	private Integer num_current;
 
@@ -56,26 +54,62 @@ public class Farm implements Serializable {
 	private Integer flag_calc_bonus;
 
 	/**
-	 * 实际成交时间
+	 * 实际成交时间（当最后一笔钱卖家确认后，更新此字段）
 	 */
 	private Date time_deal;
 
 	/**
-	 * 0初始化 1未出局 2已出局 3强制出局
+	 * 相对于上级领导
+	 *
+	 * 1未出局
+	 *
+	 * 2主动出局
+	 *
+	 * 3自然出局
 	 */
-	private Integer flag_out;
+	private Integer flag_out_p;
+
+	/**
+	 * 相对于上级领导的最近一单
+	 */
+	private String pid_higher_ups;
+
+	/**
+	 * 对于自己来说，是重新开始的一次排单
+	 *
+	 * 1接上气儿
+	 *
+	 * 0重新开始
+	 */
+	private Integer flag_out_self;
 
 	/**
 	 * 上一单的ID
 	 */
 	private String pid;
 
-	public Integer getFlag_out() {
-		return flag_out;
+	public Integer getFlag_out_self() {
+		return flag_out_self;
 	}
 
-	public void setFlag_out(Integer flag_out) {
-		this.flag_out = flag_out;
+	public void setFlag_out_self(Integer flag_out_self) {
+		this.flag_out_self = flag_out_self;
+	}
+
+	public Integer getFlag_out_p() {
+		return flag_out_p;
+	}
+
+	public void setFlag_out_p(Integer flag_out_p) {
+		this.flag_out_p = flag_out_p;
+	}
+
+	public String getPid_higher_ups() {
+		return pid_higher_ups;
+	}
+
+	public void setPid_higher_ups(String pid_higher_ups) {
+		this.pid_higher_ups = pid_higher_ups;
 	}
 
 	public String getPid() {
