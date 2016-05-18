@@ -34,10 +34,10 @@ import com.momohelp.service.UserService;
 
 //动态奖金计算
 @Component
-public class DynamicCalculation implements Serializable, ICalculation {
+public class DynamicCalculation00 implements Serializable, ICalculation {
 
 	private static final long serialVersionUID = -817967291317652692L;
-	private static Logger log = Logger.getLogger(DynamicCalculation.class);
+	private static Logger log = Logger.getLogger(DynamicCalculation00.class);
 	@Resource
 	private CfgService cfgService;
 	@Resource
