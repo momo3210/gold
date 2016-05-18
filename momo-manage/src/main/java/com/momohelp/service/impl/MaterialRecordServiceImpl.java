@@ -62,11 +62,15 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	@Override
 	public String[] virement(MaterialRecord materialRecord) {
 		switch (materialRecord.getType_id()) {
-		case 3:
-		case 4:
+		case 1:
+		case 2:
 			break;
 		default:
 			return new String[] { "非法操作" };
+		}
+
+		if (1 > materialRecord.getNum_use()) {
+			return new String[] { "转出数量必须大于 0" };
 		}
 
 		if (materialRecord.getUser_id().equals(
@@ -91,7 +95,7 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 
 		/***** 增加一条我的 *****/
 		materialRecord.setStatus(1);
-		materialRecord.setComment(null);
+		materialRecord.setComment("转出门票 -100 给 M12345");
 		// 转出
 		materialRecord.setFlag_plus_minus(0);
 		// 更新我的本次余额
@@ -172,8 +176,14 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 			return new String[] { "非法操作" };
 		}
 
+		if (1 > materialRecord.getNum_use()) {
+			return new String[] { "购买数量必须大于 0" };
+		}
+
 		materialRecord.setStatus(0);
-		materialRecord.setComment(null);
+		materialRecord.setComment("购买"
+				+ ((1 == materialRecord.getType_id()) ? "门票" : "饲料") + " +"
+				+ materialRecord.getNum_use() + ".00");
 		materialRecord.setTrans_user_id(null);
 
 		// 设置余额

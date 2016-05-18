@@ -170,7 +170,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return result;
 		}
 
-		farm.setCreate_time(new Date());
 		farm.setPid((null == my_last_farm) ? "0" : my_last_farm.getId());
 
 		// 当前排单是否接上气儿了
@@ -193,6 +192,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 */
 	@Override
 	public String[] buy(Farm farm) {
+		farm.setCreate_time(new Date());
+
 		// TODO
 		Map<String, Object> buy_validationParameter = buy_validationParameter(farm);
 		if (buy_validationParameter.containsKey("msg")) {
@@ -222,7 +223,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		farm.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		farm.setTime_out(getTimeOut(tomorrow));
-		// farm.setTime_ripe(getTimeRipe(tomorrow));
+		farm.setTime_ripe(getTimeRipe(tomorrow));
 		farm.setNum_current(farm.getNum_buy());
 
 		farm.setNum_deal(0);
@@ -237,9 +238,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 					farm.getCreate_time()));
 		}
 
-		/***** 整理数据 *****/
+		/***** 开始保存数据 *****/
 
-		saveMaterialRecord(farm);
+		saveMaterialRecord(farm, user);
 		updateNumTicketByUser(user);
 		saveBuy(farm);
 		save(farm);
@@ -256,7 +257,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setNum_buy(farm.getNum_buy() / 10);
 		buy.setW_farm_chick_id(farm.getId());
 		buy.setCreate_time(farm.getCreate_time());
-		buy.setCalc_time(farm.getCreate_time());
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(farm.getCreate_time());
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		buy.setCalc_time(c.getTime());
 
 		// Calendar c = Calendar.getInstance();
 		// c.setTime(farm.getCreate_time());
@@ -295,25 +300,31 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
+	 *
 	 * 添加操作记录
 	 *
 	 * w_material_use 添加一条操作记录
 	 *
 	 * @param farm
+	 * @param user
 	 */
-	private void saveMaterialRecord(Farm farm) {
+	private void saveMaterialRecord(Farm farm, User user) {
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(farm.getUser_id());
-		double d = farm.getNum_buy();
-		materialRecord.setNum_use(d);
+
+		double d1 = farm.getNum_buy();
+		materialRecord.setNum_use(d1);
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(1);
-		materialRecord.setComment("购买鸡苗 " + materialRecord.getNum_use()
-				+ " 使用1张");
+		materialRecord.setComment("购买鸡苗 +" + materialRecord.getNum_use()
+				+ ".00");
+
 		materialRecord.setTrans_user_id(null);
 		// 后续再说
-		materialRecord.setNum_balance(null);
-		materialRecord.setFlag_plus_minus(1);
+		double d2 = user.getNum_ticket() - 1;
+		materialRecord.setNum_balance(d2);
+
+		materialRecord.setFlag_plus_minus(0);
 		materialRecordService.save(materialRecord);
 	}
 

@@ -29,7 +29,7 @@ public class Farm implements Serializable {
 	 */
 	private Date time_out;
 	/**
-	 * 成熟时间
+	 * 成熟时间（理论）
 	 */
 	private Date time_ripe;
 
@@ -49,7 +49,11 @@ public class Farm implements Serializable {
 	private Integer num_deal;
 
 	/**
-	 * 计算奖金（0未计算，1已计算）
+	 * 计算奖金
+	 *
+	 * 0未计算
+	 *
+	 * 1已计算
 	 */
 	private Integer flag_calc_bonus;
 

@@ -1,5 +1,6 @@
 package com.momohelp.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,7 +81,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		c_23.set(Calendar.HOUR_OF_DAY, 23);
 
 		return (date.after(c_1.getTime()) && date.before(c_23.getTime())) ? null
-				: new String[] { "营业时间 1点 - 23点" };
+				: new String[] { "时间范围 01点 至 23点" };
 	}
 
 	/**
@@ -108,8 +109,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return result;
 		}
 
-		sell.setCreate_time(new Date());
-
 		String[] checkOfficeHours = checkOfficeHours(sell.getCreate_time());
 		if (null != checkOfficeHours) {
 			result.put("msg", checkOfficeHours);
@@ -118,7 +117,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 		if (2 == sell.getType_id()) {
 			if (5000 < sell.getNum_sell()) {
-				result.put("msg", new String[] { "动态钱包金额上限不能大于 5000" });
+				result.put("msg", new String[] { "动态钱包上限不能大于 5000" });
 				return result;
 			}
 		}
@@ -135,7 +134,29 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @return
 	 */
 	private Map<String, Object> sell_validation(Sell sell, User user) {
-		return null;
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		String[] checkTodaySell = checkTodaySell(sell, user);
+		if (null != checkTodaySell) {
+			result.put("msg", checkTodaySell);
+			return result;
+		}
+
+		String[] checkCeilingEveryMonth = checkCeilingEveryMonth(sell, user);
+		if (null != checkCeilingEveryMonth) {
+			result.put("msg", checkCeilingEveryMonth);
+			return result;
+		}
+
+		String[] checkSellNum = checkSellNum(sell, user);
+		if (null != checkSellNum) {
+			result.put("msg", checkSellNum);
+			return result;
+		}
+
+		result.put("data", sell);
+		return result;
 	}
 
 	/**
@@ -155,6 +176,8 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 */
 	@Override
 	public String[] sell(Sell sell) {
+		sell.setCreate_time(new Date());
+
 		// TODO
 		Map<String, Object> sell_validationParameter = sell_validationParameter(sell);
 		if (sell_validationParameter.containsKey("msg")) {
@@ -172,27 +195,10 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 		sell = (Sell) sell_validation.get("data");
 
-		String[] checkCeilingMonth = checkCeilingMonth(sell.getUser_id(), sell);
-		if (null != checkCeilingMonth) {
-			return checkCeilingMonth;
-		}
-
-		// 获取我的帐户信息（实时）
-
-		String[] checkNum = checkNum(user, sell);
-		if (null != checkNum) {
-			return checkNum;
-		}
-
-		String[] checkTodaySell = checkTodaySell(user);
-		if (null != checkTodaySell) {
-			return checkTodaySell;
-		}
-
 		if (1 == sell.getType_id()) {
-			return sell_static(user, sell);
+			return sell_static(sell, user);
 		} else { // 动态钱包
-			return sell_dynamic(user, sell);
+			return sell_dynamic(sell, user);
 		}
 	}
 
@@ -202,28 +208,35 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 *
 	 * 动态钱包每月上限6万，动态钱包上限度20万（假设）
 	 *
-	 * @param user_id
 	 * @param sell
+	 * @param user
 	 * @return
 	 */
-	private String[] checkCeilingMonth(String user_id, Sell sell) {
-		Calendar ca = Calendar.getInstance();
-		ca.set(Calendar.DAY_OF_MONTH, 1);
-		Date first_day = ca.getTime();
+	private String[] checkCeilingEveryMonth(Sell sell, User user) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(sell.getCreate_time());
+		// 每月1日
+		c.set(Calendar.DAY_OF_MONTH, 1);
+		Date date = null;
+		try {
+			date = sdf.parse(sdf.format(c.getTime()));
+		} catch (ParseException e) {
+			return new String[] { "日期转换异常" };
+		}
 
 		// TODO
 		Example example = new Example(Sell.class);
 		Example.Criteria criteria = example.createCriteria();
-		criteria.andGreaterThan("create_time", first_day);
-		criteria.andEqualTo("user_id", user_id);
+		criteria.andGreaterThan("create_time", date);
+		criteria.andEqualTo("user_id", user.getId());
 		List<Sell> list = selectByExample(example);
 
 		if (null == list) {
-			return new String[] { "读取数据异常" };
+			return new String[] { "数据读取异常" };
 		}
 
-		if (12 == list.size()) {
-			return new String[] { "每月卖出鸡苗上线不能超过 12 次" };
+		if (11 < list.size()) {
+			return new String[] { "每月卖出鸡苗上限不能超过 12 次" };
 		}
 
 		// 汇总每月的静态、动态
@@ -239,31 +252,33 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 
 		if (60000 < (num_dynamic + sell.getNum_sell())) {
-			return new String[] { "动态钱包每月不能超过 60000" };
+			return new String[] { "动态钱包卖出每月不能超过 60000" };
 		}
 
 		return null;
 	}
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
-			"yyyy-MM-dd");
+			"yyyy-MM-dd 00:00:00");
 
 	/**
+	 *
 	 * 判断今天是否已经卖出过鸡苗了（不管是动态还是静态）
 	 *
 	 * 比较最后一次的卖出记录（年月日）和当前（年月日）进行比对
 	 *
+	 * @param sell
 	 * @param user
 	 * @return
 	 */
-	private String[] checkTodaySell(User user) {
-		Sell sell = findLast(user.getId());
-		if (null == sell) {
+	private String[] checkTodaySell(Sell sell, User user) {
+		Sell last_sell = getLastByUserId(user.getId());
+		if (null == last_sell) {
 			return null;
 		}
 
-		String date_1 = sdf.format(new Date());
-		String date_2 = sdf.format(sell.getCreate_time());
+		String date_1 = sdf.format(sell.getCreate_time());
+		String date_2 = sdf.format(last_sell.getCreate_time());
 
 		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了" } : null;
 	}
@@ -271,16 +286,16 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	/**
 	 * 卖出动态钱包
 	 *
-	 * @param user
 	 * @param sell
+	 * @param user
 	 * @return
 	 */
-	private String[] sell_dynamic(User user, Sell sell) {
+	private String[] sell_dynamic(Sell sell, User user) {
 		if (sell.getNum_sell() > user.getNum_dynamic()) {
 			return new String[] { "动态钱包余额不足" };
 		}
 
-		sell_dynamic_material(user, sell);
+		saveMaterialRecord(sell, user);
 		save(sell);
 		return null;
 	}
@@ -288,54 +303,82 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	/**
 	 * 存入记录并更新用户的动态余额
 	 *
-	 * @param user
 	 * @param sell
+	 * @param user
 	 */
-	private void sell_dynamic_material(User user, Sell sell) {
-		MaterialRecord mr = new MaterialRecord();
-		mr.setUser_id(user.getId());
-		double d = sell.getNum_sell();
-		mr.setNum_use(d);
-		mr.setStatus(1);
-		mr.setType_id(4);
-		mr.setComment(null);
-		mr.setTrans_user_id(null);
-		mr.setNum_balance(user.getNum_dynamic() - sell.getNum_sell());
-		mr.setFlag_plus_minus(0);
+	private void saveMaterialRecord(Sell sell, User user) {
+		// 添加操作记录
+		MaterialRecord materialRecord = new MaterialRecord();
+		materialRecord.setUser_id(sell.getUser_id());
 
-		materialRecordService.save(mr);
+		double d1 = sell.getNum_sell();
+		materialRecord.setNum_use(d1);
 
-		User new_user = new User();
-		new_user.setId(user.getId());
-		new_user.setNum_dynamic(mr.getNum_balance());
-		userService.updateNotNull(new_user);
+		materialRecord.setStatus(1);
+		materialRecord.setType_id(sell.getType_id() + 2);
+
+		materialRecord.setComment("卖出鸡苗（"
+				+ ((1 == sell.getType_id()) ? "静" : "动") + "态） -"
+				+ materialRecord.getNum_use() + ".00");
+
+		materialRecord.setTrans_user_id(null);
+
+		double d2 = ((1 == sell.getType_id()) ? user.getNum_static() : user
+				.getNum_dynamic()) - sell.getNum_sell();
+		materialRecord.setNum_balance(d2);
+
+		materialRecord.setFlag_plus_minus(0);
+		materialRecordService.save(materialRecord);
+
+		// 更新用户信息表
+		User _user = new User();
+		_user.setId(user.getId());
+		if (1 == sell.getType_id()) {
+			_user.setNum_static(materialRecord.getNum_balance());
+		} else {
+			_user.setNum_dynamic(materialRecord.getNum_balance());
+		}
+		userService.updateNotNull(_user);
 	}
 
 	/**
 	 * 卖出静态钱包
 	 *
-	 * @param user
 	 * @param sell
+	 * @param user
 	 * @return
 	 */
-	private String[] sell_static(User user, Sell sell) {
-		if (sell.getNum_sell() > user.getNum_static()) {
-			return new String[] { "静态钱包余额不足" };
+	private String[] sell_static(Sell sell, User user) {
+		if (sell.getNum_sell() <= user.getNum_static()) {
+			return sell_static_surplus(sell, user);
 		}
+		return null;
+	}
+
+	/**
+	 * 卖出静态钱包（静态帐户充足）
+	 *
+	 * @param sell
+	 * @param user
+	 * @return
+	 */
+	private String[] sell_static_surplus(Sell sell, User user) {
+		saveMaterialRecord(sell, user);
+		save(sell);
 		return null;
 	}
 
 	/**
 	 * 检测购买的鸡苗数量是否合法
 	 *
-	 * @param user
 	 * @param sell
+	 * @param user
 	 * @return
 	 */
-	private String[] checkNum(User user, Sell sell) {
-		// 静态10倍 静态500
+	private String[] checkSellNum(Sell sell, User user) {
+		// 静态10倍 动态500
 		int radix = (1 == sell.getType_id()) ? 10 : 500;
-		return (0 == sell.getNum_sell() % Integer.valueOf(radix)) ? null
+		return (0 == sell.getNum_sell() % radix) ? null
 				: new String[] { "输入的数量不正确" };
 	}
 
@@ -345,7 +388,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @param user_id
 	 * @return
 	 */
-	private Sell findLast(String user_id) {
+	private Sell getLastByUserId(String user_id) {
 		Example example = new Example(Sell.class);
 		example.setOrderByClause("create_time desc");
 		// TODO
