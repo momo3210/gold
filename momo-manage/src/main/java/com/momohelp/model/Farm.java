@@ -75,11 +75,15 @@ public class Farm implements Serializable {
 	private String pid_higher_ups;
 
 	/**
+	 * 当前单的上一单是否出局
+	 *
 	 * 对于自己来说，是重新开始的一次排单
 	 *
-	 * 1接上气儿
+	 * 1未出局（接上气儿）
 	 *
-	 * 0重新开始
+	 * 2主动出局
+	 *
+	 * 3自然出局
 	 */
 	private Integer flag_out_self;
 

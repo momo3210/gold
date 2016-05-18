@@ -172,8 +172,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		farm.setPid((null == my_last_farm) ? "0" : my_last_farm.getId());
 
 		// 当前排单是否接上气儿了
-		farm.setFlag_out_self((null == my_last_farm) ? 1
-				: (checkFarmOut(my_last_farm) ? 0 : 1));
+		farm.setFlag_out_self(checkFarmOut(my_last_farm));
 
 		result.put("data", farm);
 		return result;
@@ -232,7 +231,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		// 我有父级
 		if (!"0".equals(user.getPid())) {
-
+			Farm my_parent_last_farm = getLastByUserId(user.getPid());
+			farm.setPid_higher_ups(my_parent_last_farm.getId());
+			farm.setFlag_out_p(checkFarmOut(my_parent_last_farm));
 		}
 
 		/***** 整理数据 *****/
@@ -370,20 +371,34 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
-	 * 判断排单在当前时间是否出局，出局 true，否 false
+	 * 判断排单在当前时间是否出局
+	 *
+	 * 1未出局（接上气儿）
+	 *
+	 * 2主动出局
+	 *
+	 * 3自然出局
 	 *
 	 * @param farm
 	 * @return
 	 */
-	private boolean checkFarmOut(Farm farm) {
-		Date date = new Date();
-
-		if (date.after(farm.getTime_out())) {
-			return true;
+	private int checkFarmOut(Farm farm) {
+		if (null == farm) {
+			return 1;
 		}
 
 		List<FarmHatch> list = farmHatchService.findByFarmId(farm.getId());
 
-		return (null == list || 0 < list.size());
+		if (null == list || 0 < list.size()) {
+			return 2;
+		}
+
+		Date date = new Date();
+
+		if (date.after(farm.getTime_out())) {
+			return 3;
+		}
+
+		return 1;
 	}
 }
