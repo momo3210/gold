@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.model.Buy;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
+import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
@@ -38,9 +41,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	@Autowired
 	private MaterialRecordService materialRecordService;
 
+	@Autowired
+	private BuyService buyService;
+
 	@Override
 	public int save(Farm entity) {
-		entity.setFlag_out(0);
 		entity.setFlag_calc_bonus(0);
 		entity.setNum_current(entity.getNum_buy());
 		entity.setNum_deal(0);
@@ -110,9 +115,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 *
 	 * 3、验证购买的数量是否符合我的身份
 	 *
-	 * 3、验证最后一笔排单，买卖双方是否完全交易成功（未完）
+	 * 7、验证是否有未完成交易的排单（买卖）
 	 *
 	 * 4、更新我的帐户信息--门票数量-1
+	 *
+	 * 8、预付款直接写入买盘
 	 *
 	 * 5、插入 w_material_use 一条购买鸡苗使用门票的记录
 	 *
@@ -121,6 +128,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	@Override
 	public String[] buy(Farm farm) {
 		farm.setNum_buy((null == farm.getNum_buy()) ? 0 : farm.getNum_buy());
+		if (1 > farm.getNum_buy()) {
+			return new String[] { "买入鸡苗数量不能为 0" };
+		}
 
 		// 获取我的帐户信息（实时）
 		User user = userService.selectByKey(farm.getUser_id());
@@ -135,7 +145,14 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return checkNum;
 		}
 
-		/***** 收集数据 *****/
+		// 会员的最后一次买入鸡苗
+		Farm last_farm = findLast(farm.getUser_id());
+		String[] checkUnDeal = checkUnDeal(last_farm);
+		if (null != checkUnDeal) {
+			return checkUnDeal;
+		}
+
+		/***** 整理数据 *****/
 
 		// 取当前日期
 		Date date = new Date();
@@ -147,12 +164,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 			return new String[] { "日期异常" };
 		}
 
+		farm.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		farm.setCreate_time(date);
 		farm.setTime_out(getOutTime(tomorrow));
 		farm.setTime_ripe(getRipeTime(tomorrow));
 
-		/***** 获取会员的最后一单 *****/
-		Farm last_farm = findLast(farm.getUser_id());
+		// 设置上次买入鸡苗ID
 		farm.setPid((null == last_farm) ? "0" : last_farm.getId());
 
 		/***** 添加一条操作记录 *****/
@@ -160,8 +177,37 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		updateUserTicket(user);
 
+		savePrepayment(farm);
 		save(farm);
 		return null;
+	}
+
+	/**
+	 * 保存预付款 10%
+	 *
+	 * @param farm
+	 */
+	private void savePrepayment(Farm farm) {
+		Buy buy = new Buy();
+
+		buy.setNum_buy(farm.getNum_buy() / 10);
+		buy.setW_farm_chick_id(farm.getId());
+
+		buyService.save(buy);
+	}
+
+	/**
+	 * 判断最后一单是否完全交易成功
+	 *
+	 * @param farm
+	 * @return
+	 */
+	private String[] checkUnDeal(Farm farm) {
+		if (null == farm) {
+			return null;
+		}
+		return farm.getNum_buy().intValue() == farm.getNum_deal().intValue() ? null
+				: new String[] { "有未完成的交易" };
 	}
 
 	/**
