@@ -88,7 +88,8 @@ public class DynamicCalculation00 implements Serializable, ICalculation {
 		cr.add(Calendar.DAY_OF_MONTH, -2);
 		List<Farm> farms = farmService.selectForceLogout(cr.getTime());
 		for (Farm farm : farms) {
-			farm.setFlag_out(3);
+			//farm.setFlag_out(3);
+			farm.setFlag_out_p(3);
 			farmService.updateNotNull(farm);
 		}
 		return true;
@@ -182,20 +183,23 @@ public class DynamicCalculation00 implements Serializable, ICalculation {
 					break;
 				}
 				Farm f = leaderLastFarm.get(0);// 领导最近一单
+				if (farm.getNum_buy() >= f.getNum_buy()) {
+					tempBase = f.getNum_buy();
+				} else {
+					tempBase = farm.getNum_buy();
+				}
 				// 判断当前用户对应的领导是否出局
 				// if (farm.getTime_out().after(f.getTime_out())) {//
 				// 这里判断还是有问题！！！！！！！！！！
-				if (f.getFlag_out() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
+				//if (f.getFlag_out() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
 											// 计算基数为0 也就不用计算了
+				if (f.getFlag_out_p() == 2){// 领导排单已经出局 f.getFlag_out()==3时
+					                        // 计算基数为0 也就不用计算了
 					// 提成基数计算
 					// 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
 					// tempBase=leader.
 					// 小端金额
-					if (farm.getNum_buy() >= f.getNum_buy()) {
-						tempBase = f.getNum_buy();
-					} else {
-						tempBase = farm.getNum_buy();
-					}
+					
 					// 推荐人获取被推荐人最近一单的推荐奖
 					/***
 					 * 获取当前单的用户排单时间【create_time】 查询当前用户小于create_time最近一单 select
@@ -260,7 +264,6 @@ public class DynamicCalculation00 implements Serializable, ICalculation {
 					entity.setFlag(0);
 					entity.setUser_id(userTemp.getId());
 					Calendar cr = Calendar.getInstance();
-
 					if (depth == 1) {
 						cr.add(Calendar.DAY_OF_MONTH, 7);
 					} else {

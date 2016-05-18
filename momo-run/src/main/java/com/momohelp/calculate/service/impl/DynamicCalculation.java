@@ -2,6 +2,7 @@ package com.momohelp.calculate.service.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -20,6 +21,7 @@ import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
+import com.momohelp.model.FarmFeed;
 import com.momohelp.model.ModelLV;
 import com.momohelp.model.Prize;
 import com.momohelp.model.Sell;
@@ -27,6 +29,7 @@ import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
@@ -56,8 +59,11 @@ public class DynamicCalculation implements Serializable, ICalculation {
 
 	@Resource
 	private PrizeService prizeService;
+	
+	@Resource
+	private FarmFeedService farmFeedService;
 
-	// 自动转换到期奖金金额
+	// 自动转换到期奖金金额--需要定时作业
 	public boolean triggerConversion() {
 		Example example = new Example(Prize.class);
 		Example.Criteria criteria = example.createCriteria();
@@ -88,7 +94,7 @@ public class DynamicCalculation implements Serializable, ICalculation {
 		cr.add(Calendar.DAY_OF_MONTH, -2);
 		List<Farm> farms = farmService.selectForceLogout(cr.getTime());
 		for (Farm farm : farms) {
-			farm.setFlag_out(3);
+			farm.setFlag_out_p(3);
 			farmService.updateNotNull(farm);
 		}
 		return true;
@@ -169,66 +175,56 @@ public class DynamicCalculation implements Serializable, ICalculation {
 		if (calculateLevel(farms)) {
 			// 计算奖金基数
 			for (Farm farm : farms) {
-				// farm.getUser_id();// 用户id
-				// farm.getNum_buy(); // 购买数量
-				// 获取当前用户的领导【用户】
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
 				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
-				// 获取当前用户排单对应的领导用户对应的最近排单 且小于当前用户排单的创建日期
-				List<Farm> leaderLastFarm = farmService.selectLastFarmByDate(
-						leader.getId(), farm.getCreate_time());
-				double tempBase = farm.getNum_buy();
-				if (leaderLastFarm == null || leaderLastFarm.size() == 0) {
+				if (farm.getPid_higher_ups() == null
+						|| farm.getPid_higher_ups().trim().length() == 0) {
 					break;
 				}
-				Farm f = leaderLastFarm.get(0);// 领导最近一单
-				// 判断当前用户对应的领导是否出局
-				// if (farm.getTime_out().after(f.getTime_out())) {//
-				// 这里判断还是有问题！！！！！！！！！！
-				if (f.getFlag_out() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
-											// 计算基数为0 也就不用计算了
-					// 提成基数计算
-					// 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
-					// tempBase=leader.
-					// 小端金额
-					if (farm.getNum_buy() >= f.getNum_buy()) {
-						tempBase = f.getNum_buy();
-					} else {
-						tempBase = farm.getNum_buy();
-					}
-					// 推荐人获取被推荐人最近一单的推荐奖
+				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
+				double tempBase = 0.0;
+				// 小端金额
+				if (farm.getNum_buy() >= f.getNum_buy()) {
+					tempBase = f.getNum_buy();
+				} else {
+					tempBase = farm.getNum_buy();
+				}
+				if (f.getFlag_out_p() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
+												// 计算基数为0 也就不用计算了
 					/***
-					 * 获取当前单的用户排单时间【create_time】 查询当前用户小于create_time最近一单 select
-					 * w.* from w_farm_chick as w where w.user_id=#{当前单据用户id}
-					 * and w.create_time<#{当前单据排单时间} order by w.create_time DESC
-					 * limit 0,1
-					 */
-					List<Farm> userLastFarm = farmService.selectLastFarmByDate(
-							farm.getUser_id(), farm.getCreate_time());
-					// 被推荐人上一单所得利息
-					/***
-					 * 利息包含： 1.幼鸡饲养利息：获取配置表中幼鸡饲养利率 * 幼鸡饲养周期 2.成年下蛋利息：获取这一批次 * 时间
-					 * 3.select sum(money) from (select (w.num_feed)* 注意这里的$用法
-					 * ${参数：下蛋利率} as money from w_farm_feed as w where
-					 * w.w_farm_chick_id=#{批次})
+					 * 提成基数计算
 					 * 
-					 * 版本二： select sum(w.price) from w_farm_feed as w where
-					 * w.w_farm_chick_id=#{批次})
+					 * 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
+					 * 
+					 * 利息包含：
+					 * 
+					 * 1.幼鸡饲养利息：获取配置表中幼鸡饲养利率 * 幼鸡饲养周期
+					 * 
+					 * 2.成年下蛋利息：获取这一批次 * 时间
+					 * 
 					 */
 					// 获得当前用户的上一单
 					Farm beforeFarm = farmService.selectByKey(farm.getPid());
+					Example example = new Example(Prize.class);
+					example.createCriteria()
+							.andCondition("relation_id", beforeFarm.getId())
+							.andCondition("user_id", leader.getId());
+					// 获取当前用户排单上一单 领导拿到的提成--推荐奖
+					double money = prizeService.selectByExample(example).get(0)
+							.getMoney();//
 					// 获得当前用户的上一单饲养成年鸡利息 --还没有计算
-					beforeFarm.getId();// 当前用户上一单的批次
-					double chicken = 0.0;//成鸡饲养利息计算----还没有做
+					Example example2=new Example(FarmFeed.class);
+					example2.createCriteria().andCondition("w_farm_chick_id",beforeFarm.getId());
+					List<FarmFeed> farmFeeds = farmFeedService.selectByExample(example2);// 成鸡饲养利息计算----还没有做
+					double chicken=0.0;
+					for (FarmFeed farmFeed : farmFeeds) {
+						chicken=farmFeed.getPrice()+chicken;
+					}
 					// 获得当前单饲养利息总和
 					double deposit = beforeFarm.getNum_buy()
 							* Integer.parseInt(cfgService.selectByKey("0205")
 									.getValue_()) + chicken;
-					tempBase = farm.getNum_buy()
-							- userLastFarm.get(0).getNum_buy()
-							* Double.parseDouble(cfgService.selectByKey(
-									getCoefficientNO(leader.getLv(), 1))
-									.getValue_()) - deposit;
+					tempBase = tempBase - money - deposit;
 				}
 				if (tempBase <= 0.0) {
 					break;
@@ -247,11 +243,6 @@ public class DynamicCalculation implements Serializable, ICalculation {
 					int depth = temp - userTemp.getDepth();
 					double number = calculateRoyalty(tempBase,
 							userTemp.getLv(), depth);
-					// userTemp.setNum_dynamic(userTemp.getNum_dynamic() +
-					// number);
-					// userTemp.setTotal_dynamic(userTemp.getTotal_dynamic()+
-					// number);
-					// userService.updateNotNull(userTemp);
 					entity = new Prize();
 					entity.setId(UUID.randomUUID().toString().replace("-", ""));
 					entity.setCreate_time(new Date());
@@ -260,24 +251,22 @@ public class DynamicCalculation implements Serializable, ICalculation {
 					entity.setFlag(0);
 					entity.setUser_id(userTemp.getId());
 					Calendar cr = Calendar.getInstance();
-
 					if (depth == 1) {
 						cr.add(Calendar.DAY_OF_MONTH, 7);
 					} else {
 						cr.add(Calendar.DAY_OF_MONTH, 15);
 					}
 					entity.setTrigger_time(cr.getTime());
+					entity.setRelation_id(farm.getId());
 					prizeService.save(entity);
 				}
 				farm.setFlag_calc_bonus(1);
 				farmService.updateNotNull(farm);
 			}
-
 		} else {
 			// 计算用户等级失败
 			return -1;
 		}
-
 		return base;
 	}
 
@@ -537,6 +526,16 @@ public class DynamicCalculation implements Serializable, ICalculation {
 	}
 
 	public static void main(String[] args) {
-
+		// Old way:
+		List<Integer> costBeforeTax = Arrays.asList(100, 200, 300, 400, 500);
+		double total = 0;
+		for (Integer cost : costBeforeTax) {
+			total = total + cost;
+		}
+		System.out.println("Total : " + total);
+		// New way:
+		costBeforeTax = Arrays.asList(100, 200, 300, 400, 500);
+		double bill = costBeforeTax.stream().map((cost) -> cost).reduce((sum, cost) -> sum+ cost).get();
+		System.out.println("Total : " + bill);
 	}
 }
