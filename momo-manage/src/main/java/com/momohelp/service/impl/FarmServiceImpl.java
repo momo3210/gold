@@ -46,7 +46,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 	@Override
 	public int save(Farm entity) {
-		entity.setFlag_out(0);
 		entity.setFlag_calc_bonus(0);
 		entity.setNum_current(entity.getNum_buy());
 		entity.setNum_deal(0);
