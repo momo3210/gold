@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,12 @@ import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Buy;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
+import com.momohelp.model.FarmHatch;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.UserService;
@@ -43,6 +47,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 	@Autowired
 	private BuyService buyService;
+
+	@Autowired
+	private FarmHatchService farmHatchService;
 
 	@Override
 	public int save(Farm entity) {
@@ -69,7 +76,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @param date
 	 * @return
 	 */
-	private Date getOutTime(Date date) {
+	private Date getTimeOut(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.HOUR_OF_DAY, 24 * 20);
@@ -82,7 +89,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @param date
 	 * @return
 	 */
-	private Date getRipeTime(Date date) {
+	private Date getTimeRipe(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.HOUR_OF_DAY, 24 * 7);
@@ -107,15 +114,72 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
+	 * 买入鸡苗参数验证
+	 *
+	 * @return
+	 */
+	private Map<String, Object> buy_validationParameter(Farm farm) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		farm.setNum_buy((null == farm.getNum_buy()) ? 0 : farm.getNum_buy());
+		if (1 > farm.getNum_buy()) {
+			result.put("msg", new String[] { "买入鸡苗数量必须大于 0" });
+			return result;
+		}
+
+		result.put("data", farm);
+		return result;
+	}
+
+	/**
+	 * 买入鸡苗的各种验证（操作数据库相关的查询）
+	 *
+	 * 1、验证我的门票是否够用
+	 *
+	 * 2、验证购买的门票数量是否合法
+	 *
+	 * 3、验证我的最后一笔排单是否已经完全交易成功
+	 *
+	 * @param farm
+	 * @param user
+	 * @return
+	 */
+	private Map<String, Object> buy_validation(Farm farm, User user) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		if (1 > user.getNum_ticket()) {
+			result.put("msg", new String[] { "请购买门票" });
+			return result;
+		}
+
+		String[] checkBuyNum = checkBuyNum(user.getLv(), farm.getNum_buy());
+		if (null != checkBuyNum) {
+			result.put("msg", checkBuyNum);
+			return result;
+		}
+
+		// 获取我的最后一单
+		Farm my_last_farm = getLastByUserId(farm.getUser_id());
+
+		String[] checkDealDone = checkDealDone(my_last_farm);
+		if (null != checkDealDone) {
+			result.put("msg", checkDealDone);
+			return result;
+		}
+
+		farm.setPid((null == my_last_farm) ? "0" : my_last_farm.getId());
+
+		// 当前排单是否接上气儿了
+		farm.setFlag_out_self(checkFarmOut(my_last_farm));
+
+		result.put("data", farm);
+		return result;
+	}
+
+	/**
 	 * 买入鸡苗
-	 *
-	 * 1、查看门票是否小于1，如果是则返回
-	 *
-	 * 2、验证购买的数量是否是100的倍数
-	 *
-	 * 3、验证购买的数量是否符合我的身份
-	 *
-	 * 7、验证是否有未完成交易的排单（买卖）
 	 *
 	 * 4、更新我的帐户信息--门票数量-1
 	 *
@@ -127,57 +191,56 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 */
 	@Override
 	public String[] buy(Farm farm) {
-		farm.setNum_buy((null == farm.getNum_buy()) ? 0 : farm.getNum_buy());
-		if (1 > farm.getNum_buy()) {
-			return new String[] { "买入鸡苗数量不能为 0" };
+		Map<String, Object> buy_validationParameter = buy_validationParameter(farm);
+
+		if (buy_validationParameter.containsKey("msg")) {
+			return (String[]) buy_validationParameter.get("msg");
 		}
+		farm = (Farm) buy_validationParameter.get("data");
 
 		// 获取我的帐户信息（实时）
 		User user = userService.selectByKey(farm.getUser_id());
 
-		String[] checkMyTicket = checkMyTicket(user);
-		if (null != checkMyTicket) {
-			return checkMyTicket;
-		}
+		Map<String, Object> buy_validation = buy_validation(farm, user);
 
-		String[] checkNum = checkNum(user, farm.getNum_buy());
-		if (null != checkNum) {
-			return checkNum;
+		if (buy_validation.containsKey("msg")) {
+			return (String[]) buy_validation.get("msg");
 		}
-
-		// 会员的最后一次买入鸡苗
-		Farm last_farm = findLast(farm.getUser_id());
-		String[] checkUnDeal = checkUnDeal(last_farm);
-		if (null != checkUnDeal) {
-			return checkUnDeal;
-		}
+		farm = (Farm) buy_validationParameter.get("data");
 
 		/***** 整理数据 *****/
 
-		// 取当前日期
-		Date date = new Date();
+		Date today = new Date();
 		Date tomorrow = null;
 
 		try {
-			tomorrow = getTomorrow(date);
+			tomorrow = getTomorrow(today);
 		} catch (ParseException e) {
 			return new String[] { "日期异常" };
 		}
 
 		farm.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-		farm.setCreate_time(date);
-		farm.setTime_out(getOutTime(tomorrow));
-		farm.setTime_ripe(getRipeTime(tomorrow));
+		farm.setCreate_time(today);
+		farm.setTime_out(getTimeOut(tomorrow));
+		farm.setTime_ripe(getTimeRipe(tomorrow));
+		farm.setNum_current(farm.getNum_buy());
 
-		// 设置上次买入鸡苗ID
-		farm.setPid((null == last_farm) ? "0" : last_farm.getId());
+		farm.setNum_deal(0);
+		farm.setFlag_calc_bonus(0);
+		farm.setTime_deal(null);
 
-		/***** 添加一条操作记录 *****/
+		// 我有父级
+		if (!"0".equals(user.getPid())) {
+			Farm my_parent_last_farm = getLastByUserId(user.getPid());
+			farm.setPid_higher_ups(my_parent_last_farm.getId());
+			farm.setFlag_out_p(checkFarmOut(my_parent_last_farm));
+		}
+
+		/***** 整理数据 *****/
+
 		saveMaterialRecord(farm);
-
-		updateUserTicket(user);
-
-		savePrepayment(farm);
+		updateNumTicketByUser(user);
+		saveBuy(farm);
 		save(farm);
 		return null;
 	}
@@ -187,42 +250,31 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 *
 	 * @param farm
 	 */
-	private void savePrepayment(Farm farm) {
+	private void saveBuy(Farm farm) {
 		Buy buy = new Buy();
-
 		buy.setNum_buy(farm.getNum_buy() / 10);
 		buy.setW_farm_chick_id(farm.getId());
+
+		Calendar c = Calendar.getInstance();
+		// 出局前排单 24 小时，出局后排单 48 小时
+		c.add(Calendar.HOUR_OF_DAY, 24 * (1 == farm.getFlag_out_self() ? 1 : 2));
+		buy.setCalc_time(c.getTime());
 
 		buyService.save(buy);
 	}
 
 	/**
-	 * 判断最后一单是否完全交易成功
+	 * 判断排单是否完全交易完成
 	 *
 	 * @param farm
 	 * @return
 	 */
-	private String[] checkUnDeal(Farm farm) {
+	private String[] checkDealDone(Farm farm) {
 		if (null == farm) {
 			return null;
 		}
 		return farm.getNum_buy().intValue() == farm.getNum_deal().intValue() ? null
-				: new String[] { "有未完成的交易" };
-	}
-
-	/**
-	 * 检测我的门票还有没有？
-	 *
-	 * 1、没有，则返回
-	 *
-	 * 2、 更新用户表门票 -1
-	 *
-	 * @param user
-	 * @param user_id
-	 * @return
-	 */
-	private String[] checkMyTicket(User user) {
-		return (1 > user.getNum_ticket()) ? new String[] { "没有门票了，请购买" } : null;
+				: new String[] { "有未完成的排单" };
 	}
 
 	/**
@@ -230,11 +282,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 *
 	 * @param user
 	 */
-	private void updateUserTicket(User user) {
-		User new_user = new User();
-		new_user.setId(user.getId());
-		new_user.setNum_ticket(user.getNum_ticket() - 1);
-		userService.updateNotNull(new_user);
+	private void updateNumTicketByUser(User user) {
+		User _user = new User();
+		_user.setId(user.getId());
+		_user.setNum_ticket(user.getNum_ticket() - 1);
+		userService.updateNotNull(_user);
 	}
 
 	/**
@@ -256,18 +308,17 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		// 后续再说
 		materialRecord.setNum_balance(null);
 		materialRecord.setFlag_plus_minus(1);
-
 		materialRecordService.save(materialRecord);
 	}
 
 	/**
 	 * 检测购买的鸡苗数量是否合法
 	 *
-	 * @param user
+	 * @param user_lv
 	 * @param num_buy
 	 * @return
 	 */
-	private String[] checkNum(User user, int num_buy) {
+	private String[] checkBuyNum(String user_lv, int num_buy) {
 		// 100 的倍数
 		Cfg cfg = cfgService.selectByKey("0106");
 
@@ -276,34 +327,31 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 获取上下限
-		Integer[] range = getRangeByUserLv(user.getLv());
+		Integer[] range = getRangeByUserLv(user_lv);
 
-		if (range[0] <= num_buy && num_buy <= range[1]) {
-			return null;
-		}
-
-		return new String[] { "请输入正确的数量范围" };
+		return (range[0] <= num_buy && num_buy <= range[1]) ? null
+				: new String[] { "请输入正确的数量范围" };
 	}
 
 	/**
-	 * 获取会员能买入鸡苗的上下限
+	 * 根据用户级别获取可以买入鸡苗的范围
 	 *
-	 * @param lv
+	 * @param user_lv
 	 * @return
 	 */
-	private Integer[] getRangeByUserLv(String lv) {
+	private Integer[] getRangeByUserLv(String user_lv) {
 		String min = null, max = null;
 
-		if ("05".equals(lv)) {
+		if ("05".equals(user_lv)) {
 			min = "2001";
 			max = "2002";
-		} else if ("06".equals(lv)) {
+		} else if ("06".equals(user_lv)) {
 			min = "2003";
 			max = "2004";
-		} else if ("07".equals(lv)) {
+		} else if ("07".equals(user_lv)) {
 			min = "2005";
 			max = "2006";
-		} else if ("08".equals(lv)) {
+		} else if ("08".equals(user_lv)) {
 			min = "2007";
 			max = "2008";
 		}
@@ -316,7 +364,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public Farm findLast(String user_id) {
+	public Farm getLastByUserId(String user_id) {
 		Example example = new Example(Farm.class);
 		example.setOrderByClause("create_time desc");
 		// TODO
@@ -328,4 +376,35 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
+	/**
+	 * 判断排单在当前时间是否出局
+	 *
+	 * 1未出局（接上气儿）
+	 *
+	 * 2主动出局
+	 *
+	 * 3自然出局
+	 *
+	 * @param farm
+	 * @return
+	 */
+	private int checkFarmOut(Farm farm) {
+		if (null == farm) {
+			return 1;
+		}
+
+		List<FarmHatch> list = farmHatchService.findByFarmId(farm.getId());
+
+		if (null == list || 0 < list.size()) {
+			return 2;
+		}
+
+		Date date = new Date();
+
+		if (date.after(farm.getTime_out())) {
+			return 3;
+		}
+
+		return 1;
+	}
 }

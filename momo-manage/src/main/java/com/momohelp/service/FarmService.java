@@ -26,5 +26,6 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	Farm findLast(String user_id);
+	Farm getLastByUserId(String user_id);
+
 }
