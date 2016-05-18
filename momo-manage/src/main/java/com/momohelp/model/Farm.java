@@ -72,7 +72,7 @@ public class Farm implements Serializable {
 	/**
 	 * 相对于上级领导的最近一单
 	 */
-	private String flag_out_pid;
+	private String pid_higher_ups;
 
 	/**
 	 * 对于自己来说，是重新开始的一次排单
@@ -104,12 +104,12 @@ public class Farm implements Serializable {
 		this.flag_out_p = flag_out_p;
 	}
 
-	public String getFlag_out_pid() {
-		return flag_out_pid;
+	public String getPid_higher_ups() {
+		return pid_higher_ups;
 	}
 
-	public void setFlag_out_pid(String flag_out_pid) {
-		this.flag_out_pid = flag_out_pid;
+	public void setPid_higher_ups(String pid_higher_ups) {
+		this.pid_higher_ups = pid_higher_ups;
 	}
 
 	public String getPid() {
