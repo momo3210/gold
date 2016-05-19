@@ -56,7 +56,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		entity.setFlag_calc_bonus(0);
 		entity.setNum_current(entity.getNum_buy());
 		entity.setNum_deal(0);
-		entity.setNum_interest(0);
 		return super.save(entity);
 	}
 
@@ -436,19 +435,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		List<Farm> list = selectByExample(example);
 		return list;
-	}
-
-	@Override
-	public int getInventoryCount(List<Farm> list) {
-		int num = 0;
-
-		for (int i = 0, j = list.size(); i < j; i++) {
-			Farm item = list.get(i);
-			// 本金+利息
-			num += item.getNum_current() + item.getNum_interest();
-		}
-
-		return num;
 	}
 
 	@Override

@@ -97,11 +97,6 @@ public class Farm implements Serializable {
 	private String pid;
 
 	/**
-	 * 喂鸡产生的利息
-	 */
-	private Integer num_interest;
-
-	/**
 	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
 	 */
 	private Integer num_reward;
@@ -112,14 +107,6 @@ public class Farm implements Serializable {
 
 	public void setNum_reward(Integer num_reward) {
 		this.num_reward = num_reward;
-	}
-
-	public Integer getNum_interest() {
-		return num_interest;
-	}
-
-	public void setNum_interest(Integer num_interest) {
-		this.num_interest = num_interest;
 	}
 
 	public Integer getFlag_out_self() {

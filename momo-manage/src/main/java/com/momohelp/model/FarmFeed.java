@@ -39,7 +39,7 @@ public class FarmFeed implements Serializable {
 	private String w_farm_chick_id;
 
 	/**
-	 * 总金额
+	 * 此次的利息金额
 	 */
 	private Double price;
 

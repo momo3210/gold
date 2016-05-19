@@ -39,14 +39,6 @@ public interface FarmService extends IService<Farm> {
 	List<Farm> findInventory(String user_id);
 
 	/**
-	 * 获取库存总数（本金+利息）
-	 *
-	 * @param list
-	 * @return
-	 */
-	int getInventoryCount(List<Farm> list);
-
-	/**
 	 * 获取可以孵化的鸡苗批次
 	 *
 	 * @param key
