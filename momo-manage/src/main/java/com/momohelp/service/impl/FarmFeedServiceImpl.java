@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,6 +24,7 @@ import com.momohelp.service.UserService;
  * @author Administrator
  *
  */
+@Service("farmFeedService")
 public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		FarmFeedService {
 
