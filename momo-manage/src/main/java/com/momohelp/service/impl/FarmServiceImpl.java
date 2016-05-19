@@ -424,4 +424,30 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		return 1;
 	}
+
+	@Override
+	public List<Farm> findInventory(String user_id) {
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time asc");
+		// TODO
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andEqualTo("num_buy", "num_deal");
+		criteria.andGreaterThan("num_current", 0);
+
+		List<Farm> list = selectByExample(example);
+		return list;
+	}
+
+	@Override
+	public int getInventoryCount(List<Farm> list) {
+		int num = 0;
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm item = list.get(i);
+			num += item.getNum_current();
+		}
+
+		return num;
+	}
 }

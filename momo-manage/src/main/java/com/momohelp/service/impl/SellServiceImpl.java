@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.model.Farm;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
@@ -34,6 +36,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Autowired
 	private MaterialRecordService materialRecordService;
+
+	@Autowired
+	private FarmService farmService;
 
 	@Override
 	public int save(Sell entity) {
@@ -350,6 +355,31 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		if (sell.getNum_sell() <= user.getNum_static()) {
 			return sell_static_surplus(sell, user);
 		}
+
+		// 获取库存列表
+		List<Farm> inventorys = farmService.findInventory(user.getId());
+		if (null == inventorys) {
+			return new String[] { "查询库存信息失败" };
+		}
+
+		// 获取库存总数
+		int inventoryCount = farmService.getInventoryCount(inventorys);
+		if (sell.getNum_sell() > (user.getNum_static() + inventoryCount)) {
+			return new String[] { "静态钱包余额不足" };
+		}
+
+		return sell_static_surplus_2(sell, user, inventorys);
+	}
+
+	/**
+	 * 卖出静态钱包（静态帐户不足，从 w_farm_chick 转换剩余到孵化器）
+	 *
+	 * @param sell
+	 * @param user
+	 * @param list
+	 * @return
+	 */
+	private String[] sell_static_surplus_2(Sell sell, User user, List<Farm> list) {
 		return null;
 	}
 
