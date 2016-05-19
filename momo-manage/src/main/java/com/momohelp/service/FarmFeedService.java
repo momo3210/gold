@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.momohelp.model.FarmFeed;
 
 /**
@@ -16,4 +18,13 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	 * @return
 	 */
 	double dividend(String farm_id);
+
+	/**
+	 * 喂饲料
+	 *
+	 * @param farm_id
+	 * @return
+	 */
+	@Transactional
+	String[] feed(FarmFeed farmFeed);
 }
