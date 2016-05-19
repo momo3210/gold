@@ -85,6 +85,13 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			return new String[] { "没有鸡可以喂了" };
 		}
 
+		// 我的实时信息
+		User user = userService.selectByKey(farm.getUser_id());
+
+		if (farmFeed.getNum_feed() > user.getNum_food()) {
+			return new String[] { "请购买饲料" };
+		}
+
 		// 最后一次喂鸡记录
 		FarmFeed last_farmfeed = getLastByFarmId(farmFeed.getW_farm_chick_id());
 
@@ -98,17 +105,11 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			return new String[] { "已经出局了" };
 		}
 
-		// 我的实时信息
-		User user = userService.selectByKey(farm.getUser_id());
-
 		saveMaterialRecord(farmFeed, user);
 
 		// 计算利息 START 0.5% or 0.9%
-		double price = 0.00;
-		price = Double.valueOf(farmFeed.getNum_feed())
-				* (7 > last_farmfeed.getOrder_feed() ? 0.005 : 0.009);
-		farmFeed.setPrice(price);
-		// 计算利息 END
+		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
+				* (7 > last_farmfeed.getOrder_feed() ? 0.005 : 0.009));
 
 		farmFeed.setOrder_feed((null == last_farmfeed) ? 1 : (1 + last_farmfeed
 				.getOrder_feed()));

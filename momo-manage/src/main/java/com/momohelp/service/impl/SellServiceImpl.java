@@ -17,8 +17,6 @@ import com.github.pagehelper.PageHelper;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
-import com.momohelp.service.FarmHatchService;
-import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
@@ -36,12 +34,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Autowired
 	private MaterialRecordService materialRecordService;
-
-	@Autowired
-	private FarmService farmService;
-
-	@Autowired
-	private FarmHatchService farmHatchService;
 
 	@Override
 	public int save(Sell entity) {
@@ -89,7 +81,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		c_23.set(Calendar.HOUR_OF_DAY, 23);
 
 		return (date.after(c_1.getTime()) && date.before(c_23.getTime())) ? null
-				: new String[] { "时间范围 01点 至 23点" };
+				: new String[] { "交易时间凌晨 01 点至午夜 23 点" };
 	}
 
 	/**

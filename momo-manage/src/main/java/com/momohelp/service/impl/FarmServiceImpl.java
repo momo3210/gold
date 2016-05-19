@@ -241,7 +241,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		/***** 开始保存数据 *****/
 
 		saveMaterialRecord(farm, user);
-		updateNumTicketByUser(user);
 		saveBuy(farm);
 		save(farm);
 		return null;
@@ -288,18 +287,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	/**
-	 * 更新用户门票数量
-	 *
-	 * @param user
-	 */
-	private void updateNumTicketByUser(User user) {
-		User _user = new User();
-		_user.setId(user.getId());
-		_user.setNum_ticket(user.getNum_ticket() - 1);
-		userService.updateNotNull(_user);
-	}
-
-	/**
 	 *
 	 * 添加操作记录
 	 *
@@ -324,6 +311,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		materialRecord.setFlag_plus_minus(0);
 		materialRecordService.save(materialRecord);
+
+		// 更新我的门票信息
+		User _user = new User();
+		_user.setId(user.getId());
+		_user.setNum_ticket(materialRecord.getNum_balance().intValue());
+		userService.updateNotNull(_user);
 	}
 
 	/**
