@@ -309,7 +309,8 @@
 													<td><#if (0 < (doc.flag_plus_minus)!)>+<#else>-</#if>${doc.num_use?string('#.00')}</td>
 													<td>${doc.num_balance?string('#.00')}</td>
 													<td>
-														<#if (doc.comment)?? && '' != (doc.comment)!>
+														${(doc.comment)!}
+														<#-- <!-- <#if (doc.comment)?? && '' != (doc.comment)!>
 															${(doc.comment)!}
 														<#else>
 															<#if (doc.trans_user_id)??>
@@ -336,7 +337,7 @@
 																		购买数额 ${(doc.num_use)!}，<#if (0 < (doc.status)!)>已入账<#else>等待入账</#if>
 																</#switch>
 															</#if>
-														</#if>
+														</#if> -->
 													</td>
 													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 												</tr>

@@ -84,10 +84,11 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 			return new String[] { "请选择接收人" };
 		}
 
-		// 获取我的余额进行比对
-		User my_user = userService.selectByKey(materialRecord.getUser_id());
-		int num_current = (1 == materialRecord.getType_id()) ? my_user
-				.getNum_ticket() : my_user.getNum_food();
+		// 获取用户实时信息
+		User user = userService.selectByKey(materialRecord.getUser_id());
+
+		int num_current = (1 == materialRecord.getType_id()) ? user
+				.getNum_ticket() : user.getNum_food();
 
 		if (num_current < materialRecord.getNum_use()) {
 			return new String[] { "您的帐号余额不足" };
@@ -95,57 +96,62 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 
 		/***** 增加一条我的 *****/
 		materialRecord.setStatus(1);
-		materialRecord.setComment("转出门票 -100 给 M12345");
-		// 转出
-		materialRecord.setFlag_plus_minus(0);
+		materialRecord.setComment("转出"
+				+ ((1 == materialRecord.getType_id()) ? "门票" : "饲料") + " -"
+				+ materialRecord.getNum_use() + " 给 M"
+				+ materialRecord.getTrans_user_id());
 		// 更新我的本次余额
 		materialRecord
 				.setNum_balance(num_current - materialRecord.getNum_use());
+		// 转出
+		materialRecord.setFlag_plus_minus(0);
 		save(materialRecord);
 
 		/***** 更新我的帐户信息 *****/
-		User new_my_user = new User();
+		User _user = new User();
 		if (1 == materialRecord.getType_id()) {
-			new_my_user.setNum_ticket(materialRecord.getNum_balance()
-					.intValue());
+			_user.setNum_ticket(materialRecord.getNum_balance().intValue());
 		} else {
-			new_my_user.setNum_food(materialRecord.getNum_balance().intValue());
+			_user.setNum_food(materialRecord.getNum_balance().intValue());
 		}
-		new_my_user.setId(materialRecord.getUser_id());
-		userService.updateNotNull(new_my_user);
+		_user.setId(materialRecord.getUser_id());
+		userService.updateNotNull(_user);
 
 		/***** 增加一条接受人的 *****/
-		MaterialRecord new_trans_materialRecord = new MaterialRecord();
-		new_trans_materialRecord.setUser_id(materialRecord.getTrans_user_id());
-		new_trans_materialRecord.setNum_use(materialRecord.getNum_use());
-		new_trans_materialRecord.setStatus(materialRecord.getStatus());
-		new_trans_materialRecord.setType_id(materialRecord.getType_id());
-		new_trans_materialRecord.setComment(materialRecord.getComment());
-		new_trans_materialRecord.setTrans_user_id(materialRecord.getUser_id());
+		MaterialRecord _trans_materialRecord = new MaterialRecord();
+		_trans_materialRecord.setUser_id(materialRecord.getTrans_user_id());
+		_trans_materialRecord.setNum_use(materialRecord.getNum_use());
+		_trans_materialRecord.setStatus(materialRecord.getStatus());
+		_trans_materialRecord.setType_id(materialRecord.getType_id());
+		_trans_materialRecord.setComment("接收"
+				+ ((1 == materialRecord.getType_id()) ? "门票" : "饲料") + " +"
+				+ materialRecord.getNum_use() + " 来自 M"
+				+ materialRecord.getUser_id());
+		_trans_materialRecord.setTrans_user_id(materialRecord.getUser_id());
 
-		new_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
-				+ ((1 == new_trans_materialRecord.getType_id()) ? trans_user
+		_trans_materialRecord.setNum_balance(materialRecord.getNum_use()
+				+ ((1 == _trans_materialRecord.getType_id()) ? trans_user
 						.getNum_ticket() : trans_user.getNum_food()));
 
 		// 转入
-		new_trans_materialRecord.setFlag_plus_minus(1);
-		save(new_trans_materialRecord);
+		_trans_materialRecord.setFlag_plus_minus(1);
+		save(_trans_materialRecord);
 
 		/***** 更新接收人的帐户信息 *****/
-		User new_trans_user = new User();
-		if (1 == new_trans_materialRecord.getType_id()) {
-			new_trans_user.setNum_ticket(new_trans_materialRecord
-					.getNum_balance().intValue());
-			new_trans_user.setTotal_ticket(trans_user.getTotal_ticket()
-					+ new_trans_materialRecord.getNum_use().intValue());
+		User _trans_user = new User();
+		if (1 == _trans_materialRecord.getType_id()) {
+			_trans_user.setNum_ticket(_trans_materialRecord.getNum_balance()
+					.intValue());
+			_trans_user.setTotal_ticket(trans_user.getTotal_ticket()
+					+ _trans_materialRecord.getNum_use().intValue());
 		} else {
-			new_trans_user.setNum_food(new_trans_materialRecord
-					.getNum_balance().intValue());
-			new_trans_user.setTotal_food(trans_user.getTotal_food()
-					+ new_trans_materialRecord.getNum_use().intValue());
+			_trans_user.setNum_food(_trans_materialRecord.getNum_balance()
+					.intValue());
+			_trans_user.setTotal_food(trans_user.getTotal_food()
+					+ _trans_materialRecord.getNum_use().intValue());
 		}
-		new_trans_user.setId(new_trans_materialRecord.getUser_id());
-		userService.updateNotNull(new_trans_user);
+		_trans_user.setId(_trans_materialRecord.getUser_id());
+		userService.updateNotNull(_trans_user);
 
 		return null;
 	}
@@ -181,9 +187,8 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		}
 
 		materialRecord.setStatus(0);
-		materialRecord.setComment("购买"
-				+ ((1 == materialRecord.getType_id()) ? "门票" : "饲料") + " +"
-				+ materialRecord.getNum_use() + ".00");
+		materialRecord.setComment("购买数额 +" + materialRecord.getNum_use()
+				+ "，等待入账");
 		materialRecord.setTrans_user_id(null);
 
 		// 设置余额
@@ -238,31 +243,34 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		User user = userService.selectByKey(materialRecord.getUser_id());
 
 		/***** 更新用户帐户信息 *****/
-		User new_user = new User();
-		new_user.setId(user.getId());
+		User _user = new User();
+		_user.setId(user.getId());
 		if (1 == materialRecord.getType_id()) {
-			new_user.setNum_ticket(user.getNum_ticket()
+			_user.setNum_ticket(user.getNum_ticket()
 					+ materialRecord.getNum_use().intValue());
-			new_user.setTotal_ticket(user.getTotal_ticket()
+			_user.setTotal_ticket(user.getTotal_ticket()
 					+ materialRecord.getNum_use().intValue());
 		} else {
-			new_user.setNum_food(user.getNum_food()
+			_user.setNum_food(user.getNum_food()
 					+ materialRecord.getNum_use().intValue());
-			new_user.setTotal_food(user.getTotal_food()
+			_user.setTotal_food(user.getTotal_food()
 					+ materialRecord.getNum_use().intValue());
 		}
-		userService.updateNotNull(new_user);
+		userService.updateNotNull(_user);
 
 		/***** 更新转账信息 *****/
-		MaterialRecord new_materialRecord = new MaterialRecord();
-		new_materialRecord.setId(key);
-		new_materialRecord.setStatus(1);
+		MaterialRecord _materialRecord = new MaterialRecord();
+		_materialRecord.setId(key);
+		_materialRecord.setStatus(1);
 
-		double d = (1 == materialRecord.getType_id()) ? new_user
-				.getNum_ticket() : new_user.getNum_food();
-		new_materialRecord.setNum_balance(d);
-		updateNotNull(new_materialRecord);
+		double d = (1 == materialRecord.getType_id()) ? _user.getNum_ticket()
+				: _user.getNum_food();
+		_materialRecord.setNum_balance(d);
 
+		_materialRecord.setComment("购买数额 +" + materialRecord.getNum_use()
+				+ "，已入账");
+
+		updateNotNull(_materialRecord);
 		return null;
 	}
 }
