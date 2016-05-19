@@ -85,6 +85,13 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			return new String[] { "没有鸡可以喂了" };
 		}
 
+		// 买入当天不能喂鸡
+		String date_1 = sdf.format(farm.getCreate_time());
+		String date_2 = sdf.format(farmFeed.getCreate_time());
+		if (date_1.equals(date_2)) {
+			return new String[] { "买入当天不能喂鸡" };
+		}
+
 		// 我的实时信息
 		User user = userService.selectByKey(farm.getUser_id());
 
