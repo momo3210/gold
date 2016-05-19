@@ -73,6 +73,9 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 			return new String[] { "转出数量必须大于 0" };
 		}
 
+		materialRecord.setTrans_user_id(materialRecord.getTrans_user_id()
+				.substring(1));
+
 		if (materialRecord.getUser_id().equals(
 				materialRecord.getTrans_user_id())) {
 			return new String[] { "接收人不能是自己" };
