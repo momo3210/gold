@@ -45,4 +45,13 @@ public interface FarmService extends IService<Farm> {
 	 * @return
 	 */
 	int getInventoryCount(List<Farm> list);
+
+	/**
+	 * 获取可以孵化的鸡苗批次
+	 *
+	 * @param key
+	 * @param user_id
+	 * @return
+	 */
+	Farm findCanHatch(String key, String user_id);
 }

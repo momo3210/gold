@@ -23,6 +23,8 @@ public class FarmHatch implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	private String user_id;
+
 	/**
 	 * 孵化时间
 	 */
@@ -42,6 +44,14 @@ public class FarmHatch implements Serializable {
 	 * 最后一笔卖出
 	 */
 	private Integer flag_is_last;
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
 
 	public Integer getFlag_is_last() {
 		return flag_is_last;

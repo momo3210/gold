@@ -451,4 +451,29 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return num;
 	}
 
+	@Override
+	public Farm findCanHatch(String key, String user_id) {
+		Farm farm = selectByKey(key);
+		if (null == farm) {
+			return null;
+		}
+
+		// 是否是此人的鸡苗批次
+		if (!user_id.equals(farm.getUser_id())) {
+			return null;
+		}
+
+		// 是否已经完全成交过
+		if (farm.getNum_buy().intValue() != farm.getNum_deal().intValue()) {
+			return null;
+		}
+
+		// 是否还有存量
+		if (0 == farm.getNum_current()) {
+			return null;
+		}
+
+		return farm;
+	}
+
 }
