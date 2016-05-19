@@ -317,9 +317,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(sell.getType_id() + 2);
 
-		materialRecord.setComment("卖出鸡苗（"
-				+ ((1 == sell.getType_id()) ? "静" : "动") + "态） -"
-				+ materialRecord.getNum_use() + ".00");
+		materialRecord.setComment("卖出鸡苗 -" + materialRecord.getNum_use());
 
 		materialRecord.setTrans_user_id(null);
 

@@ -312,12 +312,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(farm.getUser_id());
 
-		double d1 = farm.getNum_buy();
-		materialRecord.setNum_use(d1);
+		materialRecord.setNum_use(1.0);
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(1);
-		materialRecord.setComment("购买鸡苗 +" + materialRecord.getNum_use()
-				+ ".00");
+
+		double d1 = farm.getNum_buy();
+		materialRecord.setComment("买入鸡苗 +" + d1);
 
 		materialRecord.setTrans_user_id(null);
 		// 后续再说
