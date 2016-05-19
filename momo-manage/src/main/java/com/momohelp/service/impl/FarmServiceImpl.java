@@ -56,6 +56,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		entity.setFlag_calc_bonus(0);
 		entity.setNum_current(entity.getNum_buy());
 		entity.setNum_deal(0);
+		entity.setNum_interest(0);
 		return super.save(entity);
 	}
 
@@ -316,13 +317,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(1);
 
-		double d1 = farm.getNum_buy();
-		materialRecord.setComment("买入鸡苗 +" + d1);
+		materialRecord.setComment("买入鸡苗 +" + Double.valueOf(farm.getNum_buy()));
 
 		materialRecord.setTrans_user_id(null);
-		// 后续再说
-		double d2 = user.getNum_ticket() - 1;
-		materialRecord.setNum_balance(d2);
+
+		materialRecord.setNum_balance(Double.valueOf(user.getNum_ticket() - 1));
 
 		materialRecord.setFlag_plus_minus(0);
 		materialRecordService.save(materialRecord);
@@ -445,9 +444,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Farm item = list.get(i);
-			num += item.getNum_current();
+			// 本金+利息
+			num += item.getNum_current() + item.getNum_interest();
 		}
 
 		return num;
 	}
+
 }

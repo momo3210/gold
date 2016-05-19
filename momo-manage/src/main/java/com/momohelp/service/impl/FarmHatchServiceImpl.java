@@ -1,5 +1,6 @@
 package com.momohelp.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +18,18 @@ import com.momohelp.service.FarmHatchService;
 @Service("farmHatchService")
 public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		FarmHatchService {
+
+	@Override
+	public int save(FarmHatch entity) {
+		entity.setCreate_time(new Date());
+		return super.save(entity);
+	}
+
+	@Override
+	public int updateNotNull(FarmHatch entity) {
+		entity.setId(null);
+		return super.updateNotNull(entity);
+	}
 
 	@Override
 	public List<FarmHatch> findByFarmId(String farm_id) {

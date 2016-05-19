@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
-import com.momohelp.model.Farm;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
@@ -39,6 +39,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Autowired
 	private FarmService farmService;
+
+	@Autowired
+	private FarmHatchService farmHatchService;
 
 	@Override
 	public int save(Sell entity) {
@@ -160,6 +163,12 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return result;
 		}
 
+		if (sell.getNum_sell() > ((1 == sell.getType_id()) ? user
+				.getNum_static() : user.getNum_dynamic())) {
+			result.put("msg", new String[] { (1 == sell.getType_id() ? "静"
+					: "动") + "态钱包余额不足" });
+		}
+
 		result.put("data", sell);
 		return result;
 	}
@@ -200,11 +209,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 		sell = (Sell) sell_validation.get("data");
 
-		if (1 == sell.getType_id()) {
-			return sell_static(sell, user);
-		} else { // 动态钱包
-			return sell_dynamic(sell, user);
-		}
+		saveMaterialRecord(sell, user);
+		save(sell);
+		return null;
 	}
 
 	/**
@@ -257,7 +264,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 
 		if (60000 < (num_dynamic + sell.getNum_sell())) {
-			return new String[] { "动态钱包卖出每月不能超过 60000" };
+			return new String[] { "动态钱包每月卖出不能超过 60000" };
 		}
 
 		return null;
@@ -289,23 +296,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	/**
-	 * 卖出动态钱包
-	 *
-	 * @param sell
-	 * @param user
-	 * @return
-	 */
-	private String[] sell_dynamic(Sell sell, User user) {
-		if (sell.getNum_sell() > user.getNum_dynamic()) {
-			return new String[] { "动态钱包余额不足" };
-		}
-
-		saveMaterialRecord(sell, user);
-		save(sell);
-		return null;
-	}
-
-	/**
 	 * 存入记录并更新用户的动态余额
 	 *
 	 * @param sell
@@ -316,8 +306,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(sell.getUser_id());
 
-		double d1 = sell.getNum_sell();
-		materialRecord.setNum_use(d1);
+		materialRecord.setNum_use(Double.valueOf(sell.getNum_sell()));
 
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(sell.getType_id() + 2);
@@ -326,9 +315,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 		materialRecord.setTrans_user_id(null);
 
-		double d2 = ((1 == sell.getType_id()) ? user.getNum_static() : user
-				.getNum_dynamic()) - sell.getNum_sell();
-		materialRecord.setNum_balance(d2);
+		materialRecord.setNum_balance(((1 == sell.getType_id()) ? user
+				.getNum_static() : user.getNum_dynamic())
+				- materialRecord.getNum_use());
 
 		materialRecord.setFlag_plus_minus(0);
 		materialRecordService.save(materialRecord);
@@ -342,58 +331,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			_user.setNum_dynamic(materialRecord.getNum_balance());
 		}
 		userService.updateNotNull(_user);
-	}
-
-	/**
-	 * 卖出静态钱包
-	 *
-	 * @param sell
-	 * @param user
-	 * @return
-	 */
-	private String[] sell_static(Sell sell, User user) {
-		if (sell.getNum_sell() <= user.getNum_static()) {
-			return sell_static_surplus(sell, user);
-		}
-
-		// 获取库存列表
-		List<Farm> inventorys = farmService.findInventory(user.getId());
-		if (null == inventorys) {
-			return new String[] { "查询库存信息失败" };
-		}
-
-		// 获取库存总数
-		int inventoryCount = farmService.getInventoryCount(inventorys);
-		if (sell.getNum_sell() > (user.getNum_static() + inventoryCount)) {
-			return new String[] { "静态钱包余额不足" };
-		}
-
-		return sell_static_surplus_2(sell, user, inventorys);
-	}
-
-	/**
-	 * 卖出静态钱包（静态帐户不足，从 w_farm_chick 转换剩余到孵化器）
-	 *
-	 * @param sell
-	 * @param user
-	 * @param list
-	 * @return
-	 */
-	private String[] sell_static_surplus_2(Sell sell, User user, List<Farm> list) {
-		return null;
-	}
-
-	/**
-	 * 卖出静态钱包（静态帐户充足）
-	 *
-	 * @param sell
-	 * @param user
-	 * @return
-	 */
-	private String[] sell_static_surplus(Sell sell, User user) {
-		saveMaterialRecord(sell, user);
-		save(sell);
-		return null;
 	}
 
 	/**

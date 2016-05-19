@@ -39,7 +39,7 @@ public interface FarmService extends IService<Farm> {
 	List<Farm> findInventory(String user_id);
 
 	/**
-	 * 获取库存总数
+	 * 获取库存总数（本金+利息）
 	 *
 	 * @param list
 	 * @return
