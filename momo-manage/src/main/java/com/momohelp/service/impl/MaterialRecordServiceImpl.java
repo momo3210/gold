@@ -263,9 +263,8 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 		_materialRecord.setId(key);
 		_materialRecord.setStatus(1);
 
-		double d = (1 == materialRecord.getType_id()) ? _user.getNum_ticket()
-				: _user.getNum_food();
-		_materialRecord.setNum_balance(d);
+		_materialRecord.setNum_balance(materialRecord.getNum_balance()
+				+ materialRecord.getNum_use());
 
 		_materialRecord.setComment("购买数额 +" + materialRecord.getNum_use()
 				+ "，已入账");

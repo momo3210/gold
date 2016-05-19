@@ -48,6 +48,7 @@ public class MessageController {
 
 		// TODO
 		result.addObject("nav_choose", ",07,0702,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 

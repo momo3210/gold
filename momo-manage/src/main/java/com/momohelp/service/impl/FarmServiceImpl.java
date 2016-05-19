@@ -56,6 +56,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		entity.setFlag_calc_bonus(0);
 		entity.setNum_current(entity.getNum_buy());
 		entity.setNum_deal(0);
+		entity.setNum_reward(0);
 		return super.save(entity);
 	}
 
@@ -260,6 +261,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Calendar c = Calendar.getInstance();
 		c.setTime(farm.getCreate_time());
 		c.add(Calendar.DAY_OF_MONTH, 1);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
 		buy.setCalc_time(c.getTime());
 
 		// Calendar c = Calendar.getInstance();

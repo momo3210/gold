@@ -25,6 +25,7 @@ public class DefaultController {
 	public ModelAndView _i_indexUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/default/1.0.2/index");
 		result.addObject("nav_choose", ",02,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 

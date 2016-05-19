@@ -48,6 +48,7 @@ public class NoticeController {
 		result.addObject("data_list", list);
 
 		result.addObject("nav_choose", ",07,0701,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -58,7 +59,7 @@ public class NoticeController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/notice/info" }, method = RequestMethod.GET)
-	public String _i_infoUI(Map<String, Object> map,
+	public String _i_infoUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = true) String id) {
 		Notice notice = noticeService.selectByKey(id);
 		if (null == notice) {
@@ -69,6 +70,7 @@ public class NoticeController {
 
 		// TODO
 		map.put("nav_choose", ",07,0701,");
+		map.put("data_user", session.getAttribute("session.user"));
 		return "i/notice/1.0.2/info";
 	}
 

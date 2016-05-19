@@ -132,6 +132,7 @@ public class UserController {
 	public ModelAndView _i_pastureUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/pasture");
 		result.addObject("nav_choose", ",01,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -191,9 +192,10 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.GET)
-	public ModelAndView _i_changePwdUI() {
+	public ModelAndView _i_changePwdUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/changePwd");
 		result.addObject("nav_choose", ",03,0302,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -272,6 +274,7 @@ public class UserController {
 		map.put("data_user", user);
 		// TODO
 		map.put("nav_choose", ",03,0301,");
+		map.put("data_user", session.getAttribute("session.user"));
 		return "i/user/1.0.1/profile";
 	}
 
@@ -338,6 +341,7 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/createAccount");
 		result.addObject("data_token", genToken(session));
 		result.addObject("nav_choose", ",04,0401,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -400,6 +404,7 @@ public class UserController {
 
 		// TODO
 		result.addObject("nav_choose", ",04,0402,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -494,6 +499,7 @@ public class UserController {
 
 		// TODO
 		result.addObject("nav_choose", ",05,0501,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -514,6 +520,7 @@ public class UserController {
 		result.addObject("data_token", genToken(session));
 
 		result.addObject("nav_choose", ",05,0502,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -580,6 +587,7 @@ public class UserController {
 	public ModelAndView _i_buyRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -593,6 +601,7 @@ public class UserController {
 	public ModelAndView _i_sellRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
 		result.addObject("nav_choose", ",05,0504,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -711,6 +720,7 @@ public class UserController {
 	public ModelAndView _i_virementTicketUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/virementTicket");
 		result.addObject("nav_choose", ",06,0604,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -734,6 +744,7 @@ public class UserController {
 	public ModelAndView _i_virementFoodUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/virementFood");
 		result.addObject("nav_choose", ",06,0605,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -801,6 +812,7 @@ public class UserController {
 	public ModelAndView _i_commissionUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/commission");
 		result.addObject("nav_choose", ",06,0606,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -814,6 +826,7 @@ public class UserController {
 	public ModelAndView _i_staticRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
 		result.addObject("nav_choose", ",06,0607,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -827,6 +840,7 @@ public class UserController {
 	public ModelAndView _i_dynamicRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
 		result.addObject("nav_choose", ",06,0608,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -877,6 +891,7 @@ public class UserController {
 
 		// TODO
 		result.addObject("nav_choose", nav_choose);
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -903,9 +918,8 @@ public class UserController {
 
 		result.addObject("data_list", list);
 
-		result.addObject("data_user", session.getAttribute("session.user"));
-
 		result.addObject("nav_choose", ",06,0610,");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
