@@ -81,7 +81,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		c_23.set(Calendar.HOUR_OF_DAY, 23);
 
 		return (date.after(c_1.getTime()) && date.before(c_23.getTime())) ? null
-				: new String[] { "交易时间凌晨 01 点至午夜 23 点" };
+				: new String[] { "交易时间：凌晨01点 至 午夜23点" };
 	}
 
 	/**
