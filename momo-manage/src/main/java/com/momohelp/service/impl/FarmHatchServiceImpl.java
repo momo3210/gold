@@ -96,10 +96,12 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 
 		// 最后一笔孵化
 		if (0 == _farm.getNum_current()) {
-			// 需要+利息
+			// 需要+利息+奖金
 			double i = farmFeedService.dividend(farmHatch.getW_farm_chick_id());
-			_user.setNum_static(user.getNum_static() + i);
-			_user.setTotal_static(user.getTotal_static() + i);
+			_user.setNum_static(user.getNum_static() + i
+					+ Double.valueOf(farm.getNum_reward()));
+			_user.setTotal_static(user.getTotal_static() + i
+					+ Double.valueOf(farm.getNum_reward()));
 
 			// 最后一笔孵化标记
 			farmHatch.setFlag_is_last(1);
