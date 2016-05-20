@@ -1,5 +1,6 @@
 package com.momohelp.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmHatch;
-import com.momohelp.model.User;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
@@ -36,13 +36,11 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 
 	@Override
 	public int save(FarmHatch entity) {
-		entity.setCreate_time(new Date());
 		return super.save(entity);
 	}
 
 	@Override
 	public int updateNotNull(FarmHatch entity) {
-		entity.setId(null);
 		return super.updateNotNull(entity);
 	}
 
@@ -59,6 +57,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 
 	@Override
 	public String[] hatch(FarmHatch farmHatch) {
+		farmHatch.setCreate_time(new Date());
 
 		farmHatch.setNum_hatch((null == farmHatch.getNum_hatch()) ? 0
 				: farmHatch.getNum_hatch());
@@ -66,48 +65,44 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 			return new String[] { "孵化数量必须大于 0" };
 		}
 
-		Farm farm = farmService.findCanHatch(farmHatch.getW_farm_chick_id(),
-				farmHatch.getUser_id());
+		Farm farm = farmService.selectByKey(farmHatch.getW_farm_chick_id());
+
 		if (null == farm) {
 			return new String[] { "不能孵化" };
+		}
+
+		if (!farmHatch.getUser_id().equals(farm.getUser_id())) {
+			return new String[] { "非法操作" };
+		}
+
+		// 未完全交易成功，所以不能孵化
+		if (null == farm.getTime_deal()) {
+			return new String[] { "不能孵化" };
+		}
+
+		if (0 == farm.getNum_current()) {
+			return new String[] { "库存不足" };
 		}
 
 		if (farmHatch.getNum_hatch() > farm.getNum_current()) {
 			return new String[] { "待孵化数量不足" };
 		}
 
+		// 更新鸡苗批次表
 		Farm _farm = new Farm();
 		_farm.setId(farmHatch.getW_farm_chick_id());
 		_farm.setNum_current(farm.getNum_current() - farmHatch.getNum_hatch());
 		farmService.updateNotNull(_farm);
 
-		// 获取我的帐户信息（实时）
-		User user = userService.selectByKey(farmHatch.getUser_id());
-
-		// 新对象
-		User _user = new User();
-		_user.setId(user.getId());
-		_user.setNum_static(user.getNum_static()
-				+ Double.valueOf(farmHatch.getNum_hatch()));
-		_user.setTotal_static(user.getTotal_static()
-				+ Double.valueOf(farmHatch.getNum_hatch()));
-
-		farmHatch.setFlag_is_last(0);
-
 		// 最后一笔孵化
-		if (0 == _farm.getNum_current()) {
-			// 需要+利息+奖金
-			double i = farmFeedService.dividend(farmHatch.getW_farm_chick_id());
-			_user.setNum_static(user.getNum_static() + i
-					+ Double.valueOf(farm.getNum_reward()));
-			_user.setTotal_static(user.getTotal_static() + i
-					+ Double.valueOf(farm.getNum_reward()));
+		// 需要+利息+奖金
+		farmHatch.setFlag_is_last(0 == _farm.getNum_current() ? 1 : 0);
 
-			// 最后一笔孵化标记
-			farmHatch.setFlag_is_last(1);
-		}
-
-		userService.updateNotNull(_user);
+		// 冻结24小时
+		Calendar c = Calendar.getInstance();
+		c.setTime(farmHatch.getCreate_time());
+		c.add(Calendar.HOUR_OF_DAY, 24);
+		farmHatch.setFreeze_time(c.getTime());
 
 		save(farmHatch);
 		return null;

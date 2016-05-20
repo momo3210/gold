@@ -31,6 +31,11 @@ public class FarmHatch implements Serializable {
 	private Date create_time;
 
 	/**
+	 * 冻结到期时间
+	 */
+	private Date freeze_time;
+
+	/**
 	 * 孵化数量
 	 */
 	private Integer num_hatch;
@@ -41,9 +46,17 @@ public class FarmHatch implements Serializable {
 	private String w_farm_chick_id;
 
 	/**
-	 * 最后一笔卖出
+	 * 最后一笔孵化
 	 */
 	private Integer flag_is_last;
+
+	public Date getFreeze_time() {
+		return freeze_time;
+	}
+
+	public void setFreeze_time(Date freeze_time) {
+		this.freeze_time = freeze_time;
+	}
 
 	public String getUser_id() {
 		return user_id;
