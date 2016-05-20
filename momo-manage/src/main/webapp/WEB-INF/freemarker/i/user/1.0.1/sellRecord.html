@@ -137,7 +137,24 @@
 														<h4 class="smaller">
 															<i class="icon-sort"></i>
 															P${(doc.id)!}
-															<small>等待对方打款</small>
+															<small>
+															<#switch doc.status>
+																<#case 0>
+																	等待对方打款
+																	<#break>
+																<#case 1>
+																	对方已经打款
+																	<#break>
+																<#case 2>
+																	双方确认完成
+																	<#break>
+																<#case 3>
+																	问题单
+																	<#break>
+																<#default>
+																	数据异常
+															</#switch>
+															</small>
 														</h4>
 
 														<div class="widget-toolbar no-border">
@@ -174,10 +191,15 @@
 																匹配金额：RMB ${doc.num_matching?string('#.00')}
 															</p>
 
+															<#if (doc.status)?? && 2 == (doc.status)!>
+															<#else>
 															<p>
+																<#if (doc.status)?? && 1 == (doc.status)!>
 																<a class="btn btn-info btn-small" href='javascript:;'>确认打款</a>
+																</#if>
 																<a class="btn btn-warning btn-small" href='javascript:;'>举报</a>
 															</p>
+															</#if>
 
 															<table class="table table-striped table-bordered table-hover">
 																<tbody>

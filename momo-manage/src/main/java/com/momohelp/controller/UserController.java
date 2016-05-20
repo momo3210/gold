@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.momohelp.model.Buy;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
@@ -25,6 +26,7 @@ import com.momohelp.model.FarmHatch;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
@@ -61,6 +63,9 @@ public class UserController {
 
 	@Autowired
 	private SellService sellService;
+
+	@Autowired
+	private BuyService buyService;
 
 	/**
 	 * 验证令牌
@@ -795,6 +800,11 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+
+		List<Buy> list_buy = buyService.findUnFinishDeal(session.getAttribute(
+				"session.user.id").toString());
+		result.addObject("data_list", list_buy);
+
 		return result;
 	}
 

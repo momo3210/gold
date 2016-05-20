@@ -85,7 +85,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
 		for (int i = 0, j = list_buy.size(); i < j; i++) {
 			Buy buy = list_buy.get(i);
-			buy.setBuySells(buySellService.findBySellId(buy.getId()));
+			buy.setBuySells(buySellService.findByBuyId(buy.getId()));
 
 			List<BuySell> list_buySell = buy.getBuySells();
 			if (null == list_buySell) {
