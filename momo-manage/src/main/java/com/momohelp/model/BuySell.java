@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -56,6 +57,27 @@ public class BuySell implements Serializable {
 
 	private String p_buy_user_id;
 	private String p_sell_user_id;
+
+	@Transient
+	private User p_buy_user;
+	@Transient
+	private User p_sell_user;
+
+	public User getP_buy_user() {
+		return p_buy_user;
+	}
+
+	public void setP_buy_user(User p_buy_user) {
+		this.p_buy_user = p_buy_user;
+	}
+
+	public User getP_sell_user() {
+		return p_sell_user;
+	}
+
+	public void setP_sell_user(User p_sell_user) {
+		this.p_sell_user = p_sell_user;
+	}
 
 	public String getP_buy_user_id() {
 		return p_buy_user_id;

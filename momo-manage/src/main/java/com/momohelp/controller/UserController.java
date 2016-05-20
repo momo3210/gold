@@ -461,6 +461,41 @@ public class UserController {
 	}
 
 	/**
+	 * 喂养鸡苗
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.GET)
+	public ModelAndView _i_feedMoUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/feedMo");
+
+		List<Farm> list = farmService.findCanFeed(session.getAttribute(
+				"session.user.id").toString());
+		result.addObject("data_list", list);
+
+		// TODO
+		result.addObject("nav_choose", ",05,0505,");
+		result.addObject("data_user", session.getAttribute("session.user"));
+		return result;
+	}
+
+	/**
+	 * 孵化工厂
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/hatchMo" }, method = RequestMethod.GET)
+	public ModelAndView _i_hatchMoUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("i/user/1.0.1/hatchMo");
+		// TODO
+		result.addObject("nav_choose", ",05,0506,");
+		result.addObject("data_user", session.getAttribute("session.user"));
+		return result;
+	}
+
+	/**
 	 * 买入鸡苗
 	 *
 	 * @param session
