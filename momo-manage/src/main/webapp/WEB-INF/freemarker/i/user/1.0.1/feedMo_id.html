@@ -91,31 +91,17 @@
 						<div class="span12">
 							<!--PAGE CONTENT BEGINS-->
 
-							<#-- <!-- <div class="alert alert-block alert-error">
-								<button type="button" class="close" data-dismiss="alert">
-									<i class="icon-remove"></i>
-								</button>
-
+							<#if (data_msg)?? && '' != (data_msg)!>
+							<div class="alert alert-block alert-error">
 								<strong>
-									<i class="icon-remove"></i>
 									系统提示：
 								</strong>
-								<ol>
-									<li>描述信息描述信息描述信息描述信息描述信息</li>
-									<li>描述信息描述信息描述信息描述信息描述信息</li>
-									<li>描述信息描述信息描述信息描述信息描述信息</li>
-								</ol>
-							</div> -->
+								${(data_msg)!}
+							</div>
+							</#if>
 
-							<!-- <div class="row-fluid">
-								<div class="span12">
-									<ul>
-										<li>M0级别会员可以选择100-1000的M包，M3级别只能选择2000-5000的M包，M4及以上级别只能选择3000-5000的M包。</li>
-										<li>普通通道一天可挂单一次。</li>
-									</ul>
-								</div>
-							</div> -->
-
+							<#if (data_msg)?? && '' != (data_msg)!>
+							<#else>
 							<div class="row-fluid">
 								<div class="span12">
 									<div class="tabbable">
@@ -190,6 +176,7 @@
 
 
 							</div>
+							</#if>
 
 							<!--PAGE CONTENT ENDS-->
 						</div><!--/.span-->

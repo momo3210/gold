@@ -550,7 +550,8 @@ public class UserController {
 					.checkTodayFeed(farm.getId());
 			if (null != checkTodayFeed) {
 				if (checkTodayFeed.containsKey("msg")) {
-					return "redirect:/user/feedMo";
+					map.put("data_msg",
+							((String[]) checkTodayFeed.get("msg"))[0]);
 				}
 			}
 
