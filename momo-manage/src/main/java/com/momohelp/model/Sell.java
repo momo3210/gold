@@ -29,7 +29,7 @@ public class Sell implements Serializable {
 	private Integer num_sell;
 
 	/**
-	 * 成交时间
+	 * 真实的成交时间（后台计算后，更新此字段）
 	 */
 	private Date time_deal;
 

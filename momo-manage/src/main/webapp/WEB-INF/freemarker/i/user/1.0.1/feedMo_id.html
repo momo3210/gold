@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>买入鸡苗 | 陌陌黄金农场</title>
+		<title>喂养鸡苗 | 陌陌黄金农场</title>
 		<#include "/_pagelet/header.html"/>
 		<style>
 		.form-horizontal {
@@ -71,7 +71,7 @@
 								<i class="icon-angle-right arrow-icon"></i>
 							</span>
 						</li>
-						<li class="active">买入鸡苗</li>
+						<li class="active">喂养鸡苗</li>
 					</ul><!--.breadcrumb-->
 
 				</div>
@@ -79,10 +79,10 @@
 				<div class="page-content">
 					<div class="page-header position-relative">
 						<h1>
-							买入鸡苗
+							喂养鸡苗
 							<small>
 								<i class="icon-double-angle-right"></i>
-								Buy Chick
+								Feed Chick
 							</small>
 						</h1>
 					</div><!--/.page-header-->
@@ -91,31 +91,17 @@
 						<div class="span12">
 							<!--PAGE CONTENT BEGINS-->
 
+							<#if (data_msg)?? && '' != (data_msg)!>
 							<div class="alert alert-block alert-error">
-								<!-- <button type="button" class="close" data-dismiss="alert">
-									<i class="icon-remove"></i>
-								</button> -->
-
 								<strong>
-									<!-- <i class="icon-remove"></i> -->
 									系统提示：
 								</strong>
-								<ol>
-									<li>描述信息描述信息描述信息描述信息描述信息</li>
-									<li>描述信息描述信息描述信息描述信息描述信息</li>
-									<li>描述信息描述信息描述信息描述信息描述信息</li>
-								</ol>
+								${(data_msg)!}
 							</div>
+							</#if>
 
-							<!-- <div class="row-fluid">
-								<div class="span12">
-									<ul>
-										<li>M0级别会员可以选择100-1000的M包，M3级别只能选择2000-5000的M包，M4及以上级别只能选择3000-5000的M包。</li>
-										<li>普通通道一天可挂单一次。</li>
-									</ul>
-								</div>
-							</div> -->
-
+							<#if (data_msg)?? && '' != (data_msg)!>
+							<#else>
 							<div class="row-fluid">
 								<div class="span12">
 									<div class="tabbable">
@@ -123,7 +109,7 @@
 											<li class="active">
 												<a data-toggle="tab" href="#home">
 													<!-- <i class="green icon-home bigger-110"></i> -->
-													买入鸡苗
+													喂养鸡苗
 												</a>
 											</li>
 										</ul>
@@ -132,20 +118,12 @@
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal" id='frm'>
 													<input type="hidden" name='token' value='${(data_token)!}' />
+													<input type="hidden" name='w_farm_chick_id' value='${(data_id)!}' />
 													<div class="control-group">
-														<label class="control-label" for='frm_select'>买入鸡苗</label>
+														<label class="control-label" for="frm_num_feed">喂食数量</label>
 
 														<div class="controls">
-															<select class='input-large' id='frm_select'>
-																<option>RMB：${(data_lv_min)!} 至 ${(data_lv_max)!} 只鸡苗</option>
-															</select>
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="frm_num_buy">具体数量</label>
-
-														<div class="controls">
-															<input type="text" class="input-small" id="frm_num_buy" name='num_buy' />
+															<input type="text" class="input-small" id="frm_num_feed" name='num_feed' />
 														</div>
 													</div>
 													<div class="control-group">
@@ -198,6 +176,7 @@
 
 
 							</div>
+							</#if>
 
 							<!--PAGE CONTENT ENDS-->
 						</div><!--/.span-->
@@ -224,11 +203,11 @@
 		$(function(){
 			showVerifyCode();
 
-			$('#frm_num_buy').ace_spinner({
-				value: ${(data_lv_max)!},
-				min: ${(data_lv_min)!},
-				max: ${(data_lv_max)!},
-				step: 100,
+			$('#frm_num_feed').ace_spinner({
+				value: ${(data_farm.num_current)!},
+				min: 1,
+				max: ${(data_farm.num_current)!},
+				step: 1,
 				icon_up: 'icon-plus',
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,
@@ -237,17 +216,17 @@
 
 			$('#btn_submit').click(function() {
 				$.ajax({
-					url : '${(conf_html_virtualPath)!}user/buyMo',
+					url : '${(conf_html_virtualPath)!}user/feedMo',
 					type : 'POST',
 					dataType : 'JSON',
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
 						if (data.success) {
-							alert('买入鸡苗成功')
+							alert('喂养鸡苗成功')
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.href = '${(conf_html_virtualPath)!}user/buyMo';
+						location.reload();
 					},
 					error : function() {
 						alert(arguments[2]);

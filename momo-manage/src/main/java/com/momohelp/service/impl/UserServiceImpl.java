@@ -324,6 +324,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			// 算法
 			int i = (int) ((Math.random() * 9 + 1) * 10000000);
 			id = String.valueOf(i);
+			if (9 < id.length()) {
+				id.substring(0, 9);
+			}
 			// END
 			user = selectByKey(id);
 		} while (null != user);

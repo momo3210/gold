@@ -20,10 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
+import com.momohelp.model.FarmFeed;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
@@ -48,6 +50,9 @@ public class UserController {
 
 	@Autowired
 	private FarmService farmService;
+
+	@Autowired
+	private FarmFeedService farmFeedService;
 
 	@Autowired
 	private SellService sellService;
@@ -463,21 +468,104 @@ public class UserController {
 	/**
 	 * 喂养鸡苗
 	 *
+	 * @param token
+	 * @param verifyCode
+	 * @param user_pass_safe
+	 * @param farmFeed
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.GET)
-	public ModelAndView _i_feedMoUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/feedMo");
+	@ResponseBody
+	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_feedMo(
+			@RequestParam(required = true) String token,
+			@RequestParam(required = true) String verifyCode,
+			@RequestParam(required = true) String user_pass_safe,
+			FarmFeed farmFeed, HttpSession session) {
+		// TODO
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
 
-		List<Farm> list = farmService.findCanFeed(session.getAttribute(
-				"session.user.id").toString());
-		result.addObject("data_list", list);
+		String[] validateToken = validateToken(session, token);
+		if (null != validateToken) {
+			result.put("msg", validateToken);
+			return result;
+		}
+
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
+			return result;
+		}
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session, user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		farmFeed.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = farmFeedService.feed(farmFeed);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
 
 		// TODO
-		result.addObject("nav_choose", ",05,0505,");
-		result.addObject("data_user", session.getAttribute("session.user"));
+		result.put("success", true);
 		return result;
+	}
+
+	/**
+	 * 喂养鸡苗
+	 *
+	 * @param map
+	 * @param session
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.GET)
+	public String _i_feedMoUI(Map<String, Object> map, HttpSession session,
+			@RequestParam(required = false) String id) {
+
+		String html = null;
+
+		if (null == id || "".equals(id.trim())) {
+			List<Farm> list = farmService.findCanFeed(session.getAttribute(
+					"session.user.id").toString());
+			map.put("data_list", list);
+
+			html = "i/user/1.0.1/feedMo";
+		} else {
+			Farm farm = farmService.selectByKey(id);
+
+			if (null == farm) {
+				return "redirect:/user/feedMo";
+			}
+
+			// 判断今天是否已经喂过该批次的鸡苗了
+			Map<String, Object> checkTodayFeed = farmFeedService
+					.checkTodayFeed(farm.getId());
+			if (null != checkTodayFeed) {
+				if (checkTodayFeed.containsKey("msg")) {
+					map.put("data_msg",
+							((String[]) checkTodayFeed.get("msg"))[0]);
+				}
+			}
+
+			map.put("data_id", id);
+			map.put("data_farm", farm);
+			html = "i/user/1.0.1/feedMo_id";
+		}
+
+		// TODO
+		map.put("nav_choose", ",05,0505,");
+		map.put("data_user", session.getAttribute("session.user"));
+		map.put("data_token", genToken(session));
+
+		return html;
 	}
 
 	/**

@@ -31,7 +31,9 @@ public interface FarmService extends IService<Farm> {
 	Farm getLastByUserId(String user_id);
 
 	/**
-	 * 查找可以喂的鸡
+	 * 查找可以喂的鸡的批次（还没有完全卖出，并且还没有出局）
+	 *
+	 * 今天买入的鸡苗不显示，第二天才显示
 	 *
 	 * @param user_id
 	 * @return
