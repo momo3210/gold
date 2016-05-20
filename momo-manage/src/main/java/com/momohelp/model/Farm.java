@@ -28,6 +28,12 @@ public class Farm implements Serializable {
 	 * 出局时间（理论）
 	 */
 	private Date time_out;
+
+	/**
+	 * 实际出局时间（当第一次孵化时更新此字段）
+	 */
+	private Date time_out_real;
+
 	/**
 	 * 成熟时间（理论）
 	 */
@@ -95,6 +101,14 @@ public class Farm implements Serializable {
 	 * 上一单的ID
 	 */
 	private String pid;
+
+	public Date getTime_out_real() {
+		return time_out_real;
+	}
+
+	public void setTime_out_real(Date time_out_real) {
+		this.time_out_real = time_out_real;
+	}
 
 	/**
 	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
