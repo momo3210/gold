@@ -431,7 +431,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("user_id", user_id);
 		criteria.andGreaterThan("num_current", 0);
-		criteria.andLessThan("time_out", new Date());
+		criteria.andGreaterThan("time_out", new Date());
 
 		List<Farm> list = selectByExample(example);
 		return list;

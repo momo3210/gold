@@ -470,6 +470,10 @@ public class UserController {
 	public ModelAndView _i_feedMoUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/feedMo");
 
+		List<Farm> list = farmService.findCanFeed(session.getAttribute(
+				"session.user.id").toString());
+		result.addObject("data_list", list);
+
 		// TODO
 		result.addObject("nav_choose", ",05,0505,");
 		result.addObject("data_user", session.getAttribute("session.user"));
