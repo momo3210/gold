@@ -467,4 +467,19 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return farm;
 	}
 
+	@Override
+	public List<Farm> findCanHatch(String user_id) {
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time asc");
+		// TODO
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andGreaterThan("num_current", 0);
+		// 完全成交的时间
+		criteria.andIsNotNull("time_deal");
+
+		List<Farm> list = selectByExample(example);
+		return list;
+	}
+
 }

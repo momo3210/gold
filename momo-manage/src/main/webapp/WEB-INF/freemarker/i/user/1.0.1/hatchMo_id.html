@@ -1,0 +1,239 @@
+<#include "/_pagelet/constant.html"/>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>孵化工厂 | 陌陌黄金农场</title>
+		<#include "/_pagelet/header.html"/>
+		<style>
+		.form-horizontal {
+			margin-bottom: 0;
+		}
+		.form-horizontal .form-actions {
+			margin-bottom: 0;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="navbar">
+			<div class="navbar-inner">
+				<#include "../../default/1.0.2/_pagelet/banner.html"/>
+			</div><!--/.navbar-inner-->
+		</div>
+
+		<div class="main-container container-fluid">
+			<a class="menu-toggler" id="menu-toggler" href="#">
+				<span class="menu-text"></span>
+			</a>
+
+			<div class="sidebar" id="sidebar">
+				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+						<button class="btn btn-small btn-success">
+							<i class="icon-signal"></i>
+						</button>
+
+						<button class="btn btn-small btn-info">
+							<i class="icon-pencil"></i>
+						</button>
+
+						<button class="btn btn-small btn-warning">
+							<i class="icon-group"></i>
+						</button>
+
+						<button class="btn btn-small btn-danger">
+							<i class="icon-cogs"></i>
+						</button>
+					</div>
+
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success"></span>
+
+						<span class="btn btn-info"></span>
+
+						<span class="btn btn-warning"></span>
+
+						<span class="btn btn-danger"></span>
+					</div>
+				</div><!--#sidebar-shortcuts-->
+
+				<#include "../../default/1.0.2/_pagelet/nav.html"/>
+			</div>
+
+			<div class="main-content">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="icon-home home-icon"></i>
+							<a href="/">首页</a>
+
+							<span class="divider">
+								<i class="icon-angle-right arrow-icon"></i>
+							</span>
+						</li>
+						<li class="active">孵化工厂</li>
+					</ul><!--.breadcrumb-->
+
+				</div>
+
+				<div class="page-content">
+					<div class="page-header position-relative">
+						<h1>
+							孵化工厂
+							<small>
+								<i class="icon-double-angle-right"></i>
+								Hatch Chick
+							</small>
+						</h1>
+					</div><!--/.page-header-->
+
+					<div class="row-fluid">
+						<div class="span12">
+							<!--PAGE CONTENT BEGINS-->
+
+							<#if (data_msg)?? && '' != (data_msg)!>
+							<div class="alert alert-block alert-error">
+								<strong>
+									系统提示：
+								</strong>
+								${(data_msg)!}
+							</div>
+							</#if>
+
+							<#if (data_msg)?? && '' != (data_msg)!>
+							<#else>
+							<div class="row-fluid">
+								<div class="span12">
+									<div class="tabbable">
+										<ul class="nav nav-tabs" id="myTab">
+											<li class="active">
+												<a data-toggle="tab" href="#home">
+													<!-- <i class="green icon-home bigger-110"></i> -->
+													孵化工厂
+												</a>
+											</li>
+										</ul>
+
+										<div class="tab-content">
+											<div id="home" class="tab-pane in active">
+												<form class="form-horizontal" id='frm'>
+													<input type="hidden" name='token' value='${(data_token)!}' />
+													<input type="hidden" name='w_farm_chick_id' value='${(data_id)!}' />
+													<div class="control-group">
+														<label class="control-label" for="frm_num_hatch">孵化数量</label>
+
+														<div class="controls">
+															<input type="text" class="input-small" id="frm_num_hatch" name='num_hatch' />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
+
+														<div class="controls">
+															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm_verifyCode">图形验证码</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
+															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
+														</div>
+													</div>
+													<#-- <!-- <div class="control-group">
+														<label class="control-label" for="editFrm_OLD_PASS">手机号码</label>
+
+														<div class="controls">
+															<input type="text" class='input-large' id="editFrm_OLD_PASS" value="18530053050" disabled />
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="editFrm_NEW_PASS_2">短信验证码</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
+															<button class="btn btn-mini btn-danger">获取短信验证码</button>
+														</div>
+													</div> -->
+													<div class="form-actions">
+														<button class="btn btn-info" type="button" id='btn_submit'>
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+							</#if>
+
+							<!--PAGE CONTENT ENDS-->
+						</div><!--/.span-->
+					</div><!--/.row-fluid-->
+				</div><!--/.page-content-->
+
+			</div><!--/.main-content-->
+		</div><!--/.main-container-->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-small btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<#include "/_pagelet/js.html"/>
+		<script>
+		$('#img_verifyCode').click(function(){
+			showVerifyCode();
+		});
+
+		function showVerifyCode(){
+			$('#img_verifyCode').attr('src', '/verifyCode.jpg?ts='+ (new Date()).valueOf());
+		}
+
+		$(function(){
+			showVerifyCode();
+
+			$('#frm_num_hatch').ace_spinner({
+				value: ${(data_farm.num_current)!},
+				min: 1,
+				max: ${(data_farm.num_current)!},
+				step: 1,
+				icon_up: 'icon-plus',
+				icon_down: 'icon-minus',
+				btn_up_class: 'btn-success' ,
+				btn_down_class: 'btn-danger'
+			});
+
+			$('#btn_submit').click(function() {
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}user/hatchMo',
+					type : 'POST',
+					dataType : 'JSON',
+					data : $('#frm').serializeObjectForm(),
+					success : function(data) {
+						if (data.success) {
+							alert('孵化鸡苗成功')
+						}else{
+							if (data.msg) alert(data.msg[0]);
+						}
+						location.reload();
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
+			});
+		});
+		</script>
+	</body>
+</html>

@@ -21,11 +21,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
+import com.momohelp.model.FarmHatch;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmFeedService;
+import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
@@ -53,6 +55,9 @@ public class UserController {
 
 	@Autowired
 	private FarmFeedService farmFeedService;
+
+	@Autowired
+	private FarmHatchService farmHatchService;
 
 	@Autowired
 	private SellService sellService;
@@ -571,16 +576,95 @@ public class UserController {
 	/**
 	 * 孵化工厂
 	 *
+	 * @param token
+	 * @param verifyCode
+	 * @param user_pass_safe
+	 * @param farmHatch
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = { "/user/hatchMo" }, method = RequestMethod.GET)
-	public ModelAndView _i_hatchMoUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/hatchMo");
+	@ResponseBody
+	@RequestMapping(value = { "/user/hatchMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_hatchMo(
+			@RequestParam(required = true) String token,
+			@RequestParam(required = true) String verifyCode,
+			@RequestParam(required = true) String user_pass_safe,
+			FarmHatch farmHatch, HttpSession session) {
 		// TODO
-		result.addObject("nav_choose", ",05,0506,");
-		result.addObject("data_user", session.getAttribute("session.user"));
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] validateToken = validateToken(session, token);
+		if (null != validateToken) {
+			result.put("msg", validateToken);
+			return result;
+		}
+
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
+			return result;
+		}
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session, user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		farmHatch
+				.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = farmHatchService.hatch(farmHatch);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
 		return result;
+	}
+
+	/**
+	 * 孵化工厂
+	 *
+	 * @param map
+	 * @param session
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/hatchMo" }, method = RequestMethod.GET)
+	public String _i_hatchMoUI(Map<String, Object> map, HttpSession session,
+			@RequestParam(required = false) String id) {
+
+		String html = null;
+
+		if (null == id || "".equals(id.trim())) {
+			List<Farm> list = farmService.findCanHatch(session.getAttribute(
+					"session.user.id").toString());
+			map.put("data_list", list);
+
+			html = "i/user/1.0.1/hatchMo";
+		} else {
+			Farm farm = farmService.selectByKey(id);
+
+			if (null == farm) {
+				return "redirect:/user/hatchMo";
+			}
+
+			map.put("data_id", id);
+			map.put("data_farm", farm);
+			html = "i/user/1.0.1/hatchMo_id";
+		}
+
+		// TODO
+		map.put("nav_choose", ",05,0506,");
+		map.put("data_user", session.getAttribute("session.user"));
+		map.put("data_token", genToken(session));
+
+		return html;
 	}
 
 	/**

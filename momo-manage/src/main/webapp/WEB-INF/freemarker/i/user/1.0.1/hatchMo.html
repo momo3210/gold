@@ -14,6 +14,9 @@
 		.pagination {
 			margin-bottom: 0;
 		}
+		#table_1 a {
+			text-decoration: underline;
+		}
 		</style>
 	</head>
 
@@ -121,78 +124,21 @@
 											<thead>
 												<tr>
 													<th>#</th>
-													<th>额度状态</th>
-													<th>冻结状态</th>
-													<th>会员编号</th>
-
-													<th>直推</th>
-													<th>管理</th>
-
-													<th>当期余额</th>
-													<th>来源详情</th>
-													<th>发放日期</th>
+													<th>鸡苗数量</th>
+													<th>买入时间</th>
 													<th>其它操作</th>
 												</tr>
 											</thead>
-											<!-- <tbody>
+											<tbody>
+												<#list data_list! as doc>
 												<tr>
-													<td class='tit'>帐户编号</td>
-													<td style='text-align:center'>M08351506</td>
-													<td class='tit'>账户昵称</td>
-													<td style='text-align:center'>mega</td>
+													<td>${doc_index+1}</td>
+													<td>${(doc.num_current)!}</td>
+													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+													<td><a href='./hatchMo?id=${(doc.id)!}'>孵化</a></td>
 												</tr>
-												<tr>
-													<td class='tit'>信用评级</td>
-													<td style='text-align:center'>
-														<img width="14" height="12" src="http://www.mmobar.com/home/media/image/x.gif">
-														<img width="14" height="12" src="http://www.mmobar.com/home/media/image/x0.gif">
-														<img width="14" height="12" src="http://www.mmobar.com/home/media/image/x0.gif">
-														<img width="14" height="12" src="http://www.mmobar.com/home/media/image/x0.gif">
-														<img width="14" height="12" src="http://www.mmobar.com/home/media/image/x0.gif">
-													</td>
-													<td class='tit'>我的级别</td>
-													<td style='text-align:center'>M0</td>
-												</tr>
-												<tr>
-													<td class='tit'>直推数量</td>
-													<td style='text-align:center'>全部0  合格0</td>
-													<td class='tit'>团队数量</td>
-													<td style='text-align:center'>全部0  合格0</td>
-												</tr>
-												<tr>
-													<td class='tit'>静态余额</td>
-													<td style='text-align:center'>
-														<span style="color:green;">
-															<i class='icon-credit-card'></i>
-														</span>
-														0.00
-													</td>
-													<td class='tit'>动态余额</td>
-													<td style='text-align:center'>
-														<span style="color:green;">
-															<i class='icon-credit-card'></i>
-														</span>
-														0.00
-													</td>
-												</tr>
-												<tr>
-													<td class='tit'>门票余额</td>
-													<td style='text-align:center'>
-														<span style="color:green;">
-															<i class='icon-credit-card'></i>
-														</span>
-														0.00
-														<a href="javascript:;">充值</a>
-													</td>
-													<td class='tit'>冻结数额</td>
-													<td style='text-align:center'>
-														<span style="color:green;">
-															<i class='icon-credit-card'></i>
-														</span>
-														1030
-													</td>
-												</tr>
-											</tbody> -->
+												</#list>
+											</tbody>
 										</table>
 										<div class="pagination">
 											<ul>
