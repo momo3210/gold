@@ -2,11 +2,12 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -20,7 +21,6 @@ public class Sell implements Serializable {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(generator = "UUID")
 	private String id;
 
 	/**
@@ -29,15 +29,41 @@ public class Sell implements Serializable {
 	private Integer num_sell;
 
 	/**
+	 * 成交时间
+	 */
+	private Date time_deal;
+
+	/**
 	 * 卖出时间
 	 */
 	private Date create_time;
 	private String user_id;
 
 	/**
-	 * 1静态钱包</br> 2动态钱包
+	 * 1静态钱包
+	 *
+	 * 2动态钱包
 	 */
 	private Integer type_id;
+
+	@Transient
+	private List<BuySell> buySells;
+
+	public List<BuySell> getBuySells() {
+		return buySells;
+	}
+
+	public void setBuySells(List<BuySell> buySells) {
+		this.buySells = buySells;
+	}
+
+	public Date getTime_deal() {
+		return time_deal;
+	}
+
+	public void setTime_deal(Date time_deal) {
+		this.time_deal = time_deal;
+	}
 
 	public String getId() {
 		return id;

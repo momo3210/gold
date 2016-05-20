@@ -109,11 +109,21 @@
 		</entry> </map> </property> </bean> -->
 	<!-- 方式二：使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法 -->
 	<!-- 定义目标bean和bean中的方法 -->
-	<bean id="SpringQtzJob" class="com.momohelp.calculate.service.impl.DynamicCalculation" />
-	<bean id="SpringQtzJobMethod"
+	<!-- <bean id="SpringQtzJob" class="com.momohelp.calculate.service.impl.DynamicCalculation" /> -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<bean id="baseQtzJobMethod"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
-			<ref bean="SpringQtzJob" />
+			<ref bean="base" />
 		</property>
 		<property name="concurrent" value="false" />
 		<property name="targetMethod">  <!-- 要执行的方法名称 -->
@@ -122,19 +132,99 @@
 	</bean>
 
 	<!-- ======================== 调度触发器 ======================== -->
-	<bean id="CronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="SpringQtzJobMethod"></property>
+	<bean id="baseCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="baseQtzJobMethod"></property>
 		<property name="cronExpression" value="0/20 * * * * ?"></property>
 	</bean>
 
-	<!-- ======================== 调度工厂 ======================== -->
-	<bean id="SpringJobSchedulerFactoryBean"
-		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers">
-			<list>
-				<ref bean="CronTriggerBean" />
-			</list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<bean id="conversionQtzJobMethod"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="conversion" />
 		</property>
+		<property name="concurrent" value="false" />
+		<property name="targetMethod">  <!-- 要执行的方法名称 -->
+			<value>triggerConversion</value>
+		</property>
+	</bean>
+
+	<!-- ======================== 调度触发器 ======================== -->
+	<bean id="conversionCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="conversionQtzJobMethod"></property>
+		<property name="cronExpression" value="0/10 * * * * ?"></property>
+	</bean>
+
+
+
+
+
+
+
+
+
+
+	<bean id="forceLogoutQtzJobMethod"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="forceLogout" />
+		</property>
+		<property name="concurrent" value="false" />
+		<property name="targetMethod">  <!-- 要执行的方法名称 -->
+			<value>calculateForceLogout</value>
+		</property>
+	</bean>
+
+	<!-- ======================== 调度触发器 ======================== -->
+	<bean id="forceLogoutCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="forceLogoutQtzJobMethod"></property>
+		<property name="cronExpression" value="0/15 * * * * ?"></property>
+	</bean>
+
+
+
+
+
+
+
+
+
+
+
+
+	<bean id="matchQtzJobMethod"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="match" />
+		</property>
+		<property name="concurrent" value="false" />
+		<property name="targetMethod">  <!-- 要执行的方法名称 -->
+			<value>automatch</value>
+		</property>
+	</bean>
+
+	<!-- ======================== 调度触发器 ======================== -->
+	<bean id="matchCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="matchQtzJobMethod"></property>
+		<property name="cronExpression" value="0/5 * * * * ?"></property>
 	</bean>
 
 
@@ -156,6 +246,29 @@
 
 
 
+
+
+
+
+
+
+
+	<!-- ======================== 调度工厂 ======================== -->
+	<bean id="SpringJobSchedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+		lazy-init="false">
+		<property name="triggers">
+			<list>
+				<ref bean="baseCronTriggerBean"/>
+				<ref bean="conversionCronTriggerBean"/>
+				<ref bean="forceLogoutCronTriggerBean"/>
+				<ref bean="matchCronTriggerBean" />
+			</list>
+		</property>
+		<property name="autoStartup" value="true" />
+		<property name="schedulerName" value="cronScheduler" />
+		<property name="startupDelay" value="1" />
+	</bean>
 
 
 
