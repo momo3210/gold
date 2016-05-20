@@ -142,6 +142,12 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
+		if (sell.getNum_sell() > ((1 == sell.getType_id()) ? user
+				.getNum_static() : user.getNum_dynamic())) {
+			result.put("msg", new String[] { (1 == sell.getType_id() ? "静"
+					: "动") + "态钱包余额不足" });
+		}
+
 		String[] checkTodaySell = checkTodaySell(sell, user);
 		if (null != checkTodaySell) {
 			result.put("msg", checkTodaySell);
@@ -158,12 +164,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		if (null != checkSellNum) {
 			result.put("msg", checkSellNum);
 			return result;
-		}
-
-		if (sell.getNum_sell() > ((1 == sell.getType_id()) ? user
-				.getNum_static() : user.getNum_dynamic())) {
-			result.put("msg", new String[] { (1 == sell.getType_id() ? "静"
-					: "动") + "态钱包余额不足" });
 		}
 
 		result.put("data", sell);
@@ -188,7 +188,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	@Override
 	public String[] sell(Sell sell) {
 		sell.setCreate_time(new Date());
-		sell.setTime_deal(null);
 
 		// TODO
 		Map<String, Object> sell_validationParameter = sell_validationParameter(sell);
@@ -197,7 +196,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 		sell = (Sell) sell_validationParameter.get("data");
 
-		// 我的实时信息
+		// 用户实时信息
 		User user = userService.selectByKey(sell.getUser_id());
 
 		// TODO
@@ -206,6 +205,8 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return (String[]) sell_validation.get("msg");
 		}
 		sell = (Sell) sell_validation.get("data");
+
+		sell.setTime_deal(null);
 
 		saveMaterialRecord(sell, user);
 		save(sell);
@@ -223,18 +224,18 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @return
 	 */
 	private String[] checkCeilingEveryMonth(Sell sell, User user) {
+		// 得到每月的第一天，例如：2016-05-01
 		Calendar c = Calendar.getInstance();
 		c.setTime(sell.getCreate_time());
-		// 每月1日
 		c.set(Calendar.DAY_OF_MONTH, 1);
 		Date date = null;
 		try {
 			date = sdf.parse(sdf.format(c.getTime()));
 		} catch (ParseException e) {
-			return new String[] { "日期转换异常" };
+			return new String[] { "日期数据异常" };
 		}
 
-		// TODO
+		// 查询用户当月从2016-05-01到现在的卖盘列表
 		Example example = new Example(Sell.class);
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andGreaterThan("create_time", date);
@@ -242,14 +243,14 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		List<Sell> list = selectByExample(example);
 
 		if (null == list) {
-			return new String[] { "数据读取异常" };
+			return new String[] { "数据查询异常" };
 		}
 
 		if (11 < list.size()) {
 			return new String[] { "每月卖出鸡苗上限不能超过 12 次" };
 		}
 
-		// 汇总每月的静态、动态
+		// 每月卖出的静态总数、动态总数
 		int num_static = 0, num_dynamic = 0;
 
 		for (int i = 0, j = list.size(); i < j; i++) {
@@ -287,7 +288,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return null;
 		}
 
+		// 取当前的时间
 		String date_1 = sdf.format(sell.getCreate_time());
+		// 取最后一次卖盘的创建时间
 		String date_2 = sdf.format(last_sell.getCreate_time());
 
 		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了" } : null;
@@ -342,7 +345,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		// 静态10倍 动态500
 		int radix = (1 == sell.getType_id()) ? 10 : 500;
 		return (0 == sell.getNum_sell() % radix) ? null
-				: new String[] { "输入的数量不正确" };
+				: new String[] { "请输入规定的数量" };
 	}
 
 	/**

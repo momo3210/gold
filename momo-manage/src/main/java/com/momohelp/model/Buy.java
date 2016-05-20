@@ -26,11 +26,7 @@ public class Buy implements Serializable {
 	private String user_id;
 
 	/**
-	 * 成交标记
-	 *
-	 * 0未完全交易
-	 *
-	 * 1已完全交易完
+	 * 真实的成交时间（后台计算后，更新此字段）
 	 */
 	private Date time_deal;
 
