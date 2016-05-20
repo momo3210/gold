@@ -80,12 +80,12 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		}
 
 		// 权限判断是否是本人的操作
-		if (farm.getUser_id().equals(farmFeed.getUser_id())) {
+		if (!farm.getUser_id().equals(farmFeed.getUser_id())) {
 			return new String[] { "非法操作" };
 		}
 
 		// 当前时间 <--出局时间（理论）
-		if (farmFeed.getCreate_time().before(farm.getTime_out())) {
+		if (farmFeed.getCreate_time().after(farm.getTime_out())) {
 			return new String[] { "已经出局了" };
 		}
 
@@ -118,17 +118,19 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		}
 
 		// 获取最后一次喂鸡记录
-		FarmFeed last_farmfeed = (FarmFeed) (checkTodayFeed.containsKey("data") ? checkTodayFeed
-				.get("data") : null);
+		FarmFeed last_farmfeed = (null == checkTodayFeed ? null
+				: (FarmFeed) (checkTodayFeed.containsKey("data") ? checkTodayFeed
+						.get("data") : null));
 
 		saveMaterialRecord(farmFeed, user);
 
-		// 计算利息 START 0.5% or 0.9%
-		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
-				* (7 > last_farmfeed.getOrder_feed() ? 0.005 : 0.009));
-
 		farmFeed.setOrder_feed((null == last_farmfeed) ? 1 : (1 + last_farmfeed
 				.getOrder_feed()));
+
+		// 计算利息 START 0.5% or 0.9%
+		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
+				* (7 > farmFeed.getOrder_feed() ? 0.005 : 0.009));
+
 		save(farmFeed);
 		return null;
 	}

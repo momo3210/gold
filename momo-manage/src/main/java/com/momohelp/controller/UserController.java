@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
+import com.momohelp.model.FarmFeed;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
@@ -467,7 +468,62 @@ public class UserController {
 	/**
 	 * 喂养鸡苗
 	 *
+	 * @param token
+	 * @param verifyCode
+	 * @param user_pass_safe
+	 * @param farmFeed
 	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_feedMo(
+			@RequestParam(required = true) String token,
+			@RequestParam(required = true) String verifyCode,
+			@RequestParam(required = true) String user_pass_safe,
+			FarmFeed farmFeed, HttpSession session) {
+		// TODO
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] validateToken = validateToken(session, token);
+		if (null != validateToken) {
+			result.put("msg", validateToken);
+			return result;
+		}
+
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
+			return result;
+		}
+
+		// 安全密码验证
+		String[] checkSafe = checkSafe(session, user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		farmFeed.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = farmFeedService.feed(farmFeed);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		// TODO
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 喂养鸡苗
+	 *
+	 * @param map
+	 * @param session
+	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.GET)
