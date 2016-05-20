@@ -371,8 +371,8 @@
 															<#if (doc.status)?? && 2 == (doc.status)!>
 															<#else>
 															<p>
-																<a class="btn btn-info btn-small" href='javascript:;'>确认打款</a>
-																<a class="btn btn-warning btn-small" href='javascript:;'>举报</a>
+																<a class="btn btn-info btn-small" href='./user/confirm?type=1&id=${(doc.id)!}'>确认打款</a>
+																<a class="btn btn-warning btn-small" href='./user/tip_off?type=1&id=${(doc.id)!}'>举报</a>
 															</p>
 															</#if>
 
@@ -645,9 +645,9 @@
 															<#else>
 															<p>
 																<#if (doc.status)?? && 1 == (doc.status)!>
-																<a class="btn btn-info btn-small" href='javascript:;'>确认打款</a>
+																<a class="btn btn-info btn-small" href='./user/confirm?type=2&id=${(doc.id)!}'>确认打款</a>
 																</#if>
-																<a class="btn btn-warning btn-small" href='javascript:;'>举报</a>
+																<a class="btn btn-warning btn-small" href='./user/tip_off?type=2&id=${(doc.id)!}'>举报</a>
 															</p>
 															</#if>
 
