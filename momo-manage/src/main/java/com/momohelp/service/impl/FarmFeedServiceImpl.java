@@ -67,7 +67,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		farmFeed.setNum_feed((null == farmFeed.getNum_feed()) ? 0 : farmFeed
 				.getNum_feed());
 		if (1 > farmFeed.getNum_feed()) {
-			return new String[] { "喂食数量必须大于 0" };
+			return new String[] { "喂养数量必须大于 0" };
 		}
 
 		// 实时信息

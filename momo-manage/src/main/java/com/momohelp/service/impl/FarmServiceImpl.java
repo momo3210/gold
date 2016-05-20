@@ -425,9 +425,20 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("user_id", user_id);
 		criteria.andGreaterThan("num_current", 0);
+		// 当前时间 <-- 出局时间
 		criteria.andGreaterThan("time_out", new Date());
 
 		List<Farm> list = selectByExample(example);
+
+		String date_1 = sdf.format(new Date());
+
+		// 移除创建日期是当天的记录（创建当天不能喂鸡）
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm item = list.get(i);
+			if (date_1.equals(sdf.format(item.getCreate_time()))) {
+				list.remove(i);
+			}
+		}
 		return list;
 	}
 

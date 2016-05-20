@@ -467,17 +467,34 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.GET)
-	public ModelAndView _i_feedMoUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/feedMo");
+	public String _i_feedMoUI(Map<String, Object> map, HttpSession session,
+			@RequestParam(required = false) String id) {
 
-		List<Farm> list = farmService.findCanFeed(session.getAttribute(
-				"session.user.id").toString());
-		result.addObject("data_list", list);
+		String html = null;
+
+		if (null == id || "".equals(id.trim())) {
+			List<Farm> list = farmService.findCanFeed(session.getAttribute(
+					"session.user.id").toString());
+			map.put("data_list", list);
+
+			html = "i/user/1.0.1/feedMo";
+		} else {
+			Farm farm = farmService.selectByKey(id);
+
+			if (null == farm) {
+				return "redirect:/user/feedMo";
+			}
+
+			map.put("data_farm", farm);
+			html = "i/user/1.0.1/feedMo_id";
+		}
 
 		// TODO
-		result.addObject("nav_choose", ",05,0505,");
-		result.addObject("data_user", session.getAttribute("session.user"));
-		return result;
+		map.put("nav_choose", ",05,0505,");
+		map.put("data_user", session.getAttribute("session.user"));
+		map.put("data_token", genToken(session));
+
+		return html;
 	}
 
 	/**
