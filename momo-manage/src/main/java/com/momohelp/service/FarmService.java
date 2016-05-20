@@ -31,12 +31,12 @@ public interface FarmService extends IService<Farm> {
 	Farm getLastByUserId(String user_id);
 
 	/**
-	 * 查找库存
+	 * 查找可以喂的鸡
 	 *
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findInventory(String user_id);
+	List<Farm> findCanFeed(String user_id);
 
 	/**
 	 * 获取可以孵化的鸡苗批次
