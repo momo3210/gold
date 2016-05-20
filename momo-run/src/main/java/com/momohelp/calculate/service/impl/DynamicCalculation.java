@@ -2,7 +2,6 @@ package com.momohelp.calculate.service.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -59,11 +58,12 @@ public class DynamicCalculation implements Serializable, ICalculation {
 
 	@Resource
 	private PrizeService prizeService;
-	
+
 	@Resource
 	private FarmFeedService farmFeedService;
 
 	// 自动转换到期奖金金额--需要定时作业
+	@Override
 	public boolean triggerConversion() {
 		Example example = new Example(Prize.class);
 		Example.Criteria criteria = example.createCriteria();
@@ -158,17 +158,26 @@ public class DynamicCalculation implements Serializable, ICalculation {
 
 	// 奖金基数计算
 	/****
-	 * 注意事项： 计算后的基数如果小于0 返回0 前置条件：买卖盘匹配结束，且没有遗留问题 当前单购买数量和成交数量相等
-	 * 业务描述：判断是否出局条件【w_farm_chick表中是否出局标志】： 1.正常 0 出局 出局需要计算烧伤奖 正常排单基数不变 即购买金额
-	 * 计算公式：小端金额- 推荐人最近获取被推荐人一单的推荐奖-被推荐人上一单所得利息 SQL： 被推荐人上一单推荐奖 SELECT w.* FROM
-	 * w_farm_chick as w WHERE w.user_id=? ORDER BY w.create_time DESC LIMIT 0,2
-	 * 中的第二条数据：来计算推荐奖 和等级相关 所得利息： 幼鸡利息=幼鸡数量* 喂养时长+成年鸡利息=成年鸡数量*喂养时长
+	 * 注意事项： 计算后的基数如果小于0 返回0
+	 * 
+	 * 前置条件：买卖盘匹配结束，且没有遗留问题 当前单购买数量和成交数量相等
+	 * 
+	 * 业务描述：判断是否出局条件【w_farm_chick表中是否出局标志】： 1.正常 0 出局
+	 * 
+	 * 出局需要计算烧伤奖 正常排单基数不变 即购买金额
+	 * 
+	 * 计算公式：小端金额- 推荐人最近获取被推荐人一单的推荐奖-被推荐人上一单所得利息
+	 * 
+	 * SQL： 被推荐人上一单推荐奖 SELECT w.* FROM w_farm_chick as w WHERE w.user_id=? ORDER
+	 * BY w.create_time DESC LIMIT 0,2 中的第二条数据：来计算推荐奖 和等级相关
+	 * 
+	 * 所得利息： 幼鸡利息=幼鸡数量* 喂养时长+成年鸡利息=成年鸡数量*喂养时长
 	 * 
 	 * 成年鸡数量： 可能在喂养过程中卖掉成年鸡 ，需要每日计算
 	 */
 	@Override
 	public double base() {
-		double base = 0.0000;
+		double base = 0.00;
 		log.info("-------------------奖金基数计算------------------------");
 		List<Farm> farms = farmService.getUntreatedFarm();
 		// 用户等级计算
@@ -182,7 +191,7 @@ public class DynamicCalculation implements Serializable, ICalculation {
 					break;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
-				double tempBase = 0.0;
+				double tempBase = 0.00;
 				// 小端金额
 				if (farm.getNum_buy() >= f.getNum_buy()) {
 					tempBase = f.getNum_buy();
@@ -212,13 +221,16 @@ public class DynamicCalculation implements Serializable, ICalculation {
 					// 获取当前用户排单上一单 领导拿到的提成--推荐奖
 					double money = prizeService.selectByExample(example).get(0)
 							.getMoney();//
-					// 获得当前用户的上一单饲养成年鸡利息 --还没有计算
-					Example example2=new Example(FarmFeed.class);
-					example2.createCriteria().andCondition("w_farm_chick_id",beforeFarm.getId());
-					List<FarmFeed> farmFeeds = farmFeedService.selectByExample(example2);// 成鸡饲养利息计算----还没有做
-					double chicken=0.0;
+					// 获得当前用户的上一单饲养成年鸡利息
+					Example example2 = new Example(FarmFeed.class);
+					example2.createCriteria().andCondition("w_farm_chick_id",
+							beforeFarm.getId());
+					List<FarmFeed> farmFeeds = farmFeedService
+							.selectByExample(example2);
+					double chicken = 0.00;
+					// 成鸡饲养利息计算
 					for (FarmFeed farmFeed : farmFeeds) {
-						chicken=farmFeed.getPrice()+chicken;
+						chicken = farmFeed.getPrice() + chicken;
 					}
 					// 获得当前单饲养利息总和
 					double deposit = beforeFarm.getNum_buy()
@@ -327,11 +339,19 @@ public class DynamicCalculation implements Serializable, ICalculation {
 
 	// 买卖盘自动匹配
 	/**
-	 * 业务：获取当天 买卖盘中的数据 以及 交易记录中 卖盘id为空或者卖盘id为空且状态为0数据 SQL： 1.SELECT * FROM
-	 * p_buy_sell as p WHERE (p.'p_buy_id' ='null' or p.'p_sell_id'='null') and
-	 * p.`status`='0' 2.SELECT * FROM p_buy as p WHERE p.create_time between
-	 * #{0} and #{1}; 3.SELECT * FROM p_sell as p WHERE p.create_time time
-	 * between #{0} and #{1} 原则：优先匹配交易记录表中的数据 其次 卖家为主
+	 * 业务：获取当天 买卖盘中的数据 以及 交易记录中 卖盘id为空或者卖盘id为空且状态为0数据
+	 * 
+	 * SQL：
+	 * 
+	 * 1.SELECT * FROM p_buy_sell as p WHERE (p.'p_buy_id' ='null' or
+	 * p.'p_sell_id'='null') and p.`status`='0'
+	 * 
+	 * 2.SELECT * FROM p_buy as p WHERE p.create_time between #{0} and #{1};
+	 * 
+	 * 3.SELECT * FROM p_sell as p WHERE p.create_time time between #{0} and
+	 * #{1}
+	 * 
+	 * 原则：优先匹配交易记录表中的数据 其次 卖家为主
 	 *******************************/
 	@Override
 	public boolean automatch() {
@@ -468,13 +488,15 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			}
 			buySellService.save(entity);
 		}
-		if (buySell.getNum_matching() > 0) {
-			// buySellService.delete(buySell.getId());
-			buySell.setCreate_time(new Date());
-			// buySellService.save(buySell);
-			buySellService.updateNotNull(buySell);
-		} else {
-			buySellService.delete(buySell.getId());
+		if (null!=buys&&buys.size()>0) {
+			if (buySell.getNum_matching() > 0) {
+				// buySellService.delete(buySell.getId());
+				buySell.setCreate_time(new Date());
+				// buySellService.save(buySell);
+				buySellService.updateNotNull(buySell);
+			} else {
+				buySellService.delete(buySell.getId());
+			}
 		}
 		buySell = null;
 	}
@@ -513,29 +535,19 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			}
 			buySellService.save(entity);
 		}
-		if (buySell.getNum_matching() > 0) {
-			// buySellService.delete(buySell.getId());
-			buySell.setCreate_time(new Date());
-			// buySellService.save(buySell);
-			buySellService.updateNotNull(buySell);
-		} else {
-			buySellService.delete(buySell.getId());
+		if (null != sells && sells.size() > 0) {
+			if (buySell.getNum_matching() > 0) {
+				// buySellService.delete(buySell.getId());
+				buySell.setCreate_time(new Date());
+				// buySellService.save(buySell);
+				buySellService.updateNotNull(buySell);
+			} else {
+				buySellService.delete(buySell.getId());
+			}
 		}
-
 		buySell = null;
 	}
 
 	public static void main(String[] args) {
-		// Old way:
-		List<Integer> costBeforeTax = Arrays.asList(100, 200, 300, 400, 500);
-		double total = 0;
-		for (Integer cost : costBeforeTax) {
-			total = total + cost;
-		}
-		System.out.println("Total : " + total);
-		// New way:
-		costBeforeTax = Arrays.asList(100, 200, 300, 400, 500);
-		double bill = costBeforeTax.stream().map((cost) -> cost).reduce((sum, cost) -> sum+ cost).get();
-		System.out.println("Total : " + bill);
 	}
 }

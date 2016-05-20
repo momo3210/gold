@@ -17,6 +17,8 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.momohelp.calculate.service.impl.DynamicCalculation;
 @Service
@@ -28,7 +30,8 @@ public class AutomatchJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		log.info("------- Initializing ----------计算自动匹配------------");
-		new DynamicCalculation().automatch();
+		WebApplicationContext webContext = ContextLoaderListener.getCurrentWebApplicationContext();
+		webContext.getBean(DynamicCalculation.class).automatch();
 	}
 
 	@SuppressWarnings("deprecation")

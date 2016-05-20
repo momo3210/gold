@@ -44,9 +44,34 @@ public class BuySell implements Serializable {
 	private String p_sell_id;
 
 	/**
-	 * 0初始化</br> 1A打款B</br> 2B确认</br> 3问题单（双方谁不确认都会变成问题单）
+	 * 0初始化
+	 *
+	 * 1A打款B
+	 *
+	 * 2B确认
+	 *
+	 * 3问题单（双方谁不确认都会变成问题单）
 	 */
 	private Integer status;
+
+	private String p_buy_user_id;
+	private String p_sell_user_id;
+
+	public String getP_buy_user_id() {
+		return p_buy_user_id;
+	}
+
+	public void setP_buy_user_id(String p_buy_user_id) {
+		this.p_buy_user_id = p_buy_user_id;
+	}
+
+	public String getP_sell_user_id() {
+		return p_sell_user_id;
+	}
+
+	public void setP_sell_user_id(String p_sell_user_id) {
+		this.p_sell_user_id = p_sell_user_id;
+	}
 
 	public String getId() {
 		return id;
