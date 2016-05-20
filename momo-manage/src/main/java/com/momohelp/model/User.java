@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -95,6 +96,12 @@ public class User implements Serializable {
 	private String pid;
 
 	/**
+	 * 父对象
+	 */
+	@Transient
+	private User p_user;
+
+	/**
 	 * 家族（最顶端的用户id）
 	 */
 	private String family_id;
@@ -118,6 +125,14 @@ public class User implements Serializable {
 	private Double total_dynamic;
 	private Integer total_ticket;
 	private Integer total_food;
+
+	public User getP_user() {
+		return p_user;
+	}
+
+	public void setP_user(User p_user) {
+		this.p_user = p_user;
+	}
 
 	public Double getNum_static() {
 		return num_static;

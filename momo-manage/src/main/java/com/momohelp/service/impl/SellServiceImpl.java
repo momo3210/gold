@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.model.BuySell;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
@@ -384,6 +385,35 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Sell item = list.get(i);
 			item.setBuySells(buySellService.findBySellId(item.getId()));
+
+			List<BuySell> list_BuySell = item.getBuySells();
+			if (null == list_BuySell) {
+				continue;
+			}
+
+			for (int i_2 = 0, j_2 = list_BuySell.size(); i_2 < j_2; i_2++) {
+				BuySell item_buySell = list_BuySell.get(i_2);
+
+				User buy_user = userService.selectByKey(item_buySell
+						.getP_buy_user_id());
+				item_buySell.setP_buy_user(buy_user);
+
+				if (!"0".equals(buy_user.getPid())) {
+					User buy_p_user = userService
+							.selectByKey(buy_user.getPid());
+					buy_user.setP_user(buy_p_user);
+				}
+
+				User sell_user = userService.selectByKey(item_buySell
+						.getP_sell_user_id());
+				item_buySell.setP_sell_user(sell_user);
+
+				if (!"0".equals(sell_user.getPid())) {
+					User sell_p_user = userService.selectByKey(sell_user
+							.getPid());
+					sell_user.setP_user(sell_p_user);
+				}
+			}
 		}
 
 		return list;
