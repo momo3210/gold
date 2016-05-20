@@ -588,6 +588,7 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+
 		return result;
 	}
 

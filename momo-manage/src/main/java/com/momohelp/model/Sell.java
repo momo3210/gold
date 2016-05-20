@@ -27,6 +27,11 @@ public class Sell implements Serializable {
 	private Integer num_sell;
 
 	/**
+	 * 成交数量
+	 */
+	private Integer num_deal;
+
+	/**
 	 * 卖出时间
 	 */
 	private Date create_time;
@@ -38,6 +43,14 @@ public class Sell implements Serializable {
 	 * 2动态钱包
 	 */
 	private Integer type_id;
+
+	public Integer getNum_deal() {
+		return num_deal;
+	}
+
+	public void setNum_deal(Integer num_deal) {
+		this.num_deal = num_deal;
+	}
 
 	public String getId() {
 		return id;

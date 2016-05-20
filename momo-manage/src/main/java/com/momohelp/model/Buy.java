@@ -21,6 +21,13 @@ public class Buy implements Serializable {
 	@Column(name = "id")
 	private String id;
 
+	private String user_id;
+
+	/**
+	 * 成交数量
+	 */
+	private Integer num_deal;
+
 	/**
 	 * 关联批次
 	 */
@@ -40,6 +47,22 @@ public class Buy implements Serializable {
 	 * 计算时间
 	 */
 	private Date calc_time;
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public Integer getNum_deal() {
+		return num_deal;
+	}
+
+	public void setNum_deal(Integer num_deal) {
+		this.num_deal = num_deal;
+	}
 
 	public Date getCalc_time() {
 		return calc_time;

@@ -46,4 +46,5 @@ public interface FarmService extends IService<Farm> {
 	 * @return
 	 */
 	Farm findCanHatch(String key, String user_id);
+
 }
