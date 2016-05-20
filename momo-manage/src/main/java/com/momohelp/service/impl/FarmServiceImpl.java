@@ -258,7 +258,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setW_farm_chick_id(farm.getId());
 		buy.setCreate_time(farm.getCreate_time());
 		buy.setUser_id(farm.getUser_id());
-		buy.setFlag_deal(0);
+		buy.setTime_deal(null);
 
 		Calendar c = Calendar.getInstance();
 		c.setTime(farm.getCreate_time());

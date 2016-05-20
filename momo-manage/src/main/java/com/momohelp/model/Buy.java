@@ -2,10 +2,12 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -30,7 +32,7 @@ public class Buy implements Serializable {
 	 *
 	 * 1已完全交易完
 	 */
-	private Integer flag_deal;
+	private Date time_deal;
 
 	/**
 	 * 关联批次
@@ -52,6 +54,17 @@ public class Buy implements Serializable {
 	 */
 	private Date calc_time;
 
+	@Transient
+	private List<BuySell> buySells;
+
+	public List<BuySell> getBuySells() {
+		return buySells;
+	}
+
+	public void setBuySells(List<BuySell> buySells) {
+		this.buySells = buySells;
+	}
+
 	public String getUser_id() {
 		return user_id;
 	}
@@ -60,12 +73,12 @@ public class Buy implements Serializable {
 		this.user_id = user_id;
 	}
 
-	public Integer getFlag_deal() {
-		return flag_deal;
+	public Date getTime_deal() {
+		return time_deal;
 	}
 
-	public void setFlag_deal(Integer flag_deal) {
-		this.flag_deal = flag_deal;
+	public void setTime_deal(Date time_deal) {
+		this.time_deal = time_deal;
 	}
 
 	public Date getCalc_time() {

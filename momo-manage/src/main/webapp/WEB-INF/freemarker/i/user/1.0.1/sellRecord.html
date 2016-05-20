@@ -79,14 +79,23 @@
 						</h1>
 					</div><!--/.page-header-->
 
+					<div class="alert alert-block alert-success">
+						<button type="button" class="close" data-dismiss="alert">
+							<i class="icon-remove"></i>
+						</button>
+						<i class="icon-ok green"></i>
+						<strong>成功确认24小时之后不予显示</strong>
+					</div>
+
+					<#list data_list! as doc>
 					<div class="row-fluid">
 						<div class="span12">
-							<div class="widget-box">
-								<div class="widget-header header-color-red2">
+							<div class="widget-box collapsed">
+								<div class="widget-header header-color-green2">
 									<h4 class="smaller">
 										<i class="icon-sort"></i>
-										提供帮助编号
-										<small>B001635566</small>
+										请求援助编号
+										<small>S${(doc.id)!}</small>
 									</h4>
 									<div class="widget-toolbar">
 										<#-- <!-- <a href="#" data-action="settings">
@@ -110,12 +119,10 @@
 								<div class="widget-body">
 									<div class="widget-main">
 										<p class="alert alert-info">
-											参加者：<br/>
-											提供帮助数额：<br/>
-											排队日期：<br/>
-											当前状态：<br/>
-											回流金额：<br/>
-											回流倒计时：<br/>
+											参加者：M${(data_user.id)!}<br/>
+											请求援助数额：RMB ${doc.num_sell?string('#.00')}<br/>
+											排队日期：${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}<br/>
+											当前状态：未完成
 										</p>
 
 										<#-- <!-- <p class="alert alert-success">
@@ -355,6 +362,7 @@
 							</div>
 						</div><!--/span-->
 					</div>
+					</#list>
 
 					<#-- <!-- <div class="row-fluid">
 						<div class="span12">

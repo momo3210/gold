@@ -605,8 +605,7 @@ public class UserController {
 
 		List<Sell> list_sell = sellService.findUnCompleteDeal(session
 				.getAttribute("session.user.id").toString());
-
-		System.out.println(list_sell.size());
+		result.addObject("data_list", list_sell);
 
 		return result;
 	}

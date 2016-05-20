@@ -17,6 +17,7 @@ import com.github.pagehelper.PageHelper;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.service.BuySellService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
@@ -34,6 +35,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Autowired
 	private MaterialRecordService materialRecordService;
+
+	@Autowired
+	private BuySellService buySellService;
 
 	@Override
 	public int save(Sell entity) {
@@ -183,7 +187,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	@Override
 	public String[] sell(Sell sell) {
 		sell.setCreate_time(new Date());
-		sell.setFlag_deal(0);
+		sell.setTime_deal(null);
 
 		// TODO
 		Map<String, Object> sell_validationParameter = sell_validationParameter(sell);
@@ -363,11 +367,25 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		Example example = new Example(Sell.class);
 		example.setOrderByClause("create_time desc");
 
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("user_id", user_id);
-		criteria.andEqualTo("flag_deal", 0);
+		// 24小时之前
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.HOUR_OF_DAY, -24);
+
+		example.or().andEqualTo("user_id", user_id)
+				.andGreaterThan("time_deal", c.getTime());
+		example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
 
 		List<Sell> list = selectByExample(example);
+
+		if (null == list) {
+			return list;
+		}
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Sell item = list.get(i);
+			item.setBuySells(buySellService.findBySellId(item.getId()));
+		}
+
 		return list;
 	}
 
