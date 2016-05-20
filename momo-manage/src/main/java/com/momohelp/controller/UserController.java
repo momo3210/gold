@@ -275,6 +275,25 @@ public class UserController {
 	}
 
 	/**
+	 * 确认打款
+	 *
+	 * @param map
+	 * @param session
+	 * @param id
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/confirm" }, method = RequestMethod.GET)
+	public String _i_confirmUI(Map<String, Object> map, HttpSession session,
+			@RequestParam(required = true) String id,
+			@RequestParam(required = true) String type) {
+		// TODO
+		map.put("nav_choose", ",05,0503,");
+		map.put("data_user", session.getAttribute("session.user"));
+		return "i/user/1.0.1/confirm";
+	}
+
+	/**
 	 * 修改资料
 	 *
 	 * @param map
@@ -289,7 +308,6 @@ public class UserController {
 		map.put("data_user", user);
 		// TODO
 		map.put("nav_choose", ",03,0301,");
-		map.put("data_user", session.getAttribute("session.user"));
 		return "i/user/1.0.1/profile";
 	}
 
