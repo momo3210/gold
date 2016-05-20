@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.momohelp.model.Buy;
 import com.momohelp.model.Notice;
+import com.momohelp.model.Sell;
+import com.momohelp.service.BuyService;
 import com.momohelp.service.NoticeService;
+import com.momohelp.service.SellService;
 
 /**
  *
@@ -23,6 +27,12 @@ public class DefaultController {
 
 	@Autowired
 	private NoticeService noticeService;
+
+	@Autowired
+	private BuyService buyService;
+
+	@Autowired
+	private SellService sellService;
 
 	/**
 	 * 首页
@@ -40,6 +50,17 @@ public class DefaultController {
 
 		result.addObject("nav_choose", ",02,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+
+		// 买盘
+		List<Buy> list_buy = buyService.findUnFinishDeal(session.getAttribute(
+				"session.user.id").toString());
+		result.addObject("data_list_buy", list_buy);
+
+		// 卖盘
+		List<Sell> list_sell = sellService.findUnFinishDeal(session
+				.getAttribute("session.user.id").toString());
+		result.addObject("data_list_sell", list_sell);
+
 		return result;
 	}
 

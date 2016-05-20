@@ -803,7 +803,7 @@ public class UserController {
 
 		List<Buy> list_buy = buyService.findUnFinishDeal(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_list", list_buy);
+		result.addObject("data_list_buy", list_buy);
 
 		return result;
 	}
@@ -822,7 +822,7 @@ public class UserController {
 
 		List<Sell> list_sell = sellService.findUnFinishDeal(session
 				.getAttribute("session.user.id").toString());
-		result.addObject("data_list", list_sell);
+		result.addObject("data_list_sell", list_sell);
 
 		return result;
 	}
