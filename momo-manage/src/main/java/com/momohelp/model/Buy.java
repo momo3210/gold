@@ -24,9 +24,13 @@ public class Buy implements Serializable {
 	private String user_id;
 
 	/**
-	 * 成交数量
+	 * 成交标记
+	 *
+	 * 0未完全交易
+	 *
+	 * 1已完全交易完
 	 */
-	private Integer num_deal;
+	private Integer flag_deal;
 
 	/**
 	 * 关联批次
@@ -56,12 +60,12 @@ public class Buy implements Serializable {
 		this.user_id = user_id;
 	}
 
-	public Integer getNum_deal() {
-		return num_deal;
+	public Integer getFlag_deal() {
+		return flag_deal;
 	}
 
-	public void setNum_deal(Integer num_deal) {
-		this.num_deal = num_deal;
+	public void setFlag_deal(Integer flag_deal) {
+		this.flag_deal = flag_deal;
 	}
 
 	public Date getCalc_time() {

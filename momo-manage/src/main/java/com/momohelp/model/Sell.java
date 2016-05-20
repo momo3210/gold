@@ -27,9 +27,9 @@ public class Sell implements Serializable {
 	private Integer num_sell;
 
 	/**
-	 * 成交数量
+	 * 成交标记
 	 */
-	private Integer num_deal;
+	private Integer flag_deal;
 
 	/**
 	 * 卖出时间
@@ -44,12 +44,12 @@ public class Sell implements Serializable {
 	 */
 	private Integer type_id;
 
-	public Integer getNum_deal() {
-		return num_deal;
+	public Integer getFlag_deal() {
+		return flag_deal;
 	}
 
-	public void setNum_deal(Integer num_deal) {
-		this.num_deal = num_deal;
+	public void setFlag_deal(Integer flag_deal) {
+		this.flag_deal = flag_deal;
 	}
 
 	public String getId() {

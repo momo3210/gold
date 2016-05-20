@@ -588,7 +588,6 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
 		result.addObject("data_user", session.getAttribute("session.user"));
-
 		return result;
 	}
 
@@ -603,6 +602,12 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
 		result.addObject("nav_choose", ",05,0504,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+
+		List<Sell> list_sell = sellService.findUnCompleteDeal(session
+				.getAttribute("session.user.id").toString());
+
+		System.out.println(list_sell.size());
+
 		return result;
 	}
 

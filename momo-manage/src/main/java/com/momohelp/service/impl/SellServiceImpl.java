@@ -183,6 +183,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	@Override
 	public String[] sell(Sell sell) {
 		sell.setCreate_time(new Date());
+		sell.setFlag_deal(0);
 
 		// TODO
 		Map<String, Object> sell_validationParameter = sell_validationParameter(sell);
@@ -355,6 +356,19 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		PageHelper.startPage(1, 1);
 		List<Sell> list = selectByExample(example);
 		return (null == list || 0 == list.size()) ? null : list.get(0);
+	}
+
+	@Override
+	public List<Sell> findUnCompleteDeal(String user_id) {
+		Example example = new Example(Sell.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andEqualTo("flag_deal", 0);
+
+		List<Sell> list = selectByExample(example);
+		return list;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.momohelp.model.Sell;
@@ -19,4 +21,12 @@ public interface SellService extends IService<Sell> {
 	 */
 	@Transactional
 	String[] sell(Sell sell);
+
+	/**
+	 * 获取未完全成交的记录
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Sell> findUnCompleteDeal(String user_id);
 }
