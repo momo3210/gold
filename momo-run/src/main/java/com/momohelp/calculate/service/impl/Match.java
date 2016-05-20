@@ -54,13 +54,12 @@ public class Match implements Serializable, IMatch {
 		boolean bool = false;
 		// 获取买卖盘中未匹配的单据
 		List<BuySell> buySells = buySellService.selectBySellAndBuyId();
-		// 获取卖盘中数据
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.DATE, -2);
 		// 卖盘数据
 		List<Sell> sells = sellService.selectByCycles(cr.getTime(), Calendar
 				.getInstance().getTime());
-		// 卖盘数据
+		//买盘数据
 		List<Buy> buys = buyService.selectByCycles(cr.getTime(), Calendar
 				.getInstance().getTime());
 		for (BuySell buySell : buySells) {
@@ -100,6 +99,8 @@ public class Match implements Serializable, IMatch {
 				entity.setP_sell_id(sell.getId());
 				entity.setP_buy_id(buy.getId());
 				entity.setStatus(0);
+				entity.setP_buy_user_id(buy.getUser_id());
+				entity.setP_sell_user_id(sell.getUser_id());
 				if (sellMatchNum > buyMatchNum) {// 卖家大于买家
 					entity.setNum_matching(buyMatchNum);
 					sell.setNum_sell(sellMatchNum - buyMatchNum);
@@ -132,6 +133,7 @@ public class Match implements Serializable, IMatch {
 							entity.setP_sell_id(sell.getId());
 							entity.setP_buy_id("null");
 							entity.setStatus(0);
+							entity.setP_sell_user_id(sell.getUser_id());
 							entity.setNum_matching(sell.getNum_sell());
 						});
 		// 买盘清理
@@ -146,6 +148,7 @@ public class Match implements Serializable, IMatch {
 							entity.setP_sell_id("null");
 							entity.setP_buy_id(buy.getId());
 							entity.setStatus(0);
+							entity.setP_buy_user_id(buy.getUser_id());
 							entity.setNum_matching(buy.getNum_buy());
 						});
 	}
@@ -165,6 +168,8 @@ public class Match implements Serializable, IMatch {
 			entity.setP_sell_id(buySell.getP_sell_id());
 			entity.setP_buy_id(buy.getId());
 			entity.setStatus(0);
+			entity.setP_buy_user_id(buy.getUser_id());
+			entity.setP_sell_user_id(buySell.getP_sell_user_id());
 			int buyMatcheNum = buy.getNum_buy();
 			int sellMatcheNum = buySell.getNum_matching();
 			if (sellMatcheNum > buyMatcheNum) {// 卖家数据大于买家数据
@@ -212,6 +217,8 @@ public class Match implements Serializable, IMatch {
 			entity.setP_sell_id(sell.getId());
 			entity.setP_buy_id(buySell.getP_buy_id());
 			entity.setStatus(0);
+			entity.setP_buy_user_id(buySell.getP_buy_user_id());
+			entity.setP_sell_user_id(sell.getUser_id());
 			int sellMatcheNum = sell.getNum_sell();// 买家数据
 			int buySellMatcheNum = buySell.getNum_matching();// 卖家数据
 			if (buySellMatcheNum > sellMatcheNum) {// 买家数据大于卖家数据
