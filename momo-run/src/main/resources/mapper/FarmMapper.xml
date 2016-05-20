@@ -2,17 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.FarmMapper">
 	<resultMap id="farm" type="com.momohelp.model.Farm">
-	<id column="id" property="id" jdbcType="VARCHAR" />
-	<result column="user_id" property="user_id" jdbcType="VARCHAR" />
-	<result column="create_time" property="create_time" jdbcType="DATE" />
-	<result column="time_out" property="time_out" jdbcType="DATE" />
-	<result column="time_ripe" property="time_ripe" jdbcType="DATE" />
-	<result column="num_current" property="num_current" jdbcType="INTEGER" />
-	<result column="num_buy" property="num_buy" jdbcType="INTEGER" />
-	<result column="num_deal" property="num_deal" jdbcType="INTEGER" />
-	<result column="flag_calc_bonus" property="flag_calc_bonus"
-		jdbcType="INTEGER" />
-</resultMap>
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="DATE" />
+		<result column="time_out" property="time_out" jdbcType="DATE" />
+		<result column="time_ripe" property="time_ripe" jdbcType="DATE" />
+		<result column="num_current" property="num_current" jdbcType="INTEGER" />
+		<result column="num_buy" property="num_buy" jdbcType="INTEGER" />
+		<result column="num_deal" property="num_deal" jdbcType="INTEGER" />
+		<result column="flag_calc_bonus" property="flag_calc_bonus"
+			jdbcType="INTEGER" />
+		<result column="time_deal" property="time_deal" jdbcType="DATE" />
+		<result column="flag_out_p" property="flag_out_p" jdbcType="INTEGER" />
+		<result column="pid_higher_ups" property="pid_higher_ups" jdbcType="VARCHAR" />
+		<result column="flag_out_self" property="flag_out_self" jdbcType="INTEGER" />
+		<result column="num_reward" property="num_reward" jdbcType="INTEGER" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+	</resultMap>
 	<select id="getUntreatedFarm" resultType="farm">
 		SELECT w.* FROM
 		w_farm_chick as w WHERE w.num_buy=w.num_deal and w.flag_calc_bonus=0
@@ -24,7 +30,8 @@
 		ORDER BY w.create_time DESC LIMIT 0,1
 	</select>
 	<select id="selectForceLogout" resultType="farm">
-		SELECT w.* FROM w_farm_chick as w WHERE ( w.time_out &lt;SYSDATE() AND
+		SELECT w.* FROM
+		w_farm_chick as w WHERE ( w.time_out &lt;SYSDATE() AND
 		w.time_out&gt;#{0} )AND w.flag_out_p!='3'
 	</select>
 </mapper>

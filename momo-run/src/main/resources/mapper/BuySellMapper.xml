@@ -13,6 +13,10 @@
 		<result column="p_sell_id" property="p_sell_id" jdbcType="VARCHAR" />
 
 		<result column="status" property="status" jdbcType="INTEGER" />
+		
+		<result column="p_buy_user_id" property="p_buy_user_id" jdbcType="VARCHAR" />
+		
+		<result column="p_sell_user_id" property="p_sell_user_id" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBySellAndBuyId" resultType="buySell">
 		SELECT * FROM p_buy_sell as p WHERE (p.p_buy_id ='null' or p.p_sell_id='null') and p.status='0'

@@ -9,6 +9,12 @@
 		<result column="num_buy" property="num_buy" jdbcType="INTEGER" />
 
 		<result column="create_time" property="create_time" jdbcType="DATE" />
+		
+		<result column="calc_time" property="calc_time" jdbcType="DATE" />
+		
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		
+		<result column="time_deal" property="time_deal" jdbcType="DATE" />
 	</resultMap>
 	<select id="selectByCycles" resultType="buy">
 		SELECT * FROM p_buy as p WHERE p.calc_time between #{0} and #{1}
