@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.Map;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.momohelp.model.FarmFeed;
@@ -34,5 +36,5 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	 * @param farm_id
 	 * @return
 	 */
-	String[] checkTodayFeed(String farm_id);
+	Map<String, Object> checkTodayFeed(String farm_id);
 }

@@ -2,7 +2,9 @@ package com.momohelp.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,18 +79,24 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			return new String[] { "数据查询异常" };
 		}
 
+		// 权限判断是否是本人的操作
 		if (farm.getUser_id().equals(farmFeed.getUser_id())) {
 			return new String[] { "非法操作" };
 		}
 
+		// 当前时间 <--出局时间（理论）
+		if (farmFeed.getCreate_time().before(farm.getTime_out())) {
+			return new String[] { "已经出局了" };
+		}
+
+		// 该批次的鸡都卖完了
 		if (0 == farm.getNum_current()) {
 			return new String[] { "没有鸡可以喂了" };
 		}
 
 		// 买入当天不能喂鸡
-		String date_1 = sdf.format(farm.getCreate_time());
-		String date_2 = sdf.format(farmFeed.getCreate_time());
-		if (date_1.equals(date_2)) {
+		if (sdf.format(farm.getCreate_time()).equals(
+				sdf.format(farmFeed.getCreate_time()))) {
 			return new String[] { "买入当天不能喂鸡" };
 		}
 
@@ -96,21 +104,22 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		User user = userService.selectByKey(farm.getUser_id());
 
 		if (farmFeed.getNum_feed() > user.getNum_food()) {
-			return new String[] { "请购买饲料" };
+			return new String[] { "饲料不足，请购买饲料" };
 		}
 
-		// 最后一次喂鸡记录
-		FarmFeed last_farmfeed = getLastByFarmId(farmFeed.getW_farm_chick_id());
+		Map<String, Object> checkTodayFeed = checkTodayFeed(farmFeed
+				.getW_farm_chick_id());
 
-		String[] checkTodayFeed = checkTodayFeed(last_farmfeed, farmFeed);
+		// 判断今天是否已经喂过鸡了
 		if (null != checkTodayFeed) {
-			return checkTodayFeed;
+			if (checkTodayFeed.containsKey("msg")) {
+				return (String[]) checkTodayFeed.get("msg");
+			}
 		}
 
-		// 判断是否已经20次了
-		if (20 == last_farmfeed.getOrder_feed()) {
-			return new String[] { "已经出局了" };
-		}
+		// 获取最后一次喂鸡记录
+		FarmFeed last_farmfeed = (FarmFeed) (checkTodayFeed.containsKey("data") ? checkTodayFeed
+				.get("data") : null);
 
 		saveMaterialRecord(farmFeed, user);
 
@@ -161,24 +170,6 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			"yyyy-MM-dd 00:00:00");
 
 	/**
-	 * 判断今天是否已经喂过鸡了
-	 *
-	 * @param last_farmfeed
-	 * @param farmFeed
-	 * @return
-	 */
-	private String[] checkTodayFeed(FarmFeed last_farmfeed, FarmFeed farmFeed) {
-		if (null == last_farmfeed) {
-			return null;
-		}
-
-		String date_1 = sdf.format(farmFeed.getCreate_time());
-		String date_2 = sdf.format(last_farmfeed.getCreate_time());
-
-		return (date_1.equals(date_2)) ? new String[] { "今天已经喂过鸡了" } : null;
-	}
-
-	/**
 	 * 获取用户最后一次的喂鸡记录
 	 *
 	 * @param farm_id
@@ -197,7 +188,9 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	}
 
 	@Override
-	public String[] checkTodayFeed(String farm_id) {
+	public Map<String, Object> checkTodayFeed(String farm_id) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
 
 		FarmFeed farmFeed = getLastByFarmId(farm_id);
 		if (null == farmFeed) {
@@ -209,6 +202,12 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		// 当前时间
 		String date_2 = sdf.format(new Date());
 
-		return (date_1.equals(date_2)) ? new String[] { "今天已经喂过鸡了" } : null;
+		if (date_1.equals(date_2)) {
+			result.put("msg", new String[] { "今天已经喂过鸡了" });
+		} else {
+			result.put("data", farmFeed);
+		}
+
+		return result;
 	}
 }

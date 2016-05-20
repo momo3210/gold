@@ -143,7 +143,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		if (1 > user.getNum_ticket()) {
-			result.put("msg", new String[] { "请购买门票" });
+			result.put("msg", new String[] { "门票不足，请购买门票" });
 			return result;
 		}
 

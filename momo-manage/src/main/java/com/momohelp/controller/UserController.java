@@ -490,12 +490,15 @@ public class UserController {
 			}
 
 			// 判断今天是否已经喂过该批次的鸡苗了
-			String[] checkTodayFeed = farmFeedService.checkTodayFeed(farm
-					.getId());
+			Map<String, Object> checkTodayFeed = farmFeedService
+					.checkTodayFeed(farm.getId());
 			if (null != checkTodayFeed) {
-				return "redirect:/user/feedMo";
+				if (checkTodayFeed.containsKey("msg")) {
+					return "redirect:/user/feedMo";
+				}
 			}
 
+			map.put("data_id", id);
 			map.put("data_farm", farm);
 			html = "i/user/1.0.1/feedMo_id";
 		}
