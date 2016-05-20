@@ -810,7 +810,7 @@ public class UserController {
 		result.addObject("nav_choose", ",05,0504,");
 		result.addObject("data_user", session.getAttribute("session.user"));
 
-		List<Sell> list_sell = sellService.findUnCompleteDeal(session
+		List<Sell> list_sell = sellService.findUnFinishDeal(session
 				.getAttribute("session.user.id").toString());
 		result.addObject("data_list", list_sell);
 

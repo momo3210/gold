@@ -370,11 +370,11 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	@Override
-	public List<Sell> findUnCompleteDeal(String user_id) {
+	public List<Sell> findUnFinishDeal(String user_id) {
 		Example example = new Example(Sell.class);
 		example.setOrderByClause("create_time desc");
 
-		// 24小时之前
+		// 显示24小时内的
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.HOUR_OF_DAY, -24);
 
@@ -382,47 +382,39 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 				.andGreaterThan("time_deal", c.getTime());
 		example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
 
-		List<Sell> list = selectByExample(example);
+		List<Sell> list_sell = selectByExample(example);
 
-		if (null == list) {
-			return list;
+		if (null == list_sell) {
+			return list_sell;
 		}
 
-		for (int i = 0, j = list.size(); i < j; i++) {
-			Sell item = list.get(i);
-			item.setBuySells(buySellService.findBySellId(item.getId()));
+		for (int i = 0, j = list_sell.size(); i < j; i++) {
+			Sell sell = list_sell.get(i);
+			sell.setBuySells(buySellService.findBySellId(sell.getId()));
 
-			List<BuySell> list_BuySell = item.getBuySells();
-			if (null == list_BuySell) {
+			List<BuySell> list_buySell = sell.getBuySells();
+			if (null == list_buySell) {
 				continue;
 			}
 
-			for (int i_2 = 0, j_2 = list_BuySell.size(); i_2 < j_2; i_2++) {
-				BuySell item_buySell = list_BuySell.get(i_2);
+			// 获取用户对象和其父对象
+			for (int m = 0, n = list_buySell.size(); m < n; m++) {
+				BuySell buySell = list_buySell.get(m);
 
-				User buy_user = userService.selectByKey(item_buySell
+				// 买盘
+				User buy_user = userService.selectByKey(buySell
 						.getP_buy_user_id());
-				item_buySell.setP_buy_user(buy_user);
+				buySell.setP_buy_user(buy_user);
 
 				if (!"0".equals(buy_user.getPid())) {
-					User buy_p_user = userService
+					User p_buy_user = userService
 							.selectByKey(buy_user.getPid());
-					buy_user.setP_user(buy_p_user);
-				}
-
-				User sell_user = userService.selectByKey(item_buySell
-						.getP_sell_user_id());
-				item_buySell.setP_sell_user(sell_user);
-
-				if (!"0".equals(sell_user.getPid())) {
-					User sell_p_user = userService.selectByKey(sell_user
-							.getPid());
-					sell_user.setP_user(sell_p_user);
+					buy_user.setP_user(p_buy_user);
 				}
 			}
 		}
 
-		return list;
+		return list_sell;
 	}
 
 }

@@ -28,5 +28,5 @@ public interface SellService extends IService<Sell> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Sell> findUnCompleteDeal(String user_id);
+	List<Sell> findUnFinishDeal(String user_id);
 }

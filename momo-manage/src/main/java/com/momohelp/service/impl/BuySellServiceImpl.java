@@ -18,6 +18,9 @@ import com.momohelp.service.BuySellService;
 public class BuySellServiceImpl extends BaseService<BuySell> implements
 		BuySellService {
 
+	/**
+	 * 卖盘
+	 */
 	@Override
 	public List<BuySell> findBySellId(String sell_id) {
 
@@ -28,10 +31,12 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		criteria.andEqualTo("p_sell_id", sell_id);
 
 		List<BuySell> list = selectByExample(example);
-
 		return list;
 	}
 
+	/**
+	 * 买盘
+	 */
 	@Override
 	public List<BuySell> findByBuyId(String buy_id) {
 
@@ -42,7 +47,6 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		criteria.andEqualTo("p_buy_id", buy_id);
 
 		List<BuySell> list = selectByExample(example);
-
 		return list;
 	}
 

@@ -1,5 +1,7 @@
 package com.momohelp.service;
 
+import java.util.List;
+
 import com.momohelp.model.Buy;
 
 /**
@@ -9,4 +11,11 @@ import com.momohelp.model.Buy;
  */
 public interface BuyService extends IService<Buy> {
 
+	/**
+	 * 获取未完全成交的记录
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Buy> findUnFinishDeal(String user_id);
 }
