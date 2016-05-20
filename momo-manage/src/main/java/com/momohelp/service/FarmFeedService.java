@@ -27,4 +27,12 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	 */
 	@Transactional
 	String[] feed(FarmFeed farmFeed);
+
+	/**
+	 * 根据批次ID判断今天是否已经喂过鸡
+	 *
+	 * @param farm_id
+	 * @return
+	 */
+	String[] checkTodayFeed(String farm_id);
 }

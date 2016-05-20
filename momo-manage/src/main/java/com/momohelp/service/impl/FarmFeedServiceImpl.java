@@ -195,4 +195,20 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		List<FarmFeed> list = selectByExample(example);
 		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
+
+	@Override
+	public String[] checkTodayFeed(String farm_id) {
+
+		FarmFeed farmFeed = getLastByFarmId(farm_id);
+		if (null == farmFeed) {
+			return null;
+		}
+
+		// 该批次最后一次喂鸡的时间
+		String date_1 = sdf.format(farmFeed.getCreate_time());
+		// 当前时间
+		String date_2 = sdf.format(new Date());
+
+		return (date_1.equals(date_2)) ? new String[] { "今天已经喂过鸡了" } : null;
+	}
 }

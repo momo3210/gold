@@ -24,6 +24,7 @@ import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
@@ -48,6 +49,9 @@ public class UserController {
 
 	@Autowired
 	private FarmService farmService;
+
+	@Autowired
+	private FarmFeedService farmFeedService;
 
 	@Autowired
 	private SellService sellService;
@@ -482,6 +486,13 @@ public class UserController {
 			Farm farm = farmService.selectByKey(id);
 
 			if (null == farm) {
+				return "redirect:/user/feedMo";
+			}
+
+			// 判断今天是否已经喂过该批次的鸡苗了
+			String[] checkTodayFeed = farmFeedService.checkTodayFeed(farm
+					.getId());
+			if (null != checkTodayFeed) {
 				return "redirect:/user/feedMo";
 			}
 
