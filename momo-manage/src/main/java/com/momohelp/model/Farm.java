@@ -102,6 +102,11 @@ public class Farm implements Serializable {
 	 */
 	private String pid;
 
+	/**
+	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
+	 */
+	private Integer num_reward;
+
 	public Date getTime_out_real() {
 		return time_out_real;
 	}
@@ -109,11 +114,6 @@ public class Farm implements Serializable {
 	public void setTime_out_real(Date time_out_real) {
 		this.time_out_real = time_out_real;
 	}
-
-	/**
-	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
-	 */
-	private Integer num_reward;
 
 	public Integer getNum_reward() {
 		return num_reward;

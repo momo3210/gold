@@ -40,7 +40,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	private MaterialRecordService materialRecordService;
 
 	@Override
-	public double dividend(String farm_id) {
+	public double calculateInterest(String farm_id) {
 		Example example = new Example(FarmFeed.class);
 		// TODO
 		Example.Criteria criteria = example.createCriteria();

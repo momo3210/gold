@@ -14,12 +14,12 @@ import com.momohelp.model.FarmFeed;
 public interface FarmFeedService extends IService<FarmFeed> {
 
 	/**
-	 * 计算利息
+	 * 计算利息（只计算了喂饲料产生的利息，未加批次表中的奖金字段 num_reward）
 	 *
 	 * @param farm_id
 	 * @return
 	 */
-	double dividend(String farm_id);
+	double calculateInterest(String farm_id);
 
 	/**
 	 * 喂饲料
