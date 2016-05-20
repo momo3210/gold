@@ -135,7 +135,7 @@
 	<bean id="baseCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="baseQtzJobMethod"></property>
-		<property name="cronExpression" value="0/20 * * * * ?"></property>
+		<property name="cronExpression" value="0/13 * * * * ?"></property>
 	</bean>
 
 
@@ -168,7 +168,7 @@
 	<bean id="conversionCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="conversionQtzJobMethod"></property>
-		<property name="cronExpression" value="0/10 * * * * ?"></property>
+		<property name="cronExpression" value="0/21 * * * * ?"></property>
 	</bean>
 
 
@@ -195,7 +195,7 @@
 	<bean id="forceLogoutCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="forceLogoutQtzJobMethod"></property>
-		<property name="cronExpression" value="0/15 * * * * ?"></property>
+		<property name="cronExpression" value="0/11 * * * * ?"></property>
 	</bean>
 
 
@@ -224,7 +224,7 @@
 	<bean id="matchCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
-		<property name="cronExpression" value="0/5 * * * * ?"></property>
+		<property name="cronExpression" value="0/7 * * * * ?"></property>
 	</bean>
 
 

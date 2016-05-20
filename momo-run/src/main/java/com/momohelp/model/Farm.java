@@ -29,7 +29,7 @@ public class Farm implements Serializable {
 	 */
 	private Date time_out;
 	/**
-	 * 成熟时间
+	 * 成熟时间（理论）
 	 */
 	private Date time_ripe;
 
@@ -49,7 +49,11 @@ public class Farm implements Serializable {
 	private Integer num_deal;
 
 	/**
-	 * 计算奖金（0未计算，1已计算）
+	 * 计算奖金
+	 *
+	 * 0未计算
+	 *
+	 * 1已计算
 	 */
 	private Integer flag_calc_bonus;
 
@@ -75,11 +79,15 @@ public class Farm implements Serializable {
 	private String pid_higher_ups;
 
 	/**
+	 * 当前单的上一单是否出局
+	 *
 	 * 对于自己来说，是重新开始的一次排单
 	 *
-	 * 1接上气儿
+	 * 1未出局（接上气儿）
 	 *
-	 * 0重新开始
+	 * 2主动出局
+	 *
+	 * 3自然出局
 	 */
 	private Integer flag_out_self;
 
@@ -87,6 +95,19 @@ public class Farm implements Serializable {
 	 * 上一单的ID
 	 */
 	private String pid;
+
+	/**
+	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
+	 */
+	private Integer num_reward;
+
+	public Integer getNum_reward() {
+		return num_reward;
+	}
+
+	public void setNum_reward(Integer num_reward) {
+		this.num_reward = num_reward;
+	}
 
 	public Integer getFlag_out_self() {
 		return flag_out_self;
