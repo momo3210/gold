@@ -26,7 +26,7 @@ public class ForceLogout implements Serializable, IForceLogout {
 	public boolean calculateForceLogout() {
 		log.info("----------用户强制出局计算----------");
 		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.DAY_OF_MONTH, -2);
+		cr.add(Calendar.DAY_OF_MONTH, -1);
 		List<Farm> farms = farmService.selectForceLogout(cr.getTime());
 		for (Farm farm : farms) {
 			farm.setFlag_out_p(3);
