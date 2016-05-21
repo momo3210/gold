@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -94,7 +93,7 @@ public class Match implements Serializable, IMatch {
 					continue;
 				}
 				entity = new BuySell();
-				entity.setId(UUID.randomUUID().toString().replace("-", ""));
+				entity.setId(genId());
 				entity.setCreate_time(new Date());
 				entity.setP_sell_id(sell.getId());
 				entity.setP_buy_id(buy.getId());
@@ -127,8 +126,7 @@ public class Match implements Serializable, IMatch {
 				.forEach(
 						sell -> {
 							BuySell entity = new BuySell();
-							entity.setId(UUID.randomUUID().toString()
-									.replace("-", ""));
+							entity.setId(genId());
 							entity.setCreate_time(new Date());
 							entity.setP_sell_id(sell.getId());
 							entity.setP_buy_id("null");
@@ -142,8 +140,7 @@ public class Match implements Serializable, IMatch {
 				.forEach(
 						buy -> {
 							BuySell entity = new BuySell();
-							entity.setId(UUID.randomUUID().toString()
-									.replace("-", ""));
+							entity.setId(genId());
 							entity.setCreate_time(new Date());
 							entity.setP_sell_id("null");
 							entity.setP_buy_id(buy.getId());
@@ -163,7 +160,7 @@ public class Match implements Serializable, IMatch {
 				continue;
 			}
 			entity = new BuySell();
-			entity.setId(UUID.randomUUID().toString().replace("-", ""));
+			entity.setId(genId());
 			entity.setCreate_time(new Date());
 			entity.setP_sell_id(buySell.getP_sell_id());
 			entity.setP_buy_id(buy.getId());
@@ -212,7 +209,7 @@ public class Match implements Serializable, IMatch {
 				continue;
 			}
 			entity = new BuySell();
-			entity.setId(UUID.randomUUID().toString().replace("-", ""));
+			entity.setId(genId());
 			entity.setCreate_time(new Date());
 			entity.setP_sell_id(sell.getId());
 			entity.setP_buy_id(buySell.getP_buy_id());
@@ -250,5 +247,24 @@ public class Match implements Serializable, IMatch {
 		}
 		buySell = null;
 	}
-
+	/**
+	 * 生成主键
+	 *
+	 * @return
+	 */
+	private String genId() {
+		String id = null;
+		BuySell buySell = null;
+		do {
+			// 算法
+			int i = (int) ((Math.random() * 9 + 1) * 10000000);
+			id = String.valueOf(i);
+			if (9 < id.length()) {
+				id.substring(0, 9);
+			}
+			// END
+			buySell = buySellService.selectByKey(id);
+		} while (null != buySell);
+		return id;
+	}
 }
