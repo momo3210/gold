@@ -12,9 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Buy;
 import com.momohelp.model.Notice;
+import com.momohelp.model.Prize;
 import com.momohelp.model.Sell;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.NoticeService;
+import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
 
 /**
@@ -33,6 +35,9 @@ public class DefaultController {
 
 	@Autowired
 	private SellService sellService;
+
+	@Autowired
+	private PrizeService prizeService;
 
 	/**
 	 * 首页
@@ -60,6 +65,21 @@ public class DefaultController {
 		List<Sell> list_sell = sellService.findUnFinishDeal(session
 				.getAttribute("session.user.id").toString());
 		result.addObject("data_list_sell", list_sell);
+
+		List<Prize> dongjieliebiao = prizeService.findByUserId(session
+				.getAttribute("session.user.id").toString());
+
+		double d = 0;
+
+		for (int i = 0; i < dongjieliebiao.size(); i++) {
+			Prize item = dongjieliebiao.get(i);
+
+			if (item.getFlag() == 0) {
+				d += item.getMoney();
+			}
+		}
+
+		result.addObject("data_dj", d);
 
 		return result;
 	}
