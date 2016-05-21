@@ -239,9 +239,42 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		/***** 开始保存数据 *****/
 
 		saveMaterialRecord(farm, user);
+		saveBuy2(farm);
 		saveBuy(farm);
 		save(farm);
 		return null;
+	}
+
+	/**
+	 * 保存预付款 10%
+	 *
+	 * @param farm
+	 */
+	private void saveBuy2(Farm farm) {
+		Buy buy = new Buy();
+		buy.setNum_buy(farm.getNum_buy() - (farm.getNum_buy() / 10));
+		buy.setW_farm_chick_id(farm.getId());
+		buy.setCreate_time(farm.getCreate_time());
+		buy.setUser_id(farm.getUser_id());
+		buy.setTime_deal(null);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(farm.getCreate_time());
+		c.add(Calendar.DAY_OF_MONTH, 7);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		buy.setCalc_time(c.getTime());
+
+		// Calendar c = Calendar.getInstance();
+		// c.setTime(farm.getCreate_time());
+		// // 出局前排单 24 小时，出局后排单 48 小时
+		// c.add(Calendar.HOUR_OF_DAY, 24 * (1 == farm.getFlag_out_self() ? 1 :
+		// 2));
+		// buy.setCalc_time(c.getTime());
+
+		buyService.save(buy);
 	}
 
 	/**
