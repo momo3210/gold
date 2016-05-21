@@ -107,14 +107,14 @@ public class Base implements Ibase, Serializable {
 					Farm beforeFarm = farmService.selectByKey(farm.getPid());
 					Example example = new Example(Prize.class);
 					example.createCriteria()
-							.andCondition("relation_id", beforeFarm.getId())
-							.andCondition("user_id", leader.getId());
+							.andEqualTo("relation_id", beforeFarm.getId())
+							.andEqualTo("user_id", leader.getId());
 					// 获取当前用户排单上一单 领导拿到的提成--推荐奖
 					double money = prizeService.selectByExample(example).get(0)
 							.getMoney();//
 					// 获得当前用户的上一单饲养成年鸡利息
 					Example example2 = new Example(FarmFeed.class);
-					example2.createCriteria().andCondition("w_farm_chick_id",
+					example2.createCriteria().andEqualTo("w_farm_chick_id",
 							beforeFarm.getId());
 					List<FarmFeed> farmFeeds = farmFeedService
 							.selectByExample(example2);

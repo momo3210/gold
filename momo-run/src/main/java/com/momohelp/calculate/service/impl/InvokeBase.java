@@ -27,20 +27,27 @@ import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.UserService;
+
 @Service
 public class InvokeBase implements Serializable, Ibase {
 
 	private static final long serialVersionUID = 1701780579395849614L;
 
-	private List<Farm> farms=null;
-	
-	public InvokeBase(Farm farm){
-		this.farms=new ArrayList<Farm>(8);
+	private List<Farm> farms = null;
+
+	public InvokeBase() {
+		this.farms = new ArrayList<Farm>(8);
+	}
+
+	public InvokeBase(Farm farm) {
+		this.farms = new ArrayList<Farm>(8);
 		this.farms.add(farm);
 	}
-	public InvokeBase(List<Farm> farms){
-		this.farms=farms;
+
+	public InvokeBase(List<Farm> farms) {
+		this.farms = farms;
 	}
+
 	private static Logger log = Logger.getLogger(Base.class);
 
 	@Resource
@@ -115,14 +122,14 @@ public class InvokeBase implements Serializable, Ibase {
 					Farm beforeFarm = farmService.selectByKey(farm.getPid());
 					Example example = new Example(Prize.class);
 					example.createCriteria()
-							.andCondition("relation_id", beforeFarm.getId())
-							.andCondition("user_id", leader.getId());
+							.andEqualTo("relation_id", beforeFarm.getId())
+							.andEqualTo("user_id", leader.getId());
 					// 获取当前用户排单上一单 领导拿到的提成--推荐奖
 					double money = prizeService.selectByExample(example).get(0)
 							.getMoney();//
 					// 获得当前用户的上一单饲养成年鸡利息
 					Example example2 = new Example(FarmFeed.class);
-					example2.createCriteria().andCondition("w_farm_chick_id",
+					example2.createCriteria().andEqualTo("w_farm_chick_id",
 							beforeFarm.getId());
 					List<FarmFeed> farmFeeds = farmFeedService
 							.selectByExample(example2);
@@ -291,6 +298,5 @@ public class InvokeBase implements Serializable, Ibase {
 		base.append(getCoefficientNO(generation));
 		return base.toString();
 	}
-
 
 }

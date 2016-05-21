@@ -237,6 +237,23 @@
 
 
 
+	<bean id="myStaticQtzJobMethod"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="myStatic" />
+		</property>
+		<property name="concurrent" value="false" />
+		<property name="targetMethod">  <!-- 要执行的方法名称 -->
+			<value>calculation</value>
+		</property>
+	</bean>
+
+	<!-- ======================== 调度触发器 ======================== -->
+	<bean id="myStaticCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
+		<property name="cronExpression" value="0/27 * * * * ?"></property>
+	</bean>
 
 
 
@@ -263,6 +280,7 @@
 				<ref bean="conversionCronTriggerBean"/>
 				<ref bean="forceLogoutCronTriggerBean"/>
 				<ref bean="matchCronTriggerBean" />
+				<ref bean="myStaticCronTriggerBean"/>
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />
