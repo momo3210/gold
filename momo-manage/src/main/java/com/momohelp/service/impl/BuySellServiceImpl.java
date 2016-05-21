@@ -181,6 +181,8 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 				_farm.setId(farm.getId());
 				_farm.setNum_deal(farm.getNum_buy());
 				_farm.setTime_deal(new Date());
+				// 划拨奖金
+				_farm.setNum_reward(farm.getNum_buy() / 100);
 				farmService.updateNotNull(_farm);
 			}
 
