@@ -80,7 +80,7 @@
 	<!-- <aop:aspectj-autoproxy/> -->
 	<aop:config>
 		<aop:pointcut id="appService"
-			expression="execution(* com.momohelp.service..*Service*.*(..))" />
+			expression="execution(public *  com.momohelp.calculate.service.impl.*.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="appService" />
 	</aop:config>
 
@@ -254,15 +254,6 @@
 		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
 		<property name="cronExpression" value="0/27 * * * * ?"></property>
 	</bean>
-
-
-
-
-
-
-
-
-
 
 
 
