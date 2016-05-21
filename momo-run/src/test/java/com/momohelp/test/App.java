@@ -1,21 +1,21 @@
-package com.momohelp.calculate.service;
+package com.momohelp.test;
 
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 public class App {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
-		AbstractApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		SchedulerFactoryBean bean=null;
-		try {
-			 bean=context.getBean(SchedulerFactoryBean.class);
-			bean.start();
-		} catch (Exception e) {
-			bean.stop();
-			context.close();
-		}
+//		AbstractApplicationContext context = 
+		new ClassPathXmlApplicationContext("applicationContext.xml");
+//		SchedulerFactoryBean bean=null;
+//		try {
+//			 bean=context.getBean(SchedulerFactoryBean.class);
+//			bean.start();
+//		} catch (Exception e) {
+//			bean.stop();
+//			context.close();
+//		}
 		
 		//ICalculation calculation=context.getBean(ICalculation.class);
 		//calculation.automatch();
