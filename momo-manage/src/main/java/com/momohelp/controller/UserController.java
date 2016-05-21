@@ -282,6 +282,39 @@ public class UserController {
 	/**
 	 * 确认打款
 	 *
+	 * @param session
+	 * @param buySell
+	 * @param verifyCode
+	 * @param user_pass_safe
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/user/confirm" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_confirm(HttpSession session, BuySell buySell,
+			@RequestParam(required = true) String verifyCode,
+			@RequestParam(required = true) String user_pass_safe) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
+			return result;
+		}
+
+		String[] checkSafe = checkSafe(session, user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 确认打款
+	 *
 	 * @param map
 	 * @param session
 	 * @param id
@@ -317,6 +350,39 @@ public class UserController {
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));
 		return "i/user/1.0.1/confirm";
+	}
+
+	/**
+	 * 举报
+	 *
+	 * @param session
+	 * @param buySell
+	 * @param verifyCode
+	 * @param user_pass_safe
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/user/tip_off" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_tip_off(HttpSession session, BuySell buySell,
+			@RequestParam(required = true) String verifyCode,
+			@RequestParam(required = true) String user_pass_safe) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] verify = verify(session, verifyCode);
+		if (null != verify) {
+			result.put("msg", verify);
+			return result;
+		}
+
+		String[] checkSafe = checkSafe(session, user_pass_safe);
+		if (null != checkSafe) {
+			result.put("msg", checkSafe);
+			return result;
+		} // IF
+
+		result.put("success", true);
+		return result;
 	}
 
 	/**
