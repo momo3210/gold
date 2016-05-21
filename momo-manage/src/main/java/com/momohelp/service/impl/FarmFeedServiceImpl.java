@@ -127,6 +127,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		farmFeed.setOrder_feed((null == last_farmfeed) ? 1 : (1 + last_farmfeed
 				.getOrder_feed()));
 
+		// 1饲料喂100只鸡
 		// 计算利息 START 0.5% or 0.9%
 		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
 				* (7 > farmFeed.getOrder_feed() ? 0.7 : 1.2));
