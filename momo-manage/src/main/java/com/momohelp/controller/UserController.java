@@ -293,6 +293,10 @@ public class UserController {
 
 		BuySell buySell = buySellService.selectByKey(id);
 
+		if (null == buySell) {
+			return "redirect:/";
+		}
+
 		String user_id = session.getAttribute("session.user.id").toString();
 
 		// 判断是买盘
@@ -328,8 +332,30 @@ public class UserController {
 	public String _i_tip_offUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = true) String id,
 			@RequestParam(required = true) String type) {
+
+		BuySell buySell = buySellService.selectByKey(id);
+
+		if (null == buySell) {
+			return "redirect:/";
+		}
+
+		String user_id = session.getAttribute("session.user.id").toString();
+
+		// 判断是买盘
+		if (user_id.equals(buySell.getP_buy_user_id())) {
+			map.put("nav_choose", ",05,0503,");
+		} else {
+			// 判断是卖盘
+			if (user_id.equals(buySell.getP_sell_user_id())) {
+				map.put("nav_choose", ",05,0504,");
+			} else {
+				return "redirect:/";
+			}
+		}
+
+		map.put("data_buySell", buySell);
+
 		// TODO
-		map.put("nav_choose", ("1".equals(type) ? ",05,0503," : ",05,0504,"));
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));
 		return "i/user/1.0.1/tip_off";
