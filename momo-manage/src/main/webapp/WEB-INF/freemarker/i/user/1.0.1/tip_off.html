@@ -125,45 +125,21 @@
 													<input type="hidden" name='token' value='${(data_token)!}' />
 													<input type="hidden" name='id' value='${(data_buySell.id)!}' />
 
-													<#if (data_buySell.p_buy_user_img)?? && '' != (data_buySell.p_buy_user_img)!>
 													<div class="control-group">
-														<label class="control-label">确认图片</label>
+														<label class="control-label">举报内容</label>
 
 														<div class="controls">
-															<img style='width:300px;height:200px' src='${(data_buySell.p_buy_user_img)!}' />
+															<textarea class="span6" name='tip_off_content'>${(data_buySell.tip_off_content)!}</textarea>
 														</div>
 													</div>
-													</#if>
 
-													<#if (data_buySell.p_buy_user_content)?? && '' != (data_buySell.p_buy_user_content)!>
-													<div class="control-group">
-														<label class="control-label">确认内容</label>
-
-														<div class="controls">
-															<textarea class="span6" disabled>${(data_buySell.p_buy_user_content)!}</textarea>
-														</div>
-													</div>
-													</#if>
-
-													<#if (data_buySell.tip_off_user_id)?? && '' != (data_buySell.tip_off_user_id)!>
-													<div class="control-group">
-														<label class="control-label">举报人</label>
-
-														<div class="controls">
-															<input type="text" class='input-small' value="M${(data_buySell.tip_off_user_id)!}" disabled />
-														</div>
-													</div>
-													</#if>
-
-													<#if (data_buySell.tip_off_content)?? && '' != (data_buySell.tip_off_content)!>
-													<div class="control-group">
+													<!-- <div class="control-group">
 														<label class="control-label">处理结果</label>
 
 														<div class="controls">
-															<textarea class="span6" disabled>${(data_buySell.tip_off_content)!}</textarea>
+															<textarea class="span6">${(data_buySell.tip_off_result)!}</textarea>
 														</div>
-													</div>
-													</#if>
+													</div> -->
 
 													<#if (data_buySell.tip_off_user_id)?? && '' != (data_buySell.tip_off_user_id)!>
 													<#else>
@@ -242,7 +218,7 @@
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.reload();
+						location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 					},
 					error : function() {
 						alert(arguments[2]);

@@ -388,8 +388,11 @@ public class UserController {
 			return result;
 		} // IF
 
-		String[] tip_off = buySellService.tip_off(buySell, session
-				.getAttribute("session.user.id").toString());
+		// 举报人id
+		buySell.setTip_off_user_id(session.getAttribute("session.user.id")
+				.toString());
+
+		String[] tip_off = buySellService.tip_off(buySell);
 		if (null != tip_off) {
 			result.put("msg", checkSafe);
 			return result;

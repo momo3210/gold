@@ -2,6 +2,8 @@ package com.momohelp.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.momohelp.model.BuySell;
 
 /**
@@ -34,14 +36,15 @@ public interface BuySellService extends IService<BuySell> {
 	 * @param user_id
 	 * @return
 	 */
+	@Transactional
 	String[] confirm(BuySell buySell, String user_id);
 
 	/**
 	 * 举报（买家确认打款，卖家确认打款）
 	 *
 	 * @param buySell
-	 * @param user_id
 	 * @return
 	 */
-	String[] tip_off(BuySell buySell, String user_id);
+	@Transactional
+	String[] tip_off(BuySell buySell);
 }

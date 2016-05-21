@@ -71,10 +71,10 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		BuySell _buySell = new BuySell();
 		_buySell.setId(buySell.getId());
 
-		// 买家帐户判断
+		// 买家确认
 		if (user_id.equals(__buySell.getP_buy_user_id())) {
 
-			if (0 != buySell.getStatus()) {
+			if (0 != __buySell.getStatus()) {
 				return new String[] { "非法操作" };
 			}
 
@@ -88,7 +88,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 			_buySell.setStatus(1);
 		} else if (user_id.equals(__buySell.getP_sell_user_id())) {
 
-			if (1 != buySell.getStatus()) {
+			if (1 != __buySell.getStatus()) {
 				return new String[] { "非法操作" };
 			}
 
@@ -106,11 +106,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 	 * 买卖双方都可以举报
 	 */
 	@Override
-	public String[] tip_off(BuySell buySell, String user_id) {
-
-		if (2 == buySell.getStatus()) {
-			return new String[] { "不能举报" };
-		}
+	public String[] tip_off(BuySell buySell) {
 
 		BuySell __buySell = selectByKey(buySell.getId());
 
@@ -118,13 +114,17 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 			return new String[] { "非法操作" };
 		}
 
-		if (null != __buySell.getTip_off_user_id()) {
-			return new String[] { "已经举报过了" };
+		switch (__buySell.getStatus()) {
+		case 0:
+		case 1:
+			break;
+		default:
+			return new String[] { "不能举报" };
 		}
 
 		BuySell _buySell = new BuySell();
 		_buySell.setId(buySell.getId());
-		_buySell.setTip_off_user_id(user_id);
+		_buySell.setTip_off_user_id(buySell.getTip_off_user_id());
 		_buySell.setTip_off_time(new Date());
 		_buySell.setStatus(3);
 		_buySell.setTip_off_content(buySell.getTip_off_content());

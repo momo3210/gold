@@ -96,7 +96,7 @@ public class BuySell implements Serializable {
 	/**
 	 * 举报内容
 	 */
-	private Date tip_off_content;
+	private String tip_off_content;
 
 	public Date getTip_off_time() {
 		return tip_off_time;
@@ -106,11 +106,11 @@ public class BuySell implements Serializable {
 		this.tip_off_time = tip_off_time;
 	}
 
-	public Date getTip_off_content() {
+	public String getTip_off_content() {
 		return tip_off_content;
 	}
 
-	public void setTip_off_content(Date tip_off_content) {
+	public void setTip_off_content(String tip_off_content) {
 		this.tip_off_content = tip_off_content;
 	}
 

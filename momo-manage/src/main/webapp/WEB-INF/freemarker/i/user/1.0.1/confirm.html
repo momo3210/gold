@@ -104,12 +104,11 @@
 										</ul>
 
 										<div class="tab-content">
-											<#if (data_buySell.p_buy_user_content)?? && '' != (data_buySell.p_buy_user_content)!>
-											<#else>
+											<#if (data_buySell.status)?? && 0 == (data_buySell.status)!>
 											<div class="tab-pane in active">
 												<form class="form-horizontal" id='upfrm'>
 													<div class="control-group">
-														<label class="control-label" for="upfrm_p_buy_user_img">（参加者）上传图片</label>
+														<label class="control-label" for="upfrm_p_buy_user_img">打款图片</label>
 
 														<div class="controls">
 															<input class="span6" multiple="" type="file" id="upfrm_p_buy_user_img" accept='.jpg' />
@@ -135,9 +134,9 @@
 													<input type="hidden" name='id' value='${(data_buySell.id)!}' />
 													<input type="hidden" id='frm_confirm_img' name='confirm_img' />
 
-													<#if (data_buySell.p_buy_user_content)?? && '' != (data_buySell.p_buy_user_content)!>
+													<#if (data_buySell.status)?? && 1 == (data_buySell.status)!>
 													<div class="control-group">
-														<label class="control-label">（参加者）确认图片</label>
+														<label class="control-label">打款图片</label>
 
 														<div class="controls">
 															<img style='width:300px;height:200px' src='${(data_buySell.p_buy_user_img)!}' />
@@ -146,15 +145,13 @@
 													</#if>
 
 													<div class="control-group">
-														<label class="control-label" for="frm_p_buy_user_content">（参加者）确认内容</label>
+														<label class="control-label" for="frm_p_buy_user_content">确认内容</label>
 
 														<div class="controls">
-															<textarea class="span6" id="frm_p_buy_user_content" name='p_buy_user_content'>${(data_buySell.p_buy_user_content)!}</textarea>
+															<textarea class="span6" id="frm_p_buy_user_content" name='p_buy_user_content'<#if 1 == (data_buySell.status)!> disabled</#if>>${(data_buySell.p_buy_user_content)!}</textarea>
 														</div>
 													</div>
 
-													<#if (data_buySell.p_buy_user_content)?? && '' != (data_buySell.p_buy_user_content)!>
-													<#else>
 													<div class="control-group">
 														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
@@ -184,7 +181,6 @@
 															重置
 														</button>
 													</div>
-													</#if>
 												</form>
 											</div>
 										</div>
@@ -262,7 +258,7 @@
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.reload();
+						location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 					},
 					error : function() {
 						alert(arguments[2]);
