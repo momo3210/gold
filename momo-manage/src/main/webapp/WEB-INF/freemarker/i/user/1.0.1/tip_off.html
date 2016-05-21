@@ -91,13 +91,13 @@
 						<div class="span12">
 							<!--PAGE CONTENT BEGINS-->
 
-							<div class="alert alert-block alert-error">
-								<!-- <button type="button" class="close" data-dismiss="alert">
+							<#-- <!-- <div class="alert alert-block alert-error">
+								<button type="button" class="close" data-dismiss="alert">
 									<i class="icon-remove"></i>
-								</button> -->
+								</button>
 
 								<strong>
-									<!-- <i class="icon-remove"></i> -->
+									<i class="icon-remove"></i>
 									系统提示：
 								</strong>
 								<ol>
@@ -105,15 +105,6 @@
 									<li>描述信息描述信息描述信息描述信息描述信息</li>
 									<li>描述信息描述信息描述信息描述信息描述信息</li>
 								</ol>
-							</div>
-
-							<!-- <div class="row-fluid">
-								<div class="span12">
-									<ul>
-										<li>M0级别会员可以选择100-1000的M包，M3级别只能选择2000-5000的M包，M4及以上级别只能选择3000-5000的M包。</li>
-										<li>普通通道一天可挂单一次。</li>
-									</ul>
-								</div>
 							</div> -->
 
 							<div class="row-fluid">
@@ -133,13 +124,49 @@
 												<form class="form-horizontal" id='frm'>
 													<input type="hidden" name='token' value='${(data_token)!}' />
 													<input type="hidden" name='id' value='${(data_buySell.id)!}' />
+
+													<#if (data_buySell.p_buy_user_img)?? && '' != (data_buySell.p_buy_user_img)!>
 													<div class="control-group">
-														<label class="control-label" for="frm_tip_off_content">举报内容</label>
+														<label class="control-label">确认图片</label>
 
 														<div class="controls">
-															<textarea class="span6" id="frm_tip_off_content" name='tip_off_content'></textarea>
+															<img style='width:300px;height:200px' src='${(data_buySell.p_buy_user_img)!}' />
 														</div>
 													</div>
+													</#if>
+
+													<#if (data_buySell.p_buy_user_content)?? && '' != (data_buySell.p_buy_user_content)!>
+													<div class="control-group">
+														<label class="control-label">确认内容</label>
+
+														<div class="controls">
+															<textarea class="span6" disabled>${(data_buySell.p_buy_user_content)!}</textarea>
+														</div>
+													</div>
+													</#if>
+
+													<#if (data_buySell.tip_off_user_id)?? && '' != (data_buySell.tip_off_user_id)!>
+													<div class="control-group">
+														<label class="control-label">举报人</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' value="M${(data_buySell.tip_off_user_id)!}" disabled />
+														</div>
+													</div>
+													</#if>
+
+													<#if (data_buySell.tip_off_content)?? && '' != (data_buySell.tip_off_content)!>
+													<div class="control-group">
+														<label class="control-label">处理结果</label>
+
+														<div class="controls">
+															<textarea class="span6" disabled>${(data_buySell.tip_off_content)!}</textarea>
+														</div>
+													</div>
+													</#if>
+
+													<#if (data_buySell.tip_off_user_id)?? && '' != (data_buySell.tip_off_user_id)!>
+													<#else>
 													<div class="control-group">
 														<label class="control-label" for="frm_user_pass_safe">安全密码</label>
 
@@ -155,21 +182,7 @@
 															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
 														</div>
 													</div>
-													<#-- <!-- <div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">手机号码</label>
 
-														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" value="18530053050" disabled />
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">短信验证码</label>
-
-														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
-															<button class="btn btn-mini btn-danger">获取短信验证码</button>
-														</div>
-													</div> -->
 													<div class="form-actions">
 														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
@@ -182,6 +195,7 @@
 															重置
 														</button>
 													</div>
+													</#if>
 												</form>
 											</div>
 										</div>

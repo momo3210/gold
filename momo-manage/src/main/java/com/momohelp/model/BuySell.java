@@ -58,6 +58,58 @@ public class BuySell implements Serializable {
 	private String p_buy_user_id;
 	private String p_sell_user_id;
 
+	/**
+	 * 买家上传的图片（只能上传一张）
+	 */
+	private String p_buy_user_img;
+
+	/**
+	 * 卖家的确认内容
+	 */
+	private String p_buy_user_content;
+
+	/**
+	 * 举报人id
+	 */
+	private String tip_off_user_id;
+
+	/**
+	 * 举报处理结果的内容（有则表示管理员已经处理过这条信息）
+	 */
+	private String tip_off_content;
+
+	public String getP_buy_user_img() {
+		return p_buy_user_img;
+	}
+
+	public void setP_buy_user_img(String p_buy_user_img) {
+		this.p_buy_user_img = p_buy_user_img;
+	}
+
+	public String getP_buy_user_content() {
+		return p_buy_user_content;
+	}
+
+	public void setP_buy_user_content(String p_buy_user_content) {
+		this.p_buy_user_content = p_buy_user_content;
+	}
+
+	public String getTip_off_user_id() {
+		return tip_off_user_id;
+	}
+
+	public void setTip_off_user_id(String tip_off_user_id) {
+		this.tip_off_user_id = tip_off_user_id;
+	}
+
+	public String getTip_off_content() {
+		return tip_off_content;
+	}
+
+	public void setTip_off_content(String tip_off_content) {
+		this.tip_off_content = tip_off_content;
+	}
+
 	@Transient
 	private User p_buy_user;
 	@Transient

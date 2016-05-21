@@ -330,8 +330,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/tip_off" }, method = RequestMethod.GET)
 	public String _i_tip_offUI(Map<String, Object> map, HttpSession session,
-			@RequestParam(required = true) String id,
-			@RequestParam(required = true) String type) {
+			@RequestParam(required = true) String id) {
 
 		BuySell buySell = buySellService.selectByKey(id);
 
