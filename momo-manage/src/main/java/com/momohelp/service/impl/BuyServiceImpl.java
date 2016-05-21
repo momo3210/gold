@@ -39,7 +39,6 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
 	@Override
 	public int updateNotNull(Buy entity) {
-		entity.setId(null);
 		return super.updateNotNull(entity);
 	}
 
@@ -110,5 +109,16 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 		}
 
 		return list_buy;
+	}
+
+	@Override
+	public List<Buy> findByFarmId(String farm_id) {
+		Example example = new Example(Buy.class);
+		// TODO
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("w_farm_chick_id", farm_id);
+
+		List<Buy> list = selectByExample(example);
+		return list;
 	}
 }

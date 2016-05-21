@@ -48,7 +48,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 	@Override
 	public int updateNotNull(Sell entity) {
-		entity.setId(null);
 		return super.updateNotNull(entity);
 	}
 

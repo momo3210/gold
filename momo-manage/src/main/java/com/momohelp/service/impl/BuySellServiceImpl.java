@@ -3,12 +3,19 @@ package com.momohelp.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
+import com.momohelp.model.Farm;
+import com.momohelp.model.Sell;
 import com.momohelp.service.BuySellService;
+import com.momohelp.service.BuyService;
+import com.momohelp.service.FarmService;
+import com.momohelp.service.SellService;
 
 /**
  *
@@ -18,6 +25,15 @@ import com.momohelp.service.BuySellService;
 @Service("buySellService")
 public class BuySellServiceImpl extends BaseService<BuySell> implements
 		BuySellService {
+
+	@Autowired
+	private BuyService buyService;
+
+	@Autowired
+	private SellService sellService;
+
+	@Autowired
+	private FarmService farmService;
 
 	/**
 	 * 卖盘
@@ -92,6 +108,83 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 				return new String[] { "非法操作" };
 			}
 
+			// 查当前笔是否是此次买盘的最后一笔或买入鸡苗的最后一笔（相对于买家）
+			// 查当前笔是否是卖家的最后一笔（相对于卖家）
+			// 买家更新两个表，卖家更新一个表的 成交时间
+
+			// 买家
+			Buy buy = buyService.selectByKey(__buySell.getP_buy_id());
+
+			List<BuySell> list_buy = findByBuyId(__buySell.getP_buy_id());
+
+			int count_buySell = 0;
+
+			for (int i = 0; i < list_buy.size(); i++) {
+				BuySell item = list_buy.get(i);
+				if (2 == item.getStatus()) {
+					count_buySell += item.getNum_matching();
+				}
+			}
+
+			if (buy.getNum_buy() == (count_buySell + __buySell
+					.getNum_matching())) {
+				Buy _buy = new Buy();
+				_buy.setId(buy.getId());
+				_buy.setTime_deal(new Date());
+				buyService.updateNotNull(_buy);
+			}
+
+			// 卖家
+			Sell sell = sellService.selectByKey(__buySell.getP_sell_id());
+
+			List<BuySell> list_sell = findBySellId(__buySell.getP_sell_id());
+
+			int count_sell = 0;
+
+			for (int i = 0; i < list_sell.size(); i++) {
+				BuySell item = list_sell.get(i);
+				if (2 == item.getStatus()) {
+					count_sell += item.getNum_matching();
+				}
+			}
+
+			if (sell.getNum_sell() == (count_sell + __buySell.getNum_matching())) {
+				Sell _sell = new Sell();
+				_sell.setId(sell.getId());
+				_sell.setTime_deal(new Date());
+				sellService.updateNotNull(_sell);
+			}
+
+			// 更新Farm表
+			Farm farm = farmService.selectByKey(buy.getW_farm_chick_id());
+
+			List<Buy> list = buyService.findByFarmId(farm.getId());
+
+			int count_buybuy = 0;
+
+			for (int j = 0; j < list.size(); j++) {
+				Buy buy2 = list.get(j);
+
+				List<BuySell> list2 = findByBuyId(buy2.getId());
+
+				for (int i = 0; i < list2.size(); i++) {
+					BuySell item = list2.get(i);
+					if (2 == item.getStatus()) {
+						count_buybuy += item.getNum_matching();
+					}
+				}
+			}
+
+			if (farm.getNum_buy() == (count_buybuy + __buySell
+					.getNum_matching())) {
+				Farm _farm = new Farm();
+				_farm.setId(farm.getId());
+				_farm.setNum_deal(farm.getNum_buy());
+				_farm.setTime_deal(new Date());
+				farmService.updateNotNull(_farm);
+			}
+
+			// TODO
 			_buySell.setP_sell_user_time(new Date());
 			_buySell.setStatus(2);
 		} else {
