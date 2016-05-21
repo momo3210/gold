@@ -2,11 +2,8 @@ package com.momohelp.test;
 
 import java.util.Calendar;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 public class App {
 
-	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
 //		AbstractApplicationContext context = 
 //		new ClassPathXmlApplicationContext("applicationContext.xml");
