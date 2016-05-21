@@ -64,9 +64,19 @@ public class BuySell implements Serializable {
 	private String p_buy_user_img;
 
 	/**
-	 * 卖家的确认内容
+	 * 买家的确认内容
 	 */
 	private String p_buy_user_content;
+
+	/**
+	 * 买家的确认时间
+	 */
+	private Date p_buy_user_time;
+
+	/**
+	 * 卖家的确认时间
+	 */
+	private Date p_sell_user_time;
 
 	/**
 	 * 举报人id
@@ -77,6 +87,35 @@ public class BuySell implements Serializable {
 	 * 举报处理结果的内容（有则表示管理员已经处理过这条信息）
 	 */
 	private String tip_off_content;
+
+	/**
+	 * 举报时间
+	 */
+	private Date tip_off_user_time;
+
+	public Date getP_sell_user_time() {
+		return p_sell_user_time;
+	}
+
+	public void setP_sell_user_time(Date p_sell_user_time) {
+		this.p_sell_user_time = p_sell_user_time;
+	}
+
+	public Date getP_buy_user_time() {
+		return p_buy_user_time;
+	}
+
+	public void setP_buy_user_time(Date p_buy_user_time) {
+		this.p_buy_user_time = p_buy_user_time;
+	}
+
+	public Date getTip_off_user_time() {
+		return tip_off_user_time;
+	}
+
+	public void setTip_off_user_time(Date tip_off_user_time) {
+		this.tip_off_user_time = tip_off_user_time;
+	}
 
 	public String getP_buy_user_img() {
 		return p_buy_user_img;

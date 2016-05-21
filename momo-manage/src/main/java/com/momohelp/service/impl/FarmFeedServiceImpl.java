@@ -129,7 +129,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 
 		// 计算利息 START 0.5% or 0.9%
 		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
-				* (7 > farmFeed.getOrder_feed() ? 0.005 : 0.009));
+				* (7 > farmFeed.getOrder_feed() ? 0.7 : 1.2));
 
 		save(farmFeed);
 		return null;

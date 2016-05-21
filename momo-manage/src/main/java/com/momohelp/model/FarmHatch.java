@@ -50,6 +50,19 @@ public class FarmHatch implements Serializable {
 	 */
 	private Integer flag_is_last;
 
+	/**
+	 * 是否计算过 0未计算 1已计算
+	 */
+	private Integer flag_calc_bonus;
+
+	public Integer getFlag_calc_bonus() {
+		return flag_calc_bonus;
+	}
+
+	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
+		this.flag_calc_bonus = flag_calc_bonus;
+	}
+
 	public Date getFreeze_time() {
 		return freeze_time;
 	}
