@@ -109,7 +109,7 @@
 											<div class="tab-pane in active">
 												<form class="form-horizontal" id='upfrm'>
 													<div class="control-group">
-														<label class="control-label" for="upfrm_p_buy_user_img">上传图片</label>
+														<label class="control-label" for="upfrm_p_buy_user_img">（参加者）上传图片</label>
 
 														<div class="controls">
 															<input class="span6" multiple="" type="file" id="upfrm_p_buy_user_img" accept='.jpg' />
@@ -137,7 +137,7 @@
 
 													<#if (data_buySell.p_buy_user_content)?? && '' != (data_buySell.p_buy_user_content)!>
 													<div class="control-group">
-														<label class="control-label">确认图片</label>
+														<label class="control-label">（参加者）确认图片</label>
 
 														<div class="controls">
 															<img style='width:300px;height:200px' src='${(data_buySell.p_buy_user_img)!}' />
@@ -146,7 +146,7 @@
 													</#if>
 
 													<div class="control-group">
-														<label class="control-label" for="frm_p_buy_user_content">确认内容</label>
+														<label class="control-label" for="frm_p_buy_user_content">（参加者）确认内容</label>
 
 														<div class="controls">
 															<textarea class="span6" id="frm_p_buy_user_content" name='p_buy_user_content'>${(data_buySell.p_buy_user_content)!}</textarea>
@@ -162,6 +162,7 @@
 															<input type="password" class='input-small' id="frm_user_pass_safe" name='user_pass_safe' placeholder="安全密码" />
 														</div>
 													</div>
+
 													<div class="control-group">
 														<label class="control-label" for="frm_verifyCode">图形验证码</label>
 
@@ -170,21 +171,6 @@
 															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
 														</div>
 													</div>
-													<#-- <!-- <div class="control-group">
-														<label class="control-label" for="editFrm_OLD_PASS">手机号码</label>
-
-														<div class="controls">
-															<input type="text" class='input-large' id="editFrm_OLD_PASS" value="18530053050" disabled />
-														</div>
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="editFrm_NEW_PASS_2">短信验证码</label>
-
-														<div class="controls">
-															<input type="text" class='input-small' id="editFrm_NEW_PASS_2" placeholder="短信验证码" />
-															<button class="btn btn-mini btn-danger">获取短信验证码</button>
-														</div>
-													</div> -->
 
 													<div class="form-actions">
 														<button class="btn btn-info" type="button" id='btn_submit'>

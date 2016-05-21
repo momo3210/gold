@@ -36,6 +36,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 
 	@Override
 	public int save(FarmHatch entity) {
+		entity.setFlag_calc_bonus(0);
 		return super.save(entity);
 	}
 
@@ -65,10 +66,16 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 			return new String[] { "孵化数量必须大于 0" };
 		}
 
+		// 100的倍数
+		if (0 != farmHatch.getNum_hatch() % 100) {
+			return new String[] { "请输入规定的数量" };
+		}
+
+		// 查找鸡苗批次
 		Farm farm = farmService.selectByKey(farmHatch.getW_farm_chick_id());
 
 		if (null == farm) {
-			return new String[] { "不能孵化" };
+			return new String[] { "数据查询异常" };
 		}
 
 		if (!farmHatch.getUser_id().equals(farm.getUser_id())) {
