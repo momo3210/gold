@@ -26,4 +26,22 @@ public interface BuySellService extends IService<BuySell> {
 	 * @return
 	 */
 	List<BuySell> findByBuyId(String buy_id);
+
+	/**
+	 * 确认打款（买家确认打款，卖家确认打款）
+	 *
+	 * @param buySell
+	 * @param user_id
+	 * @return
+	 */
+	String[] confirm(BuySell buySell, String user_id);
+
+	/**
+	 * 举报（买家确认打款，卖家确认打款）
+	 *
+	 * @param buySell
+	 * @param user_id
+	 * @return
+	 */
+	String[] tip_off(BuySell buySell, String user_id);
 }

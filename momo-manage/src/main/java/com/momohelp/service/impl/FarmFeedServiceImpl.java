@@ -72,6 +72,11 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			return new String[] { "喂养数量必须大于 0" };
 		}
 
+		// 喂的时候也要喂100的倍数
+		if (0 != farmFeed.getNum_feed() % 100) {
+			return new String[] { "请输入规定的数量" };
+		}
+
 		// 实时信息
 		Farm farm = farmService.selectByKey(farmFeed.getW_farm_chick_id());
 
@@ -130,7 +135,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		// 1饲料喂100只鸡
 		// 计算利息 START 0.5% or 0.9%
 		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
-				* (7 > farmFeed.getOrder_feed() ? 0.7 : 1.2));
+				* (8 > farmFeed.getOrder_feed() ? 0.7 : 1.2));
 
 		save(farmFeed);
 		return null;
@@ -147,12 +152,12 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(farmFeed.getUser_id());
 
-		materialRecord.setNum_use(Double.valueOf(farmFeed.getNum_feed()));
+		materialRecord.setNum_use(Double.valueOf(farmFeed.getNum_feed() / 100));
 
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(2);
 
-		materialRecord.setComment("喂养鸡苗 -" + materialRecord.getNum_use());
+		materialRecord.setComment("喂养鸡苗 -" + farmFeed.getNum_feed());
 
 		materialRecord.setTrans_user_id(null);
 

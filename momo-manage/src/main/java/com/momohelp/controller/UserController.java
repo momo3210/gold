@@ -308,48 +308,12 @@ public class UserController {
 			return result;
 		} // IF
 
-		BuySell __buySell = buySellService.selectByKey(buySell.getId());
-		if (null == __buySell) {
-			result.put("msg", new String[] { "非法操作" });
+		String[] confirm = buySellService.confirm(buySell, session
+				.getAttribute("session.user.id").toString());
+		if (null != confirm) {
+			result.put("msg", checkSafe);
 			return result;
 		}
-
-		String user_id = session.getAttribute("session.user.id").toString();
-
-		BuySell _buySell = new BuySell();
-		_buySell.setId(buySell.getId());
-
-		// 买家帐户判断
-		if (user_id.equals(__buySell.getP_buy_user_id())) {
-
-			if (null != __buySell.getP_buy_user_time()) {
-				result.put("msg", new String[] { "已经确认打款过了" });
-				return result;
-			}
-
-			_buySell.setP_buy_user_img(buySell.getP_buy_user_img());
-			_buySell.setP_buy_user_content((null == buySell
-					.getP_buy_user_content() || "".equals(buySell
-					.getP_buy_user_content().trim())) ? "这家伙很懒" : buySell
-					.getP_buy_user_content().trim());
-
-			_buySell.setP_buy_user_time(new Date());
-			_buySell.setStatus(1);
-		} else if (user_id.equals(__buySell.getP_sell_user_id())) {
-
-			if (null != __buySell.getP_sell_user_time()) {
-				result.put("msg", new String[] { "已经确认打款过了" });
-				return result;
-			}
-
-			_buySell.setP_sell_user_time(new Date());
-			_buySell.setStatus(2);
-		} else {
-			result.put("msg", new String[] { "非法操作" });
-			return result;
-		}
-
-		buySellService.updateNotNull(_buySell);
 
 		result.put("success", true);
 		return result;
@@ -424,26 +388,12 @@ public class UserController {
 			return result;
 		} // IF
 
-		BuySell __buySell = buySellService.selectByKey(buySell.getId());
-		if (null == __buySell) {
-			result.put("msg", new String[] { "非法操作" });
+		String[] tip_off = buySellService.tip_off(buySell, session
+				.getAttribute("session.user.id").toString());
+		if (null != tip_off) {
+			result.put("msg", checkSafe);
 			return result;
 		}
-
-		if (null != __buySell.getTip_off_user_time()) {
-			result.put("msg", new String[] { "已经举报过了" });
-			return result;
-		}
-
-		String user_id = session.getAttribute("session.user.id").toString();
-
-		BuySell _buySell = new BuySell();
-		_buySell.setId(buySell.getId());
-		_buySell.setTip_off_user_id(user_id);
-		_buySell.setTip_off_user_time(new Date());
-		_buySell.setStatus(3);
-
-		buySellService.updateNotNull(_buySell);
 
 		result.put("success", true);
 		return result;

@@ -86,12 +86,41 @@ public class BuySell implements Serializable {
 	/**
 	 * 举报处理结果的内容（有则表示管理员已经处理过这条信息）
 	 */
-	private String tip_off_content;
+	private String tip_off_result;
 
 	/**
 	 * 举报时间
 	 */
-	private Date tip_off_user_time;
+	private Date tip_off_time;
+
+	/**
+	 * 举报内容
+	 */
+	private Date tip_off_content;
+
+	public Date getTip_off_time() {
+		return tip_off_time;
+	}
+
+	public void setTip_off_time(Date tip_off_time) {
+		this.tip_off_time = tip_off_time;
+	}
+
+	public Date getTip_off_content() {
+		return tip_off_content;
+	}
+
+	public void setTip_off_content(Date tip_off_content) {
+		this.tip_off_content = tip_off_content;
+	}
+
+	public String getTip_off_result() {
+		return tip_off_result;
+	}
+
+	public void setTip_off_result(String tip_off_result) {
+		this.tip_off_result = tip_off_result;
+	}
 
 	public Date getP_sell_user_time() {
 		return p_sell_user_time;
@@ -107,14 +136,6 @@ public class BuySell implements Serializable {
 
 	public void setP_buy_user_time(Date p_buy_user_time) {
 		this.p_buy_user_time = p_buy_user_time;
-	}
-
-	public Date getTip_off_user_time() {
-		return tip_off_user_time;
-	}
-
-	public void setTip_off_user_time(Date tip_off_user_time) {
-		this.tip_off_user_time = tip_off_user_time;
 	}
 
 	public String getP_buy_user_img() {
@@ -139,14 +160,6 @@ public class BuySell implements Serializable {
 
 	public void setTip_off_user_id(String tip_off_user_id) {
 		this.tip_off_user_id = tip_off_user_id;
-	}
-
-	public String getTip_off_content() {
-		return tip_off_content;
-	}
-
-	public void setTip_off_content(String tip_off_content) {
-		this.tip_off_content = tip_off_content;
 	}
 
 	@Transient
