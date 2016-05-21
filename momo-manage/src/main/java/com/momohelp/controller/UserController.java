@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Buy;
+import com.momohelp.model.BuySell;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
@@ -26,6 +27,7 @@ import com.momohelp.model.FarmHatch;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmFeedService;
@@ -66,6 +68,9 @@ public class UserController {
 
 	@Autowired
 	private BuyService buyService;
+
+	@Autowired
+	private BuySellService buySellService;
 
 	/**
 	 * 验证令牌
@@ -280,17 +285,54 @@ public class UserController {
 	 * @param map
 	 * @param session
 	 * @param id
-	 * @param type
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/confirm" }, method = RequestMethod.GET)
 	public String _i_confirmUI(Map<String, Object> map, HttpSession session,
+			@RequestParam(required = true) String id) {
+
+		BuySell buySell = buySellService.selectByKey(id);
+
+		String user_id = session.getAttribute("session.user.id").toString();
+
+		// 判断是买盘
+		if (user_id.equals(buySell.getP_buy_user_id())) {
+			map.put("nav_choose", ",05,0503,");
+		} else {
+			// 判断是卖盘
+			if (user_id.equals(buySell.getP_sell_user_id())) {
+				map.put("nav_choose", ",05,0504,");
+			} else {
+				return "redirect:/";
+			}
+		}
+
+		map.put("data_buySell", buySell);
+
+		// TODO
+		map.put("data_user", session.getAttribute("session.user"));
+		map.put("data_token", genToken(session));
+		return "i/user/1.0.1/confirm";
+	}
+
+	/**
+	 * 举报
+	 *
+	 * @param map
+	 * @param session
+	 * @param id
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/tip_off" }, method = RequestMethod.GET)
+	public String _i_tip_offUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = true) String id,
 			@RequestParam(required = true) String type) {
 		// TODO
-		map.put("nav_choose", ",05,0503,");
+		map.put("nav_choose", ("1".equals(type) ? ",05,0503," : ",05,0504,"));
 		map.put("data_user", session.getAttribute("session.user"));
-		return "i/user/1.0.1/confirm";
+		map.put("data_token", genToken(session));
+		return "i/user/1.0.1/tip_off";
 	}
 
 	/**
