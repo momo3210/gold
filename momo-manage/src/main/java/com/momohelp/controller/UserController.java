@@ -573,7 +573,7 @@ public class UserController {
 		result.put("success", false);
 
 		// 我的信息
-		user.setPid(session.getAttribute("session.user.id").toString());
+		// user.setPid(session.getAttribute("session.user.id").toString());
 
 		user.setUser_pass("123456");
 		user.setUser_pass_safe("123456");

@@ -32,9 +32,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		// 默认为普通用户
 		entity.setRole_id(2);
 		// 默认禁用，需要通过邮箱或手机号验证
-		entity.setStatus(0);
+		entity.setStatus(1);
 		// 默认为贫农
-		entity.setLv("05");
+//		entity.setLv("05");
 		return super.save(entity);
 	}
 
