@@ -732,8 +732,8 @@ public class UserController {
 		String html = null;
 
 		if (null == id || "".equals(id.trim())) {
-			List<Farm> list = farmService.findCanFeed(session.getAttribute(
-					"session.user.id").toString());
+			List<Farm> list = farmService.findFeedByUserId(session
+					.getAttribute("session.user.id").toString());
 			map.put("data_list", list);
 
 			html = "i/user/1.0.1/feedMo";
@@ -757,9 +757,8 @@ public class UserController {
 			map.put("data_id", id);
 			map.put("data_farm", farm);
 			html = "i/user/1.0.1/feedMo_id";
-		}
+		} // if
 
-		// TODO
 		map.put("nav_choose", ",05,0505,");
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));

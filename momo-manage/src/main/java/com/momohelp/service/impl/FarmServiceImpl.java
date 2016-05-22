@@ -45,6 +45,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		PageHelper.startPage(page, rows);
 		List<Farm> list = selectByExample(example);
 
+		if (null == list) {
+			return null;
+		} // if
+
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Farm farm = list.get(i);
 			// 喂食记录
@@ -385,10 +389,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public List<Farm> findCanFeed(String user_id) {
+	public List<Farm> findFeedByUserId(String user_id) {
 		Example example = new Example(Farm.class);
 		example.setOrderByClause("create_time asc");
-		// TODO
+
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("user_id", user_id);
 		criteria.andGreaterThan("num_current", 0);
@@ -397,15 +401,15 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		List<Farm> list = selectByExample(example);
 
-		String date_1 = sdf.format(new Date());
+		if (null == list) {
+			return null;
+		} // if
 
-		// 移除创建日期是当天的记录（创建当天不能喂鸡）
 		for (int i = 0, j = list.size(); i < j; i++) {
-			Farm item = list.get(i);
-			if (date_1.equals(sdf.format(item.getCreate_time()))) {
-				list.remove(i);
-			}
-		}
+			Farm farm = list.get(i);
+			farm.setFarmFeeds(farmFeedService.findByFarmId(farm.getId()));
+		} // for
+
 		return list;
 	}
 
