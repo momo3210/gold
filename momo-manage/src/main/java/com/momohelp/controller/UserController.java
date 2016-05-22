@@ -601,12 +601,9 @@ public class UserController {
 			@RequestParam(required = false, defaultValue = "100") int rows) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
 
-		String user_id = session.getAttribute("session.user.id").toString();
-		// TODO
-		User user = new User();
-		user.setPid(user_id);
-
-		List<User> list = userService.findByUser(user, page, Integer.MAX_VALUE);
+		List<User> list = userService.findChildren(
+				session.getAttribute("session.user.id").toString(), page,
+				Integer.MAX_VALUE);
 		result.addObject("data_list", list);
 
 		// TODO

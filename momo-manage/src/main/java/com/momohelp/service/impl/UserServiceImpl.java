@@ -212,14 +212,14 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 				criteria.andEqualTo("pid", pid);
 			} // if
 
-			String email = StringUtil.isEmpty(user.getEmail());
-			if (null != email) {
-				criteria.andEqualTo("email", email);
-			} // if
-
 			String mobile = StringUtil.isEmpty(user.getMobile());
 			if (null != mobile) {
 				criteria.andEqualTo("mobile", mobile);
+			} // if
+
+			String email = StringUtil.isEmpty(user.getEmail());
+			if (null != email) {
+				criteria.andEqualTo("email", email);
 			} // if
 
 			String nickname = StringUtil.isEmpty(user.getNickname());
@@ -542,65 +542,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public List<User> findByUser(User user, int page, int rows) {
-		Example example = new Example(User.class);
-		example.setOrderByClause("create_time desc");
-		// TODO
-		if (null != user) {
-			Example.Criteria criteria = example.createCriteria();
+	public List<User> findChildren(String user_id, int page, int rows) {
 
-			// TODO
-			String apikey = StringUtil.isEmpty(user.getApikey());
-			if (null != apikey) {
-				criteria.andEqualTo("apikey", apikey);
-			}
+		User user = new User();
+		user.setPid(user_id);
 
-			// TODO
-			String seckey = StringUtil.isEmpty(user.getSeckey());
-			if (null != seckey) {
-				criteria.andEqualTo("seckey", seckey);
-			}
-
-			// TODO
-			String pid = StringUtil.isEmpty(user.getPid());
-			if (null != pid) {
-				criteria.andEqualTo("pid", pid);
-			}
-
-		}
-		PageHelper.startPage(page, rows);
-		return selectByExample(example);
-	}
-
-	@Override
-	public User findByUser(User user) {
-		Example example = new Example(User.class);
-		// TODO
-		if (null != user) {
-			Example.Criteria criteria = example.createCriteria();
-
-			// TODO
-			String email = StringUtil.isEmpty(user.getEmail());
-			if (null != email) {
-				criteria.andEqualTo("email", email);
-			}
-
-			// TODO
-			String mobile = StringUtil.isEmpty(user.getMobile());
-			if (null != mobile) {
-				criteria.andEqualTo("mobile", mobile);
-			}
-
-			// TODO
-			String nickname = StringUtil.isEmpty(user.getNickname());
-			if (null != nickname) {
-				criteria.andEqualTo("nickname", nickname);
-			}
-		}
-
-		// TODO
-		List<User> list = selectByExample(example);
-		return (null == list || 1 != list.size()) ? null : list.get(0);
+		return findByUser_1(user, page, rows);
 	}
 
 }

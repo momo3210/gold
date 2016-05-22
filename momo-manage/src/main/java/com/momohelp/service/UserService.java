@@ -28,22 +28,14 @@ public interface UserService extends IService<User> {
 	Map<String, Object> login(String user_name, String user_pass);
 
 	/**
-	 * 单个
+	 * 查找用户的直推（下一级）
 	 *
-	 * @param user
-	 * @return
-	 */
-	User findByUser(User user);
-
-	/**
-	 * 多个
-	 *
-	 * @param user
+	 * @param user_id
 	 * @param page
 	 * @param rows
 	 * @return
 	 */
-	List<User> findByUser(User user, int page, int rows);
+	List<User> findChildren(String user_id, int page, int rows);
 
 	/**
 	 * 登陆密码重置
