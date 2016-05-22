@@ -1,5 +1,6 @@
 package com.momohelp.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Buy;
@@ -121,6 +123,21 @@ public class DefaultController {
 		map.put("data_user", user);
 		map.put("nav_choose", ",08,0801,");
 		return "i/user/1.0.1/edit";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/user/edit" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_edit(User user, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 设置主键
+
+		userService.updateNotNull(user);
+
+		// TODO
+		result.put("success", true);
+		return result;
 	}
 
 	@RequestMapping(value = { "/user/add" }, method = RequestMethod.GET)
