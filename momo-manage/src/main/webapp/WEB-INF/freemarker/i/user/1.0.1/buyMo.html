@@ -137,7 +137,7 @@
 
 														<div class="controls">
 															<select class='input-large' id='frm_select'>
-																<option>RMB：${(data_lv_min)!} 至 ${(data_lv_max)!} 只鸡苗</option>
+																<option>RMB：${(data_user.buyMo.min)!} 至 ${(data_user.buyMo.max)!} 只鸡苗</option>
 															</select>
 														</div>
 													</div>
@@ -225,9 +225,9 @@
 			showVerifyCode();
 
 			$('#frm_num_buy').ace_spinner({
-				value: ${(data_lv_max)!},
-				min: ${(data_lv_min)!},
-				max: ${(data_lv_max)!},
+				value: ${(data_user.buyMo.max)!},
+				min: ${(data_user.buyMo.min)!},
+				max: ${(data_user.buyMo.max)!},
 				step: 100,
 				icon_up: 'icon-plus',
 				icon_down: 'icon-minus',

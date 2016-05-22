@@ -60,7 +60,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 			// END
 			buy = selectByKey(id);
 		} while (null != buy);
-		return id;
+		return "B" + id;
 	}
 
 	@Override

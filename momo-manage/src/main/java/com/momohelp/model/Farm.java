@@ -118,6 +118,28 @@ public class Farm implements Serializable {
 	@Transient
 	private List<FarmHatch> farmHatchs;
 
+	/**
+	 *
+	 * 判断排单在当前时间是否出局
+	 *
+	 * 1未出局（接上气儿）
+	 *
+	 * 2主动出局
+	 *
+	 * 3自然出局
+	 *
+	 * @return
+	 */
+	public int checkStatusOut() {
+
+		if (null == this.getTime_out_real()) {
+			return 1;
+		} // if
+
+		// 实际出局时间在理论出局时间之后
+		return this.getTime_out_real().after(this.getTime_out()) ? 3 : 2;
+	}
+
 	public List<Buy> getBuys() {
 		return buys;
 	}

@@ -139,6 +139,65 @@ public class User implements Serializable {
 	@Transient
 	private List<User> children;
 
+	/**
+	 * 用户的最后一次排单（鸡苗批次）
+	 */
+	@Transient
+	private Farm lastFarm;
+
+	public Farm getLastFarm() {
+		return lastFarm;
+	}
+
+	public void setLastFarm(Farm lastFarm) {
+		this.lastFarm = lastFarm;
+	}
+
+	public BuyMo getBuyMo() {
+		BuyMo buyMo = new BuyMo();
+
+		buyMo.setMax(5000);
+
+		if ("05".equals(lv)) {
+			buyMo.setMin(100);
+		} else if ("06".equals(lv)) {
+			buyMo.setMin(1000);
+		} else if ("07".equals(lv)) {
+			buyMo.setMin(2000);
+		} else if ("08".equals(lv)) {
+			buyMo.setMin(3000);
+		} // if
+
+		return buyMo;
+	}
+
+	/**
+	 * 买入鸡苗的限制
+	 *
+	 * @author Administrator
+	 *
+	 */
+	public class BuyMo {
+		private Integer max;
+		private Integer min;
+
+		public Integer getMax() {
+			return max;
+		}
+
+		public void setMax(Integer max) {
+			this.max = max;
+		}
+
+		public Integer getMin() {
+			return min;
+		}
+
+		public void setMin(Integer min) {
+			this.min = min;
+		}
+	}
+
 	public String getVerifycode_sms() {
 		return verifycode_sms;
 	}

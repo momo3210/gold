@@ -8,12 +8,15 @@ import java.util.Map;
 import net.foreworld.util.StringUtil;
 import net.foreworld.util.encryptUtil.MD5;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.model.Farm;
 import com.momohelp.model.User;
+import com.momohelp.service.FarmService;
 import com.momohelp.service.UserService;
 
 /**
@@ -23,6 +26,9 @@ import com.momohelp.service.UserService;
  */
 @Service("userService")
 public class UserServiceImpl extends BaseService<User> implements UserService {
+
+	@Autowired
+	private FarmService farmService;
 
 	/**
 	 * 保存之前的预判
@@ -275,13 +281,18 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		User user = selectByKey(id);
 		if (null == user) {
 			return null;
-		}
+		} // if
 
 		// 获取父亲
 		if (!"0".equals(user.getPid())) {
 			User p_user = selectByKey(user.getPid());
 			user.setP_user(p_user);
-		}
+		} // if
+
+		// 获取用户的最后一次排单（鸡苗批次）
+		List<Farm> list_farm = farmService.findByUserId(user.getId(), 1, 1);
+		user.setLastFarm((null == list_farm || 0 == list_farm.size()) ? null
+				: list_farm.get(0));
 
 		return user;
 	}
@@ -347,11 +358,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public int save(User entity) {
-		return 0;
-	}
-
-	@Override
-	public int updateNotNull(User entity) {
 		return 0;
 	}
 
