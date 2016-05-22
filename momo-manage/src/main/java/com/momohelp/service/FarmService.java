@@ -14,6 +14,16 @@ import com.momohelp.model.Farm;
 public interface FarmService extends IService<Farm> {
 
 	/**
+	 * 获取用户的鸡苗批次
+	 *
+	 * @param user_id
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Farm> findByUserId(String user_id, int page, int rows);
+
+	/**
 	 * 买入鸡苗
 	 *
 	 * @param farm

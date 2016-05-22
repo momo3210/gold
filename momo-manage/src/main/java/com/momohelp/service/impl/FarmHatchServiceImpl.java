@@ -49,7 +49,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 	public List<FarmHatch> findByFarmId(String farm_id) {
 		Example example = new Example(FarmHatch.class);
 		example.setOrderByClause("create_time desc");
-		// TODO
+
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("w_farm_chick_id", farm_id);
 

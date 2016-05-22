@@ -22,6 +22,8 @@ import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
+import com.momohelp.service.FarmFeedService;
+import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.UserService;
@@ -34,6 +36,28 @@ import com.momohelp.service.UserService;
 @Service("farmService")
 public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
+	@Override
+	public List<Farm> findByUserId(String user_id, int page, int rows) {
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+
+		PageHelper.startPage(page, rows);
+		List<Farm> list = selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm farm = list.get(i);
+			// 喂食记录
+			farm.setFarmFeeds(farmFeedService.findByFarmId(farm.getId()));
+			// 孵化记录
+			farm.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
+		} // for
+
+		return list;
+	}
+
 	@Autowired
 	private UserService userService;
 
@@ -45,6 +69,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 	@Autowired
 	private BuyService buyService;
+
+	@Autowired
+	private FarmFeedService farmFeedService;
+
+	@Autowired
+	private FarmHatchService farmHatchService;
 
 	@Override
 	public int save(Farm entity) {

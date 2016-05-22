@@ -2,10 +2,12 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -80,6 +82,11 @@ public class Farm implements Serializable {
 	private Integer flag_out_p;
 
 	/**
+	 * 上一单的ID
+	 */
+	private String pid;
+
+	/**
 	 * 相对于上级领导的最近一单
 	 */
 	private String pid_higher_ups;
@@ -98,14 +105,42 @@ public class Farm implements Serializable {
 	private Integer flag_out_self;
 
 	/**
-	 * 上一单的ID
-	 */
-	private String pid;
-
-	/**
 	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
 	 */
 	private Integer num_reward;
+
+	@Transient
+	private List<Buy> buys;
+
+	@Transient
+	private List<FarmFeed> farmFeeds;
+
+	@Transient
+	private List<FarmHatch> farmHatchs;
+
+	public List<Buy> getBuys() {
+		return buys;
+	}
+
+	public void setBuys(List<Buy> buys) {
+		this.buys = buys;
+	}
+
+	public List<FarmFeed> getFarmFeeds() {
+		return farmFeeds;
+	}
+
+	public void setFarmFeeds(List<FarmFeed> farmFeeds) {
+		this.farmFeeds = farmFeeds;
+	}
+
+	public List<FarmHatch> getFarmHatchs() {
+		return farmHatchs;
+	}
+
+	public void setFarmHatchs(List<FarmHatch> farmHatchs) {
+		this.farmHatchs = farmHatchs;
+	}
 
 	public Date getTime_out_real() {
 		return time_out_real;

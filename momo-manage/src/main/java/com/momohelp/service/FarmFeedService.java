@@ -1,5 +1,6 @@
 package com.momohelp.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,15 @@ import com.momohelp.model.FarmFeed;
  *
  */
 public interface FarmFeedService extends IService<FarmFeed> {
+
+	/**
+	 * 获取鸡苗批次的喂食记录
+	 *
+	 * @param farm_id
+	 *            鸡苗批次id
+	 * @return
+	 */
+	List<FarmFeed> findByFarmId(String farm_id);
 
 	/**
 	 * 计算利息（只计算了喂饲料产生的利息，未加批次表中的奖金字段 num_reward）

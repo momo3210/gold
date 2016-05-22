@@ -30,6 +30,17 @@ import com.momohelp.service.UserService;
 public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		FarmFeedService {
 
+	@Override
+	public List<FarmFeed> findByFarmId(String farm_id) {
+		Example example = new Example(FarmFeed.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("w_farm_chick_id", farm_id);
+
+		return selectByExample(example);
+	}
+
 	@Autowired
 	private UserService userService;
 
