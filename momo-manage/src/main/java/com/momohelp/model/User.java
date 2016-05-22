@@ -2,6 +2,7 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -23,6 +24,11 @@ public class User implements Serializable {
 	@Id
 	@Column(name = "id")
 	private String id;
+
+	/**
+	 * 父ID
+	 */
+	private String pid;
 
 	/**
 	 * 登陆密码
@@ -91,17 +97,6 @@ public class User implements Serializable {
 	private String bank_account;
 
 	/**
-	 * 父ID
-	 */
-	private String pid;
-
-	/**
-	 * 父对象
-	 */
-	@Transient
-	private User p_user;
-
-	/**
 	 * 家族（最顶端的用户id）
 	 */
 	private String family_id;
@@ -125,6 +120,26 @@ public class User implements Serializable {
 	private Double total_dynamic;
 	private Integer total_ticket;
 	private Integer total_food;
+
+	/**
+	 * 父对象
+	 */
+	@Transient
+	private User p_user;
+
+	/**
+	 * 直推的下一级用户
+	 */
+	@Transient
+	private List<User> children;
+
+	public List<User> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<User> children) {
+		this.children = children;
+	}
 
 	public User getP_user() {
 		return p_user;

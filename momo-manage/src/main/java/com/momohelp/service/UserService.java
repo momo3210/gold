@@ -12,6 +12,12 @@ import com.momohelp.model.User;
  */
 public interface UserService extends IService<User> {
 
+	User getId(int flag, String id);
+
+	User getByUser(int flag, User user);
+
+	List<User> findByUser(int flag, User user, int page, int rows);
+
 	/**
 	 * 普通用户登陆
 	 *
@@ -42,26 +48,34 @@ public interface UserService extends IService<User> {
 	/**
 	 * 登陆密码重置
 	 *
-	 * @param key
+	 * @param id
 	 * @return
 	 */
-	int resetPwdByKey(String key);
+	int resetPwd(String id);
 
 	/**
 	 * 安全密码重置
 	 *
-	 * @param key
+	 * @param id
 	 * @return
 	 */
-	int resetPwdSafeByKey(String key);
+	int resetPwdSafe(String id);
 
 	/**
-	 * 创建新用户
+	 * 创建新用户（普通用户使用）
 	 *
 	 * @param user
 	 * @return
 	 */
 	String[] register(User user);
+
+	/**
+	 * 创建新用户（管理员使用）
+	 *
+	 * @param user
+	 * @return
+	 */
+	String[] createUser(User user);
 
 	/**
 	 * 修改资料
@@ -72,23 +86,31 @@ public interface UserService extends IService<User> {
 	String[] editInfo(User user);
 
 	/**
+	 * 管理员可以修改全部的信息
+	 *
+	 * @param user
+	 * @return
+	 */
+	String[] editInfoAll(User user);
+
+	/**
 	 * 登陆密码修改
 	 *
-	 * @param key
+	 * @param id
 	 * @param old_pass
 	 * @param new_pass
 	 * @return
 	 */
-	String[] changePwd(String key, String old_pass, String new_pass);
+	String[] changePwd(String id, String old_pass, String new_pass);
 
 	/**
 	 * 安全密码修改
 	 *
-	 * @param key
+	 * @param id
 	 * @param old_pass
 	 * @param new_pass
 	 * @return
 	 */
-	String[] changePwdSafe(String key, String old_pass, String new_pass);
+	String[] changePwdSafe(String id, String old_pass, String new_pass);
 
 }
