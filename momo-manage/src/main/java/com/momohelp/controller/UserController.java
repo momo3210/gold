@@ -565,6 +565,30 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/user/createAccount2" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_createAccount2(User user, HttpSession session) {
+		// TODO
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 我的信息
+		user.setPid(session.getAttribute("session.user.id").toString());
+
+		user.setUser_pass("123456");
+		user.setUser_pass_safe("123456");
+
+		String[] msg = userService.register(user);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
 	/**
 	 * 推荐清单
 	 *

@@ -42,7 +42,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	public int updateNotNull(User entity) {
 		entity.setCreate_time(null);
 		entity.setRole_id(null);
-		entity.setPid(null);
 		entity.setFamily_id(null);
 		entity.setDepth(null);
 		return super.updateNotNull(entity);
