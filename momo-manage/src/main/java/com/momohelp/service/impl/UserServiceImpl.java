@@ -352,11 +352,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public int updateNotNull(User entity) {
-		entity.setCreate_time(null);
-		entity.setRole_id(null);
-		entity.setFamily_id(null);
-		entity.setDepth(null);
-		return super.updateNotNull(entity);
+		return 0;
 	}
 
 	/**
@@ -506,7 +502,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		User _user = new User();
 		_user.setId(user.getId());
 
-		_user.setNickname(user.getNickname());
+		_user.setReal_name(user.getReal_name());
 		_user.setAlipay_account(user.getAlipay_account());
 		_user.setWx_account(user.getWx_account());
 		_user.setBank(user.getBank());
@@ -526,7 +522,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		User _user = new User();
 		_user.setId(user.getId());
 
+		_user.setMobile(user.getMobile());
+		_user.setEmail(user.getEmail());
 		_user.setNickname(user.getNickname());
+
 		_user.setAlipay_account(user.getAlipay_account());
 		_user.setWx_account(user.getWx_account());
 		_user.setBank(user.getBank());
@@ -535,7 +534,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		_user.setNum_static(user.getNum_static());
 		_user.setNum_dynamic(user.getNum_dynamic());
-
 		_user.setNum_ticket(user.getNum_ticket());
 		_user.setNum_food(user.getNum_food());
 

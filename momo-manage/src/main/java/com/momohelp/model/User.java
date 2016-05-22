@@ -16,6 +16,7 @@ import javax.persistence.Transient;
  */
 @Table(name = "s_user")
 public class User implements Serializable {
+
 	private static final long serialVersionUID = -1453141126844138706L;
 
 	/**
@@ -122,6 +123,11 @@ public class User implements Serializable {
 	private Integer total_food;
 
 	/**
+	 * 短信验证码
+	 */
+	private String verifycode_sms;
+
+	/**
 	 * 父对象
 	 */
 	@Transient
@@ -132,6 +138,14 @@ public class User implements Serializable {
 	 */
 	@Transient
 	private List<User> children;
+
+	public String getVerifycode_sms() {
+		return verifycode_sms;
+	}
+
+	public void setVerifycode_sms(String verifycode_sms) {
+		this.verifycode_sms = verifycode_sms;
+	}
 
 	public List<User> getChildren() {
 		return children;
