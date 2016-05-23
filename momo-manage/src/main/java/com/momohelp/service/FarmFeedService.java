@@ -1,7 +1,6 @@
 package com.momohelp.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,10 +40,14 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	String[] feed(FarmFeed farmFeed);
 
 	/**
-	 * 根据批次ID判断今天是否已经喂过鸡
+	 * 判断今天是否已经喂过鸡
 	 *
-	 * @param farm_id
+	 * false今天没喂过
+	 *
+	 * true今天喂过
+	 *
+	 * @param farmFeeds
 	 * @return
 	 */
-	Map<String, Object> checkTodayFeed(String farm_id);
+	boolean checkTodayFeed(List<FarmFeed> farmFeeds);
 }

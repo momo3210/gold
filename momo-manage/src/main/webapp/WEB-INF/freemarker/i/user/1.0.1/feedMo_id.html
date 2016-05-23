@@ -118,7 +118,7 @@
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal" id='frm'>
 													<input type="hidden" name='token' value='${(data_token)!}' />
-													<input type="hidden" name='w_farm_chick_id' value='${(data_farm.id)!}' />
+													<input type="hidden" name='w_farm_chick_id' value='${(data_farm.id)}' />
 													<div class="control-group">
 														<label class="control-label" for="frm_num_feed">喂食数量</label>
 
@@ -205,9 +205,9 @@
 
 			$('#frm_num_feed').ace_spinner({
 				value: ${(data_farm.num_current)!},
-				min: 1,
+				min: 100,
 				max: ${(data_farm.num_current)!},
-				step: 1,
+				step: 100,
 				icon_up: 'icon-plus',
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,

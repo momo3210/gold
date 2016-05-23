@@ -54,7 +54,17 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		} // if
 
 		List<Farm> list = selectByExample(example);
-		return (null == list || 1 != list.size()) ? null : list.get(0);
+
+		if (null == list || 1 != list.size()) {
+			return null;
+		} // if
+
+		farm = list.get(0);
+
+		// 喂食记录
+		farm.setFarmFeeds(farmFeedService.findByFarmId(farm.getId()));
+
+		return farm;
 	}
 
 	@Override

@@ -743,17 +743,13 @@ public class UserController {
 
 			if (null == farm) {
 				return "redirect:/user/feedMo";
-			}
+			} // if
 
-			// // 判断今天是否已经喂过该批次的鸡苗了
-			// Map<String, Object> checkTodayFeed = farmFeedService
-			// .checkTodayFeed(farm.getId());
-			// if (null != checkTodayFeed) {
-			// if (checkTodayFeed.containsKey("msg")) {
-			// map.put("data_msg",
-			// ((String[]) checkTodayFeed.get("msg"))[0]);
-			// }
-			// }
+			// 判断今天是否已经喂过该批次的鸡苗了
+			boolean b = farmFeedService.checkTodayFeed(farm.getFarmFeeds());
+			if (b) {
+				map.put("data_msg", "今天已经喂过鸡了");
+			} // if
 
 			map.put("data_farm", farm);
 

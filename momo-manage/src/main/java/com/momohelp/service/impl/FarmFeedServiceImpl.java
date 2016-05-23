@@ -2,16 +2,13 @@ package com.momohelp.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
-import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
 import com.momohelp.model.MaterialRecord;
@@ -123,25 +120,26 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			return new String[] { "饲料不足，请购买饲料" };
 		}
 
-		Map<String, Object> checkTodayFeed = checkTodayFeed(farmFeed
-				.getW_farm_chick_id());
-
-		// 判断今天是否已经喂过鸡了
-		if (null != checkTodayFeed) {
-			if (checkTodayFeed.containsKey("msg")) {
-				return (String[]) checkTodayFeed.get("msg");
-			}
-		}
-
-		// 获取最后一次喂鸡记录
-		FarmFeed last_farmfeed = (null == checkTodayFeed ? null
-				: (FarmFeed) (checkTodayFeed.containsKey("data") ? checkTodayFeed
-						.get("data") : null));
-
-		saveMaterialRecord(farmFeed, user);
-
-		farmFeed.setOrder_feed((null == last_farmfeed) ? 1 : (1 + last_farmfeed
-				.getOrder_feed()));
+		// Map<String, Object> checkTodayFeed = checkTodayFeed(farmFeed
+		// .getW_farm_chick_id());
+		//
+		// // 判断今天是否已经喂过鸡了
+		// if (null != checkTodayFeed) {
+		// if (checkTodayFeed.containsKey("msg")) {
+		// return (String[]) checkTodayFeed.get("msg");
+		// }
+		// }
+		// //
+		// // // 获取最后一次喂鸡记录
+		// // FarmFeed last_farmfeed = (null == checkTodayFeed ? null
+		// // : (FarmFeed) (checkTodayFeed.containsKey("data") ? checkTodayFeed
+		// // .get("data") : null));
+		//
+		// saveMaterialRecord(farmFeed, user);
+		//
+		// farmFeed.setOrder_feed((null == last_farmfeed) ? 1 : (1 +
+		// last_farmfeed
+		// .getOrder_feed()));
 
 		// 1饲料喂100只鸡
 		// 计算利息 START 0.5% or 0.9%
@@ -188,45 +186,21 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd 00:00:00");
 
-	/**
-	 * 获取用户最后一次的喂鸡记录
-	 *
-	 * @param farm_id
-	 * @return
-	 */
-	private FarmFeed getLastByFarmId(String farm_id) {
-		Example example = new Example(FarmFeed.class);
-		example.setOrderByClause("create_time desc");
-		// TODO
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("w_farm_chick_id", farm_id);
-
-		PageHelper.startPage(1, 1);
-		List<FarmFeed> list = selectByExample(example);
-		return (null == list || 0 == list.size()) ? null : list.get(0);
-	}
-
 	@Override
-	public Map<String, Object> checkTodayFeed(String farm_id) {
+	public boolean checkTodayFeed(List<FarmFeed> farmFeeds) {
 
-		Map<String, Object> result = new HashMap<String, Object>();
+		if (null == farmFeeds || 0 == farmFeeds.size()) {
+			return false;
+		} // if
 
-		FarmFeed farmFeed = getLastByFarmId(farm_id);
-		if (null == farmFeed) {
-			return null;
-		}
+		// 获取最后一次的喂鸡记录
+		FarmFeed lastFarmFeed = farmFeeds.get(0);
 
 		// 该批次最后一次喂鸡的时间
-		String date_1 = sdf.format(farmFeed.getCreate_time());
+		String date_1 = sdf.format(lastFarmFeed.getCreate_time());
 		// 当前时间
 		String date_2 = sdf.format(new Date());
 
-		if (date_1.equals(date_2)) {
-			result.put("msg", new String[] { "今天已经喂过鸡了" });
-		} else {
-			result.put("data", farmFeed);
-		}
-
-		return result;
+		return date_1.equals(date_2);
 	}
 }
