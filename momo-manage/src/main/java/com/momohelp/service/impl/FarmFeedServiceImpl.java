@@ -77,74 +77,63 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		farmFeed.setNum_feed((null == farmFeed.getNum_feed()) ? 0 : farmFeed
 				.getNum_feed());
 		if (1 > farmFeed.getNum_feed()) {
-			return new String[] { "喂养数量必须大于 0" };
-		}
+			return new String[] { "喂养数量必须大于0" };
+		} // if
 
 		// 喂的时候也要喂100的倍数
 		if (0 != farmFeed.getNum_feed() % 100) {
 			return new String[] { "请输入规定的数量" };
-		}
+		} // if
 
 		// 实时信息
-		Farm farm = farmService.selectByKey(farmFeed.getW_farm_chick_id());
+		Farm farm = farmService.getByFarm(1,
+				new Farm(farmFeed.getW_farm_chick_id(), farmFeed.getUser_id()));
 
 		if (null == farm) {
 			return new String[] { "数据查询异常" };
-		}
+		} // if
 
-		// 权限判断是否是本人的操作
-		if (!farm.getUser_id().equals(farmFeed.getUser_id())) {
+		// 喂鸡的数量大于当前鸡苗批次的数量
+		if (farmFeed.getNum_feed() > farm.getNum_current()) {
 			return new String[] { "非法操作" };
-		}
+		} // if
 
 		// 当前时间 <--出局时间（理论）
 		if (farmFeed.getCreate_time().after(farm.getTime_out())) {
 			return new String[] { "已经出局了" };
-		}
+		} // if
 
 		// 该批次的鸡都卖完了
 		if (0 == farm.getNum_current()) {
 			return new String[] { "没有鸡可以喂了" };
-		}
+		} // if
 
 		// 买入当天不能喂鸡
 		if (sdf.format(farm.getCreate_time()).equals(
 				sdf.format(farmFeed.getCreate_time()))) {
 			return new String[] { "买入当天不能喂鸡" };
-		}
+		} // if
+
+		// 判断今天是否已经喂过该批次的鸡苗了
+		String[] checkTodayFeed = checkTodayFeed(farm.getLastFarmFeed());
+		if (null != checkTodayFeed) {
+			return checkTodayFeed;
+		} // if
 
 		// 我的实时信息
 		User user = userService.selectByKey(farm.getUser_id());
 
-		if (farmFeed.getNum_feed() > user.getNum_food()) {
+		if ((farmFeed.getNum_feed() / 100) > user.getNum_food()) {
 			return new String[] { "饲料不足，请购买饲料" };
-		}
+		} // if
 
-		// Map<String, Object> checkTodayFeed = checkTodayFeed(farmFeed
-		// .getW_farm_chick_id());
-		//
-		// // 判断今天是否已经喂过鸡了
-		// if (null != checkTodayFeed) {
-		// if (checkTodayFeed.containsKey("msg")) {
-		// return (String[]) checkTodayFeed.get("msg");
-		// }
-		// }
-		// //
-		// // // 获取最后一次喂鸡记录
-		// // FarmFeed last_farmfeed = (null == checkTodayFeed ? null
-		// // : (FarmFeed) (checkTodayFeed.containsKey("data") ? checkTodayFeed
-		// // .get("data") : null));
-		//
-		// saveMaterialRecord(farmFeed, user);
-		//
-		// farmFeed.setOrder_feed((null == last_farmfeed) ? 1 : (1 +
-		// last_farmfeed
-		// .getOrder_feed()));
+		saveMaterialRecord(farmFeed, user);
 
 		// 1饲料喂100只鸡
 		// 计算利息 START 0.5% or 0.9%
 		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
-				* (8 > farmFeed.getOrder_feed() ? 0.7 : 1.2));
+				* (8 > ((null == farm.getFarmFeeds()) ? 1 : (farm
+						.getFarmFeeds().size() + 1)) ? 0.007 : 0.012));
 
 		save(farmFeed);
 		return null;
@@ -187,20 +176,17 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			"yyyy-MM-dd 00:00:00");
 
 	@Override
-	public boolean checkTodayFeed(List<FarmFeed> farmFeeds) {
+	public String[] checkTodayFeed(FarmFeed farmFeed) {
 
-		if (null == farmFeeds || 0 == farmFeeds.size()) {
-			return false;
+		if (null == farmFeed) {
+			return null;
 		} // if
 
-		// 获取最后一次的喂鸡记录
-		FarmFeed lastFarmFeed = farmFeeds.get(0);
-
 		// 该批次最后一次喂鸡的时间
-		String date_1 = sdf.format(lastFarmFeed.getCreate_time());
+		String date_1 = sdf.format(farmFeed.getCreate_time());
 		// 当前时间
 		String date_2 = sdf.format(new Date());
 
-		return date_1.equals(date_2);
+		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了" } : null;
 	}
 }

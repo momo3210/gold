@@ -33,7 +33,7 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	/**
 	 * 喂饲料
 	 *
-	 * @param farm_id
+	 * @param farmFeed
 	 * @return
 	 */
 	@Transactional
@@ -46,8 +46,8 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	 *
 	 * true今天喂过
 	 *
-	 * @param farmFeeds
+	 * @param farmFeed
 	 * @return
 	 */
-	boolean checkTodayFeed(List<FarmFeed> farmFeeds);
+	String[] checkTodayFeed(FarmFeed farmFeed);
 }

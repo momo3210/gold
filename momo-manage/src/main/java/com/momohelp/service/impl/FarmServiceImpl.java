@@ -17,6 +17,7 @@ import tk.mybatis.mapper.entity.Example;
 import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Buy;
 import com.momohelp.model.Farm;
+import com.momohelp.model.FarmFeed;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.User;
 import com.momohelp.service.BuyService;
@@ -61,8 +62,14 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		farm = list.get(0);
 
+		List<FarmFeed> list_farmFeed = farmFeedService.findByFarmId(farm
+				.getId());
+
 		// 喂食记录
-		farm.setFarmFeeds(farmFeedService.findByFarmId(farm.getId()));
+		farm.setFarmFeeds(list_farmFeed);
+		// 最后一次喂食记录
+		farm.setLastFarmFeed((null == list_farmFeed || 0 == list_farmFeed
+				.size()) ? null : list_farmFeed.get(0));
 
 		return farm;
 	}

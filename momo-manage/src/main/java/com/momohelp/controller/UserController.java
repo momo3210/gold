@@ -688,20 +688,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		}
+		} // if
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		}
+		} // if
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		} // if
 
 		farmFeed.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -746,9 +746,10 @@ public class UserController {
 			} // if
 
 			// 判断今天是否已经喂过该批次的鸡苗了
-			boolean b = farmFeedService.checkTodayFeed(farm.getFarmFeeds());
-			if (b) {
-				map.put("data_msg", "今天已经喂过鸡了");
+			String[] checkTodayFeed = farmFeedService.checkTodayFeed(farm
+					.getLastFarmFeed());
+			if (null != checkTodayFeed) {
+				map.put("data_msg", checkTodayFeed[0]);
 			} // if
 
 			map.put("data_farm", farm);

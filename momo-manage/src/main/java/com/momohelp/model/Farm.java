@@ -125,7 +125,18 @@ public class Farm implements Serializable {
 	private List<FarmFeed> farmFeeds;
 
 	@Transient
+	private FarmFeed lastFarmFeed;
+
+	@Transient
 	private List<FarmHatch> farmHatchs;
+
+	public FarmFeed getLastFarmFeed() {
+		return lastFarmFeed;
+	}
+
+	public void setLastFarmFeed(FarmFeed lastFarmFeed) {
+		this.lastFarmFeed = lastFarmFeed;
+	}
 
 	/**
 	 *

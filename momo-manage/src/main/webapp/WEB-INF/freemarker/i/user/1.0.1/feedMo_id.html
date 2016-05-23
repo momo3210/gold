@@ -226,7 +226,7 @@
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.reload();
+						location.href = '${(conf_html_virtualPath)!}user/feedMo';
 					},
 					error : function() {
 						alert(arguments[2]);

@@ -45,27 +45,12 @@ public class FarmFeed implements Serializable {
 	 */
 	private Double price;
 
-	/**
-	 * 喂鸡顺序
-	 *
-	 * 第一次、第二次等等
-	 */
-	private Integer order_feed;
-
 	public String getUser_id() {
 		return user_id;
 	}
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
-	}
-
-	public Integer getOrder_feed() {
-		return order_feed;
-	}
-
-	public void setOrder_feed(Integer order_feed) {
-		this.order_feed = order_feed;
 	}
 
 	public Double getPrice() {
