@@ -245,7 +245,7 @@
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.href = '${(conf_html_virtualPath)!}user/hatchMo';
+						location.href = '${(conf_html_virtualPath)!}user/hatchMo?id=${(data_farm.id)!}';
 					},
 					error : function() {
 						alert(arguments[2]);

@@ -259,7 +259,7 @@
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.href = '${(conf_html_virtualPath)!}user/feedMo';
+						location.href = '${(conf_html_virtualPath)!}user/feedMo?id=${(data_farm.id)!}';
 					},
 					error : function() {
 						alert(arguments[2]);
