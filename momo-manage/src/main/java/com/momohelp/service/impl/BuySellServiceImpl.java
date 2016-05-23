@@ -76,7 +76,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		for (int i = 0, j = list.size(); i < j; i++) {
 			BuySell buySell = list.get(i);
 			buySell.setP_sell_user(userService.getId(1,
-					buySell.getP_buy_user_id()));
+					buySell.getP_sell_user_id()));
 		} // for
 
 		return list;
