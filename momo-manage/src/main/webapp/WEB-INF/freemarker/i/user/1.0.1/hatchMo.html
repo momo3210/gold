@@ -133,7 +133,7 @@
 												<#list data_list! as doc>
 												<tr>
 													<td>${doc_index+1}</td>
-													<td>${(doc.num_current?string('#.00'))!}</td>
+													<td>${(doc.num_buy?string('#.00'))!}</td>
 													<td>${(doc.time_deal?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 													<td><a href='./hatchMo?id=${(doc.id)!}'>孵化</a></td>
 												</tr>
