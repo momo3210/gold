@@ -91,6 +91,17 @@
 					</div><!--/.page-header-->
 
 					<div class="row-fluid">
+						<div class='span2'>
+							<a href='/user/add' class="btn btn-danger btn-block btn-small" style='border-radius:4px'>
+								<i class="icon-bullhorn"></i>
+								添加新用户
+							</a>
+						</div>
+					</div>
+
+					<div class="space"></div>
+
+					<div class="row-fluid">
 						<div class="span12 widget-container-span">
 							<div class="widget-box">
 								<div class="widget-header">
@@ -122,10 +133,17 @@
 												<tr>
 													<th>#</th>
 													<th>会员编号</th>
+													<th>父级编号</th>
 													<th>昵称</th>
 													<th>姓名</th>
 													<th>手机号</th>
 													<th>注册时间</th>
+
+													<th>级别</th>
+													<th>静态钱包</th>
+													<th>动态钱包</th>
+													<th>门票</th>
+													<th>饲料</th>
 													<th>其它操作</th>
 												</tr>
 											</thead>
@@ -133,11 +151,19 @@
 											<#list data_list! as doc>
 												<tr>
 													<td>${doc_index+1}</td>
-													<td>M${(doc.id)!}</td>
+													<td>${(doc.id)!}</td>
+													<td>${(doc.pid)!}</td>
 													<td>${(doc.nickname)!}</td>
 													<td>${(doc.real_name)!}</td>
 													<td>${(doc.mobile)!}</td>
 													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+
+													<td>${(doc.lv)!}</td>
+													<td>${(doc.num_static)!}</td>
+													<td>${(doc.num_dynamic)!}</td>
+													<td>${(doc.num_ticket)!}</td>
+													<td>${(doc.num_food)!}</td>
+
 													<td><a href='/user/edit?id=${(doc.id)!}'>编辑</a></td>
 												</tr>
 											</#list>

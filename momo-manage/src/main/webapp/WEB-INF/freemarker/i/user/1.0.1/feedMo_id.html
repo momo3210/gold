@@ -11,6 +11,12 @@
 		.form-horizontal .form-actions {
 			margin-bottom: 0;
 		}
+		#table_1 th {
+			text-align: center;
+		}
+		#table_1 td {
+			text-align: center;
+		}
 		</style>
 	</head>
 
@@ -118,7 +124,7 @@
 											<div id="home" class="tab-pane in active">
 												<form class="form-horizontal" id='frm'>
 													<input type="hidden" name='token' value='${(data_token)!}' />
-													<input type="hidden" name='w_farm_chick_id' value='${(data_id)!}' />
+													<input type="hidden" name='w_farm_chick_id' value='${(data_farm.id)}' />
 													<div class="control-group">
 														<label class="control-label" for="frm_num_feed">喂食数量</label>
 
@@ -173,8 +179,35 @@
 										</div>
 									</div>
 								</div>
+							</div>
+							</#if>
 
-
+							<#if (data_farm.farmFeeds)?? && (0 < data_farm.farmFeeds?size)>
+							<div class="row-fluid">
+								<div class="span12 widget-container-span">
+									<div class="widget-box">
+										<table id="table_1" class="table table-striped table-bordered table-hover" style='margin-bottom:0'>
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>喂食数量</th>
+													<th>喂食时间</th>
+													<th>产生利息</th>
+												</tr>
+											</thead>
+											<tbody>
+												<#list data_farm.farmFeeds! as doc>
+												<tr>
+													<td>${doc_index+1}</td>
+													<td>${(doc.num_feed?string('#.00'))!}</td>
+													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+													<td>${(doc.price?string('#.00'))!}</td>
+												</tr>
+												</#list>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 							</#if>
 
@@ -205,9 +238,9 @@
 
 			$('#frm_num_feed').ace_spinner({
 				value: ${(data_farm.num_current)!},
-				min: 1,
+				min: 100,
 				max: ${(data_farm.num_current)!},
-				step: 1,
+				step: 100,
 				icon_up: 'icon-plus',
 				icon_down: 'icon-minus',
 				btn_up_class: 'btn-success' ,
@@ -226,7 +259,7 @@
 						}else{
 							if (data.msg) alert(data.msg[0]);
 						}
-						location.reload();
+						location.href = '${(conf_html_virtualPath)!}user/feedMo?id=${(data_farm.id)!}';
 					},
 					error : function() {
 						alert(arguments[2]);

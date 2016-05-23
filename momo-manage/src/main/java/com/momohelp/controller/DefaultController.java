@@ -139,4 +139,14 @@ public class DefaultController {
 		result.put("success", true);
 		return result;
 	}
+
+	@RequestMapping(value = { "/user/add" }, method = RequestMethod.GET)
+	public String _i_addtUI(Map<String, Object> map, HttpSession session) {
+
+		// TODO
+		map.put("data_user", session.getAttribute("session.user"));
+		map.put("nav_choose", ",08,0801,");
+		return "i/user/1.0.1/add";
+	}
+
 }

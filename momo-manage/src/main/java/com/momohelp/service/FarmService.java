@@ -13,6 +13,18 @@ import com.momohelp.model.Farm;
  */
 public interface FarmService extends IService<Farm> {
 
+	Farm getByFarm(int flag, Farm farm);
+
+	/**
+	 * 获取用户的鸡苗批次
+	 *
+	 * @param user_id
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Farm> findByUserId(String user_id, int page, int rows);
+
 	/**
 	 * 买入鸡苗
 	 *
@@ -38,7 +50,15 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findCanFeed(String user_id);
+	List<Farm> findFeedByUserId(String user_id);
+
+	/**
+	 * 查找可以孵化的鸡苗的批次
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findHatchByUserId(String user_id);
 
 	/**
 	 * 查找可以孵化的鸡的批次

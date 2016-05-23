@@ -7,9 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import net.foreworld.util.StringUtil;
-import net.foreworld.util.encryptUtil.MD5;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +33,8 @@ import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
+import com.momohelp.util.encryptUtil.MD5;
 
 /**
  *
@@ -565,6 +564,30 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/user/createAccount2" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_createAccount2(User user, HttpSession session) {
+		// TODO
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 我的信息
+		// user.setPid(session.getAttribute("session.user.id").toString());
+
+		user.setUser_pass("123456");
+		user.setUser_pass_safe("123456");
+
+		String[] msg = userService.register(user);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
 	/**
 	 * 推荐清单
 	 *
@@ -577,12 +600,9 @@ public class UserController {
 			@RequestParam(required = false, defaultValue = "100") int rows) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
 
-		String user_id = session.getAttribute("session.user.id").toString();
-		// TODO
-		User user = new User();
-		user.setPid(user_id);
-
-		List<User> list = userService.findByUser(user, page, Integer.MAX_VALUE);
+		List<User> list = userService.findChildren(
+				session.getAttribute("session.user.id").toString(), page,
+				Integer.MAX_VALUE);
 		result.addObject("data_list", list);
 
 		// TODO
@@ -660,7 +680,7 @@ public class UserController {
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe,
 			FarmFeed farmFeed, HttpSession session) {
-		// TODO
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -668,20 +688,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		}
+		} // if
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		}
+		} // if
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		} // if
 
 		farmFeed.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -689,9 +709,8 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
-		}
+		} // if
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}
@@ -708,42 +727,40 @@ public class UserController {
 	public String _i_feedMoUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = false) String id) {
 
-		String html = null;
+		String uri = null;
 
 		if (null == id || "".equals(id.trim())) {
-			List<Farm> list = farmService.findCanFeed(session.getAttribute(
-					"session.user.id").toString());
+			List<Farm> list = farmService.findFeedByUserId(session
+					.getAttribute("session.user.id").toString());
 			map.put("data_list", list);
 
-			html = "i/user/1.0.1/feedMo";
+			uri = "i/user/1.0.1/feedMo";
 		} else {
-			Farm farm = farmService.selectByKey(id);
+
+			Farm farm = farmService.getByFarm(1, new Farm(id, session
+					.getAttribute("session.user.id").toString()));
 
 			if (null == farm) {
 				return "redirect:/user/feedMo";
-			}
+			} // if
 
 			// 判断今天是否已经喂过该批次的鸡苗了
-			Map<String, Object> checkTodayFeed = farmFeedService
-					.checkTodayFeed(farm.getId());
+			String[] checkTodayFeed = farmFeedService.checkTodayFeed(farm
+					.getLastFarmFeed());
 			if (null != checkTodayFeed) {
-				if (checkTodayFeed.containsKey("msg")) {
-					map.put("data_msg",
-							((String[]) checkTodayFeed.get("msg"))[0]);
-				}
-			}
+				map.put("data_msg", checkTodayFeed[0]);
+			} // if
 
-			map.put("data_id", id);
 			map.put("data_farm", farm);
-			html = "i/user/1.0.1/feedMo_id";
-		}
+			map.put("data_token", genToken(session));
 
-		// TODO
+			uri = "i/user/1.0.1/feedMo_id";
+		} // if
+
 		map.put("nav_choose", ",05,0505,");
 		map.put("data_user", session.getAttribute("session.user"));
-		map.put("data_token", genToken(session));
 
-		return html;
+		return uri;
 	}
 
 	/**
@@ -763,7 +780,7 @@ public class UserController {
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe,
 			FarmHatch farmHatch, HttpSession session) {
-		// TODO
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -771,20 +788,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		}
+		} // if
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		}
+		} // if
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		} // if
 
 		farmHatch
 				.setUser_id(session.getAttribute("session.user.id").toString());
@@ -812,32 +829,33 @@ public class UserController {
 	public String _i_hatchMoUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = false) String id) {
 
-		String html = null;
+		String uri = null;
 
 		if (null == id || "".equals(id.trim())) {
-			List<Farm> list = farmService.findCanHatch(session.getAttribute(
-					"session.user.id").toString());
+			List<Farm> list = farmService.findHatchByUserId(session
+					.getAttribute("session.user.id").toString());
 			map.put("data_list", list);
 
-			html = "i/user/1.0.1/hatchMo";
+			uri = "i/user/1.0.1/hatchMo";
 		} else {
-			Farm farm = farmService.selectByKey(id);
+			Farm farm = farmService.getByFarm(1, new Farm(id, session
+					.getAttribute("session.user.id").toString()));
 
 			if (null == farm) {
 				return "redirect:/user/hatchMo";
-			}
+			} // if
 
-			map.put("data_id", id);
 			map.put("data_farm", farm);
-			html = "i/user/1.0.1/hatchMo_id";
+			map.put("data_token", genToken(session));
+
+			uri = "i/user/1.0.1/hatchMo_id";
 		}
 
 		// TODO
 		map.put("nav_choose", ",05,0506,");
 		map.put("data_user", session.getAttribute("session.user"));
-		map.put("data_token", genToken(session));
 
-		return html;
+		return uri;
 	}
 
 	/**
@@ -850,36 +868,10 @@ public class UserController {
 	public ModelAndView _i_buyMoUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyMo");
 
-		User user = (User) session.getAttribute("session.user");
-
-		String lv = user.getLv();
-
-		String min = null, max = null;
-
-		if ("05".equals(lv)) {
-			min = "2001";
-			max = "2002";
-		} else if ("06".equals(lv)) {
-			min = "2003";
-			max = "2004";
-		} else if ("07".equals(lv)) {
-			min = "2005";
-			max = "2006";
-		} else if ("08".equals(lv)) {
-			min = "2007";
-			max = "2008";
-		}
-
-		Cfg minObj = cfgService.selectByKey(min);
-		Cfg maxObj = cfgService.selectByKey(max);
-
-		result.addObject("data_lv_min", minObj.getValue_());
-		result.addObject("data_lv_max", maxObj.getValue_());
 		result.addObject("data_token", genToken(session));
-
-		// TODO
 		result.addObject("nav_choose", ",05,0501,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+
 		return result;
 	}
 
@@ -921,7 +913,7 @@ public class UserController {
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe, Sell sell,
 			HttpSession session) {
-		// TODO
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -929,20 +921,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		}
+		} // if
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		}
+		} // if
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		} // if
 
 		sell.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -950,9 +942,8 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
-		}
+		} // if
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}

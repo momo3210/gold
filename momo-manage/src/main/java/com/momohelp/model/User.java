@@ -2,6 +2,7 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import javax.persistence.Transient;
  */
 @Table(name = "s_user")
 public class User implements Serializable {
+
 	private static final long serialVersionUID = -1453141126844138706L;
 
 	/**
@@ -23,6 +25,11 @@ public class User implements Serializable {
 	@Id
 	@Column(name = "id")
 	private String id;
+
+	/**
+	 * 父ID
+	 */
+	private String pid;
 
 	/**
 	 * 登陆密码
@@ -91,17 +98,6 @@ public class User implements Serializable {
 	private String bank_account;
 
 	/**
-	 * 父ID
-	 */
-	private String pid;
-
-	/**
-	 * 父对象
-	 */
-	@Transient
-	private User p_user;
-
-	/**
 	 * 家族（最顶端的用户id）
 	 */
 	private String family_id;
@@ -125,6 +121,126 @@ public class User implements Serializable {
 	private Double total_dynamic;
 	private Integer total_ticket;
 	private Integer total_food;
+
+	/**
+	 * 短信验证码
+	 */
+	private String verifycode_sms;
+
+	/**
+	 * 父对象
+	 */
+	@Transient
+	private User p_user;
+
+	/**
+	 * 直推的下一级用户
+	 */
+	@Transient
+	private List<User> children;
+
+	/**
+	 * 用户的最后一次排单（鸡苗批次）
+	 */
+	@Transient
+	private Farm lastFarm;
+
+	/**
+	 * 最新的卖盘
+	 */
+	@Transient
+	private Sell lastSell;
+
+	/**
+	 * 每月的卖盘
+	 */
+	@Transient
+	private List<Sell> monthSells;
+
+	public Sell getLastSell() {
+		return lastSell;
+	}
+
+	public void setLastSell(Sell lastSell) {
+		this.lastSell = lastSell;
+	}
+
+	public List<Sell> getMonthSells() {
+		return monthSells;
+	}
+
+	public void setMonthSells(List<Sell> monthSells) {
+		this.monthSells = monthSells;
+	}
+
+	public Farm getLastFarm() {
+		return lastFarm;
+	}
+
+	public void setLastFarm(Farm lastFarm) {
+		this.lastFarm = lastFarm;
+	}
+
+	public BuyMo getBuyMo() {
+		BuyMo buyMo = new BuyMo();
+
+		buyMo.setMax(5000);
+
+		if ("05".equals(lv)) {
+			buyMo.setMin(100);
+		} else if ("06".equals(lv)) {
+			buyMo.setMin(1000);
+		} else if ("07".equals(lv)) {
+			buyMo.setMin(2000);
+		} else if ("08".equals(lv)) {
+			buyMo.setMin(3000);
+		} // if
+
+		return buyMo;
+	}
+
+	/**
+	 * 买入鸡苗的限制
+	 *
+	 * @author Administrator
+	 *
+	 */
+	public class BuyMo {
+		private Integer max;
+		private Integer min;
+
+		public Integer getMax() {
+			return max;
+		}
+
+		public void setMax(Integer max) {
+			this.max = max;
+		}
+
+		public Integer getMin() {
+			return min;
+		}
+
+		public void setMin(Integer min) {
+			this.min = min;
+		}
+	}
+
+	public String getVerifycode_sms() {
+		return verifycode_sms;
+	}
+
+	public void setVerifycode_sms(String verifycode_sms) {
+		this.verifycode_sms = verifycode_sms;
+	}
+
+	public List<User> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<User> children) {
+		this.children = children;
+	}
 
 	public User getP_user() {
 		return p_user;

@@ -125,7 +125,7 @@
 												<tr>
 													<th>#</th>
 													<th>鸡苗数量</th>
-													<th>买入时间</th>
+													<th>成交时间</th>
 													<th>其它操作</th>
 												</tr>
 											</thead>
@@ -133,8 +133,8 @@
 												<#list data_list! as doc>
 												<tr>
 													<td>${doc_index+1}</td>
-													<td>${(doc.num_current)!}</td>
-													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+													<td>${(doc.num_buy?string('#.00'))!}</td>
+													<td>${(doc.time_deal?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 													<td><a href='./hatchMo?id=${(doc.id)!}'>孵化</a></td>
 												</tr>
 												</#list>
@@ -151,22 +151,6 @@
 												<li class="active">
 													<a href="#">1</a>
 												</li>
-
-												<!-- <li>
-													<a href="#">2</a>
-												</li>
-
-												<li>
-													<a href="#">3</a>
-												</li>
-
-												<li>
-													<a href="#">4</a>
-												</li>
-
-												<li>
-													<a href="#">5</a>
-												</li> -->
 
 												<li>
 													<a href="#">

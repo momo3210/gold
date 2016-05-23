@@ -1,6 +1,5 @@
 package com.momohelp.service.impl;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,11 +45,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		return super.save(entity);
 	}
 
-	@Override
-	public int updateNotNull(Sell entity) {
-		return super.updateNotNull(entity);
-	}
-
 	/**
 	 * 生成主键
 	 *
@@ -64,9 +58,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			int i = (int) ((Math.random() * 10 + 1) * 100000000);
 			id = String.valueOf(i);
 			if (9 < id.length()) {
-				id.substring(0, 9);
-			}
-			// END
+				id = id.substring(0, 9);
+			} // id
+			id = "M" + id;
 			sell = selectByKey(id);
 		} while (null != sell);
 		return id;
@@ -88,7 +82,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		c_23.set(Calendar.HOUR_OF_DAY, 23);
 
 		return (date.after(c_1.getTime()) && date.before(c_23.getTime())) ? null
-				: new String[] { "交易时间：凌晨01点 至 午夜23点" };
+				: new String[] { "交易时间：凌晨01点至午夜23点" };
 	}
 
 	/**
@@ -108,26 +102,31 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		default:
 			result.put("msg", new String[] { "非法操作" });
 			return result;
-		}
+		} // switch
 
 		sell.setNum_sell((null == sell.getNum_sell()) ? 0 : sell.getNum_sell());
 		if (1 > sell.getNum_sell()) {
-			result.put("msg", new String[] { "卖出鸡苗数量必须大于 0" });
+			result.put("msg", new String[] { "卖出鸡苗数量必须大于0" });
 			return result;
-		}
+		} // if
+
+		if (0 != (sell.getNum_sell() % ((1 == sell.getType_id()) ? 10 : 500))) {
+			result.put("msg", new String[] { "请输入规定的数量" });
+			return result;
+		} // if
 
 		String[] checkOfficeHours = checkOfficeHours(sell.getCreate_time());
 		if (null != checkOfficeHours) {
 			result.put("msg", checkOfficeHours);
 			return result;
-		}
+		} // if
 
 		if (2 == sell.getType_id()) {
 			if (5000 < sell.getNum_sell()) {
 				result.put("msg", new String[] { "动态钱包上限不能大于 5000" });
 				return result;
-			}
-		}
+			} // if
+		} // if
 
 		result.put("data", sell);
 		return result;
@@ -148,23 +147,17 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 				.getNum_static() : user.getNum_dynamic())) {
 			result.put("msg", new String[] { (1 == sell.getType_id() ? "静"
 					: "动") + "态钱包余额不足" });
-		}
+		} // if
 
 		String[] checkTodaySell = checkTodaySell(sell, user);
 		if (null != checkTodaySell) {
 			result.put("msg", checkTodaySell);
 			return result;
-		}
+		} // if
 
-		String[] checkCeilingEveryMonth = checkCeilingEveryMonth(sell, user);
-		if (null != checkCeilingEveryMonth) {
-			result.put("msg", checkCeilingEveryMonth);
-			return result;
-		}
-
-		String[] checkSellNum = checkSellNum(sell, user);
-		if (null != checkSellNum) {
-			result.put("msg", checkSellNum);
+		String[] checkMonthCeiling = checkMonthCeiling(sell, user);
+		if (null != checkMonthCeiling) {
+			result.put("msg", checkMonthCeiling);
 			return result;
 		}
 
@@ -191,21 +184,19 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	public String[] sell(Sell sell) {
 		sell.setCreate_time(new Date());
 
-		// TODO
 		Map<String, Object> sell_validationParameter = sell_validationParameter(sell);
 		if (sell_validationParameter.containsKey("msg")) {
 			return (String[]) sell_validationParameter.get("msg");
-		}
+		} // if
 		sell = (Sell) sell_validationParameter.get("data");
 
 		// 用户实时信息
-		User user = userService.selectByKey(sell.getUser_id());
+		User user = userService.getId(1, sell.getUser_id());
 
-		// TODO
 		Map<String, Object> sell_validation = sell_validation(sell, user);
 		if (sell_validation.containsKey("msg")) {
 			return (String[]) sell_validation.get("msg");
-		}
+		} // if
 		sell = (Sell) sell_validation.get("data");
 
 		sell.setTime_deal(null);
@@ -225,48 +216,32 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @param user
 	 * @return
 	 */
-	private String[] checkCeilingEveryMonth(Sell sell, User user) {
-		// 得到每月的第一天，例如：2016-05-01
-		Calendar c = Calendar.getInstance();
-		c.setTime(sell.getCreate_time());
-		c.set(Calendar.DAY_OF_MONTH, 1);
-		Date date = null;
-		try {
-			date = sdf.parse(sdf.format(c.getTime()));
-		} catch (ParseException e) {
-			return new String[] { "日期数据异常" };
-		}
+	private String[] checkMonthCeiling(Sell sell, User user) {
 
-		// 查询用户当月从2016-05-01到现在的卖盘列表
-		Example example = new Example(Sell.class);
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andGreaterThan("create_time", date);
-		criteria.andEqualTo("user_id", user.getId());
-		List<Sell> list = selectByExample(example);
-
-		if (null == list) {
+		if (null == user.getMonthSells()) {
 			return new String[] { "数据查询异常" };
-		}
+		} // if
 
-		if (11 < list.size()) {
-			return new String[] { "每月卖出鸡苗上限不能超过 12 次" };
-		}
+		if (12 == user.getMonthSells().size()) {
+			return new String[] { "每月卖出鸡苗上限不能超过12次" };
+		} // if
 
 		// 每月卖出的静态总数、动态总数
 		int num_static = 0, num_dynamic = 0;
 
-		for (int i = 0, j = list.size(); i < j; i++) {
-			Sell item = list.get(i);
+		for (int i = 0, j = user.getMonthSells().size(); i < j; i++) {
+			Sell item = user.getMonthSells().get(i);
+
 			if (1 == item.getType_id()) {
 				num_static += item.getNum_sell();
 			} else {
 				num_dynamic += item.getNum_sell();
-			}
-		}
+			} // if
+		} // for
 
 		if (60000 < (num_dynamic + sell.getNum_sell())) {
-			return new String[] { "动态钱包每月卖出不能超过 60000" };
-		}
+			return new String[] { "动态钱包每月卖出不能超过60000" };
+		} // if
 
 		return null;
 	}
@@ -285,15 +260,15 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @return
 	 */
 	private String[] checkTodaySell(Sell sell, User user) {
-		Sell last_sell = getLastByUserId(user.getId());
-		if (null == last_sell) {
+		Sell lastSell = user.getLastSell();
+		if (null == lastSell) {
 			return null;
 		}
 
 		// 取当前的时间
 		String date_1 = sdf.format(sell.getCreate_time());
 		// 取最后一次卖盘的创建时间
-		String date_2 = sdf.format(last_sell.getCreate_time());
+		String date_2 = sdf.format(lastSell.getCreate_time());
 
 		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了" } : null;
 	}
@@ -332,40 +307,8 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			_user.setNum_static(materialRecord.getNum_balance());
 		} else {
 			_user.setNum_dynamic(materialRecord.getNum_balance());
-		}
+		} // if
 		userService.updateNotNull(_user);
-	}
-
-	/**
-	 * 检测购买的鸡苗数量是否合法
-	 *
-	 * @param sell
-	 * @param user
-	 * @return
-	 */
-	private String[] checkSellNum(Sell sell, User user) {
-		// 静态10倍 动态500
-		int radix = (1 == sell.getType_id()) ? 10 : 500;
-		return (0 == sell.getNum_sell() % radix) ? null
-				: new String[] { "请输入规定的数量" };
-	}
-
-	/**
-	 * 获取用户最后一次的卖出记录
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	private Sell getLastByUserId(String user_id) {
-		Example example = new Example(Sell.class);
-		example.setOrderByClause("create_time desc");
-		// TODO
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("user_id", user_id);
-
-		PageHelper.startPage(1, 1);
-		List<Sell> list = selectByExample(example);
-		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
 	@Override
@@ -414,6 +357,40 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 
 		return list_sell;
+	}
+
+	@Override
+	public List<Sell> findMonthSellByUserId(String user_id) {
+
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DAY_OF_MONTH, 1);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+
+		// 查询用户当月从2016-05-01到现在的卖盘列表
+		Example example = new Example(Sell.class);
+		Example.Criteria criteria = example.createCriteria();
+
+		criteria.andGreaterThan("create_time", c.getTime());
+		criteria.andEqualTo("user_id", user_id);
+
+		return selectByExample(example);
+	}
+
+	@Override
+	public Sell getLastSellByUserId(String user_id) {
+
+		Example example = new Example(Sell.class);
+		example.setOrderByClause("create_time desc");
+		// TODO
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+
+		PageHelper.startPage(1, 1);
+		List<Sell> list = selectByExample(example);
+		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
 }

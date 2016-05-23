@@ -23,13 +23,6 @@ public class Buy implements Serializable {
 	@Column(name = "id")
 	private String id;
 
-	private String user_id;
-
-	/**
-	 * 真实的成交时间（后台计算后，更新此字段）
-	 */
-	private Date time_deal;
-
 	/**
 	 * 关联批次
 	 */
@@ -49,6 +42,13 @@ public class Buy implements Serializable {
 	 * 计算时间
 	 */
 	private Date calc_time;
+
+	private String user_id;
+
+	/**
+	 * 真实的成交时间（后台计算后，更新此字段）
+	 */
+	private Date time_deal;
 
 	@Transient
 	private List<BuySell> buySells;

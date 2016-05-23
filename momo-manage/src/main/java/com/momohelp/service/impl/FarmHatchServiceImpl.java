@@ -11,10 +11,8 @@ import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmHatch;
-import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
-import com.momohelp.service.UserService;
 
 /**
  *
@@ -26,13 +24,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		FarmHatchService {
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private FarmService farmService;
-
-	@Autowired
-	private FarmFeedService farmFeedService;
 
 	@Override
 	public int save(FarmHatch entity) {
@@ -49,7 +41,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 	public List<FarmHatch> findByFarmId(String farm_id) {
 		Example example = new Example(FarmHatch.class);
 		example.setOrderByClause("create_time desc");
-		// TODO
+
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("w_farm_chick_id", farm_id);
 
@@ -63,37 +55,35 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		farmHatch.setNum_hatch((null == farmHatch.getNum_hatch()) ? 0
 				: farmHatch.getNum_hatch());
 		if (1 > farmHatch.getNum_hatch()) {
-			return new String[] { "孵化数量必须大于 0" };
-		}
+			return new String[] { "孵化数量必须大于0" };
+		} // if
 
 		// 100的倍数
 		if (0 != farmHatch.getNum_hatch() % 100) {
 			return new String[] { "请输入规定的数量" };
-		}
+		} // if
 
 		// 查找鸡苗批次
-		Farm farm = farmService.selectByKey(farmHatch.getW_farm_chick_id());
+		Farm farm = farmService
+				.getByFarm(1, new Farm(farmHatch.getW_farm_chick_id(),
+						farmHatch.getUser_id()));
 
 		if (null == farm) {
 			return new String[] { "数据查询异常" };
-		}
-
-		if (!farmHatch.getUser_id().equals(farm.getUser_id())) {
-			return new String[] { "非法操作" };
-		}
+		} // if
 
 		// 未完全交易成功，所以不能孵化
 		if (null == farm.getTime_deal()) {
 			return new String[] { "不能孵化" };
-		}
+		} // if
 
 		if (0 == farm.getNum_current()) {
 			return new String[] { "库存不足" };
-		}
+		} // if
 
 		if (farmHatch.getNum_hatch() > farm.getNum_current()) {
 			return new String[] { "待孵化数量不足" };
-		}
+		} // if
 
 		// 更新鸡苗批次表
 		Farm _farm = new Farm();
