@@ -275,8 +275,45 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return id;
 	}
 
+	/**
+	 * 获取我和我的父级
+	 *
+	 * @param id
+	 * @return
+	 */
+	private User getId_3(String id) {
+
+		User user = selectByKey(id);
+		if (null == user) {
+			return null;
+		} // if
+
+		// 获取父亲
+		if (!"0".equals(user.getPid())) {
+			User p_user = selectByKey(user.getPid());
+			user.setP_user(p_user);
+		} // if
+
+		return user;
+	}
+
+	/**
+	 * 买盘
+	 *
+	 * @param id
+	 * @return
+	 */
 	private User getId_2(String id) {
-		return null;
+
+		User user = getId_3(id);
+		if (null == user) {
+			return null;
+		} // if
+
+		// 未完全成交的鸡苗批次（当前时间）
+		user.setFarms(farmService.findByUnDeal_1(id));
+
+		return user;
 	}
 
 	private User getId_1(String id) {
@@ -314,6 +351,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return getId_1(id);
 		case 2:
 			return getId_2(id);
+		case 3:
+			return getId_3(id);
 		default:
 			return null;
 		}

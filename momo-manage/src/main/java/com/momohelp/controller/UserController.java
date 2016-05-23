@@ -964,9 +964,12 @@ public class UserController {
 		// "session.user.id").toString());
 		// result.addObject("data_list_buy", list_buy);
 
-		List<Farm> list = farmService.findByUnDeal(session.getAttribute(
-				"session.user.id").toString());
-		result.addObject("data_list", list);
+		// List<Farm> list = farmService.findByUnDeal(session.getAttribute(
+		// "session.user.id").toString());
+
+		User user = userService.getId(2, session
+				.getAttribute("session.user.id").toString());
+		result.addObject("data_user", user);
 
 		return result;
 	}

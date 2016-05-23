@@ -20,4 +20,6 @@ public interface BuyService extends IService<Buy> {
 	List<Buy> findUnFinishDeal(String user_id);
 
 	List<Buy> findByFarmId(String farm_id);
+
+	List<Buy> findByFarmId_1(String farm_id);
 }

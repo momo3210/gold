@@ -21,6 +21,14 @@ public interface FarmService extends IService<Farm> {
 	 */
 	List<Farm> findByUnDeal(String user_id);
 
+	/**
+	 * 获取用户的未完全交易的鸡苗批次
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findByUnDeal_1(String user_id);
+
 	Farm getByFarm(int flag, Farm farm);
 
 	/**

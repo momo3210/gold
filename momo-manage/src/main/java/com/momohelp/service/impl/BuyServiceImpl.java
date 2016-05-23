@@ -24,6 +24,29 @@ import com.momohelp.service.UserService;
 @Service("buyService")
 public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
+	@Override
+	public List<Buy> findByFarmId_1(String farm_id) {
+
+		Example example = new Example(Buy.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("w_farm_chick_id", farm_id);
+
+		List<Buy> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Buy buy = list.get(i);
+			buy.setBuySells(buySellService.findByBuyId_1(buy.getId()));
+		} // for
+
+		return list;
+	}
+
 	@Autowired
 	private BuySellService buySellService;
 

@@ -157,6 +157,20 @@ public class User implements Serializable {
 	@Transient
 	private List<Sell> monthSells;
 
+	/**
+	 * 关联的鸡苗批次列表
+	 */
+	@Transient
+	private List<Farm> farms;
+
+	public List<Farm> getFarms() {
+		return farms;
+	}
+
+	public void setFarms(List<Farm> farms) {
+		this.farms = farms;
+	}
+
 	public Sell getLastSell() {
 		return lastSell;
 	}

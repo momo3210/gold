@@ -37,6 +37,34 @@ import com.momohelp.util.StringUtil;
 public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 	@Override
+	public List<Farm> findByUnDeal_1(String user_id) {
+
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time desc");
+
+		// 24小时之内的买盘可以查看
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.HOUR_OF_DAY, -24);
+
+		example.or().andEqualTo("user_id", user_id)
+				.andGreaterThan("time_deal", c.getTime());
+		example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
+
+		List<Farm> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm farm = list.get(i);
+			farm.setBuys(buyService.findByFarmId_1(farm.getId()));
+		} // for
+
+		return list;
+	}
+
+	@Override
 	public List<Farm> findByUnDeal(String user_id) {
 
 		Example example = new Example(Farm.class);

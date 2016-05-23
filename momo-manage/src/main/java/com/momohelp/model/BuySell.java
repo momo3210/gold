@@ -98,6 +98,18 @@ public class BuySell implements Serializable {
 	 */
 	private String tip_off_content;
 
+	/**
+	 * 买家对象
+	 */
+	@Transient
+	private User p_buy_user;
+
+	/**
+	 * 卖家对象
+	 */
+	@Transient
+	private User p_sell_user;
+
 	public Date getTip_off_time() {
 		return tip_off_time;
 	}
@@ -161,11 +173,6 @@ public class BuySell implements Serializable {
 	public void setTip_off_user_id(String tip_off_user_id) {
 		this.tip_off_user_id = tip_off_user_id;
 	}
-
-	@Transient
-	private User p_buy_user;
-	@Transient
-	private User p_sell_user;
 
 	public User getP_buy_user() {
 		return p_buy_user;
