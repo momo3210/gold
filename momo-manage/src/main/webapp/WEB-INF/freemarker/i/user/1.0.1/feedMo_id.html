@@ -182,7 +182,7 @@
 							</div>
 							</#if>
 
-							<#if (data_farm.farmFeeds)??>
+							<#if (data_farm.farmFeeds)?? && (0 < data_farm.farmFeeds?size)>
 							<div class="row-fluid">
 								<div class="span12 widget-container-span">
 									<div class="widget-box">
