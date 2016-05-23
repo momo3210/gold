@@ -1,4 +1,4 @@
-package com.momohelp.calculate.service.impl;
+package com.momohelp.calculate.service.test3;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,8 +11,6 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.Ibase;
@@ -27,7 +25,7 @@ import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.UserService;
-@Service
+//@Service
 public class Base implements Ibase, Serializable {
 
 	private static final long serialVersionUID = -7329182768601602219L;
@@ -76,16 +74,10 @@ public class Base implements Ibase, Serializable {
 			// 计算奖金基数
 			for (Farm farm : farms) {
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
+				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
 				if (farm.getPid_higher_ups() == null
 						|| farm.getPid_higher_ups().trim().length() == 0) {
-					continue;
-				}
-				if ("0".equals(farm.getPid_higher_ups())) {
-					continue;
-				}
-				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
-				if (leader==null) {
-					continue;
+					break;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
 				double tempBase = 0.00;
@@ -189,10 +181,7 @@ public class Base implements Ibase, Serializable {
 				break;
 			}
 			String pid = user.getPid();// 获取当前用户的领导
-			if (pid.equals("0")) {
-				continue;
-			}
-			List<ModelLV> childsList = (List<ModelLV>) userService
+			List<ModelLV> childsList = userService
 					.countMemberNOAndlevel(pid);
 			/**
 			 * level 级别（05贫农、06中农、07富农、08农场主）

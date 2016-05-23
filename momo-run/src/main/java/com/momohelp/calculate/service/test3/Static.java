@@ -1,4 +1,4 @@
-package com.momohelp.calculate.service.impl;
+package com.momohelp.calculate.service.test3;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -7,8 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.IStatic;
@@ -21,7 +19,7 @@ import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.UserService;
 
-@Service("myStatic")
+//@Service("myStatic")
 public class Static implements IStatic {
 
 	private static final long serialVersionUID = -4917080782460473547L;
@@ -52,9 +50,6 @@ public class Static implements IStatic {
 		User user = null;
 		for (FarmHatch farmHatch : farmHatchs) {
 			user = userService.selectByKey(farmHatch.getUser_id());
-			if (user == null) {
-				continue;
-			}
 			double temp = 0.00;
 			if (farmHatch.getFlag_is_last() == 1) {
 				Example example2 = new Example(FarmFeed.class);
@@ -67,9 +62,7 @@ public class Static implements IStatic {
 				}
 				Farm farm = farmService.selectByKey(farmHatch
 						.getW_farm_chick_id());
-				if (farm != null) {
-					temp = temp + farm.getNum_reward();
-				}
+				temp = temp + farm.getNum_reward();
 			}
 			user.setNum_static(user.getNum_static()
 					+ farmHatch.getNum_hatch().intValue() + temp);

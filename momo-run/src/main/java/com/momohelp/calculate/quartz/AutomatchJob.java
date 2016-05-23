@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.momohelp.calculate.service.impl.DynamicCalculation;
+import com.momohelp.calculate.service.test2.DynamicCalculation;
 @Service
 public class AutomatchJob implements Job {
 

@@ -1,4 +1,4 @@
-package com.momohelp.calculate.service.impl;
+package com.momohelp.calculate.service.test2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.ICalculation;
+import com.momohelp.calculate.service.impl.Parameter;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
-import com.momohelp.model.FarmFeed;
 import com.momohelp.model.ModelLV;
 import com.momohelp.model.Prize;
 import com.momohelp.model.Sell;
@@ -28,7 +28,6 @@ import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.CfgService;
-import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
@@ -36,10 +35,10 @@ import com.momohelp.service.UserService;
 
 //动态奖金计算
 @Component
-public class DynamicCalculation implements Serializable, ICalculation {
+public class DynamicCalculation00 implements Serializable, ICalculation {
 
 	private static final long serialVersionUID = -817967291317652692L;
-	private static Logger log = Logger.getLogger(DynamicCalculation.class);
+	private static Logger log = Logger.getLogger(DynamicCalculation00.class);
 	@Resource
 	private CfgService cfgService;
 	@Resource
@@ -59,11 +58,7 @@ public class DynamicCalculation implements Serializable, ICalculation {
 	@Resource
 	private PrizeService prizeService;
 
-	@Resource
-	private FarmFeedService farmFeedService;
-
-	// 自动转换到期奖金金额--需要定时作业
-	@Override
+	// 自动转换到期奖金金额
 	public boolean triggerConversion() {
 		Example example = new Example(Prize.class);
 		Example.Criteria criteria = example.createCriteria();
@@ -94,6 +89,7 @@ public class DynamicCalculation implements Serializable, ICalculation {
 		cr.add(Calendar.DAY_OF_MONTH, -2);
 		List<Farm> farms = farmService.selectForceLogout(cr.getTime());
 		for (Farm farm : farms) {
+			//farm.setFlag_out(3);
 			farm.setFlag_out_p(3);
 			farmService.updateNotNull(farm);
 		}
@@ -158,85 +154,86 @@ public class DynamicCalculation implements Serializable, ICalculation {
 
 	// 奖金基数计算
 	/****
-	 * 注意事项： 计算后的基数如果小于0 返回0
-	 * 
-	 * 前置条件：买卖盘匹配结束，且没有遗留问题 当前单购买数量和成交数量相等
-	 * 
-	 * 业务描述：判断是否出局条件【w_farm_chick表中是否出局标志】： 1.正常 0 出局
-	 * 
-	 * 出局需要计算烧伤奖 正常排单基数不变 即购买金额
-	 * 
-	 * 计算公式：小端金额- 推荐人最近获取被推荐人一单的推荐奖-被推荐人上一单所得利息
-	 * 
-	 * SQL： 被推荐人上一单推荐奖 SELECT w.* FROM w_farm_chick as w WHERE w.user_id=? ORDER
-	 * BY w.create_time DESC LIMIT 0,2 中的第二条数据：来计算推荐奖 和等级相关
-	 * 
-	 * 所得利息： 幼鸡利息=幼鸡数量* 喂养时长+成年鸡利息=成年鸡数量*喂养时长
+	 * 注意事项： 计算后的基数如果小于0 返回0 前置条件：买卖盘匹配结束，且没有遗留问题 当前单购买数量和成交数量相等
+	 * 业务描述：判断是否出局条件【w_farm_chick表中是否出局标志】： 1.正常 0 出局 出局需要计算烧伤奖 正常排单基数不变 即购买金额
+	 * 计算公式：小端金额- 推荐人最近获取被推荐人一单的推荐奖-被推荐人上一单所得利息 SQL： 被推荐人上一单推荐奖 SELECT w.* FROM
+	 * w_farm_chick as w WHERE w.user_id=? ORDER BY w.create_time DESC LIMIT 0,2
+	 * 中的第二条数据：来计算推荐奖 和等级相关 所得利息： 幼鸡利息=幼鸡数量* 喂养时长+成年鸡利息=成年鸡数量*喂养时长
 	 * 
 	 * 成年鸡数量： 可能在喂养过程中卖掉成年鸡 ，需要每日计算
 	 */
 	@Override
 	public double base() {
-		double base = 0.00;
+		double base = 0.0000;
 		log.info("-------------------奖金基数计算------------------------");
 		List<Farm> farms = farmService.getUntreatedFarm();
 		// 用户等级计算
 		if (calculateLevel(farms)) {
 			// 计算奖金基数
 			for (Farm farm : farms) {
+				// farm.getUser_id();// 用户id
+				// farm.getNum_buy(); // 购买数量
+				// 获取当前用户的领导【用户】
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
 				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
-				if (farm.getPid_higher_ups() == null
-						|| farm.getPid_higher_ups().trim().length() == 0) {
+				// 获取当前用户排单对应的领导用户对应的最近排单 且小于当前用户排单的创建日期
+				List<Farm> leaderLastFarm = farmService.selectLastFarmByDate(
+						leader.getId(), farm.getCreate_time());
+				double tempBase = farm.getNum_buy();
+				if (leaderLastFarm == null || leaderLastFarm.size() == 0) {
 					break;
 				}
-				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
-				double tempBase = 0.00;
-				// 小端金额
+				Farm f = leaderLastFarm.get(0);// 领导最近一单
 				if (farm.getNum_buy() >= f.getNum_buy()) {
 					tempBase = f.getNum_buy();
 				} else {
 					tempBase = farm.getNum_buy();
 				}
-				if (f.getFlag_out_p() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
-												// 计算基数为0 也就不用计算了
+				// 判断当前用户对应的领导是否出局
+				// if (farm.getTime_out().after(f.getTime_out())) {//
+				// 这里判断还是有问题！！！！！！！！！！
+				//if (f.getFlag_out() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
+											// 计算基数为0 也就不用计算了
+				if (f.getFlag_out_p() == 2){// 领导排单已经出局 f.getFlag_out()==3时
+					                        // 计算基数为0 也就不用计算了
+					// 提成基数计算
+					// 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
+					// tempBase=leader.
+					// 小端金额
+					
+					// 推荐人获取被推荐人最近一单的推荐奖
 					/***
-					 * 提成基数计算
+					 * 获取当前单的用户排单时间【create_time】 查询当前用户小于create_time最近一单 select
+					 * w.* from w_farm_chick as w where w.user_id=#{当前单据用户id}
+					 * and w.create_time<#{当前单据排单时间} order by w.create_time DESC
+					 * limit 0,1
+					 */
+					List<Farm> userLastFarm = farmService.selectLastFarmByDate(
+							farm.getUser_id(), farm.getCreate_time());
+					// 被推荐人上一单所得利息
+					/***
+					 * 利息包含： 1.幼鸡饲养利息：获取配置表中幼鸡饲养利率 * 幼鸡饲养周期 2.成年下蛋利息：获取这一批次 * 时间
+					 * 3.select sum(money) from (select (w.num_feed)* 注意这里的$用法
+					 * ${参数：下蛋利率} as money from w_farm_feed as w where
+					 * w.w_farm_chick_id=#{批次})
 					 * 
-					 * 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
-					 * 
-					 * 利息包含：
-					 * 
-					 * 1.幼鸡饲养利息：获取配置表中幼鸡饲养利率 * 幼鸡饲养周期
-					 * 
-					 * 2.成年下蛋利息：获取这一批次 * 时间
-					 * 
+					 * 版本二： select sum(w.price) from w_farm_feed as w where
+					 * w.w_farm_chick_id=#{批次})
 					 */
 					// 获得当前用户的上一单
 					Farm beforeFarm = farmService.selectByKey(farm.getPid());
-					Example example = new Example(Prize.class);
-					example.createCriteria()
-							.andCondition("relation_id", beforeFarm.getId())
-							.andCondition("user_id", leader.getId());
-					// 获取当前用户排单上一单 领导拿到的提成--推荐奖
-					double money = prizeService.selectByExample(example).get(0)
-							.getMoney();//
-					// 获得当前用户的上一单饲养成年鸡利息
-					Example example2 = new Example(FarmFeed.class);
-					example2.createCriteria().andCondition("w_farm_chick_id",
-							beforeFarm.getId());
-					List<FarmFeed> farmFeeds = farmFeedService
-							.selectByExample(example2);
-					double chicken = 0.00;
-					// 成鸡饲养利息计算
-					for (FarmFeed farmFeed : farmFeeds) {
-						chicken = farmFeed.getPrice() + chicken;
-					}
+					// 获得当前用户的上一单饲养成年鸡利息 --还没有计算
+					beforeFarm.getId();// 当前用户上一单的批次
+					double chicken = 0.0;//成鸡饲养利息计算----还没有做
 					// 获得当前单饲养利息总和
 					double deposit = beforeFarm.getNum_buy()
 							* Integer.parseInt(cfgService.selectByKey("0205")
 									.getValue_()) + chicken;
-					tempBase = tempBase - money - deposit;
+					tempBase = farm.getNum_buy()
+							- userLastFarm.get(0).getNum_buy()
+							* Double.parseDouble(cfgService.selectByKey(
+									getCoefficientNO(leader.getLv(), 1))
+									.getValue_()) - deposit;
 				}
 				if (tempBase <= 0.0) {
 					break;
@@ -255,6 +252,11 @@ public class DynamicCalculation implements Serializable, ICalculation {
 					int depth = temp - userTemp.getDepth();
 					double number = calculateRoyalty(tempBase,
 							userTemp.getLv(), depth);
+					// userTemp.setNum_dynamic(userTemp.getNum_dynamic() +
+					// number);
+					// userTemp.setTotal_dynamic(userTemp.getTotal_dynamic()+
+					// number);
+					// userService.updateNotNull(userTemp);
 					entity = new Prize();
 					entity.setId(UUID.randomUUID().toString().replace("-", ""));
 					entity.setCreate_time(new Date());
@@ -269,16 +271,17 @@ public class DynamicCalculation implements Serializable, ICalculation {
 						cr.add(Calendar.DAY_OF_MONTH, 15);
 					}
 					entity.setTrigger_time(cr.getTime());
-					entity.setRelation_id(farm.getId());
 					prizeService.save(entity);
 				}
 				farm.setFlag_calc_bonus(1);
 				farmService.updateNotNull(farm);
 			}
+
 		} else {
 			// 计算用户等级失败
 			return -1;
 		}
+
 		return base;
 	}
 
@@ -339,19 +342,11 @@ public class DynamicCalculation implements Serializable, ICalculation {
 
 	// 买卖盘自动匹配
 	/**
-	 * 业务：获取当天 买卖盘中的数据 以及 交易记录中 卖盘id为空或者卖盘id为空且状态为0数据
-	 * 
-	 * SQL：
-	 * 
-	 * 1.SELECT * FROM p_buy_sell as p WHERE (p.'p_buy_id' ='null' or
-	 * p.'p_sell_id'='null') and p.`status`='0'
-	 * 
-	 * 2.SELECT * FROM p_buy as p WHERE p.create_time between #{0} and #{1};
-	 * 
-	 * 3.SELECT * FROM p_sell as p WHERE p.create_time time between #{0} and
-	 * #{1}
-	 * 
-	 * 原则：优先匹配交易记录表中的数据 其次 卖家为主
+	 * 业务：获取当天 买卖盘中的数据 以及 交易记录中 卖盘id为空或者卖盘id为空且状态为0数据 SQL： 1.SELECT * FROM
+	 * p_buy_sell as p WHERE (p.'p_buy_id' ='null' or p.'p_sell_id'='null') and
+	 * p.`status`='0' 2.SELECT * FROM p_buy as p WHERE p.create_time between
+	 * #{0} and #{1}; 3.SELECT * FROM p_sell as p WHERE p.create_time time
+	 * between #{0} and #{1} 原则：优先匹配交易记录表中的数据 其次 卖家为主
 	 *******************************/
 	@Override
 	public boolean automatch() {
@@ -488,15 +483,13 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			}
 			buySellService.save(entity);
 		}
-		if (null!=buys&&buys.size()>0) {
-			if (buySell.getNum_matching() > 0) {
-				// buySellService.delete(buySell.getId());
-				buySell.setCreate_time(new Date());
-				// buySellService.save(buySell);
-				buySellService.updateNotNull(buySell);
-			} else {
-				buySellService.delete(buySell.getId());
-			}
+		if (buySell.getNum_matching() > 0) {
+			// buySellService.delete(buySell.getId());
+			buySell.setCreate_time(new Date());
+			// buySellService.save(buySell);
+			buySellService.updateNotNull(buySell);
+		} else {
+			buySellService.delete(buySell.getId());
 		}
 		buySell = null;
 	}
@@ -535,19 +528,19 @@ public class DynamicCalculation implements Serializable, ICalculation {
 			}
 			buySellService.save(entity);
 		}
-		if (null != sells && sells.size() > 0) {
-			if (buySell.getNum_matching() > 0) {
-				// buySellService.delete(buySell.getId());
-				buySell.setCreate_time(new Date());
-				// buySellService.save(buySell);
-				buySellService.updateNotNull(buySell);
-			} else {
-				buySellService.delete(buySell.getId());
-			}
+		if (buySell.getNum_matching() > 0) {
+			// buySellService.delete(buySell.getId());
+			buySell.setCreate_time(new Date());
+			// buySellService.save(buySell);
+			buySellService.updateNotNull(buySell);
+		} else {
+			buySellService.delete(buySell.getId());
 		}
+
 		buySell = null;
 	}
 
 	public static void main(String[] args) {
+
 	}
 }
