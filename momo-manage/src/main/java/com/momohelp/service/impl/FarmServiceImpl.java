@@ -71,6 +71,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		farm.setLastFarmFeed((null == list_farmFeed || 0 == list_farmFeed
 				.size()) ? null : list_farmFeed.get(0));
 
+		// 孵化记录
+		farm.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
+
 		return farm;
 	}
 
@@ -508,6 +511,31 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		criteria.andIsNotNull("time_deal");
 
 		List<Farm> list = selectByExample(example);
+		return list;
+	}
+
+	@Override
+	public List<Farm> findHatchByUserId(String user_id) {
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time asc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andGreaterThan("num_current", 0);
+		// 完全成交的时间
+		criteria.andIsNotNull("time_deal");
+
+		List<Farm> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm farm = list.get(i);
+			farm.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
+		} // for
+
 		return list;
 	}
 

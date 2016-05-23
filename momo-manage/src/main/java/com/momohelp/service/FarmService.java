@@ -53,6 +53,14 @@ public interface FarmService extends IService<Farm> {
 	List<Farm> findFeedByUserId(String user_id);
 
 	/**
+	 * 查找可以孵化的鸡苗的批次
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findHatchByUserId(String user_id);
+
+	/**
 	 * 查找可以孵化的鸡的批次
 	 *
 	 * @param user_id

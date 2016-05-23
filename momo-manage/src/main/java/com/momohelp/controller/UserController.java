@@ -753,13 +753,13 @@ public class UserController {
 			} // if
 
 			map.put("data_farm", farm);
+			map.put("data_token", genToken(session));
 
 			uri = "i/user/1.0.1/feedMo_id";
 		} // if
 
 		map.put("nav_choose", ",05,0505,");
 		map.put("data_user", session.getAttribute("session.user"));
-		map.put("data_token", genToken(session));
 
 		return uri;
 	}
@@ -830,32 +830,33 @@ public class UserController {
 	public String _i_hatchMoUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = false) String id) {
 
-		String html = null;
+		String uri = null;
 
 		if (null == id || "".equals(id.trim())) {
-			List<Farm> list = farmService.findCanHatch(session.getAttribute(
-					"session.user.id").toString());
+			List<Farm> list = farmService.findHatchByUserId(session
+					.getAttribute("session.user.id").toString());
 			map.put("data_list", list);
 
-			html = "i/user/1.0.1/hatchMo";
+			uri = "i/user/1.0.1/hatchMo";
 		} else {
-			Farm farm = farmService.selectByKey(id);
+			Farm farm = farmService.getByFarm(1, new Farm(id, session
+					.getAttribute("session.user.id").toString()));
 
 			if (null == farm) {
 				return "redirect:/user/hatchMo";
-			}
+			} // if
 
-			map.put("data_id", id);
 			map.put("data_farm", farm);
-			html = "i/user/1.0.1/hatchMo_id";
+			map.put("data_token", genToken(session));
+
+			uri = "i/user/1.0.1/hatchMo_id";
 		}
 
 		// TODO
 		map.put("nav_choose", ",05,0506,");
 		map.put("data_user", session.getAttribute("session.user"));
-		map.put("data_token", genToken(session));
 
-		return html;
+		return uri;
 	}
 
 	/**
