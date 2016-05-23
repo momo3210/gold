@@ -76,10 +76,16 @@ public class Base implements Ibase, Serializable {
 			// 计算奖金基数
 			for (Farm farm : farms) {
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
-				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
 				if (farm.getPid_higher_ups() == null
 						|| farm.getPid_higher_ups().trim().length() == 0) {
-					break;
+					continue;
+				}
+				if ("0".equals(farm.getPid_higher_ups())) {
+					continue;
+				}
+				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
+				if (leader==null) {
+					continue;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
 				double tempBase = 0.00;
@@ -183,6 +189,9 @@ public class Base implements Ibase, Serializable {
 				break;
 			}
 			String pid = user.getPid();// 获取当前用户的领导
+			if (pid.equals("0")) {
+				continue;
+			}
 			List<ModelLV> childsList = (List<ModelLV>) userService
 					.countMemberNOAndlevel(pid);
 			/**

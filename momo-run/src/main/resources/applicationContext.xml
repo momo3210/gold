@@ -272,11 +272,11 @@
 		lazy-init="false" init-method="start" destroy-method="stop">
 		<property name="triggers">
 			<list>
-				<!-- <ref bean="baseCronTriggerBean"/> -->
+				<ref bean="baseCronTriggerBean"/>
 				<ref bean="conversionCronTriggerBean"/>
-				<!-- <ref bean="forceLogoutCronTriggerBean"/>
+				<ref bean="forceLogoutCronTriggerBean"/>
 				<ref bean="matchCronTriggerBean" />
-				<ref bean="myStaticCronTriggerBean"/> -->
+				<ref bean="myStaticCronTriggerBean"/>
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />

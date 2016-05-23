@@ -52,6 +52,9 @@ public class Static implements IStatic {
 		User user = null;
 		for (FarmHatch farmHatch : farmHatchs) {
 			user = userService.selectByKey(farmHatch.getUser_id());
+			if (user == null) {
+				continue;
+			}
 			double temp = 0.00;
 			if (farmHatch.getFlag_is_last() == 1) {
 				Example example2 = new Example(FarmFeed.class);
@@ -64,7 +67,9 @@ public class Static implements IStatic {
 				}
 				Farm farm = farmService.selectByKey(farmHatch
 						.getW_farm_chick_id());
-				temp = temp + farm.getNum_reward();
+				if (farm != null) {
+					temp = temp + farm.getNum_reward();
+				}
 			}
 			user.setNum_static(user.getNum_static()
 					+ farmHatch.getNum_hatch().intValue() + temp);

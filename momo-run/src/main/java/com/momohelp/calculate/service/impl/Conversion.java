@@ -45,6 +45,9 @@ public class Conversion implements Serializable, IConversion {
 		User userTemp = null;
 		for (Prize prize : prizes) {
 			userTemp = userService.selectByKey(prize.getUser_id());
+			if (null==userTemp) {
+				continue;
+			}
 			userTemp.setNum_dynamic(userTemp.getNum_dynamic()
 					+ prize.getMoney());
 			userTemp.setTotal_dynamic(userTemp.getTotal_dynamic()
