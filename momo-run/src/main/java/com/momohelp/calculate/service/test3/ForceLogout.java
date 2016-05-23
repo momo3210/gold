@@ -7,12 +7,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.momohelp.calculate.service.IForceLogout;
 import com.momohelp.model.Farm;
 import com.momohelp.service.FarmService;
-@Service
+//@Service
 public class ForceLogout implements Serializable, IForceLogout {
 
 	private static final long serialVersionUID = -583545930103637435L;

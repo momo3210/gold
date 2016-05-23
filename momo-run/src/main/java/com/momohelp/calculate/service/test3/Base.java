@@ -11,8 +11,6 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.Ibase;
@@ -27,7 +25,7 @@ import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.UserService;
-@Service
+//@Service
 public class Base implements Ibase, Serializable {
 
 	private static final long serialVersionUID = -7329182768601602219L;
@@ -183,7 +181,7 @@ public class Base implements Ibase, Serializable {
 				break;
 			}
 			String pid = user.getPid();// 获取当前用户的领导
-			List<ModelLV> childsList = (List<ModelLV>) userService
+			List<ModelLV> childsList = userService
 					.countMemberNOAndlevel(pid);
 			/**
 			 * level 级别（05贫农、06中农、07富农、08农场主）

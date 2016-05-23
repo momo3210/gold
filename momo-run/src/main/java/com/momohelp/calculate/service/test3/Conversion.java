@@ -7,8 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.IConversion;
@@ -16,7 +14,7 @@ import com.momohelp.model.Prize;
 import com.momohelp.model.User;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.UserService;
-@Service
+//@Service
 public class Conversion implements Serializable, IConversion {
 
 	private static final long serialVersionUID = 1374594730910928041L;

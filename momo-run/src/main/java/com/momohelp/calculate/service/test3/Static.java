@@ -7,8 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.IStatic;
@@ -21,7 +19,7 @@ import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.UserService;
 
-@Service("myStatic")
+//@Service("myStatic")
 public class Static implements IStatic {
 
 	private static final long serialVersionUID = -4917080782460473547L;

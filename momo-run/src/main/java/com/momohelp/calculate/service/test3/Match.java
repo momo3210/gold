@@ -8,8 +8,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.momohelp.calculate.service.IMatch;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
@@ -17,7 +15,7 @@ import com.momohelp.model.Sell;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.SellService;
-@Service
+//@Service
 public class Match implements Serializable, IMatch {
 
 	private static final long serialVersionUID = -7591547109810957383L;

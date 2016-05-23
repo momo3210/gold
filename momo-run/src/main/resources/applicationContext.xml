@@ -135,7 +135,8 @@
 	<bean id="baseCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="baseQtzJobMethod"></property>
-		<property name="cronExpression" value="0/13 * * * * ?"></property>
+		<!--间隔5秒计算一次 -->
+		<property name="cronExpression" value="0/5 * * * * ?"></property>
 	</bean>
 
 
@@ -168,7 +169,8 @@
 	<bean id="conversionCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="conversionQtzJobMethod"></property>
-		<property name="cronExpression" value="0/21 * * * * ?"></property>
+		<!-- 每天夜里1点执行一次 -->
+		<property name="cronExpression" value="0 20 1 * * ?"></property>
 	</bean>
 
 
@@ -195,7 +197,8 @@
 	<bean id="forceLogoutCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="forceLogoutQtzJobMethod"></property>
-		<property name="cronExpression" value="0/11 * * * * ?"></property>
+		<!-- 每天夜里1点执行一次 -->
+		<property name="cronExpression" value="0 0 1 * * ?"></property>
 	</bean>
 
 
@@ -224,7 +227,8 @@
 	<bean id="matchCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
-		<property name="cronExpression" value="0/7 * * * * ?"></property>
+		<!-- 每天8-20点 每一小时执行一次-->
+		<property name="cronExpression" value="0 0 8-20 * * ?"></property>
 	</bean>
 
 
@@ -252,7 +256,8 @@
 	<bean id="myStaticCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
-		<property name="cronExpression" value="0/27 * * * * ?"></property>
+		<!-- 每天夜里1点30分执行一次 -->
+		<property name="cronExpression" value="0 30 1 * * ?"></property>
 	</bean>
 
 
@@ -267,11 +272,11 @@
 		lazy-init="false" init-method="start" destroy-method="stop">
 		<property name="triggers">
 			<list>
-				<ref bean="baseCronTriggerBean"/>
+				<!-- <ref bean="baseCronTriggerBean"/> -->
 				<ref bean="conversionCronTriggerBean"/>
-				<ref bean="forceLogoutCronTriggerBean"/>
+				<!-- <ref bean="forceLogoutCronTriggerBean"/>
 				<ref bean="matchCronTriggerBean" />
-				<ref bean="myStaticCronTriggerBean"/>
+				<ref bean="myStaticCronTriggerBean"/> -->
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />
