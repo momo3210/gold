@@ -7,9 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import net.foreworld.util.StringUtil;
-import net.foreworld.util.encryptUtil.MD5;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +33,8 @@ import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
+import com.momohelp.util.encryptUtil.MD5;
 
 /**
  *
@@ -729,41 +728,43 @@ public class UserController {
 	public String _i_feedMoUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = false) String id) {
 
-		String html = null;
+		String uri = null;
 
 		if (null == id || "".equals(id.trim())) {
 			List<Farm> list = farmService.findFeedByUserId(session
 					.getAttribute("session.user.id").toString());
 			map.put("data_list", list);
 
-			html = "i/user/1.0.1/feedMo";
+			uri = "i/user/1.0.1/feedMo";
 		} else {
-			Farm farm = farmService.selectByKey(id);
+
+			Farm farm = farmService.getByFarm(1, new Farm(id, session
+					.getAttribute("session.user.id").toString()));
 
 			if (null == farm) {
 				return "redirect:/user/feedMo";
 			}
 
-			// 判断今天是否已经喂过该批次的鸡苗了
-			Map<String, Object> checkTodayFeed = farmFeedService
-					.checkTodayFeed(farm.getId());
-			if (null != checkTodayFeed) {
-				if (checkTodayFeed.containsKey("msg")) {
-					map.put("data_msg",
-							((String[]) checkTodayFeed.get("msg"))[0]);
-				}
-			}
+			// // 判断今天是否已经喂过该批次的鸡苗了
+			// Map<String, Object> checkTodayFeed = farmFeedService
+			// .checkTodayFeed(farm.getId());
+			// if (null != checkTodayFeed) {
+			// if (checkTodayFeed.containsKey("msg")) {
+			// map.put("data_msg",
+			// ((String[]) checkTodayFeed.get("msg"))[0]);
+			// }
+			// }
 
-			map.put("data_id", id);
 			map.put("data_farm", farm);
-			html = "i/user/1.0.1/feedMo_id";
+
+			uri = "i/user/1.0.1/feedMo_id";
 		} // if
 
 		map.put("nav_choose", ",05,0505,");
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));
 
-		return html;
+		return uri;
 	}
 
 	/**

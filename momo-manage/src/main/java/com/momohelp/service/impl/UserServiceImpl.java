@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.foreworld.util.StringUtil;
-import net.foreworld.util.encryptUtil.MD5;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +15,8 @@ import com.momohelp.model.Farm;
 import com.momohelp.model.User;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
+import com.momohelp.util.encryptUtil.MD5;
 
 /**
  *
@@ -342,7 +341,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		if (null == user) {
 			return null;
-		}
+		} // if
 
 		switch (flag) {
 		case 1:
@@ -351,7 +350,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return getByUser_2(user);
 		default:
 			return null;
-		}
+		} // switch
 	}
 
 	private static final String DEFAULT_USER_PASS = MD5.encode("123456");

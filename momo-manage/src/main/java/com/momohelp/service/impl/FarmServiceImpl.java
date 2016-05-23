@@ -25,6 +25,7 @@ import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
 
 /**
  *
@@ -33,6 +34,45 @@ import com.momohelp.service.UserService;
  */
 @Service("farmService")
 public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
+
+	private Farm getByFarm_2(Farm farm) {
+		return null;
+	}
+
+	private Farm getByFarm_1(Farm farm) {
+		Example example = new Example(Farm.class);
+		Example.Criteria criteria = example.createCriteria();
+
+		String id = StringUtil.isEmpty(farm.getId());
+		if (null != id) {
+			criteria.andEqualTo("id", id);
+		} // if
+
+		String user_id = StringUtil.isEmpty(farm.getUser_id());
+		if (null != user_id) {
+			criteria.andEqualTo("user_id", user_id);
+		} // if
+
+		List<Farm> list = selectByExample(example);
+		return (null == list || 1 != list.size()) ? null : list.get(0);
+	}
+
+	@Override
+	public Farm getByFarm(int flag, Farm farm) {
+
+		if (null == farm) {
+			return null;
+		} // if
+
+		switch (flag) {
+		case 1:
+			return getByFarm_1(farm);
+		case 2:
+			return getByFarm_2(farm);
+		default:
+			return null;
+		} // switch
+	}
 
 	@Override
 	public List<Farm> findByUserId(String user_id, int page, int rows) {
@@ -299,7 +339,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		// 第七天开始计算
 		Calendar c = Calendar.getInstance();
 		c.setTime(farm.getCreate_time());
-		c.add(Calendar.DAY_OF_MONTH, 7);
+		c.add(Calendar.DAY_OF_MONTH, (1 == farm.getFlag_out_self()) ? 7 : 8);
 		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
@@ -324,7 +364,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		// 第二天开始计算
 		Calendar c = Calendar.getInstance();
 		c.setTime(farm.getCreate_time());
-		c.add(Calendar.DAY_OF_MONTH, 1);
+		// 出局前排单24小时，出局后排单48小时
+		c.add(Calendar.DAY_OF_MONTH, (1 == farm.getFlag_out_self()) ? 1 : 2);
 		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);

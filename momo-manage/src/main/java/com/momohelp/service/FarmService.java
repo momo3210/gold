@@ -13,6 +13,8 @@ import com.momohelp.model.Farm;
  */
 public interface FarmService extends IService<Farm> {
 
+	Farm getByFarm(int flag, Farm farm);
+
 	/**
 	 * 获取用户的鸡苗批次
 	 *
