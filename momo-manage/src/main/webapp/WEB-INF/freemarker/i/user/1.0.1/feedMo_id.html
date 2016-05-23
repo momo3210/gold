@@ -11,6 +11,12 @@
 		.form-horizontal .form-actions {
 			margin-bottom: 0;
 		}
+		#table_1 th {
+			text-align: center;
+		}
+		#table_1 td {
+			text-align: center;
+		}
 		</style>
 	</head>
 
@@ -173,8 +179,35 @@
 										</div>
 									</div>
 								</div>
+							</div>
+							</#if>
 
-
+							<#if (data_farm.farmFeeds)??>
+							<div class="row-fluid">
+								<div class="span12 widget-container-span">
+									<div class="widget-box">
+										<table id="table_1" class="table table-striped table-bordered table-hover" style='margin-bottom:0'>
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>鸡苗数量</th>
+													<th>买入时间</th>
+													<th>产生利息</th>
+												</tr>
+											</thead>
+											<tbody>
+												<#list data_farm.farmFeeds! as doc>
+												<tr>
+													<td>${doc_index+1}</td>
+													<td>${(doc.num_feed?string('#.00'))!}</td>
+													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+													<td>${(doc.price?string('#.00'))!}</td>
+												</tr>
+												</#list>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 							</#if>
 
