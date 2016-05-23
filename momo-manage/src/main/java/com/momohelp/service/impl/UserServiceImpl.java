@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Farm;
 import com.momohelp.model.User;
 import com.momohelp.service.FarmService;
+import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 import com.momohelp.util.StringUtil;
 import com.momohelp.util.encryptUtil.MD5;
@@ -28,6 +29,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Autowired
 	private FarmService farmService;
+
+	@Autowired
+	private SellService sellService;
 
 	/**
 	 * 保存之前的预判
@@ -263,12 +267,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			int i = (int) ((Math.random() * 9 + 1) * 10000000);
 			id = String.valueOf(i);
 			if (8 < id.length()) {
-				id.substring(0, 8);
-			}
-			// END
+				id = id.substring(0, 8);
+			} // if
+			id = "M" + id;
 			user = selectByKey(id);
 		} while (null != user);
-		return "M" + id;
+		return id;
 	}
 
 	private User getId_2(String id) {
@@ -292,6 +296,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		List<Farm> list_farm = farmService.findByUserId(user.getId(), 1, 1);
 		user.setLastFarm((null == list_farm || 0 == list_farm.size()) ? null
 				: list_farm.get(0));
+
+		// 最后一次的卖盘
+		user.setLastSell(sellService.getLastSellByUserId(id));
+
+		// 每月的卖盘列表
+		user.setMonthSells(sellService.findMonthSellByUserId(id));
 
 		return user;
 	}

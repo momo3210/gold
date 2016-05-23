@@ -55,12 +55,12 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 			int i = (int) ((Math.random() * 10 + 1) * 100000000);
 			id = String.valueOf(i);
 			if (9 < id.length()) {
-				id.substring(0, 9);
-			}
-			// END
+				id = id.substring(0, 9);
+			} // if
+			id = "B" + id;
 			buy = selectByKey(id);
 		} while (null != buy);
-		return "B" + id;
+		return id;
 	}
 
 	@Override

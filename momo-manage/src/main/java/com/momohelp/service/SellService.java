@@ -23,6 +23,22 @@ public interface SellService extends IService<Sell> {
 	String[] sell(Sell sell);
 
 	/**
+	 * 获取每月卖出
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Sell> findMonthSellByUserId(String user_id);
+
+	/**
+	 * 获取最后一次的卖盘
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	Sell getLastSellByUserId(String user_id);
+
+	/**
 	 * 获取未完全成交的记录
 	 *
 	 * @param user_id
