@@ -35,7 +35,7 @@ public class BuySell implements Serializable {
 	private Date create_time;
 
 	/**
-	 * 卖盘ID
+	 * 买盘ID
 	 */
 	private String p_buy_id;
 

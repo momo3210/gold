@@ -393,4 +393,32 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		return (null == list || 0 == list.size()) ? null : list.get(0);
 	}
 
+	@Override
+	public List<Sell> findByUnDeal_1(String user_id) {
+
+		Example example = new Example(Sell.class);
+		example.setOrderByClause("create_time desc");
+
+		// 24小时之内的卖盘可以查看
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.HOUR_OF_DAY, -24);
+
+		example.or().andEqualTo("user_id", user_id)
+				.andGreaterThan("time_deal", c.getTime());
+		example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
+
+		List<Sell> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Sell sell = list.get(i);
+			sell.setBuySells(buySellService.findBySellId_1(sell.getId()));
+		} // for
+
+		return list;
+	}
+
 }

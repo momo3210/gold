@@ -163,6 +163,12 @@ public class User implements Serializable {
 	@Transient
 	private List<Farm> farms;
 
+	/**
+	 * 卖盘
+	 */
+	@Transient
+	private List<Sell> sells;
+
 	public List<Farm> getFarms() {
 		return farms;
 	}
@@ -494,6 +500,14 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<Sell> getSells() {
+		return sells;
+	}
+
+	public void setSells(List<Sell> sells) {
+		this.sells = sells;
 	}
 
 }

@@ -13,6 +13,8 @@ import com.momohelp.model.Sell;
  */
 public interface SellService extends IService<Sell> {
 
+	List<Sell> findByUnDeal_1(String user_id);
+
 	/**
 	 * 卖出鸡苗
 	 *

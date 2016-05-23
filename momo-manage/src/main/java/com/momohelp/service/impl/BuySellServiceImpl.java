@@ -267,4 +267,28 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		return list;
 	}
 
+	@Override
+	public List<BuySell> findBySellId_1(String sell_id) {
+
+		Example example = new Example(BuySell.class);
+		example.setOrderByClause("create_time asc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("p_sell_id", sell_id);
+
+		List<BuySell> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			BuySell buySell = list.get(i);
+			buySell.setP_buy_user(userService.getId(3,
+					buySell.getP_buy_user_id()));
+		} // for
+
+		return list;
+	}
+
 }

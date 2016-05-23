@@ -957,7 +957,6 @@ public class UserController {
 	public ModelAndView _i_buyRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
-		result.addObject("data_user", session.getAttribute("session.user"));
 
 		// List<Buy> list_buy =
 		// buyService.findUnFinishDeal(session.getAttribute(
@@ -984,11 +983,14 @@ public class UserController {
 	public ModelAndView _i_sellRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
 		result.addObject("nav_choose", ",05,0504,");
-		result.addObject("data_user", session.getAttribute("session.user"));
 
-		List<Sell> list_sell = sellService.findUnFinishDeal(session
+		// List<Sell> list_sell = sellService.findUnFinishDeal(session
+		// .getAttribute("session.user.id").toString());
+		// result.addObject("data_list_sell", list_sell);
+
+		User user = userService.getId(4, session
 				.getAttribute("session.user.id").toString());
-		result.addObject("data_list_sell", list_sell);
+		result.addObject("data_user", user);
 
 		return result;
 	}

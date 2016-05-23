@@ -298,6 +298,24 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	/**
+	 * 卖盘
+	 *
+	 * @param id
+	 * @return
+	 */
+	private User getId_4(String id) {
+
+		User user = getId_3(id);
+		if (null == user) {
+			return null;
+		} // if
+
+		user.setSells(sellService.findByUnDeal_1(id));
+
+		return user;
+	}
+
+	/**
 	 * 买盘
 	 *
 	 * @param id
@@ -353,6 +371,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return getId_2(id);
 		case 3:
 			return getId_3(id);
+		case 4:
+			return getId_4(id);
 		default:
 			return null;
 		}

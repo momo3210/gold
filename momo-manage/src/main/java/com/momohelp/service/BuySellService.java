@@ -31,6 +31,8 @@ public interface BuySellService extends IService<BuySell> {
 
 	List<BuySell> findByBuyId_1(String buy_id);
 
+	List<BuySell> findBySellId_1(String sell_id);
+
 	/**
 	 * 确认打款（买家确认打款，卖家确认打款）
 	 *
