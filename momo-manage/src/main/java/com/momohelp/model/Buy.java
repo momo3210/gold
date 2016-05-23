@@ -50,6 +50,23 @@ public class Buy implements Serializable {
 	 */
 	private Date time_deal;
 
+	/**
+	 * 是否是订金（预付款）
+	 *
+	 * 1是
+	 *
+	 * 0不是
+	 */
+	private Integer is_deposit;
+
+	public Integer getIs_deposit() {
+		return is_deposit;
+	}
+
+	public void setIs_deposit(Integer is_deposit) {
+		this.is_deposit = is_deposit;
+	}
+
 	@Transient
 	private List<BuySell> buySells;
 

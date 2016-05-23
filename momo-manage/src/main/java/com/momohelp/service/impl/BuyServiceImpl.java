@@ -114,11 +114,21 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 	@Override
 	public List<Buy> findByFarmId(String farm_id) {
 		Example example = new Example(Buy.class);
-		// TODO
+
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("w_farm_chick_id", farm_id);
 
 		List<Buy> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Buy buy = list.get(i);
+			buy.setBuySells(buySellService.findByBuyId(buy.getId()));
+		} // for
+
 		return list;
 	}
 }

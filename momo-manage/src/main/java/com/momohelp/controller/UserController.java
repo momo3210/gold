@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
@@ -960,9 +959,14 @@ public class UserController {
 		result.addObject("nav_choose", ",05,0503,");
 		result.addObject("data_user", session.getAttribute("session.user"));
 
-		List<Buy> list_buy = buyService.findUnFinishDeal(session.getAttribute(
+		// List<Buy> list_buy =
+		// buyService.findUnFinishDeal(session.getAttribute(
+		// "session.user.id").toString());
+		// result.addObject("data_list_buy", list_buy);
+
+		List<Farm> list = farmService.findByUnDeal(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_list_buy", list_buy);
+		result.addObject("data_list", list);
 
 		return result;
 	}

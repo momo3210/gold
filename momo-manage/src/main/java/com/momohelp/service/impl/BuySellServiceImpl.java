@@ -16,6 +16,7 @@ import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.SellService;
+import com.momohelp.service.UserService;
 
 /**
  *
@@ -35,6 +36,9 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 	@Autowired
 	private FarmService farmService;
 
+	@Autowired
+	private UserService userService;
+
 	/**
 	 * 卖盘
 	 */
@@ -52,7 +56,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 	}
 
 	/**
-	 * 买盘
+	 * 买卖盘
 	 */
 	@Override
 	public List<BuySell> findByBuyId(String buy_id) {
@@ -64,6 +68,17 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		criteria.andEqualTo("p_buy_id", buy_id);
 
 		List<BuySell> list = selectByExample(example);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			BuySell buySell = list.get(i);
+			buySell.setP_sell_user(userService.getId(1,
+					buySell.getP_buy_user_id()));
+		} // for
+
 		return list;
 	}
 

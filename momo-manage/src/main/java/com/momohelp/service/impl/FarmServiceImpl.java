@@ -36,6 +36,30 @@ import com.momohelp.util.StringUtil;
 @Service("farmService")
 public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
+	@Override
+	public List<Farm> findByUnDeal(String user_id) {
+
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time desc");
+
+		// 显示24小时内的
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.HOUR_OF_DAY, -24);
+
+		example.or().andEqualTo("user_id", user_id)
+				.andGreaterThan("time_deal", c.getTime());
+		example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
+
+		List<Farm> list = selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm farm = list.get(i);
+			farm.setBuys(buyService.findByFarmId(farm.getId()));
+		} // for
+
+		return list;
+	}
+
 	private Farm getByFarm_2(Farm farm) {
 		return null;
 	}
@@ -355,6 +379,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setW_farm_chick_id(farm.getId());
 		buy.setUser_id(farm.getUser_id());
 		buy.setTime_deal(null);
+		buy.setIs_deposit(0);
 
 		// 第七天开始计算
 		Calendar c = Calendar.getInstance();
@@ -380,6 +405,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setW_farm_chick_id(farm.getId());
 		buy.setUser_id(farm.getUser_id());
 		buy.setTime_deal(null);
+		buy.setIs_deposit(1);
 
 		// 第二天开始计算
 		Calendar c = Calendar.getInstance();

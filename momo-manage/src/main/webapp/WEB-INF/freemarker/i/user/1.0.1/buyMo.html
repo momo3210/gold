@@ -244,10 +244,11 @@
 					success : function(data) {
 						if (data.success) {
 							alert('买入鸡苗成功')
+							location.href = '${(conf_html_virtualPath)!}user/buyRecord';
 						}else{
 							if (data.msg) alert(data.msg[0]);
+							showVerifyCode();
 						}
-						location.href = '${(conf_html_virtualPath)!}user/buyMo';
 					},
 					error : function() {
 						alert(arguments[2]);

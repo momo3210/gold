@@ -60,7 +60,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			if (9 < id.length()) {
 				id = id.substring(0, 9);
 			} // id
-			id = "M" + id;
+			id = "S" + id;
 			sell = selectByKey(id);
 		} while (null != sell);
 		return id;
@@ -159,7 +159,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		if (null != checkMonthCeiling) {
 			result.put("msg", checkMonthCeiling);
 			return result;
-		}
+		} // if
 
 		result.put("data", sell);
 		return result;
