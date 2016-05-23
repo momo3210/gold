@@ -18,9 +18,6 @@ import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 import com.momohelp.util.StringUtil;
 import com.momohelp.util.encryptUtil.MD5;
-import com.momohelp.util.webservice.SmSWebService;
-import com.momohelp.util.webservice.SmSWebServiceSoap;
-import com.momohelp.util.webservice.WsSendResponse;
 
 /**
  *
@@ -564,13 +561,13 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		User __u = selectByKey(id);
 
-		SmSWebService service = new SmSWebService();
-		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
-				"123456", __u.getMobile(), "您本次验证码:" + user.getVerifycode_sms()
-						+ "，感谢您的支持，祝您生活愉快！！", "", "");
+		// SmSWebService service = new SmSWebService();
+		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
+		// "123456", __u.getMobile(), "您本次验证码:" + user.getVerifycode_sms()
+		// + "，感谢您的支持，祝您生活愉快！！", "", "");
 
-		response.getReturnStatus();
+		// response.getReturnStatus();
 
 		return null;
 	}

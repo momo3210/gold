@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.momohelp.model.Buy;
 import com.momohelp.model.Notice;
 import com.momohelp.model.Prize;
-import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.NoticeService;
@@ -65,15 +63,26 @@ public class DefaultController {
 		result.addObject("nav_choose", ",02,");
 		result.addObject("data_user", session.getAttribute("session.user"));
 
-		// 买盘
-		List<Buy> list_buy = buyService.findUnFinishDeal(session.getAttribute(
+		// 买盘匹配
+		User buy_record = userService.buy_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_list_buy", list_buy);
+		result.addObject("data_buy_record", buy_record);
+
+		// 卖盘匹配
+		User sell_record = userService.sell_record__list__4(session
+				.getAttribute("session.user.id").toString());
+		result.addObject("data_sell_record", sell_record);
+
+		// 买盘
+		// List<Buy> list_buy =
+		// buyService.findUnFinishDeal(session.getAttribute(
+		// "session.user.id").toString());
+		// result.addObject("data_list_buy", list_buy);
 
 		// 卖盘
-//		List<Sell> list_sell = sellService.findUnFinishDeal(session
-//				.getAttribute("session.user.id").toString());
-//		result.addObject("data_list_sell", list_sell);
+		// List<Sell> list_sell = sellService.findUnFinishDeal(session
+		// .getAttribute("session.user.id").toString());
+		// result.addObject("data_list_sell", list_sell);
 
 		List<Prize> dongjieliebiao = prizeService.findByUserId(session
 				.getAttribute("session.user.id").toString());

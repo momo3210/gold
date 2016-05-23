@@ -1,21 +1,17 @@
 package com.momohelp.test;
 
-import com.momohelp.util.webservice.SmSWebService;
-import com.momohelp.util.webservice.SmSWebServiceSoap;
-import com.momohelp.util.webservice.WsSendResponse;
-
 public class Test {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SmSWebService service = new SmSWebService();
-		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
-				"123456", "18530053050", "您本次验证码:1234，感谢您的支持，祝您生活愉快！！", "", "");
-
-		System.err.println(response.getReturnStatus());
+		// SmSWebService service = new SmSWebService();
+		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
+		// "123456", "18530053050", "您本次验证码:1234，感谢您的支持，祝您生活愉快！！", "", "");
+		//
+		// System.err.println(response.getReturnStatus());
 
 		// int i = (int) ((Math.random() * 5 + 1) * 1000);
 		// String id = String.valueOf(i);
