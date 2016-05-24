@@ -14,6 +14,26 @@ import com.momohelp.model.Farm;
 public interface FarmService extends IService<Farm> {
 
 	/**
+	 * 孵化时使用
+	 *
+	 * @param id
+	 * @param user_id
+	 * @return
+	 */
+	Farm getHatchByFarmId(String id, String user_id);
+
+	/**
+	 * 喂鸡时使用
+	 *
+	 * @param id
+	 * @param user_id
+	 * @return
+	 */
+	Farm getFeedByFarmId(String id, String user_id);
+
+	/*************************/
+
+	/**
 	 * 买入鸡苗
 	 *
 	 * @param farm
@@ -28,7 +48,7 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findUnDealByUserId(String user_id);
+	List<Farm> findUnDealByUserId__1(String user_id);
 
 	/**
 	 * 查找目前可以孵化的批次
@@ -67,7 +87,7 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	Farm getLastByUserId(String user_id);
+	Farm getLastByUserId__1(String user_id);
 
 	void updateNum_deal(String id, int num_deal);
 

@@ -40,7 +40,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 	 * 卖盘
 	 */
 	@Override
-	public List<BuySell> findBySellId(String sell_id) {
+	public List<BuySell> findBySellId__1(String sell_id) {
 
 		Example example = new Example(BuySell.class);
 		example.setOrderByClause("create_time asc");
@@ -56,18 +56,18 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			BuySell buySell = list.get(i);
-			buySell.setP_buy_user(userService.getId(0,
-					buySell.getP_buy_user_id()));
+			buySell.setP_buy_user(userService.getMeAndParent__1(buySell
+					.getP_buy_user_id()));
 		}
 
 		return list;
 	}
 
 	/**
-	 * 买卖盘
+	 * 买盘
 	 */
 	@Override
-	public List<BuySell> findByBuyId(String buy_id) {
+	public List<BuySell> findByBuyId__1(String buy_id) {
 
 		Example example = new Example(BuySell.class);
 		example.setOrderByClause("create_time asc");
@@ -83,8 +83,8 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			BuySell buySell = list.get(i);
-			buySell.setP_sell_user(userService.getId(0,
-					buySell.getP_sell_user_id()));
+			buySell.setP_sell_user(userService.getMeAndParent__1(buySell
+					.getP_sell_user_id()));
 		}
 
 		return list;

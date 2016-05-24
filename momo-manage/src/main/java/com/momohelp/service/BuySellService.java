@@ -21,7 +21,7 @@ public interface BuySellService extends IService<BuySell> {
 	 * @param sell_id
 	 * @return
 	 */
-	List<BuySell> findBySellId(String sell_id);
+	List<BuySell> findBySellId__1(String sell_id);
 
 	/**
 	 * 买盘
@@ -29,7 +29,7 @@ public interface BuySellService extends IService<BuySell> {
 	 * @param buy_id
 	 * @return
 	 */
-	List<BuySell> findByBuyId(String buy_id);
+	List<BuySell> findByBuyId__1(String buy_id);
 
 	/**
 	 * 确认打款（买家确认打款，卖家确认打款）

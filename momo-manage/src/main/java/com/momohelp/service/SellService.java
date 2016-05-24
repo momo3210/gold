@@ -19,7 +19,7 @@ public interface SellService extends IService<Sell> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Sell> findUnDealByUserId(String user_id);
+	List<Sell> findUnDealByUserId__1(String user_id);
 
 	/**
 	 * 获取当前月的卖出记录

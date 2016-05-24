@@ -295,7 +295,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	@Override
-	public List<Sell> findUnDealByUserId(String user_id) {
+	public List<Sell> findUnDealByUserId__1(String user_id) {
 
 		// Example example = new Example(Sell.class);
 		// example.setOrderByClause("create_time desc");
@@ -311,9 +311,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		// List<Sell> list = selectByExample(example);
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("user_id", user_id);
-
 		List<Sell> list = ((SellMapper) getMapper()).findUnDealByUserId(map);
 
 		if (null == list) {
@@ -322,7 +320,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Sell sell = list.get(i);
-			sell.setBuySells(buySellService.findBySellId(sell.getId()));
+			sell.setBuySells(buySellService.findBySellId__1(sell.getId()));
 		}
 
 		return list;

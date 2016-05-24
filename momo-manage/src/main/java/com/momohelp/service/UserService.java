@@ -14,7 +14,43 @@ import com.momohelp.model.User;
  */
 public interface UserService extends IService<User> {
 
-	User getId_4(String id);
+	/**
+	 * 买入时使用
+	 *
+	 * @param id
+	 * @return
+	 */
+	User getBuyTimeById__1(String id);
+
+	/**
+	 * 获取用户所有的未完全交易的买盘（展示时使用）
+	 *
+	 * @param id
+	 * @return
+	 */
+	User getUnDealBuyById__1(String id);
+
+	/**
+	 * 获取用户所有的未完全交易的卖盘（展示时使用）
+	 *
+	 * @param id
+	 * @return
+	 */
+	User getUnDealSellById__1(String id);
+
+	/**
+	 * 获取我和我的父级
+	 *
+	 * @param id
+	 * @return
+	 */
+	User getMeAndParent__1(String id);
+
+	/**** -------------- */
+
+	/****************************/
+
+	User getAllById(String id);
 
 	User getId(int flag, String id);
 

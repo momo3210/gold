@@ -46,13 +46,13 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	public User getId(int flag, String id) {
 		switch (flag) {
 		case 0:
-			return getId_0(id);
+			return getRootById(id);
 		case 1:
 			return getId_1(id);
 		case 2:
 			return getId_2(id);
 		case 4:
-			return getId_4(id);
+			return getAllById(id);
 		case 5:
 			return getId_5(id);
 		case 6:
@@ -70,12 +70,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 */
 	private User getId_1(String id) {
 
-		User user = getId_0(id);
+		User user = getRootById(id);
 		if (null == user) {
 			return null;
 		}
 
-		user.setFarms(farmService.findUnDealByUserId(id));
+		user.setFarms(farmService.findUnDealByUserId__1(id));
 
 		return user;
 	}
@@ -88,12 +88,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 */
 	private User getId_2(String id) {
 
-		User user = getId_0(id);
+		User user = getRootById(id);
 		if (null == user) {
 			return null;
 		}
 
-		user.setSells(sellService.findUnDealByUserId(id));
+		user.setSells(sellService.findUnDealByUserId__1(id));
 
 		return user;
 
@@ -106,15 +106,17 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 * @return
 	 */
 	@Override
-	public User getId_4(String id) {
+	public User getAllById(String id) {
 
-		User user = getId_0(id);
+		User user = getRootById(id);
+
 		if (null == user) {
 			return null;
 		}
 
 		// 最后一笔排单
-		user.setLastFarm(farmService.getLastByUserId(id));
+		user.setLastFarm(farmService.getLastByUserId__1(id));
+
 		// 最后一笔卖出记录
 		user.setLastSell(sellService.getLastByUserId(id));
 
@@ -132,7 +134,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 */
 	private User getId_5(String id) {
 
-		User user = getId_0(id);
+		User user = getRootById(id);
 		if (null == user) {
 			return null;
 		}
@@ -150,7 +152,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 */
 	private User getId_6(String id) {
 
-		User user = getId_0(id);
+		User user = getRootById(id);
 		if (null == user) {
 			return null;
 		}
@@ -166,7 +168,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 * @param id
 	 * @return
 	 */
-	private User getId_0(String id) {
+	private User getRootById(String id) {
 
 		User user = selectByKey(id);
 		if (null == user) {
@@ -580,5 +582,68 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			id = id.substring(0, 4);
 		}
 		return id;
+	}
+
+	@Override
+	public User getUnDealSellById__1(String id) {
+
+		User user = selectByKey(id);
+
+		if (null == user) {
+			return null;
+		}
+
+		// 获取用户未完全交易的卖盘
+		user.setSells(sellService.findUnDealByUserId__1(id));
+
+		return user;
+	}
+
+	@Override
+	public User getMeAndParent__1(String id) {
+
+		User user = selectByKey(id);
+
+		if (null == user) {
+			return null;
+		}
+
+		// 获取父亲
+		if (!"0".equals(user.getPid())) {
+			User p_user = selectByKey(user.getPid());
+			user.setP_user(p_user);
+		}
+
+		return user;
+	}
+
+	@Override
+	public User getUnDealBuyById__1(String id) {
+
+		User user = selectByKey(id);
+
+		if (null == user) {
+			return null;
+		}
+
+		// 获取用户未完全交易的买盘
+		user.setFarms(farmService.findUnDealByUserId__1(id));
+
+		return user;
+	}
+
+	@Override
+	public User getBuyTimeById__1(String id) {
+
+		User user = selectByKey(id);
+
+		if (null == user) {
+			return null;
+		}
+
+		// 最近的一笔排单
+		user.setLastFarm(farmService.getLastByUserId__1(id));
+
+		return user;
 	}
 }

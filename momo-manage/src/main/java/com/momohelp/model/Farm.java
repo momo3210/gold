@@ -121,6 +121,28 @@ public class Farm implements Serializable {
 	@Transient
 	private List<FarmHatch> farmHatchs;
 
+	@Transient
+	private FarmFeed farmFeed;
+
+	@Transient
+	private FarmHatch farmHatch;
+
+	public FarmHatch getFarmHatch() {
+		return farmHatch;
+	}
+
+	public void setFarmHatch(FarmHatch farmHatch) {
+		this.farmHatch = farmHatch;
+	}
+
+	public FarmFeed getFarmFeed() {
+		return farmFeed;
+	}
+
+	public void setFarmFeed(FarmFeed farmFeed) {
+		this.farmFeed = farmFeed;
+	}
+
 	public FarmFeed getLastFarmFeed() {
 		return lastFarmFeed;
 	}
