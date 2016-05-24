@@ -277,7 +277,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		case 3:
 			break;
 		default:
-			return new String[] { "不能举报" };
+			return new String[] { "非法操作" };
 		}
 
 		BuySell _buySell = new BuySell();

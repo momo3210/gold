@@ -177,8 +177,6 @@
 										</div>
 									</div>
 								</div>
-
-
 							</div>
 
 							<!--PAGE CONTENT ENDS-->
@@ -214,11 +212,12 @@
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
 						if (data.success) {
-							alert('举报成功')
+							alert('举报成功');
+							location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 						}else{
 							if (data.msg) alert(data.msg[0]);
+							location.href = '${(conf_html_virtualPath)!}user/tip_off?id=${(data_buySell.id)!}';
 						}
-						location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 					},
 					error : function() {
 						alert(arguments[2]);

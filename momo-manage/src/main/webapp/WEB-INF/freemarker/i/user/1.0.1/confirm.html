@@ -254,11 +254,12 @@
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
 						if (data.success) {
-							alert('确认打款成功')
+							alert('确认打款成功');
+							location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 						}else{
 							if (data.msg) alert(data.msg[0]);
+							location.href = '${(conf_html_virtualPath)!}user/confirm?id=${(data_buySell.id)!}';
 						}
-						location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 					},
 					error : function() {
 						alert(arguments[2]);

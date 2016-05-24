@@ -45,6 +45,7 @@
 
 	<update id="updateNum_deal" parameterType="com.momohelp.model.Farm">
 		UPDATE w_farm_chick
-		SET num_deal = num_deal + #{num_deal} WHERE id = #{id}
+		SET num_deal = num_deal + #{num_deal}, time_deal= #{time_deal} WHERE
+		id = #{id}
 	</update>
 </mapper>

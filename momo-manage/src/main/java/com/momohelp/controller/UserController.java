@@ -329,7 +329,7 @@ public class UserController {
 				.getAttribute("session.user.id").toString());
 
 		if (null != confirm) {
-			result.put("msg", checkSafe);
+			result.put("msg", confirm);
 			return result;
 		}
 
@@ -412,7 +412,7 @@ public class UserController {
 		String[] tip_off = buySellService.tip_off(buySell);
 
 		if (null != tip_off) {
-			result.put("msg", checkSafe);
+			result.put("msg", tip_off);
 			return result;
 		}
 
