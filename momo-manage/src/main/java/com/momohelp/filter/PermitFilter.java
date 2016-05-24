@@ -34,11 +34,10 @@ public class PermitFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		// TODO
+
 		HttpServletRequest hreq = (HttpServletRequest) request;
 		HttpServletResponse hres = (HttpServletResponse) response;
 
-		// TODO
 		if (!checkUrlSafe(hreq)) {
 			chain.doFilter(request, response);
 			return;
@@ -46,6 +45,11 @@ public class PermitFilter implements Filter {
 
 		// 获取此次的请求路径
 		String uri = hreq.getRequestURI();
+
+		if (isT(uri)) {
+			chain.doFilter(request, response);
+			return;
+		}
 
 		if ("/user/login".equals(uri)) {
 			chain.doFilter(request, response);
@@ -91,7 +95,6 @@ public class PermitFilter implements Filter {
 	 */
 	private boolean checkUrlSafe(HttpServletRequest req) {
 		String suffix = HttpUtil.getUrlSuffix(req);
-		// TODO
 		return (null == suffix) ? true : (urlSuffix.indexOf(","
 				+ suffix.toLowerCase() + ",") == -1);
 	}
@@ -103,4 +106,7 @@ public class PermitFilter implements Filter {
 		return 0 == uri.indexOf("/manage/");
 	}
 
+	private boolean isT(String uri) {
+		return 0 == uri.indexOf("/t/");
+	}
 }

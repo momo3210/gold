@@ -981,7 +981,7 @@ public class UserController {
 
 		User user = userService.buy_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_user", user);
+		result.addObject("data_buy_record", user);
 
 		return result;
 	}
@@ -999,7 +999,7 @@ public class UserController {
 
 		User user = userService.sell_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_user", user);
+		result.addObject("data_sell_record", user);
 
 		return result;
 	}

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +46,13 @@ public class DefaultController {
 
 	@Autowired
 	private UserService userService;
+
+	@RequestMapping(value = { "/t/{user_id}" }, method = RequestMethod.GET)
+	public ModelAndView _i_tUI(HttpSession session, @PathVariable String user_id) {
+		ModelAndView result = new ModelAndView("i/default/1.0.2/t");
+		result.addObject("user_id", user_id);
+		return result;
+	}
 
 	/**
 	 * 首页
