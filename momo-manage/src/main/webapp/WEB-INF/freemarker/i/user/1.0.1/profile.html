@@ -204,14 +204,14 @@
 															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
 														</div>
 													</div>
-													<#-- <!-- <div class="control-group">
-														<label class="control-label" for="frm_NEW_PASS_2">短信验证码</label>
+													<div class="control-group">
+														<label class="control-label" for="frm_verifycode_sms">短信验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm_NEW_PASS_2" placeholder="短信验证码" />
-															<button class="btn btn-mini btn-danger">获取短信验证码</button>
+															<input type="text" class='input-small' id="frm_verifycode_sms" name='verifycode_sms' placeholder="短信验证码" />
+															<a class="btn btn-mini btn-danger" href='javascript:sendSms();'>获取短信验证码</a>
 														</div>
-													</div> -->
+													</div>
 													<div class="form-actions">
 														<button class="btn btn-info" type="button" id='btn_submit'>
 															<i class="icon-ok bigger-110"></i>
@@ -254,6 +254,26 @@
 
 		function showVerifyCode(){
 			$('#img_verifyCode').attr('src', '/verifyCode.jpg?ts='+ (new Date()).valueOf());
+		}
+
+		function sendSms(){
+			$.ajax({
+				url : '${(conf_html_virtualPath)!}user/sendSms',
+				type : 'POST',
+				dataType : 'JSON',
+				data : $('#frm').serializeObjectForm(),
+				success : function(data) {
+					if (data.success) {
+						alert('发送成功，请查收')
+						return;
+					} // END
+					if (data.msg)
+						alert(data.msg[0]);
+				},
+				error : function() {
+					alert(arguments[2]);
+				}
+			});
 		}
 
 		$(function(){

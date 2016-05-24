@@ -247,6 +247,24 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/user/sendSms" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_changePwd(HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] msg = userService.sendSms(session.getAttribute(
+				"session.user.id").toString());
+
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
 	/**
 	 * 安全密码
 	 *

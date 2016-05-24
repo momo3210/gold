@@ -377,6 +377,19 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] editInfo(User user) {
+
+		user.setVerifycode_sms(StringUtil.isEmpty(user.getVerifycode_sms()));
+
+		if (null == user.getVerifycode_sms()) {
+			return new String[] { "请输入短信验证码" };
+		}
+
+		User __u = selectByKey(user.getId());
+
+		if (!user.getVerifycode_sms().equals(__u.getVerifycode_sms())) {
+			return new String[] { "短信验证码不正确" };
+		}
+
 		User _user = new User();
 		_user.setId(user.getId());
 
@@ -388,6 +401,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setBank_name(user.getBank_name());
 
 		super.updateNotNull(_user);
+
+		User __u2 = new User();
+		__u2.setVerifycode_sms("");
+		__u2.setId(user.getId());
+		updateNotNull(__u2);
+
 		return null;
 	}
 
@@ -525,5 +544,27 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String[] sendSms(String id) {
+
+		User user = new User();
+
+		user.setId(id);
+		user.setVerifycode_sms(genId2());
+
+		updateNotNull(user);
+
+		return null;
+	}
+
+	private String genId2() {
+		int i = (int) ((Math.random() * 5 + 1) * 1000);
+		String id = String.valueOf(i);
+		if (4 < id.length()) {
+			id = id.substring(0, 4);
+		}
+		return id;
 	}
 }

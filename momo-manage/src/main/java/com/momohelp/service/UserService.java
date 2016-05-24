@@ -3,6 +3,8 @@ package com.momohelp.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.momohelp.model.User;
 
 /**
@@ -15,6 +17,8 @@ public interface UserService extends IService<User> {
 	User getId_4(String id);
 
 	User getId(int flag, String id);
+
+	String[] sendSms(String id);
 
 	/**
 	 * 普通用户登陆
@@ -73,6 +77,7 @@ public interface UserService extends IService<User> {
 	 * @param user
 	 * @return
 	 */
+	@Transactional
 	String[] editInfo(User user);
 
 	/**

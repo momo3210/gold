@@ -208,12 +208,16 @@ public class User implements Serializable {
 
 		if ("05".equals(lv)) {
 			buyMo.setMin(100);
+			buyMo.setMax(5000);
 		} else if ("06".equals(lv)) {
 			buyMo.setMin(1000);
+			buyMo.setMax(10000);
 		} else if ("07".equals(lv)) {
-			buyMo.setMin(2000);
+			buyMo.setMin(5000);
+			buyMo.setMax(20000);
 		} else if ("08".equals(lv)) {
-			buyMo.setMin(3000);
+			buyMo.setMin(10000);
+			buyMo.setMax(30000);
 		} // if
 
 		return buyMo;
