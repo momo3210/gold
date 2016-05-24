@@ -1,5 +1,7 @@
 package com.momohelp.calculate.service.test;
 
+import java.util.Calendar;
+
 import javax.annotation.Resource;
 
 import com.momohelp.model.Cfg;
@@ -63,5 +65,19 @@ public class A {
 			break;
 		}
 		return royalty;
+	}
+	
+	public static void main(String[] args) {
+		Calendar cr=Calendar.getInstance();
+		cr.set(Calendar.HOUR, 0);
+		cr.set(Calendar.MINUTE, 0);
+		cr.set(Calendar.SECOND, 0);
+		Calendar cr2=Calendar.getInstance();
+		cr2.add(Calendar.DAY_OF_MONTH, 1);
+		cr2.set(Calendar.HOUR, 0);
+		cr2.set(Calendar.MINUTE, 0);
+		cr2.set(Calendar.SECOND, 0);
+//		System.out.println(cr.getTime().toLocaleString());
+//		System.out.println(cr2.getTime().toLocaleString());
 	}
 }
