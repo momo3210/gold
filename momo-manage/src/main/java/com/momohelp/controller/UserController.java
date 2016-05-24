@@ -304,7 +304,7 @@ public class UserController {
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		}
 
 		String[] confirm = buySellService.confirm(buySell, session
 				.getAttribute("session.user.id").toString());
@@ -351,7 +351,6 @@ public class UserController {
 
 		map.put("data_buySell", buySell);
 
-		// TODO
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));
 		return "i/user/1.0.1/confirm";
@@ -384,7 +383,7 @@ public class UserController {
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		}
 
 		// 举报人id
 		buySell.setTip_off_user_id(session.getAttribute("session.user.id")
@@ -477,7 +476,7 @@ public class UserController {
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		}
 
 		// 设置主键
 		user.setId(session.getAttribute("session.user.id").toString());
@@ -634,20 +633,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		} // if
+		}
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		} // if
+		}
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // if
+		}
 
 		farm.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -655,7 +654,7 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
-		} // if
+		}
 
 		result.put("success", true);
 		return result;
@@ -686,20 +685,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		} // if
+		}
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		} // if
+		}
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // if
+		}
 
 		farmFeed.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -707,7 +706,7 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
-		} // if
+		}
 
 		result.put("success", true);
 		return result;
@@ -730,30 +729,31 @@ public class UserController {
 		if (null == id || "".equals(id.trim())) {
 			List<Farm> list = farmService.findFeedByUserId(session
 					.getAttribute("session.user.id").toString());
+
 			map.put("data_list", list);
 
 			uri = "i/user/1.0.1/feedMo";
 		} else {
 
-			Farm farm = farmService.getByFarm(1, new Farm(id, session
-					.getAttribute("session.user.id").toString()));
+			Farm farm = farmService.getByUserId(id,
+					session.getAttribute("session.user.id").toString());
 
 			if (null == farm) {
 				return "redirect:/user/feedMo";
-			} // if
+			}
 
 			// 判断今天是否已经喂过该批次的鸡苗了
 			String[] checkTodayFeed = farmFeedService.checkTodayFeed(farm
 					.getLastFarmFeed());
 			if (null != checkTodayFeed) {
 				map.put("data_msg", checkTodayFeed[0]);
-			} // if
+			}
 
 			map.put("data_farm", farm);
 			map.put("data_token", genToken(session));
 
 			uri = "i/user/1.0.1/feedMo_id";
-		} // if
+		}
 
 		map.put("nav_choose", ",05,0505,");
 		map.put("data_user", session.getAttribute("session.user"));
@@ -786,20 +786,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		} // if
+		}
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		} // if
+		}
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // if
+		}
 
 		farmHatch
 				.setUser_id(session.getAttribute("session.user.id").toString());
@@ -836,12 +836,12 @@ public class UserController {
 
 			uri = "i/user/1.0.1/hatchMo";
 		} else {
-			Farm farm = farmService.getByFarm(1, new Farm(id, session
-					.getAttribute("session.user.id").toString()));
+			Farm farm = farmService.getByUserId(id,
+					session.getAttribute("session.user.id").toString());
 
 			if (null == farm) {
 				return "redirect:/user/hatchMo";
-			} // if
+			}
 
 			map.put("data_farm", farm);
 			map.put("data_token", genToken(session));
@@ -919,20 +919,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		} // if
+		}
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		} // if
+		}
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // if
+		}
 
 		sell.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -940,7 +940,7 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
-		} // if
+		}
 
 		result.put("success", true);
 		return result;
@@ -957,15 +957,7 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
 
-		// List<Buy> list_buy =
-		// buyService.findUnFinishDeal(session.getAttribute(
-		// "session.user.id").toString());
-		// result.addObject("data_list_buy", list_buy);
-
-		// List<Farm> list = farmService.findByUnDeal(session.getAttribute(
-		// "session.user.id").toString());
-
-		User user = userService.getId(2, session
+		User user = userService.getId(1, session
 				.getAttribute("session.user.id").toString());
 		result.addObject("data_user", user);
 
@@ -983,11 +975,7 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
 		result.addObject("nav_choose", ",05,0504,");
 
-		// List<Sell> list_sell = sellService.findUnFinishDeal(session
-		// .getAttribute("session.user.id").toString());
-		// result.addObject("data_list_sell", list_sell);
-
-		User user = userService.getId(4, session
+		User user = userService.getId(2, session
 				.getAttribute("session.user.id").toString());
 		result.addObject("data_user", user);
 
@@ -1069,7 +1057,7 @@ public class UserController {
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		}
 
 		// 组合数据
 		materialRecord.setUser_id(session.getAttribute("session.user.id")
@@ -1164,7 +1152,7 @@ public class UserController {
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		}
 
 		// 组合数据
 		materialRecord.setUser_id(session.getAttribute("session.user.id")

@@ -27,17 +27,6 @@ import com.momohelp.service.UserService;
 public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		FarmFeedService {
 
-	@Override
-	public List<FarmFeed> findByFarmId(String farm_id) {
-		Example example = new Example(FarmFeed.class);
-		example.setOrderByClause("create_time desc");
-
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("w_farm_chick_id", farm_id);
-
-		return selectByExample(example);
-	}
-
 	@Autowired
 	private UserService userService;
 
@@ -47,95 +36,88 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	@Autowired
 	private MaterialRecordService materialRecordService;
 
-	@Override
-	public double calculateInterest(String farm_id) {
-		Example example = new Example(FarmFeed.class);
-		// TODO
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("w_farm_chick_id", farm_id);
-
-		List<FarmFeed> list = selectByExample(example);
-
-		double count = 0.00;
-
-		if (null == list) {
-			return count;
-		}
-
-		for (int i = 0, j = list.size(); i < j; i++) {
-			FarmFeed item = list.get(i);
-			count += item.getPrice();
-		}
-
-		return count;
+	public int updateNotNull(FarmFeed entity) {
+		entity.setId(null);
+		return super.updateNotNull(entity);
 	}
 
 	@Override
 	public String[] feed(FarmFeed farmFeed) {
-		farmFeed.setCreate_time(new Date());
 
-		farmFeed.setNum_feed((null == farmFeed.getNum_feed()) ? 0 : farmFeed
+		FarmFeed _farmFeed = new FarmFeed();
+		_farmFeed.setUser_id(farmFeed.getUser_id());
+		_farmFeed.setCreate_time(new Date());
+		_farmFeed.setNum_feed((null == farmFeed.getNum_feed()) ? 0 : farmFeed
 				.getNum_feed());
-		if (1 > farmFeed.getNum_feed()) {
+		_farmFeed.setW_farm_chick_id(farmFeed.getW_farm_chick_id());
+
+		/**/
+
+		if (1 > _farmFeed.getNum_feed()) {
 			return new String[] { "喂养数量必须大于0" };
-		} // if
+		}
 
-		// 喂的时候也要喂100的倍数
-		if (0 != farmFeed.getNum_feed() % 100) {
+		// 100的倍数
+		if (0 != _farmFeed.getNum_feed() % 100) {
 			return new String[] { "请输入规定的数量" };
-		} // if
+		}
 
-		// 实时信息
-		Farm farm = farmService.getByFarm(1,
-				new Farm(farmFeed.getW_farm_chick_id(), farmFeed.getUser_id()));
+		/**/
+
+		// 实时
+		Farm farm = farmService.getByUserId(_farmFeed.getW_farm_chick_id(),
+				_farmFeed.getUser_id());
 
 		if (null == farm) {
 			return new String[] { "数据查询异常" };
-		} // if
+		}
+
+		/**/
 
 		// 喂鸡的数量大于当前鸡苗批次的数量
-		if (farmFeed.getNum_feed() > farm.getNum_current()) {
+		if (_farmFeed.getNum_feed() > farm.getNum_current()) {
 			return new String[] { "非法操作" };
-		} // if
+		}
 
 		// 当前时间 <--出局时间（理论）
-		if (farmFeed.getCreate_time().after(farm.getTime_out())) {
+		if (_farmFeed.getCreate_time().after(farm.getTime_out())) {
 			return new String[] { "已经出局了" };
-		} // if
+		}
 
 		// 该批次的鸡都卖完了
 		if (0 == farm.getNum_current()) {
 			return new String[] { "没有鸡可以喂了" };
-		} // if
+		}
 
 		// 买入当天不能喂鸡
 		if (sdf.format(farm.getCreate_time()).equals(
-				sdf.format(farmFeed.getCreate_time()))) {
+				sdf.format(_farmFeed.getCreate_time()))) {
 			return new String[] { "买入当天不能喂鸡" };
-		} // if
+		}
 
 		// 判断今天是否已经喂过该批次的鸡苗了
 		String[] checkTodayFeed = checkTodayFeed(farm.getLastFarmFeed());
 		if (null != checkTodayFeed) {
 			return checkTodayFeed;
-		} // if
+		}
+
+		/**/
 
 		// 我的实时信息
-		User user = userService.selectByKey(farm.getUser_id());
+		User user = userService.selectByKey(_farmFeed.getUser_id());
 
-		if ((farmFeed.getNum_feed() / 100) > user.getNum_food()) {
+		if ((_farmFeed.getNum_feed() / 100) > user.getNum_food()) {
 			return new String[] { "饲料不足，请购买饲料" };
-		} // if
-
-		saveMaterialRecord(farmFeed, user);
+		}
 
 		// 1饲料喂100只鸡
 		// 计算利息 START 0.5% or 0.9%
-		farmFeed.setPrice(Double.valueOf(farmFeed.getNum_feed())
-				* (8 > ((null == farm.getFarmFeeds()) ? 1 : (farm
-						.getFarmFeeds().size() + 1)) ? 0.007 : 0.012));
+		_farmFeed.setPrice(Double.valueOf(_farmFeed.getNum_feed())
+				* (8 > ((null == farm.getFarmFeeds()) ? 1 : (1 + farm
+						.getFarmFeeds().size())) ? 0.007 : 0.012));
 
-		save(farmFeed);
+		saveMaterialRecord(_farmFeed, user);
+		save(_farmFeed);
 		return null;
 	}
 
@@ -155,7 +137,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		materialRecord.setStatus(1);
 		materialRecord.setType_id(2);
 
-		materialRecord.setComment("喂养鸡苗 -" + farmFeed.getNum_feed());
+		materialRecord.setComment("喂食鸡苗 -" + farmFeed.getNum_feed());
 
 		materialRecord.setTrans_user_id(null);
 
@@ -180,7 +162,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 
 		if (null == farmFeed) {
 			return null;
-		} // if
+		}
 
 		// 该批次最后一次喂鸡的时间
 		String date_1 = sdf.format(farmFeed.getCreate_time());
@@ -189,4 +171,17 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 
 		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了" } : null;
 	}
+
+	@Override
+	public List<FarmFeed> findByFarmId(String farm_id) {
+
+		Example example = new Example(FarmFeed.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("w_farm_chick_id", farm_id);
+
+		return selectByExample(example);
+	}
+
 }

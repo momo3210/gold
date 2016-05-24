@@ -14,10 +14,11 @@ import com.momohelp.model.FarmHatch;
 public interface FarmHatchService extends IService<FarmHatch> {
 
 	/**
-	 * 获取鸡苗批次的孵化记录
+	 * 获取鸡苗批次关联的孵化记录
+	 *
+	 * YES
 	 *
 	 * @param farm_id
-	 *            鸡苗批次id
 	 * @return
 	 */
 	List<FarmHatch> findByFarmId(String farm_id);

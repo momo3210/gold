@@ -71,9 +71,9 @@ public class DefaultController {
 		result.addObject("data_list_buy", list_buy);
 
 		// 卖盘
-		List<Sell> list_sell = sellService.findUnFinishDeal(session
-				.getAttribute("session.user.id").toString());
-		result.addObject("data_list_sell", list_sell);
+//		List<Sell> list_sell = sellService.findUnFinishDeal(session
+//				.getAttribute("session.user.id").toString());
+//		result.addObject("data_list_sell", list_sell);
 
 		List<Prize> dongjieliebiao = prizeService.findByUserId(session
 				.getAttribute("session.user.id").toString());

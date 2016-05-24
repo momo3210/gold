@@ -1,20 +1,22 @@
 package com.momohelp.service.impl;
 
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
-import com.github.pagehelper.PageHelper;
+import com.momohelp.mapper.BuyMapper;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
+import com.momohelp.service.FarmService;
 import com.momohelp.service.UserService;
 
 /**
@@ -25,34 +27,14 @@ import com.momohelp.service.UserService;
 @Service("buyService")
 public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
-	@Override
-	public List<Buy> findByFarmId_1(String farm_id) {
-
-		Example example = new Example(Buy.class);
-		example.setOrderByClause("create_time desc");
-
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("w_farm_chick_id", farm_id);
-
-		List<Buy> list = selectByExample(example);
-
-		if (null == list) {
-			return null;
-		} // if
-
-		for (int i = 0, j = list.size(); i < j; i++) {
-			Buy buy = list.get(i);
-			buy.setBuySells(buySellService.findByBuyId_1(buy.getId()));
-		} // for
-
-		return list;
-	}
-
 	@Autowired
 	private BuySellService buySellService;
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private FarmService farmService;
 
 	@Override
 	public int save(Buy entity) {
@@ -89,18 +71,24 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
 	@Override
 	public List<Buy> findUnFinishDeal(String user_id) {
-		Example example = new Example(Buy.class);
-		example.setOrderByClause("create_time desc");
+		// Example example = new Example(Buy.class);
+		// example.setOrderByClause("create_time desc");
+		//
+		// // 显示24小时内的
+		// Calendar c = Calendar.getInstance();
+		// c.add(Calendar.HOUR_OF_DAY, -24);
+		//
+		// example.or().andEqualTo("user_id", user_id)
+		// .andGreaterThan("time_deal", c.getTime());
+		// example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
+		//
+		// List<Buy> list_buy = selectByExample(example);
 
-		// 显示24小时内的
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.HOUR_OF_DAY, -24);
+		Map<String, Object> map = new HashMap<String, Object>();
 
-		example.or().andEqualTo("user_id", user_id)
-				.andGreaterThan("time_deal", c.getTime());
-		example.or().andEqualTo("user_id", user_id).andIsNull("time_deal");
+		map.put("user_id", user_id);
 
-		List<Buy> list_buy = selectByExample(example);
+		List<Buy> list_buy = ((BuyMapper) getMapper()).findUnDealByUserId(map);
 
 		if (null == list_buy) {
 			return list_buy;
@@ -146,29 +134,35 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
 		if (null == list) {
 			return null;
-		} // if
+		}
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Buy buy = list.get(i);
 			buy.setBuySells(buySellService.findByBuyId(buy.getId()));
-		} // for
+		}
 
 		return list;
 	}
 
 	@Override
-	public List<Buy> findByFarmId_3(String farm_id, int page, int rows) {
-		if (null == farm_id || "".equals(farm_id.trim())) {
+	public Buy getId(String id) {
+
+		Buy buy = selectByKey(id);
+
+		if (null == buy) {
 			return null;
-		} // if
+		}
 
-		Example example = new Example(Buy.class);
-		example.setOrderByClause("create_time desc");
+		buy.setFarm(farmService.selectByKey(buy.getW_farm_chick_id()));
 
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("farm_id", farm_id);
+		return buy;
+	}
 
-		PageHelper.startPage(page, rows);
-		return selectByExample(example);
+	@Override
+	public void updateNum_deal(String id, int num_deal) {
+		Buy buy = new Buy();
+		buy.setId(id);
+		buy.setNum_deal(num_deal);
+		((BuyMapper) getMapper()).updateNum_deal(buy);
 	}
 }

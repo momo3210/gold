@@ -13,11 +13,31 @@ import com.momohelp.model.Sell;
  */
 public interface SellService extends IService<Sell> {
 
-	List<Sell> findByUserId_5(String user_id, int page, int rows);
+	/**
+	 * 获取未成交的卖盘
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Sell> findUnDealByUserId(String user_id);
 
-	List<Sell> findBySell_5(Sell sell, int page, int rows);
+	/**
+	 * 获取当前月的卖出记录
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Sell> findMonthSellByUserId(String user_id);
 
-	List<Sell> findByUnDeal_1(String user_id);
+	/**
+	 * 获取用户的最后一次卖出记录
+	 *
+	 * YES
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	Sell getLastByUserId(String user_id);
 
 	/**
 	 * 卖出鸡苗
@@ -28,27 +48,5 @@ public interface SellService extends IService<Sell> {
 	@Transactional
 	String[] sell(Sell sell);
 
-	/**
-	 * 获取每月卖出
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	List<Sell> findMonthSellByUserId(String user_id);
-
-	/**
-	 * 获取最后一次的卖盘
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	Sell getLastSellByUserId(String user_id);
-
-	/**
-	 * 获取未完全成交的记录
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	List<Sell> findUnFinishDeal(String user_id);
+	void updateNum_deal(String id, int num_deal);
 }

@@ -29,7 +29,6 @@ public class MaterialRecordServiceImpl extends BaseService<MaterialRecord>
 	@Override
 	public int save(MaterialRecord entity) {
 		entity.setCreate_time(new Date());
-		entity.setNum_use((0 < entity.getNum_use()) ? entity.getNum_use() : 1);
 		return super.save(entity);
 	}
 

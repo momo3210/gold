@@ -13,37 +13,13 @@ import com.momohelp.model.Farm;
  */
 public interface FarmService extends IService<Farm> {
 
-	List<Farm> findByUserId_5(String user_id, int page, int rows);
-
-	List<Farm> findByFarm_5(Farm farm, int page, int rows);
-
 	/**
-	 * 获取用户的未完全交易的鸡苗批次
+	 * 查找未完全交易的鸡苗批次
 	 *
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findByUnDeal(String user_id);
-
-	/**
-	 * 获取用户的未完全交易的鸡苗批次
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	List<Farm> findByUnDeal_1(String user_id);
-
-	Farm getByFarm(int flag, Farm farm);
-
-	/**
-	 * 获取用户的鸡苗批次
-	 *
-	 * @param user_id
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	List<Farm> findByUserId(String user_id, int page, int rows);
+	List<Farm> findUnDealByUserId(String user_id);
 
 	/**
 	 * 买入鸡苗
@@ -55,25 +31,7 @@ public interface FarmService extends IService<Farm> {
 	String[] buy(Farm farm);
 
 	/**
-	 * 获取用户的最后一单
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	Farm getLastByUserId(String user_id);
-
-	/**
-	 * 查找可以喂的鸡的批次（还没有完全卖出，并且还没有出局）
-	 *
-	 * 今天买入的鸡苗不显示，第二天才显示
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	List<Farm> findFeedByUserId(String user_id);
-
-	/**
-	 * 查找可以孵化的鸡苗的批次
+	 * 查找目前可以孵化的批次
 	 *
 	 * @param user_id
 	 * @return
@@ -81,20 +39,36 @@ public interface FarmService extends IService<Farm> {
 	List<Farm> findHatchByUserId(String user_id);
 
 	/**
-	 * 查找可以孵化的鸡的批次
+	 * 查找目前可以喂的批次
 	 *
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findCanHatch(String user_id);
+	List<Farm> findFeedByUserId(String user_id);
 
 	/**
-	 * 获取可以孵化的鸡苗批次
+	 * 获取用户的排单（鸡苗批次）
 	 *
-	 * @param key
+	 * YES
+	 *
+	 * @param farm_id
+	 *            批次id
+	 * @param user_id
+	 *            用户id
+	 * @return
+	 */
+	Farm getByUserId(String farm_id, String user_id);
+
+	/**
+	 * 获取用户的最后一条买入记录（鸡苗批次）
+	 *
+	 * YES
+	 *
 	 * @param user_id
 	 * @return
 	 */
-	Farm findCanHatch(String key, String user_id);
+	Farm getLastByUserId(String user_id);
+
+	void updateNum_deal(String id, int num_deal);
 
 }

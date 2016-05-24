@@ -2,4 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.FarmMapper">
 
+	<resultMap id="baseResultMap" type="com.momohelp.model.Farm">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" />
+
+		<result column="time_out" property="time_out" />
+		<result column="time_out_real" property="time_out_real" />
+		<result column="time_ripe" property="time_ripe" />
+		<result column="num_current" property="num_current" />
+		<result column="num_buy" property="num_buy" />
+
+		<result column="num_deal" property="num_deal" />
+		<result column="flag_calc_bonus" property="flag_calc_bonus" />
+
+		<result column="time_deal" property="time_deal" />
+		<result column="flag_out_p" property="flag_out_p" />
+		<result column="pid" property="pid" />
+		<result column="pid_higher_ups" property="pid_higher_ups" />
+		<result column="flag_out_self" property="flag_out_self" />
+
+		<result column="num_reward" property="num_reward" />
+	</resultMap>
+
+	<select id="findUnDealByUserId" resultMap="baseResultMap"
+		parameterType="java.util.Map">
+
+		SELECT * FROM w_farm_chick WHERE user_id = #{user_id}
+		AND
+		num_buy != num_deal ORDER BY create_time
+		DESC
+	</select>
+
+	<select id="findHatchByUserId" resultMap="baseResultMap"
+		parameterType="java.util.Map">
+
+		SELECT * FROM w_farm_chick WHERE user_id=#{user_id} AND
+		num_current>#{num_current} AND num_buy=num_deal ORDER BY create_time
+		DESC
+	</select>
+
+	<update id="updateNum_deal" parameterType="com.momohelp.model.Farm">
+		UPDATE w_farm_chick
+		SET num_deal = num_deal + #{num_deal} WHERE id = #{id}
+	</update>
 </mapper>

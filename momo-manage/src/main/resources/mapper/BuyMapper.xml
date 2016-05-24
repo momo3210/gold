@@ -2,4 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.momohelp.mapper.BuyMapper">
 
+	<resultMap id="baseResultMap" type="com.momohelp.model.Buy">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" />
+
+		<result column="w_farm_chick_id" property="w_farm_chick_id" />
+		<result column="num_buy" property="num_buy" />
+		<result column="calc_time" property="calc_time" />
+		<result column="time_deal" property="time_deal" />
+
+		<result column="is_deposit" property="is_deposit" />
+		<result column="num_deal" property="num_deal" />
+	</resultMap>
+
+
+	<select id="findUnDealByUserId" resultMap="baseResultMap"
+		parameterType="java.util.Map">
+
+		SELECT * FROM p_buy WHERE user_id = #{user_id}
+		AND
+		num_buy != num_deal ORDER BY create_time
+		DESC
+	</select>
+
+	<update id="updateNum_deal" parameterType="com.momohelp.model.Buy">
+		UPDATE p_buy SET
+		num_deal = num_deal + #{num_deal} WHERE id = #{id}
+	</update>
 </mapper>

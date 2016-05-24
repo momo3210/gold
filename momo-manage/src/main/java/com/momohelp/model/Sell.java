@@ -46,8 +46,18 @@ public class Sell implements Serializable {
 	 */
 	private Integer type_id;
 
+	private Integer num_deal;
+
 	@Transient
 	private List<BuySell> buySells;
+
+	public Integer getNum_deal() {
+		return num_deal;
+	}
+
+	public void setNum_deal(Integer num_deal) {
+		this.num_deal = num_deal;
+	}
 
 	public List<BuySell> getBuySells() {
 		return buySells;

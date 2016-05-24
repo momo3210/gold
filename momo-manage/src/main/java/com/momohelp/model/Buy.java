@@ -59,6 +59,30 @@ public class Buy implements Serializable {
 	 */
 	private Integer is_deposit;
 
+	private Integer num_deal;
+
+	@Transient
+	private List<BuySell> buySells;
+
+	@Transient
+	private Farm farm;
+
+	public Integer getNum_deal() {
+		return num_deal;
+	}
+
+	public void setNum_deal(Integer num_deal) {
+		this.num_deal = num_deal;
+	}
+
+	public Farm getFarm() {
+		return farm;
+	}
+
+	public void setFarm(Farm farm) {
+		this.farm = farm;
+	}
+
 	public Integer getIs_deposit() {
 		return is_deposit;
 	}
@@ -66,9 +90,6 @@ public class Buy implements Serializable {
 	public void setIs_deposit(Integer is_deposit) {
 		this.is_deposit = is_deposit;
 	}
-
-	@Transient
-	private List<BuySell> buySells;
 
 	public List<BuySell> getBuySells() {
 		return buySells;

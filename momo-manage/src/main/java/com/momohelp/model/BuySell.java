@@ -110,6 +110,20 @@ public class BuySell implements Serializable {
 	@Transient
 	private User p_sell_user;
 
+	/**
+	 * 买盘
+	 */
+	@Transient
+	private Buy buy;
+
+	public Buy getBuy() {
+		return buy;
+	}
+
+	public void setBuy(Buy buy) {
+		this.buy = buy;
+	}
+
 	public Date getTip_off_time() {
 		return tip_off_time;
 	}

@@ -14,10 +14,6 @@ public interface UserService extends IService<User> {
 
 	User getId(int flag, String id);
 
-	User getByUser(int flag, User user);
-
-	List<User> findByUser(int flag, User user, int page, int rows);
-
 	/**
 	 * 普通用户登陆
 	 *

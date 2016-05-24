@@ -19,15 +19,6 @@ public class Farm implements Serializable {
 
 	private static final long serialVersionUID = -9018511068175944699L;
 
-	public Farm() {
-		//
-	}
-
-	public Farm(String id, String user_id) {
-		this.id = id;
-		this.user_id = user_id;
-	}
-
 	@Id
 	@Column(name = "id")
 	private String id;

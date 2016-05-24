@@ -11,8 +11,12 @@ import com.momohelp.model.Buy;
  */
 public interface BuyService extends IService<Buy> {
 
+	Buy getId(String id);
+
 	/**
 	 * 获取未完全成交的记录
+	 *
+	 * 可以删除了
 	 *
 	 * @param user_id
 	 * @return
@@ -21,7 +25,5 @@ public interface BuyService extends IService<Buy> {
 
 	List<Buy> findByFarmId(String farm_id);
 
-	List<Buy> findByFarmId_1(String farm_id);
-
-	List<Buy> findByFarmId_3(String farm_id, int page, int rows);
+	void updateNum_deal(String id, int num_deal);
 }

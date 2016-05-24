@@ -14,23 +14,6 @@ import com.momohelp.model.FarmFeed;
 public interface FarmFeedService extends IService<FarmFeed> {
 
 	/**
-	 * 获取鸡苗批次的喂食记录
-	 *
-	 * @param farm_id
-	 *            鸡苗批次id
-	 * @return
-	 */
-	List<FarmFeed> findByFarmId(String farm_id);
-
-	/**
-	 * 计算利息（只计算了喂饲料产生的利息，未加批次表中的奖金字段 num_reward）
-	 *
-	 * @param farm_id
-	 * @return
-	 */
-	double calculateInterest(String farm_id);
-
-	/**
 	 * 喂饲料
 	 *
 	 * @param farmFeed
@@ -40,14 +23,21 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	String[] feed(FarmFeed farmFeed);
 
 	/**
-	 * 判断今天是否已经喂过鸡
+	 * 获取鸡苗批次关联的喂食记录
 	 *
-	 * false今天没喂过
+	 * YES
 	 *
-	 * true今天喂过
+	 * @param farm_id
+	 * @return
+	 */
+	List<FarmFeed> findByFarmId(String farm_id);
+
+	/**
+	 * 判断今天是否已经喂过鸡了
 	 *
 	 * @param farmFeed
 	 * @return
 	 */
 	String[] checkTodayFeed(FarmFeed farmFeed);
+
 }
