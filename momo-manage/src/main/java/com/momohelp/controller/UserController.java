@@ -137,7 +137,7 @@ public class UserController {
 	private String[] verify(HttpSession session, String verifyCode) {
 		String code = session.getAttribute("session.verifyCode").toString();
 		// TODO
-		return (verifyCode.equals(code)) ? null : new String[] { "验证码输入错误" };
+		return (verifyCode.equals(code)) ? null : new String[] { "图形验证码输入错误" };
 	}
 
 	/**
@@ -238,24 +238,6 @@ public class UserController {
 		String[] msg = userService.changePwd(
 				session.getAttribute("session.user.id").toString(), old_pass,
 				new_pass);
-
-		if (null != msg) {
-			result.put("msg", msg);
-			return result;
-		}
-
-		result.put("success", true);
-		return result;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = { "/user/sendSms" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_changePwd(HttpSession session) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		String[] msg = userService.sendSms(session.getAttribute(
-				"session.user.id").toString());
 
 		if (null != msg) {
 			result.put("msg", msg);
