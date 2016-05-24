@@ -167,7 +167,7 @@ public class Farm implements Serializable {
 
 		if (null == this.getTime_out_real()) {
 			return 1;
-		} // if
+		}
 
 		// 实际出局时间在理论出局时间之后
 		return this.getTime_out_real().after(this.getTime_out()) ? 3 : 2;

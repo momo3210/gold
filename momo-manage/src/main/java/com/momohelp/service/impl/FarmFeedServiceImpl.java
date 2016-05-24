@@ -65,8 +65,8 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		/**/
 
 		// 实时
-		Farm farm = farmService.getFeedById__2(_farmFeed.getW_farm_chick_id(),
-				_farmFeed.getUser_id());
+		Farm farm = farmService.feedMo_farm_feed_list___4(
+				_farmFeed.getW_farm_chick_id(), _farmFeed.getUser_id());
 
 		if (null == farm) {
 			return new String[] { "数据查询异常" };
@@ -96,7 +96,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		}
 
 		// 判断今天是否已经喂过该批次的鸡苗了
-		String[] checkTodayFeed = checkTodayFeed__1(farm.getLastFarmFeed());
+		String[] checkTodayFeed = checkTodayFeed___4(farm.getLastFarmFeed());
 		if (null != checkTodayFeed) {
 			return checkTodayFeed;
 		}
@@ -116,7 +116,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 				* (8 > ((null == farm.getFarmFeeds()) ? 1 : (1 + farm
 						.getFarmFeeds().size())) ? 0.007 : 0.012));
 
-		saveMaterialRecord(_farmFeed, user);
+		saveMaterialRecord____4(_farmFeed, user);
 		save(_farmFeed);
 		return null;
 	}
@@ -127,7 +127,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	 * @param farmFeed
 	 * @param user
 	 */
-	private void saveMaterialRecord(FarmFeed farmFeed, User user) {
+	private void saveMaterialRecord____4(FarmFeed farmFeed, User user) {
 		// 添加操作记录
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(farmFeed.getUser_id());
@@ -173,7 +173,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	}
 
 	@Override
-	public List<FarmFeed> findByFarmId__1(String farm_id) {
+	public List<FarmFeed> findByFarmId___4(String farm_id) {
 
 		Example example = new Example(FarmFeed.class);
 		example.setOrderByClause("create_time desc");
@@ -182,6 +182,21 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		criteria.andEqualTo("w_farm_chick_id", farm_id);
 
 		return selectByExample(example);
+	}
+
+	@Override
+	public String[] checkTodayFeed___4(FarmFeed farmFeed) {
+
+		if (null == farmFeed) {
+			return null;
+		}
+
+		// 该批次最后一次喂鸡的时间
+		String date_1 = sdf.format(farmFeed.getCreate_time());
+		// 当前时间
+		String date_2 = sdf.format(new Date());
+
+		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了" } : null;
 	}
 
 }

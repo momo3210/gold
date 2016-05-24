@@ -746,23 +746,23 @@ public class UserController {
 
 		if (null == id || "".equals(id.trim())) {
 
-			List<Farm> list = farmService.findFeedByUserId__1(session
-					.getAttribute("session.user.id").toString());
+			List<Farm> list = farmService.feedMo_list___4(session.getAttribute(
+					"session.user.id").toString());
 			map.put("data_list", list);
 
 			uri = "i/user/1.0.1/feedMo";
 
 		} else {
 
-			Farm farm = farmService.getFeedById__1(id,
-					session.getAttribute("session.user.id").toString());
+			Farm farm = farmService.feedMo_farm_feed_list___4(id, session
+					.getAttribute("session.user.id").toString());
 
 			if (null == farm) {
 				return "redirect:/user/feedMo";
 			}
 
 			// 判断今天是否已经喂过该批次的鸡苗了
-			String[] checkTodayFeed = farmFeedService.checkTodayFeed__1(farm
+			String[] checkTodayFeed = farmFeedService.checkTodayFeed___4(farm
 					.getLastFarmFeed());
 			if (null != checkTodayFeed) {
 				map.put("data_msg", checkTodayFeed[0]);
@@ -849,14 +849,14 @@ public class UserController {
 		String uri = null;
 
 		if (null == id || "".equals(id.trim())) {
-			List<Farm> list = farmService.findHatchByUserId(session
-					.getAttribute("session.user.id").toString());
+			List<Farm> list = farmService.hatchMo_list__4(session.getAttribute(
+					"session.user.id").toString());
 			map.put("data_list", list);
 
 			uri = "i/user/1.0.1/hatchMo";
 		} else {
-			Farm farm = farmService.getFeedById__2(id,
-					session.getAttribute("session.user.id").toString());
+			Farm farm = farmService.hatchMo_farm_hatch_list___4(id, session
+					.getAttribute("session.user.id").toString());
 
 			if (null == farm) {
 				return "redirect:/user/hatchMo";

@@ -78,7 +78,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		/**/
 
 		// 实时
-		User user = userService.getBuyTimeById__1(_farm.getUser_id());
+		User user = userService.buyTime___4(_farm.getUser_id());
 
 		if (null == user) {
 			return new String[] { "非法操作" };
@@ -96,55 +96,57 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 用户的最后一次排单（鸡苗批次）
-		Farm lastFarm = user.getLastFarm();
+		Farm last_farm = user.getLastFarm();
 
-		if (null != lastFarm) {
-			if (lastFarm.getNum_buy() != lastFarm.getNum_deal()) {
+		if (null != last_farm) {
+			if (last_farm.getNum_buy().intValue() != last_farm.getNum_deal()
+					.intValue()) {
 				return new String[] { "有未完成的排单" };
 			}
 		}
 
 		// 设置当前排单的上一单id
-		_farm.setPid(null == lastFarm ? "0" : lastFarm.getId());
+		_farm.setPid(null == last_farm ? "0" : last_farm.getId());
 		// 当前时间我自己的排单是否与我的上一单接上气儿了
-		_farm.setFlag_out_self(null == lastFarm ? 1 : lastFarm.checkStatusOut());
+		_farm.setFlag_out_self(null == last_farm ? 1 : last_farm
+				.checkStatusOut());
 
 		/**/
 
 		Date tomorrow = null;
 
 		try {
-			tomorrow = getTomorrow__1(_farm.getCreate_time());
+			tomorrow = getTomorrow__4(_farm.getCreate_time());
 		} catch (ParseException e) {
 			return new String[] { "日期数据异常" };
 		}
 
 		_farm.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-		_farm.setTime_out(getTimeOut__1(tomorrow));
-		_farm.setTime_ripe(getTimeRipe__1(tomorrow));
+		_farm.setTime_out(getTimeOut__4(tomorrow));
+		_farm.setTime_ripe(getTimeRipe__4(tomorrow));
 
 		// 我有父级
 		if (!"0".equals(user.getPid())) {
 			// 获取我上级的帐户信息（实时）
-			User p_user = userService.getBuyTimeById__1(user.getPid());
+			User p_user = userService.buyTime___4(user.getPid());
 
 			if (null != p_user) {
 				// 上级的最后一次排单
-				Farm p_user_lastFarm = p_user.getLastFarm();
+				Farm p_user_last_farm = p_user.getLastFarm();
 
 				// 设置此次排单与上级排单的关系
-				_farm.setPid_higher_ups(null == p_user_lastFarm ? null
-						: p_user_lastFarm.getId());
-				_farm.setFlag_out_p(null == p_user_lastFarm ? 1
-						: p_user_lastFarm.checkStatusOut());
+				_farm.setPid_higher_ups(null == p_user_last_farm ? null
+						: p_user_last_farm.getId());
+				_farm.setFlag_out_p(null == p_user_last_farm ? 1
+						: p_user_last_farm.checkStatusOut());
 			}
 		}
 
 		/**/
 
-		saveMaterialRecord__1(_farm, user);
-		saveBuy_90__1(_farm);
-		saveBuy_10__1(_farm);
+		saveMaterialRecord__4(_farm, user);
+		saveBuy_90__4(_farm);
+		saveBuy_10__4(_farm);
 		save(_farm);
 		return null;
 	}
@@ -154,7 +156,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 *
 	 * @param farm
 	 */
-	private void saveBuy_90__1(Farm farm) {
+	private void saveBuy_90__4(Farm farm) {
 		Buy buy = new Buy();
 		buy.setNum_buy(farm.getNum_buy() - (farm.getNum_buy() / 10));
 		buy.setW_farm_chick_id(farm.getId());
@@ -180,7 +182,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 *
 	 * @param farm
 	 */
-	private void saveBuy_10__1(Farm farm) {
+	private void saveBuy_10__4(Farm farm) {
 		Buy buy = new Buy();
 		buy.setNum_buy(farm.getNum_buy() / 10);
 		buy.setW_farm_chick_id(farm.getId());
@@ -211,7 +213,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @param farm
 	 * @param user
 	 */
-	private void saveMaterialRecord__1(Farm farm, User user) {
+	private void saveMaterialRecord__4(Farm farm, User user) {
 		MaterialRecord mr = new MaterialRecord();
 		mr.setUser_id(user.getId());
 
@@ -237,7 +239,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public Farm getLastByUserId__1(String user_id) {
+	public Farm getLastByUserId__4(String user_id) {
 
 		Example example = new Example(Farm.class);
 		example.setOrderByClause("create_time desc");
@@ -260,7 +262,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @return
 	 * @throws ParseException
 	 */
-	private Date getTomorrow__1(Date date) throws ParseException {
+	private Date getTomorrow__4(Date date) throws ParseException {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.DAY_OF_MONTH, 1);
@@ -273,7 +275,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @param date
 	 * @return
 	 */
-	private Date getTimeOut__1(Date date) {
+	private Date getTimeOut__4(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.HOUR_OF_DAY, 24 * 20);
@@ -286,7 +288,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	 * @param date
 	 * @return
 	 */
-	private Date getTimeRipe__1(Date date) {
+	private Date getTimeRipe__4(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.HOUR_OF_DAY, 24 * 7);
@@ -307,10 +309,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 孵化记录
-		farm.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
+		farm.setFarmHatchs(farmHatchService.findByFarmId___4(farm.getId()));
 
 		// 喂食记录
-		farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
+		farm.setFarmFeeds(farmFeedService.findByFarmId___4(farm.getId()));
 
 		if (null != farm.getFarmFeeds()) {
 			// 最后一次喂食记录
@@ -342,7 +344,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Farm farm = list.get(i);
-			farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
+			farm.setFarmFeeds(farmFeedService.findByFarmId___4(farm.getId()));
 		}
 
 		return list;
@@ -364,7 +366,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Farm farm = list.get(i);
-			farm.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
+			farm.setFarmHatchs(farmHatchService.findByFarmId___4(farm.getId()));
 		}
 
 		return list;
@@ -423,7 +425,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 获取鸡苗批次的喂鸡记录（全部）
-		farm.setFarmFeeds(farmFeedService.findByFarmId__1(id));
+		farm.setFarmFeeds(farmFeedService.findByFarmId___4(id));
 
 		List<FarmFeed> list = farm.getFarmFeeds();
 
@@ -452,7 +454,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 获取鸡苗批次的孵化记录（全部）
-		farm.setFarmHatchs(farmHatchService.findByFarmId(id));
+		farm.setFarmHatchs(farmHatchService.findByFarmId___4(id));
 
 		List<FarmHatch> list = farm.getFarmHatchs();
 
@@ -467,7 +469,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public List<Farm> findFeedByUserId__1(String user_id) {
+	public List<Farm> feedMo_list___4(String user_id) {
 
 		Example example = new Example(Farm.class);
 		example.setOrderByClause("create_time asc");
@@ -493,7 +495,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public Farm getFeedById__1(String id, String user_id) {
+	public Farm feedMo_farm_feed_list___4(String id, String user_id) {
 
 		Farm farm = selectByKey(id);
 
@@ -506,7 +508,56 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 喂食记录
-		farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
+		farm.setFarmFeeds(farmFeedService.findByFarmId___4(farm.getId()));
+
+		List<FarmFeed> list = farm.getFarmFeeds();
+
+		if (null != list) {
+			if (0 < list.size()) {
+				// 最后一次的喂鸡时间
+				farm.setLastFarmFeed(list.get(0));
+			}
+		}
+
+		return farm;
+	}
+
+	@Override
+	public List<Farm> hatchMo_list__4(String user_id) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		map.put("num_current", 0);
+
+		List<Farm> list = ((FarmMapper) getMapper()).findHatchByUserId(map);
+
+		// if (null == list) {
+		// return null;
+		// }
+		//
+		// for (int i = 0, j = list.size(); i < j; i++) {
+		// Farm farm = list.get(i);
+		// farm.setFarmHatchs(farmHatchService.findByFarmId___4(farm.getId()));
+		// }
+
+		return list;
+	}
+
+	@Override
+	public Farm hatchMo_farm_hatch_list___4(String id, String user_id) {
+
+		Farm farm = selectByKey(id);
+
+		if (null == farm) {
+			return null;
+		}
+
+		if (!user_id.equals(farm.getUser_id())) {
+			return null;
+		}
+
+		// 孵化记录
+		farm.setFarmHatchs(farmHatchService.findByFarmId___4(farm.getId()));
 
 		return farm;
 	}

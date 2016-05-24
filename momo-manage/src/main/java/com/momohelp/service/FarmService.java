@@ -72,7 +72,15 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findFeedByUserId__1(String user_id);
+	List<Farm> feedMo_list___4(String user_id);
+
+	/**
+	 * 查找目前可以孵化的批次
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> hatchMo_list__4(String user_id);
 
 	/**
 	 * 获取用户的排单（鸡苗批次）
@@ -87,7 +95,23 @@ public interface FarmService extends IService<Farm> {
 	 */
 	Farm getFeedById__2(String id, String user_id);
 
-	Farm getFeedById__1(String id, String user_id);
+	/**
+	 * 鸡苗（单个）及其喂食记录
+	 *
+	 * @param id
+	 * @param user_id
+	 * @return
+	 */
+	Farm feedMo_farm_feed_list___4(String id, String user_id);
+
+	/**
+	 * 鸡苗（单个）及其孵化记录
+	 *
+	 * @param id
+	 * @param user_id
+	 * @return
+	 */
+	Farm hatchMo_farm_hatch_list___4(String id, String user_id);
 
 	/**
 	 * 获取用户的最后一条买入记录（鸡苗批次）
@@ -97,7 +121,7 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	Farm getLastByUserId__1(String user_id);
+	Farm getLastByUserId__4(String user_id);
 
 	void updateNum_deal(String id, int num_deal);
 

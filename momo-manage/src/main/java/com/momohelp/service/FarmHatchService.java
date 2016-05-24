@@ -21,7 +21,7 @@ public interface FarmHatchService extends IService<FarmHatch> {
 	 * @param farm_id
 	 * @return
 	 */
-	List<FarmHatch> findByFarmId(String farm_id);
+	List<FarmHatch> findByFarmId___4(String farm_id);
 
 	/**
 	 * 孵化

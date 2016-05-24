@@ -115,7 +115,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 
 		// 最后一笔排单
-		user.setLastFarm(farmService.getLastByUserId__1(id));
+		user.setLastFarm(farmService.getLastByUserId__4(id));
 
 		// 最后一笔卖出记录
 		user.setLastSell(sellService.getLastByUserId(id));
@@ -633,7 +633,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public User getBuyTimeById__1(String id) {
+	public User buyTime___4(String id) {
 
 		User user = selectByKey(id);
 
@@ -642,7 +642,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 
 		// 最近的一笔排单
-		user.setLastFarm(farmService.getLastByUserId__1(id));
+		user.setLastFarm(farmService.getLastByUserId__4(user.getId()));
 
 		return user;
 	}

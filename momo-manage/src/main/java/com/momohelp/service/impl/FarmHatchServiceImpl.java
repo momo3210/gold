@@ -59,8 +59,8 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		/**/
 
 		// 查找鸡苗批次
-		Farm farm = farmService.getFeedById__2(_farmHatch.getW_farm_chick_id(),
-				_farmHatch.getUser_id());
+		Farm farm = farmService.hatchMo_farm_hatch_list___4(
+				_farmHatch.getW_farm_chick_id(), _farmHatch.getUser_id());
 
 		if (null == farm) {
 			return new String[] { "数据查询异常" };
@@ -69,7 +69,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		/**/
 
 		// 未完全交易成功，所以不能孵化
-		if (farm.getNum_buy() != farm.getNum_deal()) {
+		if (farm.getNum_buy().intValue() != farm.getNum_deal().intValue()) {
 			return new String[] { "不能孵化" };
 		}
 
@@ -95,7 +95,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 	}
 
 	@Override
-	public List<FarmHatch> findByFarmId(String farm_id) {
+	public List<FarmHatch> findByFarmId___4(String farm_id) {
 
 		Example example = new Example(FarmHatch.class);
 		example.setOrderByClause("create_time desc");

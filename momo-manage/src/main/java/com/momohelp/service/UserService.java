@@ -22,16 +22,6 @@ public interface UserService extends IService<User> {
 	 */
 	User buyTime___4(String id);
 
-	/*****************/
-
-	/**
-	 * 买入时使用
-	 *
-	 * @param id
-	 * @return
-	 */
-	User getBuyTimeById__1(String id);
-
 	/**
 	 * 获取用户所有的未完全交易的买盘（展示时使用）
 	 *
