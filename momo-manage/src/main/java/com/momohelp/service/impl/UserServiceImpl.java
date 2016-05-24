@@ -118,10 +118,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setLastFarm(farmService.getLastByUserId__4(id));
 
 		// 最后一笔卖出记录
-		user.setLastSell(sellService.getLastByUserId(id));
+		user.setLastSell(sellService.getLastByUserId___4(id));
 
 		// 获取当前月的卖盘
-		user.setMonthSells(sellService.findMonthSellByUserId(id));
+		user.setMonthSells(sellService.findMonthSellByUserId____4(id));
 
 		return user;
 	}
@@ -643,6 +643,24 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		// 最近的一笔排单
 		user.setLastFarm(farmService.getLastByUserId__4(user.getId()));
+
+		return user;
+	}
+
+	@Override
+	public User sellTime___4(String id) {
+
+		User user = selectByKey(id);
+
+		if (null == user) {
+			return null;
+		}
+
+		// 最后一笔卖出记录
+		user.setLastSell(sellService.getLastByUserId___4(id));
+
+		// 获取当前月的卖盘
+		user.setMonthSells(sellService.findMonthSellByUserId____4(id));
 
 		return user;
 	}

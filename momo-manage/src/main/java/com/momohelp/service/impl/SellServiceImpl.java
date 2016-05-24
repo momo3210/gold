@@ -63,7 +63,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	@Override
-	public List<Sell> findMonthSellByUserId(String user_id) {
+	public List<Sell> findMonthSellByUserId____4(String user_id) {
 
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DAY_OF_MONTH, 1);
@@ -83,7 +83,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	@Override
-	public Sell getLastByUserId(String user_id) {
+	public Sell getLastByUserId___4(String user_id) {
 
 		Example example = new Example(Sell.class);
 		example.setOrderByClause("create_time desc");
@@ -126,7 +126,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			return new String[] { "请输入规定的数量" };
 		}
 
-		String[] checkDealTime = checkDealTime();
+		String[] checkDealTime = checkDealTime___4();
 		if (null != checkDealTime) {
 			return checkDealTime;
 		}
@@ -140,7 +140,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		/**/
 
 		// 实时
-		User user = userService.getId(4, _sell.getUser_id());
+		User user = userService.sellTime___4(_sell.getUser_id());
 
 		if (null == user) {
 			return new String[] { "非法操作" };
@@ -154,17 +154,18 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 					+ "态钱包余额不足" };
 		}
 
-		String[] checkTodaySell = checkTodaySell(_sell, user);
+		String[] checkTodaySell = checkTodaySell____4(_sell, user.getLastSell());
 		if (null != checkTodaySell) {
 			return checkTodaySell;
 		}
 
-		String[] checkMonthCeiling = checkMonthCeiling(_sell, user);
+		String[] checkMonthCeiling = checkMonthCeiling___4(_sell,
+				user.getMonthSells());
 		if (null != checkMonthCeiling) {
 			return checkMonthCeiling;
 		}
 
-		saveMaterialRecord(_sell, user);
+		saveMaterialRecord___4(_sell, user);
 		_sell.setId(genId());
 		save(_sell);
 		return null;
@@ -176,7 +177,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @param sell
 	 * @param user
 	 */
-	private void saveMaterialRecord(Sell sell, User user) {
+	private void saveMaterialRecord___4(Sell sell, User user) {
 		// 添加操作记录
 		MaterialRecord mr = new MaterialRecord();
 		mr.setUser_id(sell.getUser_id());
@@ -217,21 +218,21 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @param user
 	 * @return
 	 */
-	private String[] checkMonthCeiling(Sell sell, User user) {
+	private String[] checkMonthCeiling___4(Sell sell, List<Sell> monthSells) {
 
-		if (null == user.getMonthSells()) {
+		if (null == monthSells) {
 			return new String[] { "数据查询异常" };
 		}
 
-		if (12 == user.getMonthSells().size()) {
+		if (12 == monthSells.size()) {
 			return new String[] { "每月卖出鸡苗上限不能超过12次" };
 		}
 
 		// 每月卖出的静态总数、动态总数
 		int num_static = 0, num_dynamic = 0;
 
-		for (int i = 0, j = user.getMonthSells().size(); i < j; i++) {
-			Sell item = user.getMonthSells().get(i);
+		for (int i = 0, j = monthSells.size(); i < j; i++) {
+			Sell item = monthSells.get(i);
 
 			if (1 == item.getType_id()) {
 				num_static += item.getNum_sell();
@@ -252,7 +253,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 *
 	 * @return
 	 */
-	private String[] checkDealTime() {
+	private String[] checkDealTime___4() {
 		Date date = new Date();
 
 		Calendar c_1 = Calendar.getInstance();
@@ -280,16 +281,15 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	 * @param user
 	 * @return
 	 */
-	private String[] checkTodaySell(Sell sell, User user) {
-		Sell lastSell = user.getLastSell();
-		if (null == lastSell) {
+	private String[] checkTodaySell____4(Sell sell, Sell last_sell) {
+		if (null == last_sell) {
 			return null;
 		}
 
 		// 取当前的时间
 		String date_1 = sdf.format(sell.getCreate_time());
 		// 取最后一次卖盘的创建时间
-		String date_2 = sdf.format(lastSell.getCreate_time());
+		String date_2 = sdf.format(last_sell.getCreate_time());
 
 		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了" } : null;
 	}

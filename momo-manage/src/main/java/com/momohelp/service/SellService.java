@@ -27,7 +27,7 @@ public interface SellService extends IService<Sell> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Sell> findMonthSellByUserId(String user_id);
+	List<Sell> findMonthSellByUserId____4(String user_id);
 
 	/**
 	 * 获取用户的最后一次卖出记录
@@ -37,7 +37,7 @@ public interface SellService extends IService<Sell> {
 	 * @param user_id
 	 * @return
 	 */
-	Sell getLastByUserId(String user_id);
+	Sell getLastByUserId___4(String user_id);
 
 	/**
 	 * 卖出鸡苗
