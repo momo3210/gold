@@ -64,20 +64,30 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findFeedByUserId(String user_id);
+	List<Farm> findFeedByUserId__3(String user_id);
+
+	/**
+	 * 查找目前可以喂的批次（展示使用）
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findFeedByUserId__1(String user_id);
 
 	/**
 	 * 获取用户的排单（鸡苗批次）
 	 *
 	 * YES
 	 *
-	 * @param farm_id
+	 * @param id
 	 *            批次id
 	 * @param user_id
 	 *            用户id
 	 * @return
 	 */
-	Farm getByUserId(String farm_id, String user_id);
+	Farm getFeedById__2(String id, String user_id);
+
+	Farm getFeedById__1(String id, String user_id);
 
 	/**
 	 * 获取用户的最后一条买入记录（鸡苗批次）

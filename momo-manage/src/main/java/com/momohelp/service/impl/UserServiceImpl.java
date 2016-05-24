@@ -139,7 +139,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return null;
 		}
 
-		user.setFarms(farmService.findFeedByUserId(id));
+		user.setFarms(farmService.findFeedByUserId__3(id));
 
 		return user;
 	}

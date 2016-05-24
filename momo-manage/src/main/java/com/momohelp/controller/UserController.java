@@ -745,15 +745,16 @@ public class UserController {
 		String uri = null;
 
 		if (null == id || "".equals(id.trim())) {
-			List<Farm> list = farmService.findFeedByUserId(session
-					.getAttribute("session.user.id").toString());
 
+			List<Farm> list = farmService.findFeedByUserId__1(session
+					.getAttribute("session.user.id").toString());
 			map.put("data_list", list);
 
 			uri = "i/user/1.0.1/feedMo";
+
 		} else {
 
-			Farm farm = farmService.getByUserId(id,
+			Farm farm = farmService.getFeedById__1(id,
 					session.getAttribute("session.user.id").toString());
 
 			if (null == farm) {
@@ -761,7 +762,7 @@ public class UserController {
 			}
 
 			// 判断今天是否已经喂过该批次的鸡苗了
-			String[] checkTodayFeed = farmFeedService.checkTodayFeed(farm
+			String[] checkTodayFeed = farmFeedService.checkTodayFeed__1(farm
 					.getLastFarmFeed());
 			if (null != checkTodayFeed) {
 				map.put("data_msg", checkTodayFeed[0]);
@@ -854,7 +855,7 @@ public class UserController {
 
 			uri = "i/user/1.0.1/hatchMo";
 		} else {
-			Farm farm = farmService.getByUserId(id,
+			Farm farm = farmService.getFeedById__2(id,
 					session.getAttribute("session.user.id").toString());
 
 			if (null == farm) {

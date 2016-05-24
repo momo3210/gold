@@ -30,7 +30,7 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	 * @param farm_id
 	 * @return
 	 */
-	List<FarmFeed> findByFarmId(String farm_id);
+	List<FarmFeed> findByFarmId__1(String farm_id);
 
 	/**
 	 * 判断今天是否已经喂过鸡了
@@ -38,6 +38,6 @@ public interface FarmFeedService extends IService<FarmFeed> {
 	 * @param farmFeed
 	 * @return
 	 */
-	String[] checkTodayFeed(FarmFeed farmFeed);
+	String[] checkTodayFeed__1(FarmFeed farmFeed);
 
 }

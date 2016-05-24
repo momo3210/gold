@@ -59,7 +59,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		/**/
 
 		// 查找鸡苗批次
-		Farm farm = farmService.getByUserId(_farmHatch.getW_farm_chick_id(),
+		Farm farm = farmService.getFeedById__2(_farmHatch.getW_farm_chick_id(),
 				_farmHatch.getUser_id());
 
 		if (null == farm) {

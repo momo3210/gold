@@ -294,7 +294,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public Farm getByUserId(String farm_id, String user_id) {
+	public Farm getFeedById__2(String farm_id, String user_id) {
 
 		Farm farm = selectByKey(farm_id);
 
@@ -310,7 +310,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		farm.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
 
 		// 喂食记录
-		farm.setFarmFeeds(farmFeedService.findByFarmId(farm.getId()));
+		farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
 
 		if (null != farm.getFarmFeeds()) {
 			// 最后一次喂食记录
@@ -323,7 +323,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public List<Farm> findFeedByUserId(String user_id) {
+	public List<Farm> findFeedByUserId__3(String user_id) {
 
 		Example example = new Example(Farm.class);
 		example.setOrderByClause("create_time asc");
@@ -342,7 +342,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Farm farm = list.get(i);
-			farm.setFarmFeeds(farmFeedService.findByFarmId(farm.getId()));
+			farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
 		}
 
 		return list;
@@ -423,7 +423,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 获取鸡苗批次的喂鸡记录（全部）
-		farm.setFarmFeeds(farmFeedService.findByFarmId(id));
+		farm.setFarmFeeds(farmFeedService.findByFarmId__1(id));
 
 		List<FarmFeed> list = farm.getFarmFeeds();
 
@@ -464,6 +464,51 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		return null;
+	}
+
+	@Override
+	public List<Farm> findFeedByUserId__1(String user_id) {
+
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time asc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andGreaterThan("num_current", 0);
+		// 当前时间 <-- 出局时间
+		criteria.andGreaterThan("time_out", new Date());
+
+		List<Farm> list = selectByExample(example);
+
+		// if (null == list) {
+		// return null;
+		// }
+		//
+		// for (int i = 0, j = list.size(); i < j; i++) {
+		// Farm farm = list.get(i);
+		// farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
+		// }
+
+		return list;
+	}
+
+	@Override
+	public Farm getFeedById__1(String id, String user_id) {
+
+		Farm farm = selectByKey(id);
+
+		if (null == farm) {
+			return null;
+		}
+
+		if (!user_id.equals(farm.getUser_id())) {
+			return null;
+		}
+
+		// 喂食记录
+		farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
+
+		return farm;
 	}
 
 }

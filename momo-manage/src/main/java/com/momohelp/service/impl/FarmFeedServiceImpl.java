@@ -65,7 +65,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		/**/
 
 		// 实时
-		Farm farm = farmService.getByUserId(_farmFeed.getW_farm_chick_id(),
+		Farm farm = farmService.getFeedById__2(_farmFeed.getW_farm_chick_id(),
 				_farmFeed.getUser_id());
 
 		if (null == farm) {
@@ -96,7 +96,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		}
 
 		// 判断今天是否已经喂过该批次的鸡苗了
-		String[] checkTodayFeed = checkTodayFeed(farm.getLastFarmFeed());
+		String[] checkTodayFeed = checkTodayFeed__1(farm.getLastFarmFeed());
 		if (null != checkTodayFeed) {
 			return checkTodayFeed;
 		}
@@ -158,7 +158,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 			"yyyy-MM-dd 00:00:00");
 
 	@Override
-	public String[] checkTodayFeed(FarmFeed farmFeed) {
+	public String[] checkTodayFeed__1(FarmFeed farmFeed) {
 
 		if (null == farmFeed) {
 			return null;
@@ -173,7 +173,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 	}
 
 	@Override
-	public List<FarmFeed> findByFarmId(String farm_id) {
+	public List<FarmFeed> findByFarmId__1(String farm_id) {
 
 		Example example = new Example(FarmFeed.class);
 		example.setOrderByClause("create_time desc");
