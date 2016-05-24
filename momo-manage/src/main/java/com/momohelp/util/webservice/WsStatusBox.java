@@ -39,106 +39,46 @@ public class WsStatusBox {
         this.mobile = value;
     }
 
-    /**
-     * 获取taskID属性的值。
-     * 
-     */
     public int getTaskID() {
         return taskID;
     }
 
-    /**
-     * 设置taskID属性的值。
-     * 
-     */
     public void setTaskID(int value) {
         this.taskID = value;
     }
 
-    /**
-     * 获取status属性的值。
-     * 
-     */
     public int getStatus() {
         return status;
     }
 
-    /**
-     * 设置status属性的值。
-     * 
-     */
     public void setStatus(int value) {
         this.status = value;
     }
 
-    /**
-     * 获取receiveTime属性的值。
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getReceiveTime() {
         return receiveTime;
     }
 
-    /**
-     * 设置receiveTime属性的值。
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+
     public void setReceiveTime(String value) {
         this.receiveTime = value;
     }
 
-    /**
-     * 获取errorCode属性的值。
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getErrorCode() {
         return errorCode;
     }
 
-    /**
-     * 设置errorCode属性的值。
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+
     public void setErrorCode(String value) {
         this.errorCode = value;
     }
 
-    /**
-     * 获取extno属性的值。
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
+   
     public String getExtno() {
         return extno;
     }
 
-    /**
-     * 设置extno属性的值。
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+   
     public void setExtno(String value) {
         this.extno = value;
     }

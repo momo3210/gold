@@ -19,26 +19,12 @@ public class SendSmsResponse {
     @XmlElement(name = "SendSmsResult")
     protected WsSendResponse sendSmsResult;
 
-    /**
-     * 获取sendSmsResult属性的值。
-     * 
-     * @return
-     *     possible object is
-     *     {@link WsSendResponse }
-     *     
-     */
+    
     public WsSendResponse getSendSmsResult() {
         return sendSmsResult;
     }
 
-    /**
-     * 设置sendSmsResult属性的值。
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link WsSendResponse }
-     *     
-     */
+   
     public void setSendSmsResult(WsSendResponse value) {
         this.sendSmsResult = value;
     }

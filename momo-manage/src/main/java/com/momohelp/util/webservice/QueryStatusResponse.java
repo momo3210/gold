@@ -19,26 +19,11 @@ public class QueryStatusResponse {
     @XmlElement(name = "QueryStatusResult")
     protected WsStatusResponse queryStatusResult;
 
-    /**
-     * 获取queryStatusResult属性的值。
-     * 
-     * @return
-     *     possible object is
-     *     {@link WsStatusResponse }
-     *     
-     */
     public WsStatusResponse getQueryStatusResult() {
         return queryStatusResult;
     }
 
-    /**
-     * 设置queryStatusResult属性的值。
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link WsStatusResponse }
-     *     
-     */
+   
     public void setQueryStatusResult(WsStatusResponse value) {
         this.queryStatusResult = value;
     }
