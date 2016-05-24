@@ -23,6 +23,8 @@ public class FarmFeed implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
+	private String user_id;
+
 	/**
 	 * 喂食时间
 	 */
@@ -39,9 +41,17 @@ public class FarmFeed implements Serializable {
 	private String w_farm_chick_id;
 
 	/**
-	 * 总金额
+	 * 此次的利息金额
 	 */
 	private Double price;
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
 
 	public Double getPrice() {
 		return price;

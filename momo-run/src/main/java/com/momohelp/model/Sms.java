@@ -13,19 +13,23 @@ import javax.persistence.Table;
  * @author Administrator
  *
  */
-@Table(name = "s_role")
-public class Role implements Serializable {
+@Table(name = "t_sms")
+public class Sms implements Serializable {
 
-	private static final long serialVersionUID = -826192129914254850L;
+	private static final long serialVersionUID = 7519835564129158335L;
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(generator = "UUID")
 	private String id;
 
-	private String role_name;
-	private Date create_time;
+	private String user_id;
+
 	private Integer status;
+
+	private String content;
+
+	private Date create_time;
 
 	public String getId() {
 		return id;
@@ -35,12 +39,28 @@ public class Role implements Serializable {
 		this.id = id;
 	}
 
-	public String getRole_name() {
-		return role_name;
+	public String getUser_id() {
+		return user_id;
 	}
 
-	public void setRole_name(String role_name) {
-		this.role_name = role_name;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public Date getCreate_time() {
@@ -51,11 +71,4 @@ public class Role implements Serializable {
 		this.create_time = create_time;
 	}
 
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
 }

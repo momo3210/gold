@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -20,7 +20,6 @@ public class BuySell implements Serializable {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(generator = "UUID")
 	private String id;
 
 	/**
@@ -34,7 +33,7 @@ public class BuySell implements Serializable {
 	private Date create_time;
 
 	/**
-	 * 卖盘ID
+	 * 买盘ID
 	 */
 	private String p_buy_id;
 
@@ -56,6 +55,170 @@ public class BuySell implements Serializable {
 
 	private String p_buy_user_id;
 	private String p_sell_user_id;
+
+	/**
+	 * 买家上传的图片（只能上传一张）
+	 */
+	private String p_buy_user_img;
+
+	/**
+	 * 买家的确认内容
+	 */
+	private String p_buy_user_content;
+
+	/**
+	 * 买家的确认时间
+	 */
+	private Date p_buy_user_time;
+
+	/**
+	 * 卖家的确认时间
+	 */
+	private Date p_sell_user_time;
+
+	/**
+	 * 举报人id
+	 */
+	private String tip_off_user_id;
+
+	/**
+	 * 举报处理结果的内容（有则表示管理员已经处理过这条信息）
+	 */
+	private String tip_off_result;
+
+	/**
+	 * 举报时间
+	 */
+	private Date tip_off_time;
+
+	/**
+	 * 举报内容
+	 */
+	private String tip_off_content;
+
+
+	/**
+	 * 计算标志
+	 *
+	 * 0未计算
+	 *
+	 * 1已计算
+	 */
+	private Integer flag_calc_bonus;
+	
+	/**
+	 * 买家对象
+	 */
+	@Transient
+	private User p_buy_user;
+
+	/**
+	 * 卖家对象
+	 */
+	@Transient
+	private User p_sell_user;
+
+	/**
+	 * 买盘
+	 */
+	@Transient
+	private Buy buy;
+
+	public Integer getFlag_calc_bonus() {
+		return flag_calc_bonus;
+	}
+
+	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
+		this.flag_calc_bonus = flag_calc_bonus;
+	}
+
+	public Buy getBuy() {
+		return buy;
+	}
+
+	public void setBuy(Buy buy) {
+		this.buy = buy;
+	}
+
+	public Date getTip_off_time() {
+		return tip_off_time;
+	}
+
+	public void setTip_off_time(Date tip_off_time) {
+		this.tip_off_time = tip_off_time;
+	}
+
+	public String getTip_off_content() {
+		return tip_off_content;
+	}
+
+	public void setTip_off_content(String tip_off_content) {
+		this.tip_off_content = tip_off_content;
+	}
+
+	public String getTip_off_result() {
+		return tip_off_result;
+	}
+
+	public void setTip_off_result(String tip_off_result) {
+		this.tip_off_result = tip_off_result;
+	}
+
+	public Date getP_sell_user_time() {
+		return p_sell_user_time;
+	}
+
+	public void setP_sell_user_time(Date p_sell_user_time) {
+		this.p_sell_user_time = p_sell_user_time;
+	}
+
+	public Date getP_buy_user_time() {
+		return p_buy_user_time;
+	}
+
+	public void setP_buy_user_time(Date p_buy_user_time) {
+		this.p_buy_user_time = p_buy_user_time;
+	}
+
+	public String getP_buy_user_img() {
+		return p_buy_user_img;
+	}
+
+	public void setP_buy_user_img(String p_buy_user_img) {
+		this.p_buy_user_img = p_buy_user_img;
+	}
+
+	public String getP_buy_user_content() {
+		return p_buy_user_content;
+	}
+
+	public void setP_buy_user_content(String p_buy_user_content) {
+		this.p_buy_user_content = p_buy_user_content;
+	}
+
+	public String getTip_off_user_id() {
+		return tip_off_user_id;
+	}
+
+	public void setTip_off_user_id(String tip_off_user_id) {
+		this.tip_off_user_id = tip_off_user_id;
+	}
+
+	public User getP_buy_user() {
+		return p_buy_user;
+	}
+
+	public void setP_buy_user(User p_buy_user) {
+		this.p_buy_user = p_buy_user;
+	}
+
+	public User getP_sell_user() {
+		return p_sell_user;
+	}
+
+	public void setP_sell_user(User p_sell_user) {
+		this.p_sell_user = p_sell_user;
+	}
 
 	public String getP_buy_user_id() {
 		return p_buy_user_id;

@@ -2,10 +2,12 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -14,6 +16,7 @@ import javax.persistence.Table;
  */
 @Table(name = "s_user")
 public class User implements Serializable {
+
 	private static final long serialVersionUID = -1453141126844138706L;
 
 	/**
@@ -22,6 +25,11 @@ public class User implements Serializable {
 	@Id
 	@Column(name = "id")
 	private String id;
+
+	/**
+	 * 父ID
+	 */
+	private String pid;
 
 	/**
 	 * 登陆密码
@@ -90,11 +98,6 @@ public class User implements Serializable {
 	private String bank_account;
 
 	/**
-	 * 父ID
-	 */
-	private String pid;
-
-	/**
 	 * 家族（最顶端的用户id）
 	 */
 	private String family_id;
@@ -118,6 +121,168 @@ public class User implements Serializable {
 	private Double total_dynamic;
 	private Integer total_ticket;
 	private Integer total_food;
+
+	/**
+	 * 短信验证码
+	 */
+	private String verifycode_sms;
+
+	private Integer verifycode_sms_status;
+
+	public Integer getVerifycode_sms_status() {
+		return verifycode_sms_status;
+	}
+
+	public void setVerifycode_sms_status(Integer verifycode_sms_status) {
+		this.verifycode_sms_status = verifycode_sms_status;
+	}
+
+	/**
+	 * 父对象
+	 */
+	@Transient
+	private User p_user;
+
+	/**
+	 * 直推的下一级用户
+	 */
+	@Transient
+	private List<User> children;
+
+	/**
+	 * 用户的最后一次排单（鸡苗批次）
+	 */
+	@Transient
+	private Farm lastFarm;
+
+	/**
+	 * 最新的卖盘
+	 */
+	@Transient
+	private Sell lastSell;
+
+	/**
+	 * 每月的卖盘
+	 */
+	@Transient
+	private List<Sell> monthSells;
+
+	/**
+	 * 关联的鸡苗批次列表
+	 */
+	@Transient
+	private List<Farm> farms;
+
+	/**
+	 * 卖盘
+	 */
+	@Transient
+	private List<Sell> sells;
+
+	public List<Farm> getFarms() {
+		return farms;
+	}
+
+	public void setFarms(List<Farm> farms) {
+		this.farms = farms;
+	}
+
+	public Sell getLastSell() {
+		return lastSell;
+	}
+
+	public void setLastSell(Sell lastSell) {
+		this.lastSell = lastSell;
+	}
+
+	public List<Sell> getMonthSells() {
+		return monthSells;
+	}
+
+	public void setMonthSells(List<Sell> monthSells) {
+		this.monthSells = monthSells;
+	}
+
+	public Farm getLastFarm() {
+		return lastFarm;
+	}
+
+	public void setLastFarm(Farm lastFarm) {
+		this.lastFarm = lastFarm;
+	}
+
+	public BuyMo getBuyMo() {
+		BuyMo buyMo = new BuyMo();
+
+		buyMo.setMax(5000);
+
+		if ("05".equals(lv)) {
+			buyMo.setMin(100);
+			buyMo.setMax(5000);
+		} else if ("06".equals(lv)) {
+			buyMo.setMin(1000);
+			buyMo.setMax(10000);
+		} else if ("07".equals(lv)) {
+			buyMo.setMin(5000);
+			buyMo.setMax(20000);
+		} else if ("08".equals(lv)) {
+			buyMo.setMin(10000);
+			buyMo.setMax(30000);
+		} // if
+
+		return buyMo;
+	}
+
+	/**
+	 * 买入鸡苗的限制
+	 *
+	 * @author Administrator
+	 *
+	 */
+	public class BuyMo {
+		private Integer max;
+		private Integer min;
+
+		public Integer getMax() {
+			return max;
+		}
+
+		public void setMax(Integer max) {
+			this.max = max;
+		}
+
+		public Integer getMin() {
+			return min;
+		}
+
+		public void setMin(Integer min) {
+			this.min = min;
+		}
+	}
+
+	public String getVerifycode_sms() {
+		return verifycode_sms;
+	}
+
+	public void setVerifycode_sms(String verifycode_sms) {
+		this.verifycode_sms = verifycode_sms;
+	}
+
+	public List<User> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<User> children) {
+		this.children = children;
+	}
+
+	public User getP_user() {
+		return p_user;
+	}
+
+	public void setP_user(User p_user) {
+		this.p_user = p_user;
+	}
 
 	public Double getNum_static() {
 		return num_static;
@@ -349,6 +514,14 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<Sell> getSells() {
+		return sells;
+	}
+
+	public void setSells(List<Sell> sells) {
+		this.sells = sells;
 	}
 
 }

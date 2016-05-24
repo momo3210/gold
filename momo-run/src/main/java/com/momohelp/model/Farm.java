@@ -2,10 +2,12 @@ package com.momohelp.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -28,6 +30,12 @@ public class Farm implements Serializable {
 	 * 出局时间（理论）
 	 */
 	private Date time_out;
+
+	/**
+	 * 实际出局时间（当第一次孵化时更新此字段）
+	 */
+	private Date time_out_real;
+
 	/**
 	 * 成熟时间（理论）
 	 */
@@ -74,6 +82,11 @@ public class Farm implements Serializable {
 	private Integer flag_out_p;
 
 	/**
+	 * 上一单的ID
+	 */
+	private String pid;
+
+	/**
 	 * 相对于上级领导的最近一单
 	 */
 	private String pid_higher_ups;
@@ -92,14 +105,105 @@ public class Farm implements Serializable {
 	private Integer flag_out_self;
 
 	/**
-	 * 上一单的ID
-	 */
-	private String pid;
-
-	/**
 	 * 最后90%打款在3小时内，则奖励 1% 只鸡，最后一次孵化时加入这笔钱
 	 */
 	private Integer num_reward;
+
+	@Transient
+	private List<Buy> buys;
+
+	@Transient
+	private List<FarmFeed> farmFeeds;
+
+	@Transient
+	private FarmFeed lastFarmFeed;
+
+	@Transient
+	private List<FarmHatch> farmHatchs;
+
+	@Transient
+	private FarmFeed farmFeed;
+
+	@Transient
+	private FarmHatch farmHatch;
+
+	public FarmHatch getFarmHatch() {
+		return farmHatch;
+	}
+
+	public void setFarmHatch(FarmHatch farmHatch) {
+		this.farmHatch = farmHatch;
+	}
+
+	public FarmFeed getFarmFeed() {
+		return farmFeed;
+	}
+
+	public void setFarmFeed(FarmFeed farmFeed) {
+		this.farmFeed = farmFeed;
+	}
+
+	public FarmFeed getLastFarmFeed() {
+		return lastFarmFeed;
+	}
+
+	public void setLastFarmFeed(FarmFeed lastFarmFeed) {
+		this.lastFarmFeed = lastFarmFeed;
+	}
+
+	/**
+	 *
+	 * 判断排单在当前时间是否出局
+	 *
+	 * 1未出局（接上气儿）
+	 *
+	 * 2主动出局
+	 *
+	 * 3自然出局
+	 *
+	 * @return
+	 */
+	public int checkStatusOut() {
+
+		if (null == this.getTime_out_real()) {
+			return 1;
+		}
+
+		// 实际出局时间在理论出局时间之后
+		return this.getTime_out_real().after(this.getTime_out()) ? 3 : 2;
+	}
+
+	public List<Buy> getBuys() {
+		return buys;
+	}
+
+	public void setBuys(List<Buy> buys) {
+		this.buys = buys;
+	}
+
+	public List<FarmFeed> getFarmFeeds() {
+		return farmFeeds;
+	}
+
+	public void setFarmFeeds(List<FarmFeed> farmFeeds) {
+		this.farmFeeds = farmFeeds;
+	}
+
+	public List<FarmHatch> getFarmHatchs() {
+		return farmHatchs;
+	}
+
+	public void setFarmHatchs(List<FarmHatch> farmHatchs) {
+		this.farmHatchs = farmHatchs;
+	}
+
+	public Date getTime_out_real() {
+		return time_out_real;
+	}
+
+	public void setTime_out_real(Date time_out_real) {
+		this.time_out_real = time_out_real;
+	}
 
 	public Integer getNum_reward() {
 		return num_reward;

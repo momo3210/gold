@@ -37,7 +37,15 @@ public class MaterialRecord implements Serializable {
 	private Integer status;
 
 	/**
-	 * 1门票 2饲料 3静态 4动态
+	 * 1门票
+	 *
+	 * 2饲料
+	 *
+	 * 3卖出鸡苗（静态）
+	 *
+	 * 4卖出鸡苗（动态）
+	 *
+	 * 5买入鸡苗
 	 */
 	private Integer type_id;
 	private String comment;
@@ -50,18 +58,18 @@ public class MaterialRecord implements Serializable {
 	/**
 	 * 当前余额
 	 */
-	private Integer num_balance;
+	private Double num_balance;
 
 	/**
 	 * 正负标记（0负 1正）
 	 */
 	private Integer flag_plus_minus;
 
-	public Integer getNum_balance() {
+	public Double getNum_balance() {
 		return num_balance;
 	}
 
-	public void setNum_balance(Integer num_balance) {
+	public void setNum_balance(Double num_balance) {
 		this.num_balance = num_balance;
 	}
 

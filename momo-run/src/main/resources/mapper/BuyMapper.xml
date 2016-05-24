@@ -15,6 +15,13 @@
 		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
 		
 		<result column="time_deal" property="time_deal" jdbcType="DATE" />
+		
+		<result column="is_deposit" property="is_deposit" jdbcType="INTEGER" />
+		
+		<result column="num_deal" property="num_deal" jdbcType="INTEGER" />
+		
+		<result column="flag_calc_bonus" property="flag_calc_bonus" jdbcType="INTEGER" />
+		
 	</resultMap>
 	<select id="selectByCycles" resultType="buy">
 		SELECT * FROM p_buy as p WHERE p.calc_time between #{0} and #{1}

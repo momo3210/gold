@@ -14,10 +14,11 @@
 			jdbcType="INTEGER" />
 		<result column="time_deal" property="time_deal" jdbcType="DATE" />
 		<result column="flag_out_p" property="flag_out_p" jdbcType="INTEGER" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
 		<result column="pid_higher_ups" property="pid_higher_ups" jdbcType="VARCHAR" />
 		<result column="flag_out_self" property="flag_out_self" jdbcType="INTEGER" />
 		<result column="num_reward" property="num_reward" jdbcType="INTEGER" />
-		<result column="pid" property="pid" jdbcType="VARCHAR" />
+		
 	</resultMap>
 	<select id="getUntreatedFarm" resultType="farm">
 		SELECT w.* FROM

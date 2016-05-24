@@ -62,6 +62,10 @@
 		<result column="total_ticket" property="total_ticket" jdbcType="INTEGER" />
 
 		<result column="total_food" property="total_food" jdbcType="INTEGER" />
+		
+		<result column="verifycode_sms" property="verifycode_sms" jdbcType="VARCHAR" />
+		
+		<result column="verifycode_sms_status" property="verifycode_sms_status" jdbcType="INTEGER" />
 	</resultMap>
 	<select id="countMemberNOAndlevel" resultType="com.momohelp.model.ModelLV">
 		SELECT u.lv as lv
