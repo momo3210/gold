@@ -16,6 +16,7 @@ import javax.persistence.Table;
  */
 @Table(name = "w_message")
 public class Message implements Serializable {
+
 	private static final long serialVersionUID = 6286684205702978092L;
 
 	@Id
@@ -53,7 +54,7 @@ public class Message implements Serializable {
 	/**
 	 * 回复时间
 	 */
-	private String reply_time;
+	private Date reply_time;
 
 	/**
 	 * 回复内容
@@ -84,11 +85,11 @@ public class Message implements Serializable {
 		this.reply_user_id = reply_user_id;
 	}
 
-	public String getReply_time() {
+	public Date getReply_time() {
 		return reply_time;
 	}
 
-	public void setReply_time(String reply_time) {
+	public void setReply_time(Date reply_time) {
 		this.reply_time = reply_time;
 	}
 

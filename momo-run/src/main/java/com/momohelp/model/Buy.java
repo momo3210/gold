@@ -23,17 +23,6 @@ public class Buy implements Serializable {
 	@Column(name = "id")
 	private String id;
 
-	private String user_id;
-
-	/**
-	 * 成交标记
-	 *
-	 * 0未完全交易
-	 *
-	 * 1已完全交易完
-	 */
-	private Date time_deal;
-
 	/**
 	 * 关联批次
 	 */
@@ -54,8 +43,71 @@ public class Buy implements Serializable {
 	 */
 	private Date calc_time;
 
+	private String user_id;
+
+	/**
+	 * 真实的成交时间（后台计算后，更新此字段）
+	 */
+	private Date time_deal;
+
+	/**
+	 * 是否是订金（预付款）
+	 *
+	 * 1是
+	 *
+	 * 0不是
+	 */
+	private Integer is_deposit;
+
+	private Integer num_deal;
+
+	/**
+	 * 计算标志
+	 *
+	 * 0未计算
+	 *
+	 * 1已计算
+	 */
+	private Integer flag_calc_bonus=0;
+	
+
 	@Transient
 	private List<BuySell> buySells;
+
+	@Transient
+	private Farm farm;
+
+	public Integer getFlag_calc_bonus() {
+		return flag_calc_bonus;
+	}
+
+	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
+		this.flag_calc_bonus = flag_calc_bonus;
+	}
+	
+	public Integer getNum_deal() {
+		return num_deal;
+	}
+
+	public void setNum_deal(Integer num_deal) {
+		this.num_deal = num_deal;
+	}
+
+	public Farm getFarm() {
+		return farm;
+	}
+
+	public void setFarm(Farm farm) {
+		this.farm = farm;
+	}
+
+	public Integer getIs_deposit() {
+		return is_deposit;
+	}
+
+	public void setIs_deposit(Integer is_deposit) {
+		this.is_deposit = is_deposit;
+	}
 
 	public List<BuySell> getBuySells() {
 		return buySells;
