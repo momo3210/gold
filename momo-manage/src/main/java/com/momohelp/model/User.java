@@ -127,6 +127,16 @@ public class User implements Serializable {
 	 */
 	private String verifycode_sms;
 
+	private Integer verifycode_sms_status;
+
+	public Integer getVerifycode_sms_status() {
+		return verifycode_sms_status;
+	}
+
+	public void setVerifycode_sms_status(Integer verifycode_sms_status) {
+		this.verifycode_sms_status = verifycode_sms_status;
+	}
+
 	/**
 	 * 父对象
 	 */
