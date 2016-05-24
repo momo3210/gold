@@ -51,11 +51,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			// 算法
 			int i = (int) ((Math.random() * 10 + 1) * 100000000);
 			id = String.valueOf(i);
-
 			if (9 < id.length()) {
 				id = id.substring(0, 9);
 			}
-
 			id = "S" + id;
 			sell = selectByKey(id);
 		} while (null != sell);

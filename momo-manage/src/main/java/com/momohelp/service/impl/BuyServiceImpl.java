@@ -62,7 +62,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 			id = String.valueOf(i);
 			if (9 < id.length()) {
 				id = id.substring(0, 9);
-			} // if
+			}
 			id = "B" + id;
 			buy = selectByKey(id);
 		} while (null != buy);

@@ -273,6 +273,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		switch (__buySell.getStatus()) {
 		case 0:
 		case 1:
+		case 3:
 			break;
 		default:
 			return new String[] { "不能举报" };

@@ -368,7 +368,6 @@ public class UserController {
 		}
 
 		map.put("data_buySell", buySell);
-
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));
 		return "i/user/1.0.1/confirm";
@@ -388,6 +387,7 @@ public class UserController {
 	public Map<String, Object> _i_tip_off(HttpSession session, BuySell buySell,
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -408,6 +408,7 @@ public class UserController {
 				.toString());
 
 		String[] tip_off = buySellService.tip_off(buySell);
+
 		if (null != tip_off) {
 			result.put("msg", checkSafe);
 			return result;
@@ -451,8 +452,6 @@ public class UserController {
 		}
 
 		map.put("data_buySell", buySell);
-
-		// TODO
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("data_token", genToken(session));
 		return "i/user/1.0.1/tip_off";
