@@ -626,7 +626,7 @@ public class UserController {
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe, Farm farm,
 			HttpSession session) {
-		// TODO
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -634,20 +634,20 @@ public class UserController {
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
-		}
+		} // if
 
 		String[] verify = verify(session, verifyCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
-		}
+		} // if
 
 		// 安全密码验证
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
-		} // IF
+		} // if
 
 		farm.setUser_id(session.getAttribute("session.user.id").toString());
 
@@ -655,9 +655,8 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
-		}
+		} // if
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}

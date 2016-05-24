@@ -593,4 +593,50 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return list;
 	}
 
+	@Override
+	public List<Farm> findByFarm_5(Farm farm, int page, int rows) {
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time desc");
+
+		if (null != farm) {
+			Example.Criteria criteria = example.createCriteria();
+
+			String user_id = StringUtil.isEmpty(farm.getUser_id());
+			if (null != user_id) {
+				criteria.andEqualTo("user_id", user_id);
+			} // if
+		} // if
+
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
+	}
+
+	@Override
+	public List<Farm> findByUserId_5(String user_id, int page, int rows) {
+
+		Farm farm = new Farm();
+		farm.setUser_id(user_id);
+
+		List<Farm> list = findByFarm_5(farm, page, rows);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm item = list.get(i);
+
+			// 鸡苗批次关联的喂食列表
+			item.setFarmFeeds(farmFeedService.findByFarmId(item.getId()));
+
+			// 鸡苗批次关联的孵化列表
+			item.setFarmHatchs(farmHatchService.findByFarmId(farm.getId()));
+
+			// 鸡苗批次关联的买盘列表
+			item.setBuys(buyService.findByFarmId_3(farm.getId(), 1, 12));
+		} // for
+
+		return list;
+	}
+
 }

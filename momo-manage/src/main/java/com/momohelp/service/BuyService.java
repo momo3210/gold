@@ -22,4 +22,6 @@ public interface BuyService extends IService<Buy> {
 	List<Buy> findByFarmId(String farm_id);
 
 	List<Buy> findByFarmId_1(String farm_id);
+
+	List<Buy> findByFarmId_3(String farm_id, int page, int rows);
 }

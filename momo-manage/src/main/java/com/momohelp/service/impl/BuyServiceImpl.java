@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.github.pagehelper.PageHelper;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.User;
@@ -153,5 +154,21 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 		} // for
 
 		return list;
+	}
+
+	@Override
+	public List<Buy> findByFarmId_3(String farm_id, int page, int rows) {
+		if (null == farm_id || "".equals(farm_id.trim())) {
+			return null;
+		} // if
+
+		Example example = new Example(Buy.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("farm_id", farm_id);
+
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
 	}
 }

@@ -13,6 +13,10 @@ import com.momohelp.model.Sell;
  */
 public interface SellService extends IService<Sell> {
 
+	List<Sell> findByUserId_5(String user_id, int page, int rows);
+
+	List<Sell> findBySell_5(Sell sell, int page, int rows);
+
 	List<Sell> findByUnDeal_1(String user_id);
 
 	/**

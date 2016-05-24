@@ -334,6 +334,28 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return user;
 	}
 
+	/**
+	 * 全部买卖盘
+	 *
+	 * @param id
+	 * @return
+	 */
+	private User getId_5(String id) {
+
+		User user = getId_3(id);
+		if (null == user) {
+			return null;
+		} // if
+
+		// 12条卖盘记录
+		user.setSells(sellService.findByUserId_5(id, 1, 12));
+
+		// 12条买鸡苗批次记录
+		user.setFarms(farmService.findByUserId_5(id, 1, 12));
+
+		return user;
+	}
+
 	private User getId_1(String id) {
 
 		User user = selectByKey(id);
@@ -373,6 +395,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return getId_3(id);
 		case 4:
 			return getId_4(id);
+		case 5:
+			return getId_5(id);
 		default:
 			return null;
 		}

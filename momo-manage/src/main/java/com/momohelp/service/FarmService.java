@@ -13,6 +13,10 @@ import com.momohelp.model.Farm;
  */
 public interface FarmService extends IService<Farm> {
 
+	List<Farm> findByUserId_5(String user_id, int page, int rows);
+
+	List<Farm> findByFarm_5(Farm farm, int page, int rows);
+
 	/**
 	 * 获取用户的未完全交易的鸡苗批次
 	 *

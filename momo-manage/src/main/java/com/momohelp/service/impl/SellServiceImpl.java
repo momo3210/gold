@@ -21,6 +21,7 @@ import com.momohelp.service.BuySellService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
 
 /**
  *
@@ -421,4 +422,40 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		return list;
 	}
 
+	@Override
+	public List<Sell> findBySell_5(Sell sell, int page, int rows) {
+		Example example = new Example(Sell.class);
+		example.setOrderByClause("create_time desc");
+
+		if (null != sell) {
+			Example.Criteria criteria = example.createCriteria();
+
+			String user_id = StringUtil.isEmpty(sell.getUser_id());
+			if (null != user_id) {
+				criteria.andEqualTo("user_id", user_id);
+			} // if
+		} // if
+
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
+	}
+
+	@Override
+	public List<Sell> findByUserId_5(String user_id, int page, int rows) {
+
+		Sell sell = new Sell();
+		sell.setUser_id(user_id);
+
+		List<Sell> list = findBySell_5(sell, page, rows);
+
+		if (null == list) {
+			return null;
+		} // if
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+
+		} // for
+
+		return list;
+	}
 }
