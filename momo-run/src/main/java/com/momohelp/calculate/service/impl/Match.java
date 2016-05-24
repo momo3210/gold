@@ -246,11 +246,13 @@ public class Match implements Serializable, IMatch {
 		String id = null;
 		BuySell buySell = null;
 		do {
-			int i = (int) ((Math.random() * 9 + 1) * 10000000);
+			// 算法
+			int i = (int) ((Math.random() * 10 + 1) * 100000000);
 			id = String.valueOf(i);
 			if (9 < id.length()) {
-				id.substring(0, 9);
+				id = id.substring(0, 9);
 			}
+			id = "B" + id;
 			buySell = buySellService.selectByKey(id);
 		} while (null != buySell);
 		return id;
