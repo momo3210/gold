@@ -24,6 +24,9 @@ import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 import com.momohelp.util.StringUtil;
+import com.momohelp.util.webservice.SmSWebService;
+import com.momohelp.util.webservice.SmSWebServiceSoap;
+import com.momohelp.util.webservice.WsSendResponse;
 
 /**
  *
@@ -172,6 +175,15 @@ public class DefaultController {
 		return result;
 	}
 
+	private String genId2() {
+		int i = (int) ((Math.random() * 5 + 1) * 1000);
+		String id = String.valueOf(i);
+		if (4 < id.length()) {
+			id = id.substring(0, 4);
+		}
+		return id;
+	}
+
 	@ResponseBody
 	@RequestMapping(value = { "/sendSms" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_changePwd(HttpSession session, User user) {
@@ -184,16 +196,16 @@ public class DefaultController {
 			return result;
 		}
 
-		session.setAttribute("sms_mobile", user.getMobile());
+		String code = genId2();
 
-		session.setAttribute("sms_mobile", "2233");
+		session.setAttribute("sms_mobile", code);
 
-		// SmSWebService service = new SmSWebService();
-		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
-		// "123456", __u.getMobile(), "您本次验证码:" + user.getVerifycode_sms()
-		// + "，感谢您的支持，祝您生活愉快！！", "", "");
-		// response.getReturnStatus();
+		SmSWebService service = new SmSWebService();
+		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
+				"123456", user.getMobile(), "您本次验证码:" + code
+						+ "，感谢您的支持，祝您生活愉快！！", "", "");
+		response.getReturnStatus();
 
 		// String[] msg = userService.sendSms(session.getAttribute(
 		// "session.user.id").toString());

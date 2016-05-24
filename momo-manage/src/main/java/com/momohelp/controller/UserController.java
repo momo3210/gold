@@ -71,6 +71,27 @@ public class UserController {
 	private BuySellService buySellService;
 
 	/**
+	 * 验证手机号
+	 *
+	 * @param session
+	 * @param verifyCode
+	 * @return
+	 */
+	private String[] verifySms(HttpSession session, String mobile) {
+		mobile = StringUtil.isEmpty(mobile);
+		if (null == mobile) {
+			return new String[] { "短信验证失败" };
+		}
+
+		if (null == session.getAttribute("sms_mobile")) {
+			return new String[] { "短信验证失败" };
+		}
+
+		String code = session.getAttribute("sms_mobile").toString();
+		return code.equals(mobile) ? null : new String[] { "短信验证失败" };
+	}
+
+	/**
 	 * 验证令牌
 	 *
 	 * @param session
@@ -230,9 +251,15 @@ public class UserController {
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_changePwd(HttpSession session,
 			@RequestParam(required = true) String old_pass,
-			@RequestParam(required = true) String new_pass) {
+			@RequestParam(required = true) String new_pass, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
+
+		String[] verifySms = verifySms(session, user.getVerifycode_sms());
+		if (null != verifySms) {
+			result.put("msg", verifySms);
+			return result;
+		}
 
 		// TODO
 		String[] msg = userService.changePwd(
@@ -477,6 +504,12 @@ public class UserController {
 		String[] checkSafe = checkSafe(session, user.getUser_pass_safe());
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
+			return result;
+		}
+
+		String[] verifySms = verifySms(session, user.getVerifycode_sms());
+		if (null != verifySms) {
+			result.put("msg", verifySms);
 			return result;
 		}
 
