@@ -947,7 +947,7 @@ public class UserController {
 			@RequestParam(required = true) String token,
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe, Sell sell,
-			HttpSession session) {
+			User user, HttpSession session) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
@@ -968,6 +968,12 @@ public class UserController {
 		String[] checkSafe = checkSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
+			return result;
+		}
+
+		String[] verifySms = verifySms(session, user.getVerifycode_sms());
+		if (null != verifySms) {
+			result.put("msg", verifySms);
 			return result;
 		}
 

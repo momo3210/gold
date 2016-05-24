@@ -146,6 +146,14 @@
 															<input type="password" class='input-large' id="frm1_user_pass_2" placeholder="确认登录密码" />
 														</div>
 													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm1_verifycode_sms">短信验证码</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' id="frm1_verifycode_sms" name='' placeholder="短信验证码" />
+															<a class="btn btn-mini btn-danger" href='javascript:sendSms();'>获取短信验证码</a>
+														</div>
+													</div>
 													<div class="form-actions">
 														<button class="btn btn-info" type="button" id='btn_submit1'>
 															<i class="icon-ok bigger-110"></i>
@@ -184,6 +192,14 @@
 															<input type="password" class='input-large' id="frm2_user_pass_safe_2" placeholder="确认安全密码" />
 														</div>
 													</div>
+													<div class="control-group">
+														<label class="control-label" for="frm2_verifycode_sms">短信验证码</label>
+
+														<div class="controls">
+															<input type="text" class='input-small' id="frm2_verifycode_sms" placeholder="短信验证码" />
+															<a class="btn btn-mini btn-danger" href='javascript:sendSms();'>获取短信验证码</a>
+														</div>
+													</div>
 													<div class="form-actions">
 														<button class="btn btn-info" type="button" id='btn_submit2'>
 															<i class="icon-ok bigger-110"></i>
@@ -220,6 +236,29 @@
 		<#include "/_pagelet/js.html"/>
 
 		<script>
+
+		function sendSms(){
+
+			$.ajax({
+				url : '${(conf_html_virtualPath)!}sendSms',
+				type : 'POST',
+				dataType : 'JSON',
+				data : $('#frm').serializeObjectForm(),
+				success : function(data) {
+					if (data.success) {
+						alert('发送成功，请查收')
+						return;
+					} // END
+					if (data.msg)
+						alert(data.msg[0]);
+				},
+				error : function() {
+					alert(arguments[2]);
+				}
+			});
+		}
+
+
 		$(function() {
 			$('#btn_submit1').click(function() {
 				if ($('#frm1_user_pass').val() !== $('#frm1_user_pass_2').val()) {
@@ -232,7 +271,8 @@
 					dataType : 'JSON',
 					data : {
 						old_pass: $('#frm1_user_pass_old').val(),
-						new_pass: $('#frm1_user_pass').val()
+						new_pass: $('#frm1_user_pass').val(),
+						verifycode_sms: $('#frm1_verifycode_sms').val()
 					},
 					success : function(data) {
 						if (data.success){
@@ -259,7 +299,8 @@
 					dataType : 'JSON',
 					data : {
 						old_pass: $('#frm2_user_pass_safe_old').val(),
-						new_pass: $('#frm2_user_pass_safe').val()
+						new_pass: $('#frm2_user_pass_safe').val(),
+						verifycode_sms: $('#frm2_verifycode_sms').val()
 					},
 					success : function(data) {
 						if (data.success){
