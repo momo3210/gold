@@ -14,14 +14,6 @@ import com.momohelp.model.Farm;
 public interface FarmService extends IService<Farm> {
 
 	/**
-	 * 查找未完全交易的鸡苗批次
-	 *
-	 * @param user_id
-	 * @return
-	 */
-	List<Farm> findUnDealByUserId(String user_id);
-
-	/**
 	 * 买入鸡苗
 	 *
 	 * @param farm
@@ -29,6 +21,14 @@ public interface FarmService extends IService<Farm> {
 	 */
 	@Transactional
 	String[] buy(Farm farm);
+
+	/**
+	 * 查找未完全交易的鸡苗批次
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findUnDealByUserId(String user_id);
 
 	/**
 	 * 查找目前可以孵化的批次

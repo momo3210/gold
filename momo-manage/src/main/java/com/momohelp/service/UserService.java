@@ -12,6 +12,8 @@ import com.momohelp.model.User;
  */
 public interface UserService extends IService<User> {
 
+	User getId_4(String id);
+
 	User getId(int flag, String id);
 
 	/**

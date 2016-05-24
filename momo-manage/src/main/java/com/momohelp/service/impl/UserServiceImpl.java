@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
-import com.momohelp.mapper.SellMapper;
-import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
@@ -104,7 +102,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	 * @param id
 	 * @return
 	 */
-	private User getId_4(String id) {
+	@Override
+	public User getId_4(String id) {
 
 		User user = getId_0(id);
 		if (null == user) {
@@ -177,7 +176,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			user.setP_user(p_user);
 		}
 
-
 		return user;
 	}
 
@@ -209,20 +207,25 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public List<User> findChildren(String user_id, int page, int rows) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int resetPwd(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		User user = new User();
+		user.setId(id);
+		user.setUser_pass(DEFAULT_USER_PASS);
+
+		return super.updateNotNull(user);
 	}
 
 	@Override
 	public int resetPwdSafe(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		User user = new User();
+		user.setId(id);
+		user.setUser_pass_safe(DEFAULT_USER_PASS);
+
+		return super.updateNotNull(user);
 	}
 
 	@Override
@@ -346,33 +349,117 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return null;
 	}
 
+	private static final String DEFAULT_USER_PASS = MD5.encode("123456");
+
 	@Override
 	public String[] createUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		if (null == user) {
+			return new String[] { "非法操作" };
+		} // if
+
+		/***** *****/
+
+		// 附加数据
+		user.setUser_pass(DEFAULT_USER_PASS);
+		user.setUser_pass_safe(DEFAULT_USER_PASS);
+		user.setStatus(1);
+
+		user.setNum_static(null == user.getNum_static() ? 0.00 : user
+				.getNum_static());
+		user.setNum_dynamic(null == user.getNum_dynamic() ? 0.00 : user
+				.getNum_dynamic());
+		user.setNum_ticket(null == user.getNum_ticket() ? 0 : user
+				.getNum_ticket());
+		user.setNum_food(null == user.getNum_food() ? 0 : user.getNum_food());
+
+		return save_prev(user);
 	}
 
 	@Override
 	public String[] editInfo(User user) {
-		// TODO Auto-generated method stub
+		User _user = new User();
+		_user.setId(user.getId());
+
+		_user.setReal_name(user.getReal_name());
+		_user.setAlipay_account(user.getAlipay_account());
+		_user.setWx_account(user.getWx_account());
+		_user.setBank(user.getBank());
+		_user.setBank_account(user.getBank_account());
+		_user.setBank_name(user.getBank_name());
+
+		super.updateNotNull(_user);
 		return null;
 	}
 
 	@Override
 	public String[] editInfoAll(User user) {
-		// TODO Auto-generated method stub
+		User _user = new User();
+		_user.setId(user.getId());
+
+		_user.setMobile(user.getMobile());
+		_user.setEmail(user.getEmail());
+		_user.setNickname(user.getNickname());
+
+		_user.setAlipay_account(user.getAlipay_account());
+		_user.setWx_account(user.getWx_account());
+		_user.setBank(user.getBank());
+		_user.setBank_account(user.getBank_account());
+		_user.setBank_name(user.getBank_name());
+
+		_user.setNum_static(user.getNum_static());
+		_user.setNum_dynamic(user.getNum_dynamic());
+		_user.setNum_ticket(user.getNum_ticket());
+		_user.setNum_food(user.getNum_food());
+
+		super.updateNotNull(_user);
 		return null;
 	}
 
 	@Override
 	public String[] changePwd(String id, String old_pass, String new_pass) {
-		// TODO Auto-generated method stub
+		new_pass = StringUtil.isEmpty(new_pass);
+		if (null == new_pass) {
+			return new String[] { "新登陆密码不能为空" };
+		} // if
+
+		User user = selectByKey(id);
+		if (null == user) {
+			return new String[] { "没有找到该用户" };
+		} // if
+
+		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
+			return new String[] { "原登陆密码错误" };
+		} // if
+
+		User _user = new User();
+		_user.setId(id);
+		_user.setUser_pass(MD5.encode(new_pass));
+
+		super.updateNotNull(_user);
 		return null;
 	}
 
 	@Override
 	public String[] changePwdSafe(String id, String old_pass, String new_pass) {
-		// TODO Auto-generated method stub
+		new_pass = StringUtil.isEmpty(new_pass);
+		if (null == new_pass) {
+			return new String[] { "新安全密码不能为空" };
+		} // if
+
+		User user = selectByKey(id);
+		if (null == user) {
+			return new String[] { "没有找到该用户" };
+		} // if
+
+		if (!MD5.encode(old_pass).equals(user.getUser_pass_safe())) {
+			return new String[] { "原安全密码错误" };
+		} // if
+
+		User _user = new User();
+		_user.setId(id);
+		_user.setUser_pass_safe(MD5.encode(new_pass));
+
+		super.updateNotNull(_user);
 		return null;
 	}
 

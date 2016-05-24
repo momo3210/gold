@@ -160,7 +160,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setNum_buy(farm.getNum_buy() - (farm.getNum_buy() / 10));
 		buy.setW_farm_chick_id(farm.getId());
 		buy.setUser_id(farm.getUser_id());
-		buy.setTime_deal(null);
 		buy.setIs_deposit(0);
 		buy.setNum_deal(0);
 
@@ -187,7 +186,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setNum_buy(farm.getNum_buy() / 10);
 		buy.setW_farm_chick_id(farm.getId());
 		buy.setUser_id(farm.getUser_id());
-		buy.setTime_deal(null);
 		buy.setIs_deposit(1);
 		buy.setNum_deal(0);
 
