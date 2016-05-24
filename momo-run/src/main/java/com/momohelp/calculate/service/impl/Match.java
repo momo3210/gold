@@ -17,6 +17,7 @@ import com.momohelp.model.Sell;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.SellService;
+
 @Service
 public class Match implements Serializable, IMatch {
 
@@ -58,7 +59,7 @@ public class Match implements Serializable, IMatch {
 		// 卖盘数据
 		List<Sell> sells = sellService.selectByCycles(cr.getTime(), Calendar
 				.getInstance().getTime());
-		//买盘数据
+		// 买盘数据
 		List<Buy> buys = buyService.selectByCycles(cr.getTime(), Calendar
 				.getInstance().getTime());
 		for (BuySell buySell : buySells) {
@@ -121,33 +122,29 @@ public class Match implements Serializable, IMatch {
 
 		// 自动匹配结束后 未处理的数据转入买卖交易中
 		// 卖盘清理
-		sells.parallelStream()
-				.filter(sell -> sell.getNum_sell() > 0)
-				.forEach(
-						sell -> {
-							BuySell entity = new BuySell();
-							entity.setId(genId());
-							entity.setCreate_time(new Date());
-							entity.setP_sell_id(sell.getId());
-							entity.setP_buy_id("null");
-							entity.setStatus(0);
-							entity.setP_sell_user_id(sell.getUser_id());
-							entity.setNum_matching(sell.getNum_sell());
-						});
+		sells.parallelStream().filter(sell -> sell.getNum_sell() > 0)
+				.forEach(sell -> {
+					BuySell entity = new BuySell();
+					entity.setId(genId());
+					entity.setCreate_time(new Date());
+					entity.setP_sell_id(sell.getId());
+					entity.setP_buy_id("null");
+					entity.setStatus(0);
+					entity.setP_sell_user_id(sell.getUser_id());
+					entity.setNum_matching(sell.getNum_sell());
+				});
 		// 买盘清理
-		buys.parallelStream()
-				.filter(buy -> buy.getNum_buy() > 0)
-				.forEach(
-						buy -> {
-							BuySell entity = new BuySell();
-							entity.setId(genId());
-							entity.setCreate_time(new Date());
-							entity.setP_sell_id("null");
-							entity.setP_buy_id(buy.getId());
-							entity.setStatus(0);
-							entity.setP_buy_user_id(buy.getUser_id());
-							entity.setNum_matching(buy.getNum_buy());
-						});
+		buys.parallelStream().filter(buy -> buy.getNum_buy() > 0)
+				.forEach(buy -> {
+					BuySell entity = new BuySell();
+					entity.setId(genId());
+					entity.setCreate_time(new Date());
+					entity.setP_sell_id("null");
+					entity.setP_buy_id(buy.getId());
+					entity.setStatus(0);
+					entity.setP_buy_user_id(buy.getUser_id());
+					entity.setNum_matching(buy.getNum_buy());
+				});
 	}
 
 	private void sellDataHandle(BuySell buySell, List<Buy> buys) {
@@ -186,15 +183,11 @@ public class Match implements Serializable, IMatch {
 			}
 			buySellService.save(entity);
 		}
-		if (null != buys && buys.size() > 0) {
-			if (buySell.getNum_matching() > 0) {
-				// buySellService.delete(buySell.getId());
-				buySell.setCreate_time(new Date());
-				// buySellService.save(buySell);
-				buySellService.updateNotNull(buySell);
-			} else {
-				buySellService.delete(buySell.getId());
-			}
+		if (buySell.getNum_matching() > 0) {
+			buySell.setCreate_time(new Date());
+			buySellService.updateNotNull(buySell);
+		} else {
+			buySellService.delete(buySell.getId());
 		}
 		buySell = null;
 	}
@@ -235,18 +228,15 @@ public class Match implements Serializable, IMatch {
 			}
 			buySellService.save(entity);
 		}
-		if (null != sells && sells.size() > 0) {
-			if (buySell.getNum_matching() > 0) {
-				// buySellService.delete(buySell.getId());
-				buySell.setCreate_time(new Date());
-				// buySellService.save(buySell);
-				buySellService.updateNotNull(buySell);
-			} else {
-				buySellService.delete(buySell.getId());
-			}
+		if (buySell.getNum_matching() > 0) {
+			buySell.setCreate_time(new Date());
+			buySellService.updateNotNull(buySell);
+		} else {
+			buySellService.delete(buySell.getId());
 		}
 		buySell = null;
 	}
+
 	/**
 	 * 生成主键
 	 *
@@ -256,13 +246,11 @@ public class Match implements Serializable, IMatch {
 		String id = null;
 		BuySell buySell = null;
 		do {
-			// 算法
 			int i = (int) ((Math.random() * 9 + 1) * 10000000);
 			id = String.valueOf(i);
 			if (9 < id.length()) {
 				id.substring(0, 9);
 			}
-			// END
 			buySell = buySellService.selectByKey(id);
 		} while (null != buySell);
 		return id;

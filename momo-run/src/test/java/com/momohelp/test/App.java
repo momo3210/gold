@@ -2,13 +2,11 @@ package com.momohelp.test;
 
 import java.util.Calendar;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 public class App {
 
 	public static void main(String[] args) throws Exception {
 //		AbstractApplicationContext context = 
-		new ClassPathXmlApplicationContext("applicationContext.xml");
+//		new ClassPathXmlApplicationContext("applicationContext.xml");
 //		SchedulerFactoryBean bean=null;
 //		try {
 //			 bean=context.getBean(SchedulerFactoryBean.class);
