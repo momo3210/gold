@@ -185,10 +185,12 @@ public class DefaultController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "/sendSms" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_changePwd(HttpSession session, User user) {
+	@RequestMapping(value = { "/sendSms2" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_sendSms2(HttpSession session, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
+
+		// Object sess = session.getAttribute("session.user");
 
 		user.setMobile(StringUtil.isEmpty(user.getMobile()));
 		if (null == user.getMobile()) {
@@ -204,6 +206,43 @@ public class DefaultController {
 		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
 		WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
 				"123456", user.getMobile(), "您本次验证码:" + code
+						+ "，感谢您的支持，祝您生活愉快！！", "", "");
+		response.getReturnStatus();
+
+		// String[] msg = userService.sendSms(session.getAttribute(
+		// "session.user.id").toString());
+		//
+		// if (null != msg) {
+		// result.put("msg", msg);
+		// return result;
+		// }
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/sendSms" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_sendSms(HttpSession session, User user) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		Object sess = session.getAttribute("session.user");
+		if (null == sess) {
+			result.put("msg", new String[] { "请输入手机号" });
+			return result;
+		}
+
+		String mobile = ((User) sess).getMobile();
+
+		String code = genId2();
+
+		session.setAttribute("sms_mobile", code);
+
+		SmSWebService service = new SmSWebService();
+		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		WsSendResponse response = serviceSoap
+				.sendSms("154", "MOMO668", "123456", mobile, "您本次验证码:" + code
 						+ "，感谢您的支持，祝您生活愉快！！", "", "");
 		response.getReturnStatus();
 

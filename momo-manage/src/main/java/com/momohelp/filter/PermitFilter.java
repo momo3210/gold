@@ -57,6 +57,9 @@ public class PermitFilter implements Filter {
 		} else if ("/sendSms".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
+		} else if ("/sendSms2".equals(uri)) {
+			chain.doFilter(request, response);
+			return;
 		}
 
 		HttpSession session = hreq.getSession();
