@@ -373,7 +373,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public List<Farm> findUnDealByUserId__1(String user_id) {
+	public List<Farm> findUnDealByUserId___4(String user_id) {
 
 		// Example example = new Example(Farm.class);
 		// example.setOrderByClause("create_time desc");
@@ -396,7 +396,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Farm farm = list.get(i);
-			farm.setBuys(buyService.findByFarmId__1(farm.getId()));
+			farm.setBuys(buyService.findByFarmId__4(farm.getId()));
 		}
 
 		return list;

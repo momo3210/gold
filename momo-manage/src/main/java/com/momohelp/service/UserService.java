@@ -36,7 +36,7 @@ public interface UserService extends IService<User> {
 	 * @param id
 	 * @return
 	 */
-	User getUnDealBuyById__1(String id);
+	User buy_record__list__4(String id);
 
 	/**
 	 * 获取用户所有的未完全交易的卖盘（展示时使用）
@@ -44,7 +44,7 @@ public interface UserService extends IService<User> {
 	 * @param id
 	 * @return
 	 */
-	User getUnDealSellById__1(String id);
+	User sell_record__list__4(String id);
 
 	/**
 	 * 获取我和我的父级
@@ -52,7 +52,7 @@ public interface UserService extends IService<User> {
 	 * @param id
 	 * @return
 	 */
-	User getMeAndParent__1(String id);
+	User getMeAndParent__4(String id);
 
 	/**** -------------- */
 

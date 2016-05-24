@@ -48,7 +48,7 @@ public interface FarmService extends IService<Farm> {
 	 * @param user_id
 	 * @return
 	 */
-	List<Farm> findUnDealByUserId__1(String user_id);
+	List<Farm> findUnDealByUserId___4(String user_id);
 
 	/**
 	 * 查找目前可以孵化的批次

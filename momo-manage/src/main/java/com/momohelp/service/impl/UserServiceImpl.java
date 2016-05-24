@@ -75,7 +75,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return null;
 		}
 
-		user.setFarms(farmService.findUnDealByUserId__1(id));
+		user.setFarms(farmService.findUnDealByUserId___4(id));
 
 		return user;
 	}
@@ -93,7 +93,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return null;
 		}
 
-		user.setSells(sellService.findUnDealByUserId__1(id));
+		user.setSells(sellService.findUnDealByUserId__4(id));
 
 		return user;
 
@@ -585,7 +585,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public User getUnDealSellById__1(String id) {
+	public User sell_record__list__4(String id) {
 
 		User user = selectByKey(id);
 
@@ -594,13 +594,13 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 
 		// 获取用户未完全交易的卖盘
-		user.setSells(sellService.findUnDealByUserId__1(id));
+		user.setSells(sellService.findUnDealByUserId__4(user.getId()));
 
 		return user;
 	}
 
 	@Override
-	public User getMeAndParent__1(String id) {
+	public User getMeAndParent__4(String id) {
 
 		User user = selectByKey(id);
 
@@ -618,7 +618,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public User getUnDealBuyById__1(String id) {
+	public User buy_record__list__4(String id) {
 
 		User user = selectByKey(id);
 
@@ -627,7 +627,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 
 		// 获取用户未完全交易的买盘
-		user.setFarms(farmService.findUnDealByUserId__1(id));
+		user.setFarms(farmService.findUnDealByUserId___4(user.getId()));
 
 		return user;
 	}

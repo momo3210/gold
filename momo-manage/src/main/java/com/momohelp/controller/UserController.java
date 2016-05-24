@@ -976,7 +976,7 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 		result.addObject("nav_choose", ",05,0503,");
 
-		User user = userService.getUnDealBuyById__1(session.getAttribute(
+		User user = userService.buy_record__list__4(session.getAttribute(
 				"session.user.id").toString());
 		result.addObject("data_user", user);
 
@@ -994,7 +994,7 @@ public class UserController {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
 		result.addObject("nav_choose", ",05,0504,");
 
-		User user = userService.getUnDealSellById__1(session.getAttribute(
+		User user = userService.sell_record__list__4(session.getAttribute(
 				"session.user.id").toString());
 		result.addObject("data_user", user);
 

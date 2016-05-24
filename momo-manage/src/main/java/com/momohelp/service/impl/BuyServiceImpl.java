@@ -96,7 +96,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
 		for (int i = 0, j = list_buy.size(); i < j; i++) {
 			Buy buy = list_buy.get(i);
-			buy.setBuySells(buySellService.findByBuyId__1(buy.getId()));
+			buy.setBuySells(buySellService.findByBuyId__4(buy.getId()));
 
 			List<BuySell> list_buySell = buy.getBuySells();
 			if (null == list_buySell) {
@@ -124,7 +124,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 	}
 
 	@Override
-	public List<Buy> findByFarmId__1(String farm_id) {
+	public List<Buy> findByFarmId__4(String farm_id) {
 		Example example = new Example(Buy.class);
 
 		Example.Criteria criteria = example.createCriteria();
@@ -138,7 +138,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 
 		for (int i = 0, j = list.size(); i < j; i++) {
 			Buy buy = list.get(i);
-			buy.setBuySells(buySellService.findByBuyId__1(buy.getId()));
+			buy.setBuySells(buySellService.findByBuyId__4(buy.getId()));
 		}
 
 		return list;

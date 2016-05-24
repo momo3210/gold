@@ -23,7 +23,7 @@ public interface BuyService extends IService<Buy> {
 	 */
 	List<Buy> findUnFinishDeal(String user_id);
 
-	List<Buy> findByFarmId__1(String farm_id);
+	List<Buy> findByFarmId__4(String farm_id);
 
 	void updateNum_deal(String id, int num_deal);
 }
