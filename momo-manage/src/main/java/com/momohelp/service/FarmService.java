@@ -123,6 +123,6 @@ public interface FarmService extends IService<Farm> {
 	 */
 	Farm getLastByUserId__4(String user_id);
 
-	void updateNum_deal(String id, int num_deal);
+	void updateNum_deal__4(String id, int num_deal);
 
 }

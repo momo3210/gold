@@ -25,5 +25,5 @@ public interface BuyService extends IService<Buy> {
 
 	List<Buy> findByFarmId__4(String farm_id);
 
-	void updateNum_deal(String id, int num_deal);
+	void updateNum_deal__4(String id, int num_deal);
 }

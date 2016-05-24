@@ -159,7 +159,7 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 	}
 
 	@Override
-	public void updateNum_deal(String id, int num_deal) {
+	public void updateNum_deal__4(String id, int num_deal) {
 		Buy buy = new Buy();
 		buy.setId(id);
 		buy.setNum_deal(num_deal);

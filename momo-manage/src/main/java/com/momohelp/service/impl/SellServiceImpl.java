@@ -325,7 +325,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	}
 
 	@Override
-	public void updateNum_deal(String id, int num_deal) {
+	public void updateNum_deal___4(String id, int num_deal) {
 		Sell sell = new Sell();
 		sell.setId(id);
 		sell.setNum_deal(num_deal);

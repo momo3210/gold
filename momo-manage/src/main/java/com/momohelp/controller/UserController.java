@@ -309,6 +309,7 @@ public class UserController {
 	public Map<String, Object> _i_confirm(HttpSession session, BuySell buySell,
 			@RequestParam(required = true) String verifyCode,
 			@RequestParam(required = true) String user_pass_safe) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -326,6 +327,7 @@ public class UserController {
 
 		String[] confirm = buySellService.confirm(buySell, session
 				.getAttribute("session.user.id").toString());
+
 		if (null != confirm) {
 			result.put("msg", checkSafe);
 			return result;

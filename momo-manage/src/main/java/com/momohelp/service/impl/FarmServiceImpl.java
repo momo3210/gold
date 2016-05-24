@@ -403,10 +403,11 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	}
 
 	@Override
-	public void updateNum_deal(String id, int num_deal) {
+	public void updateNum_deal__4(String id, int num_deal) {
 		Farm farm = new Farm();
 		farm.setId(id);
 		farm.setNum_deal(num_deal);
+		farm.setTime_deal(new Date());
 		((FarmMapper) getMapper()).updateNum_deal(farm);
 	}
 

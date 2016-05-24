@@ -48,5 +48,5 @@ public interface SellService extends IService<Sell> {
 	@Transactional
 	String[] sell(Sell sell);
 
-	void updateNum_deal(String id, int num_deal);
+	void updateNum_deal___4(String id, int num_deal);
 }

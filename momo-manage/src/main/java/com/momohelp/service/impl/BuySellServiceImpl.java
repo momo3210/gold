@@ -93,7 +93,8 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 	@Override
 	public String[] confirm(BuySell buySell, String user_id) {
 
-		BuySell __buySell = getId(buySell.getId());
+		BuySell __buySell = getId__4(buySell.getId());
+
 		if (null == __buySell) {
 			return new String[] { "非法操作" };
 		}
@@ -109,7 +110,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		/**/
 
 		BuySell _buySell = new BuySell();
-		_buySell.setId(buySell.getId());
+		_buySell.setId(__buySell.getId());
 
 		// 判断是买家确认还是卖家确认（既不属于买家也不属于卖家）
 		if (user_id.equals(__buySell.getP_buy_user_id())) { // 买家确认
@@ -136,12 +137,12 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 			_buySell.setP_sell_user_time(new Date());
 			_buySell.setStatus(2);
 
-			sellService.updateNum_deal(__buySell.getP_sell_id(),
+			sellService.updateNum_deal___4(__buySell.getP_sell_id(),
 					__buySell.getNum_matching());
-			buyService.updateNum_deal(__buySell.getP_buy_id(),
+			buyService.updateNum_deal__4(__buySell.getP_buy_id(),
 					__buySell.getNum_matching());
-			farmService.updateNum_deal(__buySell.getBuy().getW_farm_chick_id(),
-					__buySell.getNum_matching());
+			farmService.updateNum_deal__4(__buySell.getBuy()
+					.getW_farm_chick_id(), __buySell.getNum_matching());
 
 		} else {
 			return new String[] { "非法操作" };
@@ -291,7 +292,7 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 	}
 
 	@Override
-	public BuySell getId(String id) {
+	public BuySell getId__4(String id) {
 
 		BuySell buySell = selectByKey(id);
 

@@ -13,7 +13,7 @@ import com.momohelp.model.BuySell;
  */
 public interface BuySellService extends IService<BuySell> {
 
-	BuySell getId(String id);
+	BuySell getId__4(String id);
 
 	/**
 	 * 卖盘
