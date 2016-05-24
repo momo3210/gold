@@ -15,6 +15,16 @@ import com.momohelp.model.User;
 public interface UserService extends IService<User> {
 
 	/**
+	 * 买入操作时使用
+	 *
+	 * @param id
+	 * @return
+	 */
+	User buyTime___4(String id);
+
+	/*****************/
+
+	/**
 	 * 买入时使用
 	 *
 	 * @param id
