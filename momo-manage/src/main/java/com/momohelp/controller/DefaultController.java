@@ -103,6 +103,27 @@ public class DefaultController {
 		return (verifyCode.equals(code)) ? null : new String[] { "图形验证码输入错误" };
 	}
 
+	/**
+	 * 验证手机号
+	 *
+	 * @param session
+	 * @param verifyCode
+	 * @return
+	 */
+	private String[] verifySms(HttpSession session, String mobile) {
+		mobile = StringUtil.isEmpty(mobile);
+		if (null == mobile) {
+			return new String[] { "短信验证失败" };
+		}
+
+		if (null == session.getAttribute("sms_mobile")) {
+			return new String[] { "短信验证失败" };
+		}
+
+		String code = session.getAttribute("sms_mobile").toString();
+		return code.equals(mobile) ? null : new String[] { "短信验证失败" };
+	}
+
 	@RequestMapping(value = { "/t/{user_id}" }, method = RequestMethod.GET)
 	public ModelAndView _i_tUI(HttpSession session, @PathVariable String user_id) {
 		ModelAndView result = new ModelAndView("i/default/1.0.2/t");
@@ -134,6 +155,12 @@ public class DefaultController {
 			return result;
 		}
 
+		String[] verifySms = verifySms(session, user.getVerifycode_sms());
+		if (null != verifySms) {
+			result.put("msg", verifySms);
+			return result;
+		}
+
 		String[] msg = userService.register(user);
 
 		if (null != msg) {
@@ -153,11 +180,13 @@ public class DefaultController {
 
 		user.setMobile(StringUtil.isEmpty(user.getMobile()));
 		if (null == user.getMobile()) {
-			result.put("msg", "请输入手机号");
+			result.put("msg", new String[] { "请输入手机号" });
 			return result;
 		}
 
 		session.setAttribute("sms_mobile", user.getMobile());
+
+		session.setAttribute("sms_mobile", "2233");
 
 		// SmSWebService service = new SmSWebService();
 		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();

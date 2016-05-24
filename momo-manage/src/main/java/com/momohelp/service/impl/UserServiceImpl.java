@@ -374,7 +374,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setAlipay_account(user.getAlipay_account());
 		_user.setWx_account(user.getWx_account());
 		_user.setStatus(1);
-		_user.setFamily_id(p_user.getId());
+		_user.setFamily_id(p_user.getFamily_id());
 		_user.setDepth(p_user.getDepth() + 1);
 
 		_user.setMobile(user.getMobile());
