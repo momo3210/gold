@@ -3,20 +3,25 @@
 <mapper namespace="com.momohelp.mapper.SellMapper">
 	<resultMap id="sell" type="com.momohelp.model.Sell">
 		<id column="id" property="id" jdbcType="VARCHAR" />
-		
+
 		<result column="num_sell" property="num_sell" jdbcType="INTEGER" />
-		
+
 		<result column="time_deal" property="time_deal" jdbcType="DATE" />
-		
+
 		<result column="create_time" property="create_time" jdbcType="DATE" />
-		
+
 		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
-		
+
 		<result column="type_id" property="type_id" jdbcType="INTEGER" />
-		
+
+        <result column="flag_calc_bonus" property="flag_calc_bonus" jdbcType="INTEGER" />
 	</resultMap>
 	<select id="selectByCycles" resultType="sell">
+	<!-- 由于系统时间以及管理员可以修改计算时间 -->
 		SELECT * FROM p_sell as p
-		WHERE p.create_time between #{0} and #{1}
+		WHERE p.create_time between #{0} and #{1} and p.flag_calc_bonus='0' ORDER BY p.create_time
 	</select>
+	<update id="updateFlagCalc">
+	   update p_sell as p  SET p.flag_calc_bonus=1  where p.id=#{0}
+	</update>
 </mapper>

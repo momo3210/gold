@@ -4,27 +4,33 @@
 	<resultMap id="buy" type="com.momohelp.model.Buy">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 
-		<result column="w_farm_chick_id" property="w_farm_chick_id" jdbcType="VARCHAR" />
+		<result column="w_farm_chick_id" property="w_farm_chick_id"
+			jdbcType="VARCHAR" />
 
 		<result column="num_buy" property="num_buy" jdbcType="INTEGER" />
 
 		<result column="create_time" property="create_time" jdbcType="DATE" />
-		
+
 		<result column="calc_time" property="calc_time" jdbcType="DATE" />
-		
+
 		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
-		
+
 		<result column="time_deal" property="time_deal" jdbcType="DATE" />
-		
+
 		<result column="is_deposit" property="is_deposit" jdbcType="INTEGER" />
-		
+
 		<result column="num_deal" property="num_deal" jdbcType="INTEGER" />
-		
-		<result column="flag_calc_bonus" property="flag_calc_bonus" jdbcType="INTEGER" />
-		
+
+		<result column="flag_calc_bonus" property="flag_calc_bonus"
+			jdbcType="INTEGER" />
+
 	</resultMap>
 	<select id="selectByCycles" resultType="buy">
-		SELECT * FROM p_buy as p WHERE p.calc_time between #{0} and #{1}
+		<!-- 由于系统时间以及管理员可以修改计算时间  -->
+		SELECT * FROM p_buy as p WHERE p.calc_time between #{0} and #{1} and
+		p.flag_calc_bonus='0' ORDER BY p.create_time
 	</select>
-
+	<update id="updateFlagCalc">
+		update p_buy as p SET p.flag_calc_bonus=1 where p.id=#{0}
+	</update>
 </mapper>

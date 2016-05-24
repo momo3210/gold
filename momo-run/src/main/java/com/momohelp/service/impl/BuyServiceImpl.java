@@ -23,4 +23,10 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 		return ((BuyMapper)mapper).selectByCycles(time, time2);
 	}
 
+	@Override
+	public void updateFlagCalc(String id) {
+		((BuyMapper)mapper).updateFlagCalc(id);
+		
+	}
+
 }

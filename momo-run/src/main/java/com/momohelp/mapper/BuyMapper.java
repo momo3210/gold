@@ -19,4 +19,6 @@ public interface BuyMapper extends MyMapper<Buy> {
 	 * @return
 	 */
 	List<Buy> selectByCycles(Date time, Date time2);
+
+	void updateFlagCalc(String id);
 }

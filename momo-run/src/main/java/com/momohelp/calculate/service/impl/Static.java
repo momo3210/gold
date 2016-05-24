@@ -45,6 +45,9 @@ public class Static implements IStatic {
 		Example example = new Example(FarmHatch.class);
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.DAY_OF_MONTH, -1);
+		cr.set(Calendar.HOUR, 0);
+		cr.set(Calendar.MINUTE, 0);
+		cr.set(Calendar.SECOND, 0);
 		example.createCriteria()
 				.andBetween("freeze_time", cr.getTime(), new Date())
 				.andEqualTo("flag_calc_bonus", 0);

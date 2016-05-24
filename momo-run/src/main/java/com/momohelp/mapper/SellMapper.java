@@ -19,4 +19,6 @@ public interface SellMapper extends MyMapper<Sell> {
      * @return
      */
 	List<Sell> selectByCycles(Date time, Date date);
+
+	void updateFlagCalc(String key);
 }
