@@ -11,6 +11,9 @@
 		.form-horizontal .form-actions {
 			margin-bottom: 0;
 		}
+		.main-content {
+			margin-left: 0;
+		}
 		</style>
 	</head>
 	<body>
@@ -21,46 +24,9 @@
 		</div>
 
 		<div class="main-container container-fluid">
-			<a class="menu-toggler" id="menu-toggler" href="#">
-				<span class="menu-text"></span>
-			</a>
-
-			<div class="sidebar" id="sidebar">
-				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-						<button class="btn btn-small btn-success">
-							<i class="icon-signal"></i>
-						</button>
-
-						<button class="btn btn-small btn-info">
-							<i class="icon-pencil"></i>
-						</button>
-
-						<button class="btn btn-small btn-warning">
-							<i class="icon-group"></i>
-						</button>
-
-						<button class="btn btn-small btn-danger">
-							<i class="icon-cogs"></i>
-						</button>
-					</div>
-
-					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-						<span class="btn btn-success"></span>
-
-						<span class="btn btn-info"></span>
-
-						<span class="btn btn-warning"></span>
-
-						<span class="btn btn-danger"></span>
-					</div>
-				</div><!--#sidebar-shortcuts-->
-
-				<#include "../../default/1.0.2/_pagelet/nav.html"/>
-			</div>
 
 			<div class="main-content">
-				<div class="breadcrumbs" id="breadcrumbs">
+				<!-- <div class="breadcrumbs" id="breadcrumbs">
 					<ul class="breadcrumb">
 						<li>
 							<i class="icon-home home-icon"></i>
@@ -71,9 +37,9 @@
 							</span>
 						</li>
 						<li class="active">新建帐户</li>
-					</ul><!--.breadcrumb-->
+					</ul>.breadcrumb
 
-				</div>
+				</div> -->
 
 				<div class="page-content">
 					<div class="page-header position-relative">
@@ -236,6 +202,8 @@
 		}
 
 		$(function(){
+			$('#banner_welcome').remove();
+
 			showVerifyCode();
 
 			$('#btn_submit').click(function() {
