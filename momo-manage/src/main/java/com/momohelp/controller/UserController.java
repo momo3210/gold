@@ -618,9 +618,10 @@ public class UserController {
 			@RequestParam(required = false, defaultValue = "100") int rows) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
 
-		List<User> list = userService.findChildren(
+		List<User> list = userService.findChildren___4(
 				session.getAttribute("session.user.id").toString(), page,
 				Integer.MAX_VALUE);
+
 		result.addObject("data_list", list);
 
 		// TODO

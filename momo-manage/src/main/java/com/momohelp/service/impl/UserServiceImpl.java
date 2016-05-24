@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.github.pagehelper.PageHelper;
 import com.momohelp.model.User;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
@@ -207,9 +208,55 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		return result;
 	}
 
+	private List<User> findByUser__4(User user, int page, int rows) {
+		Example example = new Example(User.class);
+		example.setOrderByClause("create_time desc");
+
+		if (null != user) {
+			Example.Criteria criteria = example.createCriteria();
+
+			String apikey = StringUtil.isEmpty(user.getApikey());
+			if (null != apikey) {
+				criteria.andEqualTo("apikey", apikey);
+			}
+
+			String seckey = StringUtil.isEmpty(user.getSeckey());
+			if (null != seckey) {
+				criteria.andEqualTo("seckey", seckey);
+			}
+
+			String pid = StringUtil.isEmpty(user.getPid());
+			if (null != pid) {
+				criteria.andEqualTo("pid", pid);
+			}
+
+			String mobile = StringUtil.isEmpty(user.getMobile());
+			if (null != mobile) {
+				criteria.andEqualTo("mobile", mobile);
+			}
+
+			String email = StringUtil.isEmpty(user.getEmail());
+			if (null != email) {
+				criteria.andEqualTo("email", email);
+			}
+
+			String nickname = StringUtil.isEmpty(user.getNickname());
+			if (null != nickname) {
+				criteria.andEqualTo("nickname", nickname);
+			}
+
+		}
+
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
+	}
+
 	@Override
-	public List<User> findChildren(String user_id, int page, int rows) {
-		return null;
+	public List<User> findChildren___4(String id, int page, int rows) {
+		User user = new User();
+		user.setPid(id);
+
+		return findByUser__4(user, page, rows);
 	}
 
 	@Override
@@ -357,7 +404,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	public String[] createUser(User user) {
 		if (null == user) {
 			return new String[] { "非法操作" };
-		} // if
+		}
 
 		/***** *****/
 
@@ -442,16 +489,16 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		new_pass = StringUtil.isEmpty(new_pass);
 		if (null == new_pass) {
 			return new String[] { "新登陆密码不能为空" };
-		} // if
+		}
 
 		User user = selectByKey(id);
 		if (null == user) {
 			return new String[] { "没有找到该用户" };
-		} // if
+		}
 
 		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
 			return new String[] { "原登陆密码错误" };
-		} // if
+		}
 
 		User _user = new User();
 		_user.setId(id);
@@ -466,16 +513,16 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		new_pass = StringUtil.isEmpty(new_pass);
 		if (null == new_pass) {
 			return new String[] { "新安全密码不能为空" };
-		} // if
+		}
 
 		User user = selectByKey(id);
 		if (null == user) {
 			return new String[] { "没有找到该用户" };
-		} // if
+		}
 
 		if (!MD5.encode(old_pass).equals(user.getUser_pass_safe())) {
 			return new String[] { "原安全密码错误" };
-		} // if
+		}
 
 		User _user = new User();
 		_user.setId(id);

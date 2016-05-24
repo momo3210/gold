@@ -76,12 +76,12 @@ public interface UserService extends IService<User> {
 	/**
 	 * 查找用户的直推（下一级）
 	 *
-	 * @param user_id
+	 * @param id
 	 * @param page
 	 * @param rows
 	 * @return
 	 */
-	List<User> findChildren(String user_id, int page, int rows);
+	List<User> findChildren___4(String id, int page, int rows);
 
 	/**
 	 * 登陆密码重置

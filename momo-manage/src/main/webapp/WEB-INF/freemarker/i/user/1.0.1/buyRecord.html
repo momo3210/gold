@@ -111,7 +111,7 @@
 											参加者：${(data_user.id)!}<br/>
 											提供帮助数额：RMB ${doc.num_buy?string('#.00')}<#if (doc.is_deposit)?? && 1 == (doc.is_deposit)!>（预付款）</#if><br/>
 											排队日期：${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}<br/>
-											预计匹配日期：${(doc.calc_time?string("yyyy-MM-dd"))!}<br/>
+											预计匹配日期：${(doc.calc_time?string("yyyy-MM-dd"))!}（预计匹配日期：5-10天）<br/>
 											当前状态：<#if (doc.time_deal)??>已完成<#else>未完成</#if>
 										</p>
 
