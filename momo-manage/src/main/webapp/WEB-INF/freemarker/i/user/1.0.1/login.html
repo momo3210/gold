@@ -247,7 +247,11 @@
 						data : $('#loginFrm').serializeObjectForm(),
 						success : function(data) {
 							if (data.success) {
-								location.href = '${(conf_html_virtualPath)!}';
+								if(1 == data.lv){
+									location.href = '${(conf_html_virtualPath)!}manage/';
+								}else{
+									location.href = '${(conf_html_virtualPath)!}';
+								}
 								return;
 							} // END
 							if (data.msg)

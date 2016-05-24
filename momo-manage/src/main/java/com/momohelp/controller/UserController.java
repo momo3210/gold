@@ -185,9 +185,10 @@ public class UserController {
 		// TODO
 		session.setAttribute("session.user", user);
 		session.setAttribute("session.user.id", user.getId());
-		session.setAttribute("session.lv", 1);
+		session.setAttribute("session.lv", user.getRole_id());
 		session.setAttribute("session.time", (new Date()).toString());
 
+		result.put("lv", user.getRole_id());
 		result.put("success", true);
 		return result;
 	}

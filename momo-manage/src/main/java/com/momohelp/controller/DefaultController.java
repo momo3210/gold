@@ -106,56 +106,51 @@ public class DefaultController {
 
 	@RequestMapping(value = { "/manage/" }, method = RequestMethod.GET)
 	public ModelAndView _manage_indexUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("manage/default/1.0.2/index");
+		ModelAndView result = new ModelAndView("m/default/index");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
-	@RequestMapping(value = { "/user/" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/manage/user/" }, method = RequestMethod.GET)
 	public ModelAndView _manage_userUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/user");
+		ModelAndView result = new ModelAndView("m/user/index");
+
 		result.addObject("data_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",08,0801,");
-
 		List<User> list = userService.selectByExample(null);
 		result.addObject("data_list", list);
 
 		return result;
 	}
 
-	@RequestMapping(value = { "/user/edit" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.GET)
 	public String _i_editUI(Map<String, Object> map, HttpSession session,
 			@RequestParam(required = true) String id) {
 
 		User user = userService.selectByKey(id);
-
-		// TODO
-		map.put("data_user", user);
+		map.put("edit_user", user);
+		map.put("data_user", session.getAttribute("session.user"));
 		map.put("nav_choose", ",08,0801,");
-		return "i/user/1.0.1/edit";
+		return "m/user/edit";
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "/user/edit" }, method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_edit(User user, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		// 设置主键
-
 		userService.updateNotNull(user);
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}
 
-	@RequestMapping(value = { "/user/add" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/manage/user/add" }, method = RequestMethod.GET)
 	public String _i_addtUI(Map<String, Object> map, HttpSession session) {
-
-		// TODO
 		map.put("data_user", session.getAttribute("session.user"));
 		map.put("nav_choose", ",08,0801,");
-		return "i/user/1.0.1/add";
+		return "m/user/add";
 	}
 
 }

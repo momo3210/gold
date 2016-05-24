@@ -63,7 +63,7 @@ public class PermitFilter implements Filter {
 			}
 
 			int lv = (Integer) obj;
-			if (2 != lv) {
+			if (1 != lv) {
 				hres.sendRedirect("/user/login");
 				return;
 			}

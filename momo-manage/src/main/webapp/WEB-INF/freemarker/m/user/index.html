@@ -20,7 +20,7 @@
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner">
-				<#include "../../default/1.0.2/_pagelet/banner.html"/>
+				<#include "/i/default/1.0.2/_pagelet/banner.html"/>
 			</div><!--/.navbar-inner-->
 		</div>
 
@@ -60,7 +60,7 @@
 					</div>
 				</div><!--#sidebar-shortcuts-->
 
-				<#include "../../default/1.0.2/_pagelet/nav.html"/>
+				<#include "/i/default/1.0.2/_pagelet/nav.html"/>
 			</div>
 
 			<div class="main-content">
@@ -92,7 +92,7 @@
 
 					<div class="row-fluid">
 						<div class='span2'>
-							<a href='/user/add' class="btn btn-danger btn-block btn-small" style='border-radius:4px'>
+							<a href='/manage/user/add' class="btn btn-danger btn-block btn-small" style='border-radius:4px'>
 								<i class="icon-bullhorn"></i>
 								添加新用户
 							</a>
@@ -164,7 +164,7 @@
 													<td>${(doc.num_ticket)!}</td>
 													<td>${(doc.num_food)!}</td>
 
-													<td><a href='/user/edit?id=${(doc.id)!}'>编辑</a></td>
+													<td><a href='/manage/user/edit?id=${(doc.id)!}'>编辑</a></td>
 												</tr>
 											</#list>
 											</tbody>
