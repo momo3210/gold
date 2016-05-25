@@ -13,31 +13,43 @@
 		<result column="p_sell_id" property="p_sell_id" jdbcType="VARCHAR" />
 
 		<result column="status" property="status" jdbcType="INTEGER" />
-		
-		<result column="p_buy_user_id" property="p_buy_user_id" jdbcType="VARCHAR" />
-		
-		<result column="p_sell_user_id" property="p_sell_user_id" jdbcType="VARCHAR" />
-		
-		<result column="p_buy_user_img" property="p_buy_user_img" jdbcType="VARCHAR" />
-		
-		<result column="p_buy_user_content" property="p_buy_user_content" jdbcType="VARCHAR" />
-		
-		<result column="p_buy_user_time" property="p_buy_user_time" jdbcType="DATE" />
-		
-		<result column="p_sell_user_time" property="p_sell_user_time" jdbcType="DATE" />
-		
-		<result column="tip_off_user_id" property="tip_off_user_id" jdbcType="VARCHAR" />
-		
-		<result column="tip_off_result" property="tip_off_result" jdbcType="VARCHAR" />
-		
+
+		<result column="p_buy_user_id" property="p_buy_user_id"
+			jdbcType="VARCHAR" />
+
+		<result column="p_sell_user_id" property="p_sell_user_id"
+			jdbcType="VARCHAR" />
+
+		<result column="p_buy_user_img" property="p_buy_user_img"
+			jdbcType="VARCHAR" />
+
+		<result column="p_buy_user_content" property="p_buy_user_content"
+			jdbcType="VARCHAR" />
+
+		<result column="p_buy_user_time" property="p_buy_user_time"
+			jdbcType="DATE" />
+
+		<result column="p_sell_user_time" property="p_sell_user_time"
+			jdbcType="DATE" />
+
+		<result column="tip_off_user_id" property="tip_off_user_id"
+			jdbcType="VARCHAR" />
+
+		<result column="tip_off_result" property="tip_off_result"
+			jdbcType="VARCHAR" />
+
 		<result column="tip_off_time" property="tip_off_time" jdbcType="DATE" />
-		
-		<result column="tip_off_content" property="tip_off_content" jdbcType="VARCHAR" />
-		
-		<result column="flag_calc_bonus" property="flag_calc_bonus" jdbcType="INTEGER" />
+
+		<result column="tip_off_content" property="tip_off_content"
+			jdbcType="VARCHAR" />
+
+		<result column="flag_calc_bonus" property="flag_calc_bonus"
+			jdbcType="INTEGER" />
 	</resultMap>
 	<select id="selectBySellAndBuyId" resultType="buySell">
-		SELECT * FROM p_buy_sell as p WHERE (p.p_buy_id ='null' or p.p_sell_id='null') and p.status='0'
+		SELECT * FROM
+		p_buy_sell as p WHERE (p.p_buy_id ='null' or p.p_sell_id='null') and
+		p.status='0' 
 	</select>
 
 </mapper>

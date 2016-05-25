@@ -19,5 +19,10 @@ public interface BuyService extends IService<Buy> {
 	 * @return
 	 */
 	List<Buy> selectByCycles(Date time, Date time2);
+    /***
+     * 更新 操作数据状态为 1
+     * @param id  主键
+     */
+	void updateFlagCalc(String id);
 
 }

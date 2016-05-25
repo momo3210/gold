@@ -39,6 +39,9 @@ public class Conversion implements Serializable, IConversion {
 		criteria.andEqualTo("flag", 0);
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.DAY_OF_MONTH, -1);
+		cr.set(Calendar.HOUR, 0);
+		cr.set(Calendar.MINUTE, 0);
+		cr.set(Calendar.SECOND, 0);
 		criteria.andGreaterThan("trigger_time", cr.getTime());
 		criteria.andLessThan("trigger_time", Calendar.getInstance().getTime());
 		List<Prize> prizes = prizeService.selectByExample(example);

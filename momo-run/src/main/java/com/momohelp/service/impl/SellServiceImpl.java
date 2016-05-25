@@ -22,4 +22,10 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		return ((SellMapper)mapper).selectByCycles(time, date);
 	}
 
+	@Override
+	public void updateFlagCalc(String key) {
+		((SellMapper)mapper).updateFlagCalc(key);
+		
+	}
+
 }

@@ -47,9 +47,28 @@ public class Sell implements Serializable {
 	private Integer type_id;
 
 	private Integer num_deal;
+	
+	
+	/**
+	 * 计算标志
+	 *
+	 * 0未计算
+	 *
+	 * 1已计算
+	 */
+	private Integer flag_calc_bonus=0;
+	
 
 	@Transient
 	private List<BuySell> buySells;
+
+	public Integer getFlag_calc_bonus() {
+		return flag_calc_bonus;
+	}
+
+	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
+		this.flag_calc_bonus = flag_calc_bonus;
+	}
 
 	public Integer getNum_deal() {
 		return num_deal;

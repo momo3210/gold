@@ -95,16 +95,6 @@ public class BuySell implements Serializable {
 	 * 举报内容
 	 */
 	private String tip_off_content;
-
-
-	/**
-	 * 计算标志
-	 *
-	 * 0未计算
-	 *
-	 * 1已计算
-	 */
-	private Integer flag_calc_bonus;
 	
 	/**
 	 * 买家对象
@@ -124,13 +114,6 @@ public class BuySell implements Serializable {
 	@Transient
 	private Buy buy;
 
-	public Integer getFlag_calc_bonus() {
-		return flag_calc_bonus;
-	}
-
-	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
-		this.flag_calc_bonus = flag_calc_bonus;
-	}
 
 	public Buy getBuy() {
 		return buy;

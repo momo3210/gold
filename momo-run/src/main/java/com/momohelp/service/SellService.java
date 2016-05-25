@@ -18,5 +18,10 @@ public interface SellService extends IService<Sell> {
      * @return
      */
 	List<Sell> selectByCycles(Date time, Date date);
+    /***
+     * 更新计算状态
+     * @param key  计算状态值
+     */
+	void updateFlagCalc(String key);
 
 }
