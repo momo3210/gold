@@ -435,17 +435,17 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	@Override
 	public String[] editInfo(User user) {
 
-		user.setVerifycode_sms(StringUtil.isEmpty(user.getVerifycode_sms()));
+//		user.setVerifycode_sms(StringUtil.isEmpty(user.getVerifycode_sms()));
+//
+//		if (null == user.getVerifycode_sms()) {
+//			return new String[] { "请输入短信验证码" };
+//		}
 
-		if (null == user.getVerifycode_sms()) {
-			return new String[] { "请输入短信验证码" };
-		}
+//		User __u = selectByKey(user.getId());
 
-		User __u = selectByKey(user.getId());
-
-		if (!user.getVerifycode_sms().equals(__u.getVerifycode_sms())) {
-			return new String[] { "短信验证码不正确" };
-		}
+//		if (!user.getVerifycode_sms().equals(__u.getVerifycode_sms())) {
+//			return new String[] { "短信验证码不正确" };
+//		}
 
 		User _user = new User();
 		_user.setId(user.getId());

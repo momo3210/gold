@@ -228,7 +228,7 @@
 														<label class="control-label" for="frm_bank_account">饲料</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' id="frm_bank_account" name='num_food' placeholder="银行帐号" value='${(edit_user.bank_account)!}' />
+															<input type="text" class='input-large' id="frm_bank_account" name='num_food' placeholder="银行帐号" value='${(edit_user.num_food)!}' />
 														</div>
 													</div>
 													<!-- <div class="control-group">
@@ -303,14 +303,14 @@
 
 			$('#btn_submit').click(function() {
 				$.ajax({
-					url : '${(conf_html_virtualPath)!}user/edit',
+					url : '${(conf_html_virtualPath)!}manage/user/edit',
 					type : 'POST',
 					dataType : 'JSON',
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
 						if (data.success) {
 							alert('修改资料成功')
-							location.href = '${(conf_html_virtualPath)!}user/';
+							location.href = '${(conf_html_virtualPath)!}manage/user/';
 							return;
 						} // END
 						if (data.msg)
