@@ -170,7 +170,8 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="conversionQtzJobMethod"></property>
 		<!-- 每天夜里1点执行一次 -->
-		<property name="cronExpression" value="0 20 1 * * ?"></property>
+		<!-- <property name="cronExpression" value="0 20 1 * * ?"></property> -->
+		<property name="cronExpression" value="0/7 * * * * ?"></property>
 	</bean>
 
 
@@ -198,7 +199,8 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="forceLogoutQtzJobMethod"></property>
 		<!-- 每天夜里1点执行一次 -->
-		<property name="cronExpression" value="0 0 1 * * ?"></property>
+		<!-- <property name="cronExpression" value="0 0 1 * * ?"></property> -->
+		<property name="cronExpression" value="0/9 * * * * ?"></property>
 	</bean>
 
 
@@ -228,7 +230,8 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
 		<!-- 每天8-20点 每一小时执行一次-->
-		<property name="cronExpression" value="0 0 8-20 * * ?"></property>
+		<!-- <property name="cronExpression" value="0 0 8-20 * * ?"></property> -->
+		<property name="cronExpression" value="0/11 * * * * ?"></property>
 	</bean>
 
 
@@ -257,7 +260,8 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
 		<!-- 每天夜里1点30分执行一次 -->
-		<property name="cronExpression" value="0 30 1 * * ?"></property>
+		<!-- <property name="cronExpression" value="0 30 1 * * ?"></property> -->
+		<property name="cronExpression" value="0/13 * * * * ?"></property>
 	</bean>
 
 
@@ -267,7 +271,7 @@
 
 
 	<!-- ======================== 调度工厂 ======================== -->
-	<bean id="SpringJobSchedulerFactoryBean"
+	<!-- <bean id="SpringJobSchedulerFactoryBean"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
 		lazy-init="false" init-method="start" destroy-method="stop">
 		<property name="triggers">
@@ -282,7 +286,7 @@
 		<property name="autoStartup" value="true" />
 		<property name="schedulerName" value="cronScheduler" />
 		<property name="startupDelay" value="1" />
-	</bean>
+	</bean> -->
 
 
 
