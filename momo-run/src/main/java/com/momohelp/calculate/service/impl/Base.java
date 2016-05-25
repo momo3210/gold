@@ -72,7 +72,7 @@ public class Base implements Ibase, Serializable {
 		log.info("-------------------奖金基数计算------------------------");
 		List<Farm> farms = farmService.getUntreatedFarm();
 		// 用户等级计算
-		if (calculateLevel(farms)) {
+		if (calculateLevel(farms)) {  
 			// 计算奖金基数
 			for (Farm farm : farms) {
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
@@ -199,6 +199,7 @@ public class Base implements Ibase, Serializable {
 			 */
 			List<String> list = new ArrayList<String>(8);
 			list.add(Parameter.POOR_PEASANT);
+			list.add(user.getLv());
 			for (ModelLV modelLV : childsList) {
 				// System.err.println(modelLV.getLv() + "---" +
 				// modelLV.getNo());

@@ -2,18 +2,14 @@ package com.momohelp.test;
 
 import java.util.Calendar;
 
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.momohelp.calculate.service.IMatch;
-
 public class App {
 
 	public static void main(String[] args) throws Exception {
-		AbstractApplicationContext context = new ClassPathXmlApplicationContext(
-				"applicationContext.xml");
-		IMatch  match=context.getBean(IMatch.class);
-		match.automatch();
+		// AbstractApplicationContext context = new
+		// ClassPathXmlApplicationContext(
+		// "applicationContext.xml");
+		// Ibase match=context.getBean(Ibase.class);
+		// match.base();
 		// SchedulerFactoryBean bean=null;
 		// try {
 		// bean=context.getBean(SchedulerFactoryBean.class);
