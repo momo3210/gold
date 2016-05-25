@@ -5,5 +5,4 @@ encoding//src/main/resources/config.properties=UTF-8
 encoding//src/main/resources/log4j.properties=UTF-8
 encoding//src/test/java=UTF-8
 encoding//src/test/java/com/momohelp/test/App.java=UTF-8
-encoding//src/test/java/com/momohelp/test/Sms.java=GBK
 encoding/<project>=UTF-8
