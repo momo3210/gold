@@ -20,6 +20,8 @@ public class Test {
 		// }
 		// System.out.println(id);
 
+		System.out.println(5000 / 100);
+
 	}
 
 }

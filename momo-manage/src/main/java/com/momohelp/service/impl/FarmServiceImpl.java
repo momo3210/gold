@@ -86,7 +86,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		/**/
 
-		if (1 > user.getNum_ticket()) {
+		// 1张门票可以买100只鸡
+		if ((_farm.getNum_buy() / 100) > user.getNum_ticket()) {
 			return new String[] { "门票数量不足，请购买" };
 		}
 
@@ -217,7 +218,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		MaterialRecord mr = new MaterialRecord();
 		mr.setUser_id(user.getId());
 
-		mr.setNum_use(1.00);
+		mr.setNum_use(Double.valueOf(farm.getNum_buy() / 100));
 		mr.setStatus(1);
 		mr.setType_id(1);
 
@@ -225,7 +226,8 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		mr.setTrans_user_id(null);
 
-		mr.setNum_balance(Double.valueOf(user.getNum_ticket() - 1));
+		mr.setNum_balance(Double.valueOf(user.getNum_ticket())
+				- mr.getNum_use());
 
 		// 0为标识使用了一张门票
 		mr.setFlag_plus_minus(0);
