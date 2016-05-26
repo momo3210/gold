@@ -42,11 +42,6 @@ public class User implements Serializable {
 	private String user_pass_safe;
 
 	/**
-	 * 1为后台管理用户 2为会员
-	 */
-	private Integer role_id;
-
-	/**
 	 * 姓名
 	 */
 	private String real_name;
@@ -121,21 +116,6 @@ public class User implements Serializable {
 	private Double total_dynamic;
 	private Integer total_ticket;
 	private Integer total_food;
-
-	/**
-	 * 短信验证码
-	 */
-	private String verifycode_sms;
-
-	private Integer verifycode_sms_status;
-
-	public Integer getVerifycode_sms_status() {
-		return verifycode_sms_status;
-	}
-
-	public void setVerifycode_sms_status(Integer verifycode_sms_status) {
-		this.verifycode_sms_status = verifycode_sms_status;
-	}
 
 	/**
 	 * 父对象
@@ -260,14 +240,6 @@ public class User implements Serializable {
 		}
 	}
 
-	public String getVerifycode_sms() {
-		return verifycode_sms;
-	}
-
-	public void setVerifycode_sms(String verifycode_sms) {
-		this.verifycode_sms = verifycode_sms;
-	}
-
 	public List<User> getChildren() {
 		return children;
 	}
@@ -346,14 +318,6 @@ public class User implements Serializable {
 
 	public void setTotal_food(Integer total_food) {
 		this.total_food = total_food;
-	}
-
-	public Integer getRole_id() {
-		return role_id;
-	}
-
-	public void setRole_id(Integer role_id) {
-		this.role_id = role_id;
 	}
 
 	public String getPid() {

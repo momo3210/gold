@@ -29,7 +29,7 @@ public class AuthImage extends HttpServlet implements Servlet {
 		String verifyCode = VerifyCodeUtil.generateVerifyCode(4);
 		// 存入会话session
 		HttpSession session = request.getSession(true);
-		session.setAttribute("session.verifyCode", verifyCode.toLowerCase());
+		session.setAttribute("verify.imgCode", verifyCode.toLowerCase());
 		// 生成图片
 		int w = 200, h = 80;
 		VerifyCodeUtil

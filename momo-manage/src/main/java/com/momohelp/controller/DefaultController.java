@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,10 +22,6 @@ import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
-import com.momohelp.util.StringUtil;
-import com.momohelp.util.webservice.SmSWebService;
-import com.momohelp.util.webservice.SmSWebServiceSoap;
-import com.momohelp.util.webservice.WsSendResponse;
 
 /**
  *
@@ -52,207 +47,50 @@ public class DefaultController {
 	private UserService userService;
 
 	/**
-	 * 验证令牌
+	 * 生成短信验证码
 	 *
-	 * @param session
-	 * @param token
 	 * @return
 	 */
-	private String[] validateToken(HttpSession session, String token) {
-		token = StringUtil.isEmpty(token);
-
-		if (null == token) {
-			session.removeAttribute("token");
-			return new String[] { "请不要重复提交" };
-		}
-
-		Object session_token = session.getAttribute("token");
-		if (null == session_token) {
-			return new String[] { "请不要重复提交" };
-		}
-
-		if (!token.equals(session_token.toString())) {
-			session.removeAttribute("token");
-			return new String[] { "请不要重复提交" };
-		}
-
-		session.removeAttribute("token");
-		return null;
-	}
-
-	/**
-	 * 生成令牌
-	 *
-	 * @param session
-	 * @return
-	 */
-	private String genToken(HttpSession session) {
-		int i = (int) ((Math.random() * 5 + 1) * 1000);
-		String token = String.valueOf(i);
-		session.setAttribute("token", token);
-		return token;
-	}
-
-	/**
-	 * 验证码
-	 *
-	 * @param session
-	 * @param verifyCode
-	 * @return
-	 */
-	private String[] verify(HttpSession session, String verifyCode) {
-		String code = session.getAttribute("session.verifyCode").toString();
-		// TODO
-		return (verifyCode.equals(code)) ? null : new String[] { "图形验证码输入错误" };
-	}
-
-	/**
-	 * 验证手机号
-	 *
-	 * @param session
-	 * @param verifyCode
-	 * @return
-	 */
-	private String[] verifySms(HttpSession session, String mobile) {
-		mobile = StringUtil.isEmpty(mobile);
-		if (null == mobile) {
-			return new String[] { "短信验证失败" };
-		}
-
-		if (null == session.getAttribute("sms_mobile")) {
-			return new String[] { "短信验证失败" };
-		}
-
-		String code = session.getAttribute("sms_mobile").toString();
-		return code.equals(mobile) ? null : new String[] { "短信验证失败" };
-	}
-
-	@RequestMapping(value = { "/t/{user_id}" }, method = RequestMethod.GET)
-	public ModelAndView _i_tUI(HttpSession session, @PathVariable String user_id) {
-		ModelAndView result = new ModelAndView("i/default/1.0.2/t");
-		result.addObject("user_id", user_id);
-		result.addObject("data_token", genToken(session));
-		return result;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = { "/t/" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_createAccount(
-			@RequestParam(required = true) String token,
-			@RequestParam(required = true) String verifyCode, User user,
-			HttpSession session) {
-		// TODO
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		String[] validateToken = validateToken(session, token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
-			return result;
-		}
-
-		// TODO
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
-			return result;
-		}
-
-		String[] verifySms = verifySms(session, user.getVerifycode_sms());
-		if (null != verifySms) {
-			result.put("msg", verifySms);
-			return result;
-		}
-
-		String[] msg = userService.register(user);
-
-		if (null != msg) {
-			result.put("msg", msg);
-			return result;
-		}
-
-		result.put("success", true);
-		return result;
-	}
-
-	private String genId2() {
-		int i = (int) ((Math.random() * 5 + 1) * 1000);
-		String id = String.valueOf(i);
-		if (4 < id.length()) {
-			id = id.substring(0, 4);
-		}
-		return id;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = { "/sendSms2" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_sendSms2(HttpSession session, User user) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		// Object sess = session.getAttribute("session.user");
-
-		user.setMobile(StringUtil.isEmpty(user.getMobile()));
-		if (null == user.getMobile()) {
-			result.put("msg", new String[] { "请输入手机号" });
-			return result;
-		}
-
-		String code = genId2();
-
-		session.setAttribute("sms_mobile", code);
-
-		SmSWebService service = new SmSWebService();
-		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
-				"123456", user.getMobile(), "您本次验证码:" + code
-						+ "，感谢您的支持，祝您生活愉快！！", "", "");
-		response.getReturnStatus();
-
-		// String[] msg = userService.sendSms(session.getAttribute(
-		// "session.user.id").toString());
-		//
-		// if (null != msg) {
-		// result.put("msg", msg);
-		// return result;
+	private String genSMS() {
+		// int i = (int) ((Math.random() * 5 + 1) * 1000);
+		// String id = String.valueOf(i);
+		// if (4 < id.length()) {
+		// id = id.substring(0, 4);
 		// }
-
-		result.put("success", true);
-		return result;
+		return "1234";
 	}
 
+	/**
+	 * 发送短信验证码
+	 *
+	 * @param session
+	 * @param mobile
+	 * @return
+	 */
 	@ResponseBody
-	@RequestMapping(value = { "/sendSms" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_sendSms(HttpSession session, User user) {
+	@RequestMapping(value = { "/sendSMS" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_sendSMS(HttpSession session,
+			@RequestParam(required = true) String mobile) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		Object sess = session.getAttribute("session.user");
-		if (null == sess) {
-			result.put("msg", new String[] { "请输入手机号" });
-			return result;
+		// 获取最后一次发送短信的时间
+		Object last_time = session.getAttribute("verify.sms.lastTime");
+
+		if (null != last_time) {
+			// TODO
 		}
 
-		String mobile = ((User) sess).getMobile();
+		session.setAttribute("verify.sms", genSMS());
 
-		String code = genId2();
-
-		session.setAttribute("sms_mobile", code);
-
-		SmSWebService service = new SmSWebService();
-		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		WsSendResponse response = serviceSoap
-				.sendSms("154", "MOMO668", "123456", mobile, "您本次验证码:" + code
-						+ "，感谢您的支持，祝您生活愉快！！", "", "");
-		response.getReturnStatus();
-
-		// String[] msg = userService.sendSms(session.getAttribute(
-		// "session.user.id").toString());
-		//
-		// if (null != msg) {
-		// result.put("msg", msg);
-		// return result;
-		// }
+		// SmSWebService service = new SmSWebService();
+		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
+		// "123456", mobile,
+		// "您本次验证码:" + session.getAttribute("verify.sms")
+		// + "，感谢您的支持，祝您生活愉快！！", "", "");
+		// result.put("code", response.getReturnStatus());
 
 		result.put("success", true);
 		return result;
@@ -278,12 +116,12 @@ public class DefaultController {
 		// 买盘匹配
 		User buy_record = userService.buy_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_buy_record", buy_record);
+		result.addObject("data_buy_record", buy_record.getFarms());
 
 		// 卖盘匹配
 		User sell_record = userService.sell_record__list__4(session
 				.getAttribute("session.user.id").toString());
-		result.addObject("data_sell_record", sell_record);
+		result.addObject("data_sell_record", sell_record.getSells());
 
 		// 买盘
 		// List<Buy> list_buy =

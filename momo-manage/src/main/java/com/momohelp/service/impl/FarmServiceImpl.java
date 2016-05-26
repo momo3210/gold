@@ -169,10 +169,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		Calendar c = Calendar.getInstance();
 		c.setTime(farm.getCreate_time());
 		c.add(Calendar.DAY_OF_MONTH, (1 == farm.getFlag_out_self()) ? 7 : 8);
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
+		// c.set(Calendar.HOUR_OF_DAY, 0);
+		// c.set(Calendar.MINUTE, 0);
+		// c.set(Calendar.SECOND, 0);
+		// c.set(Calendar.MILLISECOND, 0);
 		buy.setCalc_time(c.getTime());
 
 		buyService.save(buy);
@@ -196,10 +196,10 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		c.setTime(farm.getCreate_time());
 		// 出局前排单24小时，出局后排单48小时
 		c.add(Calendar.DAY_OF_MONTH, (1 == farm.getFlag_out_self()) ? 1 : 2);
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
+		// c.set(Calendar.HOUR_OF_DAY, 0);
+		// c.set(Calendar.MINUTE, 0);
+		// c.set(Calendar.SECOND, 0);
+		// c.set(Calendar.MILLISECOND, 0);
 		buy.setCalc_time(c.getTime());
 
 		buyService.save(buy);

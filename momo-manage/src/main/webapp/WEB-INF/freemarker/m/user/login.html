@@ -241,13 +241,13 @@
 			$(function() {
 				$('#btn_login').click(function() {
 					$.ajax({
-						url : '${(conf_html_virtualPath)!}user/login',
+						url : '${(conf_html_virtualPath)!}manage/user/login',
 						type : 'POST',
 						dataType : 'JSON',
 						data : $('#loginFrm').serializeObjectForm(),
 						success : function(data) {
 							if (data.success) {
-								return location.href = '${(conf_html_virtualPath)!}';
+								return location.href = '${(conf_html_virtualPath)!}manage/';
 							}
 							if (data.msg) alert(data.msg[0]);
 						},

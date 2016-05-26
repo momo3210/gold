@@ -3,8 +3,6 @@ package com.momohelp.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.momohelp.model.User;
 
 /**
@@ -53,8 +51,6 @@ public interface UserService extends IService<User> {
 	 * @return
 	 */
 	User getMeAndParent__4(String id);
-
-	/**** -------------- */
 
 	/****************************/
 
@@ -119,10 +115,8 @@ public interface UserService extends IService<User> {
 	 * 修改资料
 	 *
 	 * @param user
-	 * @return
 	 */
-	@Transactional
-	String[] editInfo(User user);
+	void editInfo(User user);
 
 	/**
 	 * 管理员可以修改全部的信息

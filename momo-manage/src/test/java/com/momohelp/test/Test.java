@@ -20,7 +20,12 @@ public class Test {
 		// }
 		// System.out.println(id);
 
-		System.out.println(5000 / 100);
+		// System.out.println(5000 / 100);
+
+		String a = "null";
+		String b = null;
+
+		System.out.println(a.equals(b));
 
 	}
 

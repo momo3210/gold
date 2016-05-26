@@ -165,12 +165,37 @@ public class Farm implements Serializable {
 	 */
 	public int checkStatusOut() {
 
-		if (null == this.getTime_out_real()) {
-			return 1;
+		// 当前日期
+		if ((new Date()).after(this.time_out)) {
+
+			if (this.num_buy.intValue() == this.num_current.intValue()) {
+				return 3;
+			} else {
+				return 2;
+			}
+		} else {
+
+			if (this.num_buy.intValue() == this.num_current.intValue()) {
+				return 1;
+			} else {
+				return 2;
+			}
+		}
+	}
+
+	/**
+	 * 孵化时判断最后一笔是不是新的排单（有没有新排一次单）
+	 *
+	 * @return
+	 */
+	public boolean checkNewCreate() {
+
+		// 当前日期
+		if ((new Date()).after(this.time_out)) {
+			return false;
 		}
 
-		// 实际出局时间在理论出局时间之后
-		return this.getTime_out_real().after(this.getTime_out()) ? 3 : 2;
+		return this.num_buy.intValue() != this.num_deal.intValue();
 	}
 
 	public List<Buy> getBuys() {

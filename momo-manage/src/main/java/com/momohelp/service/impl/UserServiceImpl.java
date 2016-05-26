@@ -244,7 +244,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			if (null != nickname) {
 				criteria.andEqualTo("nickname", nickname);
 			}
-
 		}
 
 		PageHelper.startPage(page, rows);
@@ -394,7 +393,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setTotal_food(user.getNum_food());
 
 		_user.setCreate_time(new Date());
-		_user.setRole_id(2);
 
 		_user.setUser_pass(user.getUser_pass());
 		_user.setUser_pass_safe(user.getUser_pass_safe());
@@ -433,19 +431,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	@Override
-	public String[] editInfo(User user) {
-
-//		user.setVerifycode_sms(StringUtil.isEmpty(user.getVerifycode_sms()));
-//
-//		if (null == user.getVerifycode_sms()) {
-//			return new String[] { "请输入短信验证码" };
-//		}
-
-//		User __u = selectByKey(user.getId());
-
-//		if (!user.getVerifycode_sms().equals(__u.getVerifycode_sms())) {
-//			return new String[] { "短信验证码不正确" };
-//		}
+	public void editInfo(User user) {
 
 		User _user = new User();
 		_user.setId(user.getId());
@@ -458,14 +444,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setBank_name(user.getBank_name());
 
 		super.updateNotNull(_user);
-
-		User __u2 = new User();
-		__u2.setVerifycode_sms("");
-		__u2.setId(user.getId());
-		__u2.setVerifycode_sms_status(1);
-		updateNotNull(__u2);
-
-		return null;
 	}
 
 	@Override
@@ -494,20 +472,19 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] changePwd(String id, String old_pass, String new_pass) {
+
 		new_pass = StringUtil.isEmpty(new_pass);
 		if (null == new_pass) {
 			return new String[] { "新登陆密码不能为空" };
 		}
 
 		User user = selectByKey(id);
-		if (null == user) {
-			return new String[] { "没有找到该用户" };
-		}
 
 		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
 			return new String[] { "原登陆密码错误" };
 		}
 
+		// 创建新用户对象
 		User _user = new User();
 		_user.setId(id);
 		_user.setUser_pass(MD5.encode(new_pass));
@@ -518,20 +495,19 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] changePwdSafe(String id, String old_pass, String new_pass) {
+
 		new_pass = StringUtil.isEmpty(new_pass);
 		if (null == new_pass) {
 			return new String[] { "新安全密码不能为空" };
 		}
 
 		User user = selectByKey(id);
-		if (null == user) {
-			return new String[] { "没有找到该用户" };
-		}
 
-		if (!MD5.encode(old_pass).equals(user.getUser_pass_safe())) {
+		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
 			return new String[] { "原安全密码错误" };
 		}
 
+		// 创建新用户对象
 		User _user = new User();
 		_user.setId(id);
 		_user.setUser_pass_safe(MD5.encode(new_pass));
@@ -585,36 +561,15 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 	}
 
 	private User getByName(String name) {
-		User user = null;
 
-		user = new User();
-		user.setEmail(name);
-		user = getByUser(user);
-		if (null != user) {
-			return user;
-		}
-
-		user = new User();
+		User user = new User();
 		user.setMobile(name);
 		user = getByUser(user);
-		if (null != user) {
-			return user;
-		}
-
-		return null;
+		return user;
 	}
 
 	@Override
 	public String[] sendSms(String id) {
-
-		User user = new User();
-
-		user.setId(id);
-		user.setVerifycode_sms(genId2());
-
-		updateNotNull(user);
-
-		User __u = selectByKey(id);
 
 		// SmSWebService service = new SmSWebService();
 		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();

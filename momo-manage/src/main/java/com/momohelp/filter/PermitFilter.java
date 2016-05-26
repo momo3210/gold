@@ -60,11 +60,14 @@ public class PermitFilter implements Filter {
 		} else if ("/sendSms2".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
+		} else if ("/manage/user/login".equals(uri)) {
+			chain.doFilter(request, response);
+			return;
 		}
 
 		HttpSession session = hreq.getSession();
 		// 获取lv对象
-		Object obj = session.getAttribute("session.lv");
+		Object obj = session.getAttribute("session.user.lv");
 
 		if (isManage(uri)) {
 			if (null == obj) {

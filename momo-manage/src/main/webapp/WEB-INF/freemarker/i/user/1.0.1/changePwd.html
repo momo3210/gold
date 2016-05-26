@@ -147,11 +147,11 @@
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm1_verifycode_sms">短信验证码</label>
+														<label class="control-label" for="frm1_verify_sms">短信验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm1_verifycode_sms" name='' placeholder="短信验证码" />
-															<a class="btn btn-mini btn-danger" href='javascript:sendSms();'>获取短信验证码</a>
+															<input type="text" class='input-small' id="frm1_verify_sms" placeholder="短信验证码" />
+															<a class="btn btn-mini btn-danger" href='javascript:sendSMS();'>获取短信验证码</a>
 														</div>
 													</div>
 													<div class="form-actions">
@@ -193,11 +193,11 @@
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm2_verifycode_sms">短信验证码</label>
+														<label class="control-label" for="frm2_verify_sms">短信验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm2_verifycode_sms" placeholder="短信验证码" />
-															<a class="btn btn-mini btn-danger" href='javascript:sendSms();'>获取短信验证码</a>
+															<input type="text" class='input-small' id="frm2_verify_sms" placeholder="短信验证码" />
+															<a class="btn btn-mini btn-danger" href='javascript:sendSMS();'>获取短信验证码</a>
 														</div>
 													</div>
 													<div class="form-actions">
@@ -237,20 +237,21 @@
 
 		<script>
 
-		function sendSms(){
+		function sendSMS(){
 
 			$.ajax({
-				url : '${(conf_html_virtualPath)!}sendSms',
+				url : '${(conf_html_virtualPath)!}sendSMS',
 				type : 'POST',
 				dataType : 'JSON',
-				data : $('#frm').serializeObjectForm(),
+				data : {
+					mobile: '${(data_user.mobile)!}'
+				},
 				success : function(data) {
 					if (data.success) {
-						alert('发送成功，请查收')
-						return;
-					} // END
-					if (data.msg)
-						alert(data.msg[0]);
+						return alert('发送成功，请查收');
+					}
+
+					if (data.msg) alert(data.msg[0]);
 				},
 				error : function() {
 					alert(arguments[2]);
@@ -272,11 +273,11 @@
 					data : {
 						old_pass: $('#frm1_user_pass_old').val(),
 						new_pass: $('#frm1_user_pass').val(),
-						verifycode_sms: $('#frm1_verifycode_sms').val()
+						verify_sms: $('#frm1_verify_sms').val()
 					},
 					success : function(data) {
 						if (data.success){
-							alert('操作成功');
+							alert('修改成功');
 							location.href = '${(conf_html_virtualPath)!}user/changePwd';
 							return;
 						}
@@ -300,11 +301,11 @@
 					data : {
 						old_pass: $('#frm2_user_pass_safe_old').val(),
 						new_pass: $('#frm2_user_pass_safe').val(),
-						verifycode_sms: $('#frm2_verifycode_sms').val()
+						verify_sms: $('#frm2_verify_sms').val()
 					},
 					success : function(data) {
 						if (data.success){
-							alert('操作成功');
+							alert('修改成功');
 							location.href = '${(conf_html_virtualPath)!}user/changePwd';
 							return;
 						}

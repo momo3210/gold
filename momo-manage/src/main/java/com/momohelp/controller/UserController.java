@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,19 +17,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.BuySell;
-import com.momohelp.model.Cfg;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
 import com.momohelp.model.FarmHatch;
+import com.momohelp.model.Manager;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
-import com.momohelp.service.CfgService;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
+import com.momohelp.service.ManagerService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
@@ -47,7 +48,7 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	private CfgService cfgService;
+	private ManagerService managerService;
 
 	@Autowired
 	private MaterialRecordService materialRecordService;
@@ -71,52 +72,62 @@ public class UserController {
 	private BuySellService buySellService;
 
 	/**
-	 * 验证手机号
+	 * 短信验证码
 	 *
 	 * @param session
-	 * @param verifyCode
+	 * @param sms
 	 * @return
 	 */
-	private String[] verifySms(HttpSession session, String mobile) {
-		mobile = StringUtil.isEmpty(mobile);
-		if (null == mobile) {
+	private String[] verifySMS(HttpSession session, String sms) {
+
+		sms = StringUtil.isEmpty(sms);
+
+		if (null == sms) {
+			return new String[] { "请输入短信验证码" };
+		}
+
+		Object verify = session.getAttribute("verify.sms");
+
+		if (null == verify) {
+			return new String[] { "请获取短信验证码" };
+		}
+
+		if (!sms.equals(verify.toString())) {
 			return new String[] { "短信验证失败" };
 		}
 
-		if (null == session.getAttribute("sms_mobile")) {
-			return new String[] { "短信验证失败" };
-		}
-
-		String code = session.getAttribute("sms_mobile").toString();
-		return code.equals(mobile) ? null : new String[] { "短信验证失败" };
+		session.removeAttribute("verify.sms");
+		return null;
 	}
 
 	/**
 	 * 验证令牌
 	 *
 	 * @param session
-	 * @param token
+	 * @param verify_token
 	 * @return
 	 */
-	private String[] validateToken(HttpSession session, String token) {
+	private String[] verifyToken(HttpSession session, String token) {
+
 		token = StringUtil.isEmpty(token);
 
 		if (null == token) {
-			session.removeAttribute("token");
+			session.removeAttribute("verify.token");
 			return new String[] { "请不要重复提交" };
 		}
 
-		Object session_token = session.getAttribute("token");
-		if (null == session_token) {
+		Object verify = session.getAttribute("verify.token");
+
+		if (null == verify) {
 			return new String[] { "请不要重复提交" };
 		}
 
-		if (!token.equals(session_token.toString())) {
-			session.removeAttribute("token");
+		if (!token.equals(verify.toString())) {
+			session.removeAttribute("verify.token");
 			return new String[] { "请不要重复提交" };
 		}
 
-		session.removeAttribute("token");
+		session.removeAttribute("verify.token");
 		return null;
 	}
 
@@ -126,39 +137,105 @@ public class UserController {
 	 * @param session
 	 * @return
 	 */
-	private String genToken(HttpSession session) {
+	private String genVerifyToken(HttpSession session) {
 		int i = (int) ((Math.random() * 5 + 1) * 1000);
-		String token = String.valueOf(i);
-		session.setAttribute("token", token);
-		return token;
+		session.setAttribute("verify.token", String.valueOf(i));
+		return session.getAttribute("verify.token").toString();
 	}
 
 	/**
 	 * 安全密码验证
 	 *
 	 * @param session
-	 * @param pass_safe
+	 * @param user_pass_safe
 	 * @return
 	 */
-	private String[] checkSafe(HttpSession session, String pass_safe) {
-		String my_user_id = session.getAttribute("session.user.id").toString();
-		User my_user = userService.selectByKey(my_user_id);
-		// TODO
-		return (MD5.encode(pass_safe).equals(my_user.getUser_pass_safe())) ? null
+	private String[] verifyPassSafe(HttpSession session, String user_pass_safe) {
+
+		user_pass_safe = StringUtil.isEmpty(user_pass_safe);
+
+		if (null == user_pass_safe) {
+			return new String[] { "安全密码输入错误" };
+		}
+
+		User user = userService.selectByKey(session.getAttribute(
+				"session.user.id").toString());
+
+		return user.getUser_pass_safe().equals(MD5.encode(user_pass_safe)) ? null
 				: new String[] { "安全密码输入错误" };
 	}
 
 	/**
-	 * 验证码
+	 * 图形验证码
 	 *
 	 * @param session
-	 * @param verifyCode
+	 * @param imgCode
 	 * @return
 	 */
-	private String[] verify(HttpSession session, String verifyCode) {
-		String code = session.getAttribute("session.verifyCode").toString();
-		// TODO
-		return (verifyCode.equals(code)) ? null : new String[] { "图形验证码输入错误" };
+	private String[] verifyImg(HttpSession session, String imgCode) {
+
+		imgCode = StringUtil.isEmpty(imgCode);
+
+		if (null == imgCode) {
+			return new String[] { "请输入图形验证码" };
+		}
+
+		Object verify = session.getAttribute("verify.imgCode");
+
+		if (null == verify) {
+			return new String[] { "图形验证码输入错误" };
+		}
+
+		return verify.toString().equals(imgCode) ? null
+				: new String[] { "图形验证码输入错误" };
+	}
+
+	@RequestMapping(value = { "/t/{user_id}" }, method = RequestMethod.GET)
+	public ModelAndView _i_tUI(HttpSession session, @PathVariable String user_id) {
+
+		ModelAndView result = new ModelAndView("i/user/1.0.1/t");
+		result.addObject("user_id", user_id);
+		result.addObject("verify_token", genVerifyToken(session));
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/t/" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_t(HttpSession session,
+			@RequestParam(required = true) String verify_token,
+			@RequestParam(required = true) String verify_imgCode,
+			@RequestParam(required = true) String verify_sms, User user) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
+			return result;
+		}
+
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
+			return result;
+		}
+
+		String[] verifySMS = verifySMS(session, verify_sms);
+		if (null != verifySMS) {
+			result.put("msg", verifySMS);
+			return result;
+		}
+
+		String[] msg = userService.register(user);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
 	}
 
 	/**
@@ -169,6 +246,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/pasture" }, method = RequestMethod.GET)
 	public ModelAndView _i_pastureUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/pasture");
 		result.addObject("nav_choose", ",01,");
 		result.addObject("data_user", session.getAttribute("session.user"));
@@ -188,12 +266,14 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_login(User user, HttpSession session) {
+	public Map<String, Object> _i_login(HttpSession session,
+			@RequestParam(required = true) String user_name,
+			@RequestParam(required = true) String user_pass) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		Map<String, Object> login = userService.login(user.getEmail(),
-				user.getUser_pass());
+		Map<String, Object> login = userService.login(user_name, user_pass);
 
 		if (login.containsKey("msg")) {
 			result.put("msg", login.get("msg"));
@@ -201,15 +281,13 @@ public class UserController {
 		}
 
 		// 获取用户对象
-		user = (User) login.get("data");
+		User user = (User) login.get("data");
 
-		// TODO
 		session.setAttribute("session.user", user);
 		session.setAttribute("session.user.id", user.getId());
-		session.setAttribute("session.lv", user.getRole_id());
+		session.setAttribute("session.user.lv", 2);
 		session.setAttribute("session.time", (new Date()).toString());
 
-		result.put("lv", user.getRole_id());
 		result.put("success", true);
 		return result;
 	}
@@ -229,39 +307,43 @@ public class UserController {
 	/**
 	 * 变更密码
 	 *
+	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.GET)
 	public ModelAndView _i_changePwdUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/changePwd");
-		result.addObject("nav_choose", ",03,0302,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",03,0302,");
 		return result;
 	}
 
 	/**
-	 * 普通密码
+	 * 普通密码修改
 	 *
 	 * @param session
 	 * @param old_pass
 	 * @param new_pass
+	 * @param verify_sms
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/changePwd" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_changePwd(HttpSession session,
 			@RequestParam(required = true) String old_pass,
-			@RequestParam(required = true) String new_pass, User user) {
+			@RequestParam(required = true) String new_pass,
+			@RequestParam(required = true) String verify_sms) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] verifySms = verifySms(session, user.getVerifycode_sms());
-		if (null != verifySms) {
-			result.put("msg", verifySms);
+		String[] verifySMS = verifySMS(session, verify_sms);
+		if (null != verifySMS) {
+			result.put("msg", verifySMS);
 			return result;
 		}
 
-		// TODO
 		String[] msg = userService.changePwd(
 				session.getAttribute("session.user.id").toString(), old_pass,
 				new_pass);
@@ -276,22 +358,30 @@ public class UserController {
 	}
 
 	/**
-	 * 安全密码
+	 * 安全密码修改
 	 *
 	 * @param session
 	 * @param old_pass
 	 * @param new_pass
+	 * @param verify_sms
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/changePwdSafe" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_changePwdSafe(HttpSession session,
 			@RequestParam(required = true) String old_pass,
-			@RequestParam(required = true) String new_pass) {
+			@RequestParam(required = true) String new_pass,
+			@RequestParam(required = true) String verify_sms) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		// TODO
+		String[] verifySms = verifySMS(session, verify_sms);
+		if (null != verifySms) {
+			result.put("msg", verifySms);
+			return result;
+		}
+
 		String[] msg = userService.changePwdSafe(
 				session.getAttribute("session.user.id").toString(), old_pass,
 				new_pass);
@@ -310,28 +400,29 @@ public class UserController {
 	 *
 	 * @param session
 	 * @param buySell
-	 * @param verifyCode
+	 * @param verify_imgCode
 	 * @param user_pass_safe
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/confirm" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_confirm(HttpSession session, BuySell buySell,
-			@RequestParam(required = true) String verifyCode,
-			@RequestParam(required = true) String user_pass_safe) {
+	public Map<String, Object> _i_confirm(HttpSession session,
+			@RequestParam(required = true) String verify_imgCode,
+			@RequestParam(required = true) String user_pass_safe,
+			BuySell buySell) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -356,7 +447,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/confirm" }, method = RequestMethod.GET)
-	public String _i_confirmUI(Map<String, Object> map, HttpSession session,
+	public String _i_confirmUI(HttpSession session, Map<String, Object> map,
 			@RequestParam(required = true) String id) {
 
 		BuySell buySell = buySellService.selectByKey(id);
@@ -381,7 +472,7 @@ public class UserController {
 
 		map.put("data_buySell", buySell);
 		map.put("data_user", session.getAttribute("session.user"));
-		map.put("data_token", genToken(session));
+		map.put("verify_token", genVerifyToken(session));
 		return "i/user/1.0.1/confirm";
 	}
 
@@ -390,26 +481,27 @@ public class UserController {
 	 *
 	 * @param session
 	 * @param buySell
-	 * @param verifyCode
+	 * @param verify_imgCode
 	 * @param user_pass_safe
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/tip_off" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_tip_off(HttpSession session, BuySell buySell,
-			@RequestParam(required = true) String verifyCode,
-			@RequestParam(required = true) String user_pass_safe) {
+	public Map<String, Object> _i_tip_off(HttpSession session,
+			@RequestParam(required = true) String verify_imgCode,
+			@RequestParam(required = true) String user_pass_safe,
+			BuySell buySell) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] verify = verify(session, verifyCode);
+		String[] verify = verifyImg(session, verify_imgCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
 		}
 
-		String[] checkSafe = checkSafe(session, user_pass_safe);
+		String[] checkSafe = verifyPassSafe(session, user_pass_safe);
 		if (null != checkSafe) {
 			result.put("msg", checkSafe);
 			return result;
@@ -440,7 +532,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/tip_off" }, method = RequestMethod.GET)
-	public String _i_tip_offUI(Map<String, Object> map, HttpSession session,
+	public String _i_tip_offUI(HttpSession session, Map<String, Object> map,
 			@RequestParam(required = true) String id) {
 
 		BuySell buySell = buySellService.selectByKey(id);
@@ -465,64 +557,60 @@ public class UserController {
 
 		map.put("data_buySell", buySell);
 		map.put("data_user", session.getAttribute("session.user"));
-		map.put("data_token", genToken(session));
+		map.put("verify_token", genVerifyToken(session));
 		return "i/user/1.0.1/tip_off";
 	}
 
 	/**
 	 * 修改资料
 	 *
-	 * @param map
 	 * @param session
+	 * @param map
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.GET)
-	public String _i_profileUI(Map<String, Object> map, HttpSession session) {
-		String user_id = session.getAttribute("session.user.id").toString();
-		// TODO
-		User user = userService.selectByKey(user_id);
+	public String _i_profileUI(HttpSession session, Map<String, Object> map) {
+
+		User user = userService.selectByKey(session.getAttribute(
+				"session.user.id").toString());
 		map.put("data_user", user);
-		// TODO
+
 		map.put("nav_choose", ",03,0301,");
 		return "i/user/1.0.1/profile";
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/profile" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_profile(
-			@RequestParam(required = true) String verifyCode, User user,
-			HttpSession session) {
+	public Map<String, Object> _i_profile(HttpSession session,
+			@RequestParam(required = true) String verify_sms,
+			@RequestParam(required = true) String verify_imgCode,
+			@RequestParam(required = true) String user_pass_safe, User user) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
-		String[] checkSafe = checkSafe(session, user.getUser_pass_safe());
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
-		String[] verifySms = verifySms(session, user.getVerifycode_sms());
-		if (null != verifySms) {
-			result.put("msg", verifySms);
+		String[] verifySMS = verifySMS(session, verify_sms);
+		if (null != verifySMS) {
+			result.put("msg", verifySMS);
 			return result;
 		}
 
 		// 设置主键
 		user.setId(session.getAttribute("session.user.id").toString());
+		userService.editInfo(user);
 
-		String[] msg = userService.editInfo(user);
-		if (null != msg) {
-			result.put("msg", msg);
-			return result;
-		}
-
-		// TODO
 		result.put("success", true);
 		return result;
 	}
@@ -530,10 +618,12 @@ public class UserController {
 	/**
 	 * 我的帐户
 	 *
+	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/account" }, method = RequestMethod.GET)
 	public ModelAndView _i_accountUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/account");
 
 		User user = userService.selectByKey(session.getAttribute(
@@ -553,31 +643,30 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.GET)
 	public ModelAndView _i_createAccountUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/createAccount");
-		result.addObject("data_token", genToken(session));
-		result.addObject("nav_choose", ",04,0401,");
+		result.addObject("verify_token", genVerifyToken(session));
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",04,0401,");
 		return result;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_createAccount(
-			@RequestParam(required = true) String token,
-			@RequestParam(required = true) String verifyCode, User user,
-			HttpSession session) {
-		// TODO
+	public Map<String, Object> _i_createAccount(HttpSession session,
+			@RequestParam(required = true) String verify_token,
+			@RequestParam(required = true) String verify_imgCode, User user) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = validateToken(session, token);
+		String[] validateToken = verifyToken(session, verify_token);
 		if (null != validateToken) {
 			result.put("msg", validateToken);
 			return result;
 		}
 
-		// TODO
-		String[] verify = verify(session, verifyCode);
+		String[] verify = verifyImg(session, verify_imgCode);
 		if (null != verify) {
 			result.put("msg", verify);
 			return result;
@@ -585,30 +674,6 @@ public class UserController {
 
 		// 我的信息
 		user.setPid(session.getAttribute("session.user.id").toString());
-
-		String[] msg = userService.register(user);
-
-		if (null != msg) {
-			result.put("msg", msg);
-			return result;
-		}
-
-		result.put("success", true);
-		return result;
-	}
-
-	@ResponseBody
-	@RequestMapping(value = { "/user/createAccount2" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_createAccount2(User user, HttpSession session) {
-		// TODO
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		// 我的信息
-		// user.setPid(session.getAttribute("session.user.id").toString());
-
-		user.setUser_pass("123456");
-		user.setUser_pass_safe("123456");
 
 		String[] msg = userService.register(user);
 
@@ -631,6 +696,7 @@ public class UserController {
 	public ModelAndView _i_recommendUI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "100") int rows) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
 
 		List<User> list = userService.findChildren___4(
@@ -639,48 +705,47 @@ public class UserController {
 
 		result.addObject("data_list", list);
 
-		// TODO
-		result.addObject("nav_choose", ",04,0402,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",04,0402,");
 		return result;
 	}
 
 	/**
 	 * 买入鸡苗
 	 *
-	 * @param verifyCode
+	 * @param session
+	 * @param verify_token
+	 * @param verify_imgCode
 	 * @param user_pass_safe
 	 * @param farm
-	 * @param session
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/buyMo" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_buyMo(
-			@RequestParam(required = true) String token,
-			@RequestParam(required = true) String verifyCode,
-			@RequestParam(required = true) String user_pass_safe, Farm farm,
-			HttpSession session) {
+	public Map<String, Object> _i_buyMo(HttpSession session,
+			@RequestParam(required = true) String verify_token,
+			@RequestParam(required = true) String verify_imgCode,
+			@RequestParam(required = true) String user_pass_safe, Farm farm) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = validateToken(session, token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
 			return result;
 		}
 
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -699,40 +764,40 @@ public class UserController {
 	/**
 	 * 喂养鸡苗
 	 *
-	 * @param token
-	 * @param verifyCode
+	 * @param session
+	 * @param verify_token
+	 * @param verify_imgCode
 	 * @param user_pass_safe
 	 * @param farmFeed
-	 * @param session
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_feedMo(
-			@RequestParam(required = true) String token,
-			@RequestParam(required = true) String verifyCode,
+	public Map<String, Object> _i_feedMo(HttpSession session,
+			@RequestParam(required = true) String verify_token,
+			@RequestParam(required = true) String verify_imgCode,
 			@RequestParam(required = true) String user_pass_safe,
-			FarmFeed farmFeed, HttpSession session) {
+			FarmFeed farmFeed) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = validateToken(session, token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
 			return result;
 		}
 
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -751,13 +816,13 @@ public class UserController {
 	/**
 	 * 喂养鸡苗
 	 *
-	 * @param map
 	 * @param session
+	 * @param map
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.GET)
-	public String _i_feedMoUI(Map<String, Object> map, HttpSession session,
+	public String _i_feedMoUI(HttpSession session, Map<String, Object> map,
 			@RequestParam(required = false) String id) {
 
 		String uri = null;
@@ -787,54 +852,54 @@ public class UserController {
 			}
 
 			map.put("data_farm", farm);
-			map.put("data_token", genToken(session));
+			map.put("verify_token", genVerifyToken(session));
 
 			uri = "i/user/1.0.1/feedMo_id";
 		}
 
-		map.put("nav_choose", ",05,0505,");
 		map.put("data_user", session.getAttribute("session.user"));
 
+		map.put("nav_choose", ",05,0505,");
 		return uri;
 	}
 
 	/**
 	 * 孵化工厂
 	 *
-	 * @param token
-	 * @param verifyCode
+	 * @param session
+	 * @param verify_token
+	 * @param verify_imgCode
 	 * @param user_pass_safe
 	 * @param farmHatch
-	 * @param session
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/hatchMo" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_hatchMo(
-			@RequestParam(required = true) String token,
-			@RequestParam(required = true) String verifyCode,
+	public Map<String, Object> _i_hatchMo(HttpSession session,
+			@RequestParam(required = true) String verify_token,
+			@RequestParam(required = true) String verify_imgCode,
 			@RequestParam(required = true) String user_pass_safe,
-			FarmHatch farmHatch, HttpSession session) {
+			FarmHatch farmHatch) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = validateToken(session, token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
 			return result;
 		}
 
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -847,7 +912,6 @@ public class UserController {
 			return result;
 		}
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}
@@ -855,13 +919,13 @@ public class UserController {
 	/**
 	 * 孵化工厂
 	 *
-	 * @param map
 	 * @param session
+	 * @param map
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/hatchMo" }, method = RequestMethod.GET)
-	public String _i_hatchMoUI(Map<String, Object> map, HttpSession session,
+	public String _i_hatchMoUI(HttpSession session, Map<String, Object> map,
 			@RequestParam(required = false) String id) {
 
 		String uri = null;
@@ -872,7 +936,9 @@ public class UserController {
 			map.put("data_list", list);
 
 			uri = "i/user/1.0.1/hatchMo";
+
 		} else {
+
 			Farm farm = farmService.hatchMo_farm_hatch_list___4(id, session
 					.getAttribute("session.user.id").toString());
 
@@ -881,15 +947,14 @@ public class UserController {
 			}
 
 			map.put("data_farm", farm);
-			map.put("data_token", genToken(session));
+			map.put("verify_token", genVerifyToken(session));
 
 			uri = "i/user/1.0.1/hatchMo_id";
 		}
 
-		// TODO
-		map.put("nav_choose", ",05,0506,");
 		map.put("data_user", session.getAttribute("session.user"));
 
+		map.put("nav_choose", ",05,0506,");
 		return uri;
 	}
 
@@ -903,7 +968,7 @@ public class UserController {
 	public ModelAndView _i_buyMoUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyMo");
 
-		result.addObject("data_token", genToken(session));
+		result.addObject("verify_token", genVerifyToken(session));
 		result.addObject("nav_choose", ",05,0501,");
 		result.addObject("data_user", session.getAttribute("session.user"));
 
@@ -918,62 +983,60 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/sellMo" }, method = RequestMethod.GET)
 	public ModelAndView _i_sellMoUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellMo");
 
-		// 卖出鸡苗上限
-		Cfg maxObj = cfgService.selectByKey("2011");
-
-		result.addObject("data_sell_max", maxObj.getValue_());
-		result.addObject("data_token", genToken(session));
+		// 卖出鸡苗上限 2011
+		result.addObject("verify_token", genVerifyToken(session));
+		result.addObject("data_user", session.getAttribute("session.user"));
 
 		result.addObject("nav_choose", ",05,0502,");
-		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
 	/**
 	 * 卖出鸡苗
 	 *
-	 * @param token
-	 * @param verifyCode
-	 * @param user_pass_safe
-	 * @param farm
 	 * @param session
+	 * @param verify_sms
+	 * @param verify_token
+	 * @param verify_imgCode
+	 * @param user_pass_safe
+	 * @param sell
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/user/sellMo" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_sellMo(
-			@RequestParam(required = true) String token,
-			@RequestParam(required = true) String verifyCode,
-			@RequestParam(required = true) String user_pass_safe, Sell sell,
-			User user, HttpSession session) {
+	public Map<String, Object> _i_sellMo(HttpSession session,
+			@RequestParam(required = true) String verify_sms,
+			@RequestParam(required = true) String verify_token,
+			@RequestParam(required = true) String verify_imgCode,
+			@RequestParam(required = true) String user_pass_safe, Sell sell) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = validateToken(session, token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
 			return result;
 		}
 
-		String[] verify = verify(session, verifyCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
-		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
-		String[] verifySms = verifySms(session, user.getVerifycode_sms());
-		if (null != verifySms) {
-			result.put("msg", verifySms);
+		String[] verifySMS = verifySMS(session, verify_sms);
+		if (null != verifySMS) {
+			result.put("msg", verifySMS);
 			return result;
 		}
 
@@ -998,12 +1061,14 @@ public class UserController {
 	@RequestMapping(value = { "/user/buyRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_buyRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
-		result.addObject("nav_choose", ",05,0503,");
 
 		User user = userService.buy_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_buy_record", user);
 
+		result.addObject("data_buy_record", user.getFarms());
+		result.addObject("data_user", user);
+
+		result.addObject("nav_choose", ",05,0503,");
 		return result;
 	}
 
@@ -1016,12 +1081,14 @@ public class UserController {
 	@RequestMapping(value = { "/user/sellRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_sellRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
-		result.addObject("nav_choose", ",05,0504,");
 
 		User user = userService.sell_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-		result.addObject("data_sell_record", user);
 
+		result.addObject("data_sell_record", user.getSells());
+		result.addObject("data_user", user);
+
+		result.addObject("nav_choose", ",05,0504,");
 		return result;
 	}
 
@@ -1032,27 +1099,27 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.GET)
-	public String _i_buyTicketUI(Map<String, Object> map, HttpSession session) {
-		String my_user_id = session.getAttribute("session.user.id").toString();
-		// TODO
-		User my_user = userService.selectByKey(my_user_id);
-		map.put("data_user", my_user);
-		map.put("data_token", genToken(session));
+	public String _i_buyTicketUI(HttpSession session, Map<String, Object> map) {
 
-		// TODO
+		User user = userService.selectByKey(session.getAttribute(
+				"session.user.id").toString());
+
+		map.put("data_user", user);
+		map.put("verify_token", genVerifyToken(session));
+
 		map.put("nav_choose", ",06,0602,");
 		return "i/user/1.0.1/buyTicket";
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_buyTicket(
+	public Map<String, Object> _i_buyTicket(HttpSession session,
 			@RequestParam(required = true) String user_pass_safe,
-			@RequestParam(required = true) String token,
-			MaterialRecord materialRecord, HttpSession session) {
-		// TODO
+			@RequestParam(required = true) String verify_token,
+			MaterialRecord materialRecord) {
+
 		materialRecord.setType_id(1);
-		return _i_buy(user_pass_safe, token, materialRecord, session);
+		return _i_buy(session, user_pass_safe, verify_token, materialRecord);
 	}
 
 	/**
@@ -1063,15 +1130,16 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.GET)
 	public ModelAndView _i_buyFoodUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyFood");
 
-		String my_user_id = session.getAttribute("session.user.id").toString();
-		// TODO
-		User my_user = userService.selectByKey(my_user_id);
-		result.addObject("data_user", my_user);
-		result.addObject("data_token", genToken(session));
+		User user = userService.selectByKey(session.getAttribute(
+				"session.user.id").toString());
 
+		result.addObject("data_user", user);
+		result.addObject("verify_token", genVerifyToken(session));
 		result.addObject("nav_choose", ",06,0603,");
+
 		return result;
 	}
 
@@ -1079,26 +1147,28 @@ public class UserController {
 	 * 购买
 	 *
 	 * @param user_pass_safe
-	 * @param token
+	 * @param verify_token
 	 * @param materialRecord
 	 * @param session
 	 * @return
 	 */
-	private Map<String, Object> _i_buy(String user_pass_safe, String token,
-			MaterialRecord materialRecord, HttpSession session) {
+	private Map<String, Object> _i_buy(HttpSession session,
+			String user_pass_safe, String verify_token,
+			MaterialRecord materialRecord) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = validateToken(session, token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
 			return result;
 		}
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -1113,21 +1183,19 @@ public class UserController {
 			return result;
 		}
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/buyFood" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_buyFood(
+	public Map<String, Object> _i_buyFood(HttpSession session,
 			@RequestParam(required = true) String user_pass_safe,
+			@RequestParam(required = true) String verify_token,
+			MaterialRecord materialRecord) {
 
-			@RequestParam(required = true) String token,
-			MaterialRecord materialRecord, HttpSession session) {
-		// TODO
 		materialRecord.setType_id(2);
-		return _i_buy(user_pass_safe, token, materialRecord, session);
+		return _i_buy(session, user_pass_safe, verify_token, materialRecord);
 	}
 
 	/**
@@ -1138,18 +1206,19 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/virementTicket" }, method = RequestMethod.GET)
 	public ModelAndView _i_virementTicketUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/virementTicket");
-		result.addObject("nav_choose", ",06,0604,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",06,0604,");
 		return result;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/virementTicket" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_virementTicket(
+	public Map<String, Object> _i_virementTicket(HttpSession session,
 			@RequestParam(required = true) String user_pass_safe,
-			MaterialRecord materialRecord, HttpSession session) {
-		// TODO
+			MaterialRecord materialRecord) {
+
 		materialRecord.setType_id(1);
 		return _i_virement(user_pass_safe, materialRecord, session);
 	}
@@ -1185,15 +1254,16 @@ public class UserController {
 		// 参数验证
 		materialRecord.setTrans_user_id(StringUtil.isEmpty(materialRecord
 				.getTrans_user_id()));
+
 		if (null == materialRecord.getTrans_user_id()) {
 			result.put("msg", new String[] { "请选择接收人" });
 			return result;
 		}
 
 		// 安全密码验证
-		String[] checkSafe = checkSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -1214,9 +1284,9 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/user/virementFood" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_virementFood(
+	public Map<String, Object> _i_virementFood(HttpSession session,
 			@RequestParam(required = true) String user_pass_safe,
-			MaterialRecord materialRecord, HttpSession session) {
+			MaterialRecord materialRecord) {
 		// TODO
 		materialRecord.setType_id(2);
 		return _i_virement(user_pass_safe, materialRecord, session);
@@ -1271,12 +1341,12 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/bill" }, method = RequestMethod.GET)
-	public ModelAndView _i_ticketRecordUI(
-			@RequestParam(required = true) int type_id, HttpSession session) {
+	public ModelAndView _i_ticketRecordUI(HttpSession session,
+			@RequestParam(required = true) int type_id) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/bill");
 
 		String nav_choose = null;
-		// TODO
+
 		switch (type_id) {
 		case 1:
 			nav_choose = ",06,0609,";
@@ -1296,11 +1366,9 @@ public class UserController {
 			break;
 		}
 
-		String my_user_id = session.getAttribute("session.user.id").toString();
-
-		// TODO
 		MaterialRecord materialRecord = new MaterialRecord();
-		materialRecord.setUser_id(my_user_id);
+		materialRecord.setUser_id(session.getAttribute("session.user.id")
+				.toString());
 		materialRecord.setType_id(type_id);
 
 		List<MaterialRecord> list = materialRecordService
@@ -1309,7 +1377,6 @@ public class UserController {
 		result.addObject("data_list", list);
 		result.addObject("data_type_id", type_id);
 
-		// TODO
 		result.addObject("nav_choose", nav_choose);
 		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
@@ -1327,7 +1394,6 @@ public class UserController {
 
 		String my_user_id = session.getAttribute("session.user.id").toString();
 
-		// TODO
 		MaterialRecord materialRecord = new MaterialRecord();
 		materialRecord.setUser_id(my_user_id);
 		materialRecord.setTrans_user_id(my_user_id);
@@ -1352,7 +1418,60 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.GET)
 	public ModelAndView _manage_loginUI() {
-		ModelAndView result = new ModelAndView("manage/user/1.0.1/login");
+		ModelAndView result = new ModelAndView("m/user/login");
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_login(HttpSession session,
+			@RequestParam(required = true) String user_name,
+			@RequestParam(required = true) String user_pass) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		Map<String, Object> login = managerService.login(user_name, user_pass);
+
+		if (login.containsKey("msg")) {
+			result.put("msg", login.get("msg"));
+			return result;
+		}
+
+		// 获取用户对象
+		Manager user = (Manager) login.get("data");
+
+		session.setAttribute("session.user", user);
+		session.setAttribute("session.user.id", user.getId());
+		session.setAttribute("session.user.lv", 1);
+		session.setAttribute("session.time", (new Date()).toString());
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/manage/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_createAccount(HttpSession session,
+			User user) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 我的信息
+		// user.setPid(session.getAttribute("session.user.id").toString());
+
+		user.setUser_pass("123456");
+		user.setUser_pass_safe("123456");
+
+		String[] msg = userService.register(user);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
 		return result;
 	}
 

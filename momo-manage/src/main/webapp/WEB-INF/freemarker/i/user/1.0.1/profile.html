@@ -137,7 +137,7 @@
 														<label class="control-label">手机号</label>
 
 														<div class="controls">
-															<input type="text" class='input-large' value='${(data_user.mobile)!}' disabled />
+															<input type="text" class='input-large' id='frm_mobile' value='${(data_user.mobile)!}' disabled />
 														</div>
 													</div>
 													<div class="control-group">
@@ -197,19 +197,19 @@
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_verifyCode">图形验证码</label>
+														<label class="control-label" for="frm_verify_imgCode">图形验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm_verifyCode" name='verifyCode' placeholder="图形验证码" />
+															<input type="text" class='input-small' id="frm_verify_imgCode" name='verify_imgCode' placeholder="图形验证码" />
 															<img id='img_verifyCode' style='height:28px' src='' title='点击更换验证码'>
 														</div>
 													</div>
 													<div class="control-group">
-														<label class="control-label" for="frm_verifycode_sms">短信验证码</label>
+														<label class="control-label" for="frm_verify_sms">短信验证码</label>
 
 														<div class="controls">
-															<input type="text" class='input-small' id="frm_verifycode_sms" name='verifycode_sms' placeholder="短信验证码" />
-															<a class="btn btn-mini btn-danger" href='javascript:sendSms();'>获取短信验证码</a>
+															<input type="text" class='input-small' id="frm_verify_sms" name='verify_sms' placeholder="短信验证码" />
+															<a class="btn btn-mini btn-danger" href='javascript:sendSMS();'>获取短信验证码</a>
 														</div>
 													</div>
 													<div class="form-actions">
@@ -256,20 +256,21 @@
 			$('#img_verifyCode').attr('src', '/verifyCode.jpg?ts='+ (new Date()).valueOf());
 		}
 
-		function sendSms(){
+		function sendSMS(){
 
 			$.ajax({
-				url : '${(conf_html_virtualPath)!}sendSms',
+				url : '${(conf_html_virtualPath)!}sendSMS',
 				type : 'POST',
 				dataType : 'JSON',
-				data : $('#frm').serializeObjectForm(),
+				data : {
+					mobile: '${(data_user.mobile)!}'
+				},
 				success : function(data) {
 					if (data.success) {
-						alert('发送成功，请查收')
-						return;
-					} // END
-					if (data.msg)
-						alert(data.msg[0]);
+						return alert('发送成功，请查收');
+					}
+
+					if (data.msg) alert(data.msg[0]);
 				},
 				error : function() {
 					alert(arguments[2]);
@@ -289,11 +290,10 @@
 					success : function(data) {
 						if (data.success) {
 							alert('修改资料成功')
-							location.href = '${(conf_html_virtualPath)!}user/profile';
-							return;
-						} // END
-						if (data.msg)
-							alert(data.msg[0]);
+							return location.href = '${(conf_html_virtualPath)!}user/profile';
+						}
+
+						if (data.msg) alert(data.msg[0]);
 					},
 					error : function() {
 						alert(arguments[2]);
