@@ -38,7 +38,6 @@ public class Conversion implements Serializable, IConversion {
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("flag", 0);
 		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.DAY_OF_MONTH, -1);
 		cr.set(Calendar.HOUR, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
