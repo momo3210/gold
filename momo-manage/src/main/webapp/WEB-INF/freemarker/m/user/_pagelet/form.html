@@ -1,0 +1,171 @@
+<form id='frm' class="form-horizontal">
+
+	<div class="control-group">
+		<label class="control-label" for='frm_pid'>父级编号</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_pid" name='pid' placeholder="父级编号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for='frm_real_name'>姓名</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_real_name" name='real_name' placeholder="姓名" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for='frm_mobile'>手机号</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_mobile" name='mobile' placeholder="手机号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for='frm_email'>电子邮箱</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_email" name='email' placeholder="电子邮箱" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_nickname">昵称</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_nickname" name='nickname' placeholder="昵称" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_alipay_account">支付宝帐号</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_alipay_account" name='alipay_account' placeholder="支付宝帐号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_wx_account">微信号</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_wx_account" name='wx_account' placeholder="微信号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_bank">开户银行</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_bank" name='bank' placeholder="开户银行" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_bank_name">开户分行</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_bank_name" name='bank_name' placeholder="开户分行" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_bank_account">银行帐号</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_bank_account" name='bank_account' placeholder="银行帐号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_lv">级别</label>
+
+		<div class="controls">
+			<select id="frm_lv" name='lv'>
+				<option value='05'>贫农</option>
+				<option value='06'>中农</option>
+				<option value='07'>富农</option>
+				<option value='08'>农场主</option>
+			</select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_num_static">静态余额</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_num_static" name='num_static' placeholder="银行帐号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_num_dynamic">动态余额</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_num_dynamic" name='num_dynamic' placeholder="银行帐号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_num_ticket">门票</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_num_ticket" name='num_ticket' placeholder="银行帐号" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="frm_num_food">饲料</label>
+
+		<div class="controls">
+			<input type="text" class='input-large' id="frm_num_food" name='num_food' placeholder="银行帐号" />
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button class="btn btn-info" type="button" id='btn_submit'>
+			<i class="icon-ok bigger-110"></i>
+			提交
+		</button>
+
+		&nbsp; &nbsp; &nbsp;
+		<button class="btn" type="reset">
+			<i class="icon-undo bigger-110"></i>
+			重置
+		</button>
+	</div>
+</form>
+<script>
+$(function(){
+	$('#frm_num_static').ace_spinner({
+		value: 10,
+		min: 10,
+		max: 10000,
+		step: 10,
+		icon_up: 'icon-plus',
+		icon_down: 'icon-minus',
+		btn_up_class: 'btn-success' ,
+		btn_down_class: 'btn-danger'
+	});
+	$('#frm_num_dynamic').ace_spinner({
+		value: 10,
+		min: 10,
+		max: 10000,
+		step: 10,
+		icon_up: 'icon-plus',
+		icon_down: 'icon-minus',
+		btn_up_class: 'btn-success' ,
+		btn_down_class: 'btn-danger'
+	});
+	$('#frm_num_ticket').ace_spinner({
+		value: 10,
+		min: 10,
+		max: 10000,
+		step: 10,
+		icon_up: 'icon-plus',
+		icon_down: 'icon-minus',
+		btn_up_class: 'btn-success' ,
+		btn_down_class: 'btn-danger'
+	});
+	$('#frm_num_food').ace_spinner({
+		value: 10,
+		min: 10,
+		max: 10000,
+		step: 10,
+		icon_up: 'icon-plus',
+		icon_down: 'icon-minus',
+		btn_up_class: 'btn-success' ,
+		btn_down_class: 'btn-danger'
+	});
+});
+
+</script>

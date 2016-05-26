@@ -35,6 +35,11 @@ public class ManagerServiceImpl extends BaseService<Manager> implements
 			return result;
 		}
 
+		if (0 == user.getStatus()) {
+			result.put("msg", new String[] { "已被限制登陆" });
+			return result;
+		}
+
 		result.put("data", user);
 		return result;
 	}

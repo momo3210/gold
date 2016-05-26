@@ -139,7 +139,7 @@ public class DefaultController {
 
 		result.addObject("data_dj", d);
 
-		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("data_user", sell_record);
 		result.addObject("nav_choose", ",02,");
 		return result;
 	}
@@ -149,50 +149,8 @@ public class DefaultController {
 	@RequestMapping(value = { "/manage/" }, method = RequestMethod.GET)
 	public ModelAndView _manage_indexUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("m/default/index");
-		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("session_user", session.getAttribute("session.user"));
 		return result;
-	}
-
-	@RequestMapping(value = { "/manage/user/" }, method = RequestMethod.GET)
-	public ModelAndView _manage_userUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("m/user/index");
-
-		result.addObject("data_user", session.getAttribute("session.user"));
-		result.addObject("nav_choose", ",08,0801,");
-		List<User> list = userService.selectByExample(null);
-		result.addObject("data_list", list);
-
-		return result;
-	}
-
-	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.GET)
-	public String _i_editUI(Map<String, Object> map, HttpSession session,
-			@RequestParam(required = true) String id) {
-
-		User user = userService.selectByKey(id);
-		map.put("edit_user", user);
-		map.put("data_user", session.getAttribute("session.user"));
-		map.put("nav_choose", ",08,0801,");
-		return "m/user/edit";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_edit(User user, HttpSession session) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		userService.updateNotNull(user);
-
-		result.put("success", true);
-		return result;
-	}
-
-	@RequestMapping(value = { "/manage/user/add" }, method = RequestMethod.GET)
-	public String _i_addtUI(Map<String, Object> map, HttpSession session) {
-		map.put("data_user", session.getAttribute("session.user"));
-		map.put("nav_choose", ",08,0801,");
-		return "m/user/add";
 	}
 
 }

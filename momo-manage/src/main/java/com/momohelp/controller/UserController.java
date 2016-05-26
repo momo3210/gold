@@ -1418,14 +1418,54 @@ public class UserController {
 
 	/***** ***** ***** ***** ***** 后台 ***** ***** ***** ***** *****/
 
+	@RequestMapping(value = { "/manage/user/" }, method = RequestMethod.GET)
+	public ModelAndView _manage_userUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("m/user/index");
+
+		List<User> list = userService.selectByExample(null);
+		result.addObject("data_list", list);
+
+		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",08,0801,");
+		return result;
+	}
+
+	@RequestMapping(value = { "/manage/user/add" }, method = RequestMethod.GET)
+	public String _i_addtUI(Map<String, Object> map, HttpSession session) {
+		map.put("session_user", session.getAttribute("session.user"));
+		map.put("nav_choose", ",08,0801,");
+		return "m/user/add";
+	}
+
 	/**
-	 * 登陆
+	 * 用户修改
 	 *
+	 * @param map
+	 * @param session
+	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.GET)
-	public ModelAndView _manage_loginUI() {
-		ModelAndView result = new ModelAndView("m/user/login");
+	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.GET)
+	public String _i_editUI(HttpSession session, Map<String, Object> map,
+			@RequestParam(required = true) String id) {
+
+		User user = userService.selectByKey(id);
+		map.put("data_user", user);
+		map.put("session_user", session.getAttribute("session.user"));
+
+		map.put("nav_choose", ",08,0801,");
+		return "m/user/edit";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_edit(User user, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		userService.updateNotNull(user);
+
+		result.put("success", true);
 		return result;
 	}
 
@@ -1457,6 +1497,29 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 登陆
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.GET)
+	public ModelAndView _manage_loginUI() {
+		ModelAndView result = new ModelAndView("m/user/login");
+		return result;
+	}
+
+	/**
+	 * 退出
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/manage/user/logout" }, method = RequestMethod.GET)
+	public String _manage_logoutUI(HttpSession session) {
+		session.invalidate();
+		return "redirect:/manage/user/login";
+	}
+
 	@ResponseBody
 	@RequestMapping(value = { "/manage/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _manage_createAccount(HttpSession session,
@@ -1480,17 +1543,5 @@ public class UserController {
 
 		result.put("success", true);
 		return result;
-	}
-
-	/**
-	 * 退出
-	 *
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = { "/manage/user/logout" }, method = RequestMethod.GET)
-	public String _manage_logoutUI(HttpSession session) {
-		session.invalidate();
-		return "redirect:/manage/user/login";
 	}
 }

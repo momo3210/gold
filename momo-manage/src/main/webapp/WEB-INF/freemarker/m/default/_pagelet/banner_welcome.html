@@ -3,7 +3,7 @@
 		<img class="nav-user-photo" src="${(conf_html_cdn)!}js/ace/1.1.2/assets/avatars/user.jpg" alt="Jason's Photo" />
 		<span class="user-info">
 			<small>欢迎您,</small>
-			${(data_user.real_name)!}
+			${(session_user.nickname)!}
 		</span>
 
 		<i class="icon-caret-down"></i>
@@ -18,7 +18,7 @@
 		</li>
 
 		<li>
-			<a href="/user/profile">
+			<a href="/manage/user/profile">
 				<i class="icon-user"></i>
 				修改资料 Profile
 			</a>
@@ -27,7 +27,7 @@
 		<li class="divider"></li>
 
 		<li>
-			<a href="/user/logout">
+			<a href="/manage/user/logout">
 				<i class="icon-off"></i>
 				安全退出 Logout
 			</a>
