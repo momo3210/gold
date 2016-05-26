@@ -220,6 +220,8 @@
 		}
 
 		$(function(){
+			$('#banner_welcome').remove();
+
 			showVerifyCode();
 
 			$('#btn_submit').click(function() {
@@ -236,7 +238,7 @@
 				data.pid = $('#frm_pid').val();
 
 				$.ajax({
-					url : '${(conf_html_virtualPath)!}t/',
+					url : '${(conf_html_virtualPath)!}r',
 					type : 'POST',
 					dataType : 'JSON',
 					data : data,
@@ -246,7 +248,7 @@
 							location.href = '${(conf_html_virtualPath)!}';
 						}else{
 							if (data.msg) alert(data.msg[0]);
-							showVerifyCode();
+							location.href = '${(conf_html_virtualPath)!}r?t='+ ${data_user_pid};
 						}
 					},
 					error : function() {

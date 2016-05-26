@@ -224,7 +224,7 @@ public class UserController {
 	// }
 
 	@ResponseBody
-	@RequestMapping(value = { "/t/" }, method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = { "/r" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_t(HttpSession session,
 			@RequestParam(required = true) String verify_token,
 			@RequestParam(required = true) String verify_imgCode,
@@ -300,11 +300,11 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] verifyToken = verifyToken(session, verify_token);
-		if (null != verifyToken) {
-			result.put("msg", verifyToken);
-			return result;
-		}
+		// String[] verifyToken = verifyToken(session, verify_token);
+		// if (null != verifyToken) {
+		// result.put("msg", verifyToken);
+		// return result;
+		// }
 
 		Map<String, Object> login = userService.login(user_name, user_pass);
 

@@ -81,10 +81,10 @@
 															<p>
 															<#switch doc.status>
 																<#case 0>
-																	<a class="btn btn-info btn-small" href='./confirm?id=${(doc.id)!}'>确认打款</a>
+																	<a class="btn btn-info btn-small" href='/user/confirm?id=${(doc.id)!}'>确认打款</a>
 																	<#break>
 																<#case 1>
-																	<a class="btn btn-warning btn-small" href='./tip_off?id=${(doc.id)!}'>举报</a>
+																	<a class="btn btn-warning btn-small" href='/user/tip_off?id=${(doc.id)!}'>举报</a>
 																	<#break>
 																<#case 2>
 																	<#break>
