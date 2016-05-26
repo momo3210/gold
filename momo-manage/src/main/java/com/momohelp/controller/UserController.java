@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -190,18 +189,34 @@ public class UserController {
 	 * 推荐注册
 	 *
 	 * @param session
-	 * @param pid
-	 *            父id
+	 * @param map
+	 * @param t
 	 * @return
 	 */
-	@RequestMapping(value = { "/t/{pid}" }, method = RequestMethod.GET)
-	public ModelAndView _i_tUI(HttpSession session, @PathVariable String pid) {
+	@RequestMapping(value = { "/r" }, method = RequestMethod.GET)
+	public String _i_tUI(HttpSession session, Map<String, Object> map,
+			@RequestParam(required = false) String t) {
 
-		ModelAndView result = new ModelAndView("i/user/1.0.1/t");
-		result.addObject("data_pid", pid);
-		result.addObject("verify_token", genVerifyToken(session));
-		return result;
+		t = StringUtil.isEmpty(t);
+
+		if (null == t) {
+			return "redirect:/";
+		}
+
+		map.put("data_user_pid", t);
+		map.put("verify_token", genVerifyToken(session));
+		return "i/user/1.0.1/rt";
 	}
+
+	// @RequestMapping(value = { "/t/{pid}" }, method = RequestMethod.GET)
+	// public ModelAndView _i_tUI(HttpSession session, @PathVariable String pid)
+	// {
+	//
+	// ModelAndView result = new ModelAndView("i/user/1.0.1/t");
+	// result.addObject("data_pid", pid);
+	// result.addObject("verify_token", genVerifyToken(session));
+	// return result;
+	// }
 
 	@ResponseBody
 	@RequestMapping(value = { "/t/" }, method = RequestMethod.POST, produces = "application/json")
@@ -279,6 +294,12 @@ public class UserController {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
+
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
+			return result;
+		}
 
 		Map<String, Object> login = userService.login(user_name, user_pass);
 
@@ -1344,7 +1365,7 @@ public class UserController {
 	}
 
 	/**
-	 * 门票对账单
+	 * 门票、饲料、动态、静态对账单
 	 *
 	 * @param session
 	 * @param map
@@ -1390,34 +1411,7 @@ public class UserController {
 		return "i/user/1.0.1/bill";
 	}
 
-	/**
-	 * 饲料对账单
-	 *
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value = { "/user/foodRecord" }, method = RequestMethod.GET)
-	public ModelAndView _i_foodRecordUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/foodRecord");
-
-		String my_user_id = session.getAttribute("session.user.id").toString();
-
-		MaterialRecord materialRecord = new MaterialRecord();
-		materialRecord.setUser_id(my_user_id);
-		materialRecord.setTrans_user_id(my_user_id);
-		materialRecord.setType_id(2);
-
-		List<MaterialRecord> list = materialRecordService
-				.findByTypeId(materialRecord);
-
-		result.addObject("data_list", list);
-
-		result.addObject("nav_choose", ",06,0610,");
-		result.addObject("data_user", session.getAttribute("session.user"));
-		return result;
-	}
-
-	/**** 后台 ****/
+	/***** ***** ***** ***** ***** 后台 ***** ***** ***** ***** *****/
 
 	/**
 	 * 登陆

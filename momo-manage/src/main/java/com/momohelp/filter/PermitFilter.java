@@ -46,21 +46,16 @@ public class PermitFilter implements Filter {
 		// 获取此次的请求路径
 		String uri = hreq.getRequestURI();
 
-		if (isT(uri)) {
-			chain.doFilter(request, response);
-			return;
-		}
-
 		if ("/user/login".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
-		} else if ("/sendSms".equals(uri)) {
-			chain.doFilter(request, response);
-			return;
-		} else if ("/sendSms2".equals(uri)) {
+		} else if ("/sendSMS".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
 		} else if ("/manage/user/login".equals(uri)) {
+			chain.doFilter(request, response);
+			return;
+		} else if ("/r".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -71,18 +66,24 @@ public class PermitFilter implements Filter {
 
 		if (isManage(uri)) {
 			if (null == obj) {
-				hres.sendRedirect("/manage/login");
+				hres.sendRedirect("/manage/user/login");
 				return;
 			}
 
 			int lv = (Integer) obj;
 			if (1 != lv) {
-				hres.sendRedirect("/user/login");
+				hres.sendRedirect("/manage/user/login");
 				return;
 			}
 		} else {
 			// 前台
 			if (null == obj) {
+				hres.sendRedirect("/user/login");
+				return;
+			}
+
+			int lv = (Integer) obj;
+			if (2 != lv) {
 				hres.sendRedirect("/user/login");
 				return;
 			}
@@ -115,7 +116,4 @@ public class PermitFilter implements Filter {
 		return 0 == uri.indexOf("/manage/");
 	}
 
-	private boolean isT(String uri) {
-		return 0 == uri.indexOf("/t/");
-	}
 }

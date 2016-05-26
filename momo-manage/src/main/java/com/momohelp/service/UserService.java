@@ -58,8 +58,6 @@ public interface UserService extends IService<User> {
 
 	User getId(int flag, String id);
 
-	String[] sendSms(String id);
-
 	/**
 	 * 普通用户登陆
 	 *

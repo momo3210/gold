@@ -494,7 +494,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 		User user = selectByKey(id);
 
-		if (!MD5.encode(old_pass).equals(user.getUser_pass())) {
+		if (!MD5.encode(old_pass).equals(user.getUser_pass_safe())) {
 			return new String[] { "原安全密码错误" };
 		}
 
@@ -557,29 +557,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setMobile(name);
 		user = getByUser(user);
 		return user;
-	}
-
-	@Override
-	public String[] sendSms(String id) {
-
-		// SmSWebService service = new SmSWebService();
-		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
-		// "123456", __u.getMobile(), "您本次验证码:" + user.getVerifycode_sms()
-		// + "，感谢您的支持，祝您生活愉快！！", "", "");
-
-		// response.getReturnStatus();
-
-		return null;
-	}
-
-	private String genId2() {
-		int i = (int) ((Math.random() * 5 + 1) * 1000);
-		String id = String.valueOf(i);
-		if (4 < id.length()) {
-			id = id.substring(0, 4);
-		}
-		return id;
 	}
 
 	@Override

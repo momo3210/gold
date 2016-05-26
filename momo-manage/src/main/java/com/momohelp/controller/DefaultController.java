@@ -144,7 +144,7 @@ public class DefaultController {
 		return result;
 	}
 
-	/**** 后台 ****/
+	/***** ***** ***** ***** ***** 后台 ***** ***** ***** ***** *****/
 
 	@RequestMapping(value = { "/manage/" }, method = RequestMethod.GET)
 	public ModelAndView _manage_indexUI(HttpSession session) {
