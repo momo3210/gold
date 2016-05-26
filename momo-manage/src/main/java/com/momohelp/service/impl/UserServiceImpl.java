@@ -278,9 +278,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] register(User user) {
-		if (null == user) {
-			return new String[] { "非法操作" };
-		}
 
 		user.setReal_name(StringUtil.isEmpty(user.getReal_name()));
 		if (null == user.getReal_name()) {
@@ -297,8 +294,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 			return new String[] { "安全密码不能为空" };
 		}
 
-		/***** *****/
-
 		// 附加数据
 		user.setUser_pass(MD5.encode(user.getUser_pass()));
 		user.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
@@ -307,8 +302,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setNum_dynamic(0.00);
 		user.setNum_ticket(0);
 		user.setNum_food(0);
-
-		user.setStatus(0);
 
 		return save_prev(user);
 	}
@@ -373,8 +366,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setAlipay_account(user.getAlipay_account());
 		_user.setWx_account(user.getWx_account());
 		_user.setStatus(1);
-		_user.setFamily_id(p_user.getFamily_id());
-		_user.setDepth(p_user.getDepth() + 1);
 
 		_user.setMobile(user.getMobile());
 		_user.setEmail(user.getEmail());
@@ -397,8 +388,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setUser_pass(user.getUser_pass());
 		_user.setUser_pass_safe(user.getUser_pass_safe());
 
-		user.setDepth(1 + p_user.getDepth());
-		user.setFamily_id(p_user.getFamily_id());
+		_user.setDepth(1 + p_user.getDepth());
+		_user.setFamily_id(p_user.getFamily_id());
 
 		super.save(_user);
 		return null;

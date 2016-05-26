@@ -25,7 +25,6 @@ import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
-import com.momohelp.service.BuyService;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
@@ -64,9 +63,6 @@ public class UserController {
 
 	@Autowired
 	private SellService sellService;
-
-	@Autowired
-	private BuyService buyService;
 
 	@Autowired
 	private BuySellService buySellService;
@@ -113,18 +109,18 @@ public class UserController {
 
 		if (null == token) {
 			session.removeAttribute("verify.token");
-			return new String[] { "请不要重复提交" };
+			return new String[] { "请刷新页面" };
 		}
 
 		Object verify = session.getAttribute("verify.token");
 
 		if (null == verify) {
-			return new String[] { "请不要重复提交" };
+			return new String[] { "请刷新页面" };
 		}
 
 		if (!token.equals(verify.toString())) {
 			session.removeAttribute("verify.token");
-			return new String[] { "请不要重复提交" };
+			return new String[] { "请刷新页面" };
 		}
 
 		session.removeAttribute("verify.token");
@@ -155,7 +151,7 @@ public class UserController {
 		user_pass_safe = StringUtil.isEmpty(user_pass_safe);
 
 		if (null == user_pass_safe) {
-			return new String[] { "安全密码输入错误" };
+			return new String[] { "请输入安全密码" };
 		}
 
 		User user = userService.selectByKey(session.getAttribute(
@@ -183,18 +179,26 @@ public class UserController {
 		Object verify = session.getAttribute("verify.imgCode");
 
 		if (null == verify) {
-			return new String[] { "图形验证码输入错误" };
+			return new String[] { "请刷新页面" };
 		}
 
 		return verify.toString().equals(imgCode) ? null
 				: new String[] { "图形验证码输入错误" };
 	}
 
-	@RequestMapping(value = { "/t/{user_id}" }, method = RequestMethod.GET)
-	public ModelAndView _i_tUI(HttpSession session, @PathVariable String user_id) {
+	/**
+	 * 推荐注册
+	 *
+	 * @param session
+	 * @param pid
+	 *            父id
+	 * @return
+	 */
+	@RequestMapping(value = { "/t/{pid}" }, method = RequestMethod.GET)
+	public ModelAndView _i_tUI(HttpSession session, @PathVariable String pid) {
 
 		ModelAndView result = new ModelAndView("i/user/1.0.1/t");
-		result.addObject("user_id", user_id);
+		result.addObject("data_pid", pid);
 		result.addObject("verify_token", genVerifyToken(session));
 		return result;
 	}
@@ -248,19 +252,21 @@ public class UserController {
 	public ModelAndView _i_pastureUI(HttpSession session) {
 
 		ModelAndView result = new ModelAndView("i/user/1.0.1/pasture");
-		result.addObject("nav_choose", ",01,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",01,");
 		return result;
 	}
 
 	/**
 	 * 登陆
 	 *
+	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.GET)
-	public ModelAndView _i_loginUI() {
+	public ModelAndView _i_loginUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/login");
+		result.addObject("verify_token", genVerifyToken(session));
 		return result;
 	}
 
@@ -268,7 +274,8 @@ public class UserController {
 	@RequestMapping(value = { "/user/login" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_login(HttpSession session,
 			@RequestParam(required = true) String user_name,
-			@RequestParam(required = true) String user_pass) {
+			@RequestParam(required = true) String user_pass,
+			@RequestParam(required = true) String verify_token) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
@@ -471,8 +478,8 @@ public class UserController {
 		}
 
 		map.put("data_buySell", buySell);
-		map.put("data_user", session.getAttribute("session.user"));
 		map.put("verify_token", genVerifyToken(session));
+		map.put("data_user", session.getAttribute("session.user"));
 		return "i/user/1.0.1/confirm";
 	}
 
@@ -495,15 +502,15 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] verify = verifyImg(session, verify_imgCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
-		String[] checkSafe = verifyPassSafe(session, user_pass_safe);
-		if (null != checkSafe) {
-			result.put("msg", checkSafe);
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
 			return result;
 		}
 
@@ -525,10 +532,9 @@ public class UserController {
 	/**
 	 * 举报
 	 *
-	 * @param map
 	 * @param session
+	 * @param map
 	 * @param id
-	 * @param type
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/tip_off" }, method = RequestMethod.GET)
@@ -556,8 +562,8 @@ public class UserController {
 		}
 
 		map.put("data_buySell", buySell);
-		map.put("data_user", session.getAttribute("session.user"));
 		map.put("verify_token", genVerifyToken(session));
+		map.put("data_user", session.getAttribute("session.user"));
 		return "i/user/1.0.1/tip_off";
 	}
 
@@ -628,7 +634,6 @@ public class UserController {
 
 		User user = userService.selectByKey(session.getAttribute(
 				"session.user.id").toString());
-
 		result.addObject("data_user", user);
 
 		result.addObject("nav_choose", ",06,0601,");
@@ -660,15 +665,15 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		String[] validateToken = verifyToken(session, verify_token);
-		if (null != validateToken) {
-			result.put("msg", validateToken);
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
 			return result;
 		}
 
-		String[] verify = verifyImg(session, verify_imgCode);
-		if (null != verify) {
-			result.put("msg", verify);
+		String[] verifyImg = verifyImg(session, verify_imgCode);
+		if (null != verifyImg) {
+			result.put("msg", verifyImg);
 			return result;
 		}
 
@@ -690,6 +695,8 @@ public class UserController {
 	 * 推荐清单
 	 *
 	 * @param session
+	 * @param page
+	 * @param rows
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/recommend" }, method = RequestMethod.GET)
@@ -702,7 +709,6 @@ public class UserController {
 		List<User> list = userService.findChildren___4(
 				session.getAttribute("session.user.id").toString(), page,
 				Integer.MAX_VALUE);
-
 		result.addObject("data_list", list);
 
 		result.addObject("data_user", session.getAttribute("session.user"));
@@ -827,7 +833,9 @@ public class UserController {
 
 		String uri = null;
 
-		if (null == id || "".equals(id.trim())) {
+		id = StringUtil.isEmpty(id);
+
+		if (null == id) {
 
 			List<Farm> list = farmService.feedMo_list___4(session.getAttribute(
 					"session.user.id").toString());
@@ -858,7 +866,6 @@ public class UserController {
 		}
 
 		map.put("data_user", session.getAttribute("session.user"));
-
 		map.put("nav_choose", ",05,0505,");
 		return uri;
 	}
@@ -907,6 +914,7 @@ public class UserController {
 				.setUser_id(session.getAttribute("session.user.id").toString());
 
 		String[] msg = farmHatchService.hatch(farmHatch);
+
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
@@ -930,7 +938,10 @@ public class UserController {
 
 		String uri = null;
 
-		if (null == id || "".equals(id.trim())) {
+		id = StringUtil.isEmpty(id);
+
+		if (null == id) {
+
 			List<Farm> list = farmService.hatchMo_list__4(session.getAttribute(
 					"session.user.id").toString());
 			map.put("data_list", list);
@@ -953,7 +964,6 @@ public class UserController {
 		}
 
 		map.put("data_user", session.getAttribute("session.user"));
-
 		map.put("nav_choose", ",05,0506,");
 		return uri;
 	}
@@ -966,12 +976,13 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/buyMo" }, method = RequestMethod.GET)
 	public ModelAndView _i_buyMoUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyMo");
 
 		result.addObject("verify_token", genVerifyToken(session));
-		result.addObject("nav_choose", ",05,0501,");
-		result.addObject("data_user", session.getAttribute("session.user"));
 
+		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",05,0501,");
 		return result;
 	}
 
@@ -988,8 +999,8 @@ public class UserController {
 
 		// 卖出鸡苗上限 2011
 		result.addObject("verify_token", genVerifyToken(session));
-		result.addObject("data_user", session.getAttribute("session.user"));
 
+		result.addObject("data_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",05,0502,");
 		return result;
 	}
@@ -1043,6 +1054,7 @@ public class UserController {
 		sell.setUser_id(session.getAttribute("session.user.id").toString());
 
 		String[] msg = sellService.sell(sell);
+
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
@@ -1060,6 +1072,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/buyRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_buyRecordUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/buyRecord");
 
 		User user = userService.buy_record__list__4(session.getAttribute(
@@ -1080,6 +1093,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/sellRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_sellRecordUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/sellRecord");
 
 		User user = userService.sell_record__list__4(session.getAttribute(
@@ -1096,6 +1110,7 @@ public class UserController {
 	 * 购买门票
 	 *
 	 * @param session
+	 * @param map
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/buyTicket" }, method = RequestMethod.GET)
@@ -1138,18 +1153,18 @@ public class UserController {
 
 		result.addObject("data_user", user);
 		result.addObject("verify_token", genVerifyToken(session));
-		result.addObject("nav_choose", ",06,0603,");
 
+		result.addObject("nav_choose", ",06,0603,");
 		return result;
 	}
 
 	/**
 	 * 购买
 	 *
+	 * @param session
 	 * @param user_pass_safe
 	 * @param verify_token
 	 * @param materialRecord
-	 * @param session
 	 * @return
 	 */
 	private Map<String, Object> _i_buy(HttpSession session,
@@ -1178,6 +1193,7 @@ public class UserController {
 		materialRecord.setStatus(0);
 
 		String[] msg = materialRecordService.buy(materialRecord);
+
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
@@ -1231,23 +1247,16 @@ public class UserController {
 	 */
 	@RequestMapping(value = { "/user/virementFood" }, method = RequestMethod.GET)
 	public ModelAndView _i_virementFoodUI(HttpSession session) {
+
 		ModelAndView result = new ModelAndView("i/user/1.0.1/virementFood");
-		result.addObject("nav_choose", ",06,0605,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",06,0605,");
 		return result;
 	}
 
-	/**
-	 * 转账
-	 *
-	 * @param user_pass_safe
-	 * @param materialRecord
-	 * @param session
-	 * @return
-	 */
 	private Map<String, Object> _i_virement(String user_pass_safe,
 			MaterialRecord materialRecord, HttpSession session) {
-		// BEGIN
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -1272,12 +1281,12 @@ public class UserController {
 				.toString());
 
 		String[] msg = materialRecordService.virement(materialRecord);
+
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
 		}
 
-		// TODO
 		result.put("success", true);
 		return result;
 	}
@@ -1287,7 +1296,7 @@ public class UserController {
 	public Map<String, Object> _i_virementFood(HttpSession session,
 			@RequestParam(required = true) String user_pass_safe,
 			MaterialRecord materialRecord) {
-		// TODO
+
 		materialRecord.setType_id(2);
 		return _i_virement(user_pass_safe, materialRecord, session);
 	}
@@ -1301,8 +1310,8 @@ public class UserController {
 	@RequestMapping(value = { "/user/commission" }, method = RequestMethod.GET)
 	public ModelAndView _i_commissionUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/commission");
-		result.addObject("nav_choose", ",06,0606,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",06,0606,");
 		return result;
 	}
 
@@ -1315,8 +1324,8 @@ public class UserController {
 	@RequestMapping(value = { "/user/staticRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_staticRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
-		result.addObject("nav_choose", ",06,0607,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",06,0607,");
 		return result;
 	}
 
@@ -1329,8 +1338,8 @@ public class UserController {
 	@RequestMapping(value = { "/user/dynamicRecord" }, method = RequestMethod.GET)
 	public ModelAndView _i_dynamicRecordUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/staticRecord");
-		result.addObject("nav_choose", ",06,0608,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",06,0608,");
 		return result;
 	}
 
@@ -1338,12 +1347,13 @@ public class UserController {
 	 * 门票对账单
 	 *
 	 * @param session
+	 * @param map
+	 * @param type_id
 	 * @return
 	 */
 	@RequestMapping(value = { "/user/bill" }, method = RequestMethod.GET)
-	public ModelAndView _i_ticketRecordUI(HttpSession session,
-			@RequestParam(required = true) int type_id) {
-		ModelAndView result = new ModelAndView("i/user/1.0.1/bill");
+	public String _i_ticketRecordUI(HttpSession session,
+			Map<String, Object> map, @RequestParam(required = true) int type_id) {
 
 		String nav_choose = null;
 
@@ -1361,9 +1371,7 @@ public class UserController {
 			nav_choose = ",06,0608,";
 			break;
 		default:
-			type_id = 1;
-			nav_choose = ",06,0609,";
-			break;
+			return "redirect:/user/bill?type_id=1";
 		}
 
 		MaterialRecord materialRecord = new MaterialRecord();
@@ -1374,12 +1382,12 @@ public class UserController {
 		List<MaterialRecord> list = materialRecordService
 				.findByTypeId(materialRecord);
 
-		result.addObject("data_list", list);
-		result.addObject("data_type_id", type_id);
+		map.put("data_list", list);
+		map.put("data_type_id", type_id);
 
-		result.addObject("nav_choose", nav_choose);
-		result.addObject("data_user", session.getAttribute("session.user"));
-		return result;
+		map.put("data_user", session.getAttribute("session.user"));
+		map.put("nav_choose", nav_choose);
+		return "i/user/1.0.1/bill";
 	}
 
 	/**

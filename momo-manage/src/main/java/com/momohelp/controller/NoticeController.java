@@ -33,22 +33,25 @@ public class NoticeController {
 	 * 网站公告
 	 *
 	 * @param session
+	 * @param page
+	 * @param rows
+	 * @param notice
 	 * @return
 	 */
 	@RequestMapping(value = { "/notice/" }, method = RequestMethod.GET)
 	public ModelAndView _i_indexUI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
-			@RequestParam(required = false, defaultValue = "100") int rows) {
-		ModelAndView result = new ModelAndView("i/notice/1.0.2/index");
+			@RequestParam(required = false, defaultValue = "100") int rows,
+			Notice notice) {
 
-		Notice notice = new Notice();
+		ModelAndView result = new ModelAndView("i/notice/1.0.2/index");
 
 		List<Notice> list = noticeService.findByNotice(notice, page,
 				Integer.MAX_VALUE);
 		result.addObject("data_list", list);
+		result.addObject("data_user", session.getAttribute("session.user"));
 
 		result.addObject("nav_choose", ",07,0701,");
-		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -56,21 +59,24 @@ public class NoticeController {
 	 * 公告信息
 	 *
 	 * @param session
+	 * @param map
+	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = { "/notice/info" }, method = RequestMethod.GET)
-	public String _i_infoUI(Map<String, Object> map, HttpSession session,
+	public String _i_infoUI(HttpSession session, Map<String, Object> map,
 			@RequestParam(required = true) String id) {
+
 		Notice notice = noticeService.selectByKey(id);
+
 		if (null == notice) {
 			return "redirect:/notice/";
 		}
 
 		map.put("data_doc", notice);
-
-		// TODO
-		map.put("nav_choose", ",07,0701,");
 		map.put("data_user", session.getAttribute("session.user"));
+
+		map.put("nav_choose", ",07,0701,");
 		return "i/notice/1.0.2/info";
 	}
 
@@ -105,7 +111,6 @@ public class NoticeController {
 	public Map<String, Object> _manage_add(Notice notice, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
-		// TODO
 		return result;
 	}
 

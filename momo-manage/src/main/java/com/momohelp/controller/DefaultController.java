@@ -17,10 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.momohelp.model.Notice;
 import com.momohelp.model.Prize;
 import com.momohelp.model.User;
-import com.momohelp.service.BuyService;
 import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
-import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 
 /**
@@ -33,12 +31,6 @@ public class DefaultController {
 
 	@Autowired
 	private NoticeService noticeService;
-
-	@Autowired
-	private BuyService buyService;
-
-	@Autowired
-	private SellService sellService;
 
 	@Autowired
 	private PrizeService prizeService;
@@ -100,18 +92,16 @@ public class DefaultController {
 	 * 首页
 	 *
 	 * @param session
+	 * @param notice
 	 * @return
 	 */
 	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
-	public ModelAndView _i_indexUI(HttpSession session) {
+	public ModelAndView _i_indexUI(HttpSession session, Notice notice) {
+
 		ModelAndView result = new ModelAndView("i/default/1.0.2/index");
 
-		Notice notice = new Notice();
 		List<Notice> list_notice = noticeService.findByNotice(notice, 1, 6);
 		result.addObject("data_list_notice", list_notice);
-
-		result.addObject("nav_choose", ",02,");
-		result.addObject("data_user", session.getAttribute("session.user"));
 
 		// 买盘匹配
 		User buy_record = userService.buy_record__list__4(session.getAttribute(
@@ -149,6 +139,8 @@ public class DefaultController {
 
 		result.addObject("data_dj", d);
 
+		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",02,");
 		return result;
 	}
 

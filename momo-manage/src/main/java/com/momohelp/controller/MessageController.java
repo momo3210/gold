@@ -32,39 +32,41 @@ public class MessageController {
 	 * 在线工单
 	 *
 	 * @param session
+	 * @param page
+	 * @param rows
+	 * @param message
 	 * @return
 	 */
 	@RequestMapping(value = { "/message/" }, method = RequestMethod.GET)
 	public ModelAndView _i_indexUI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
-			@RequestParam(required = false, defaultValue = "100") int rows) {
-		ModelAndView result = new ModelAndView("i/message/1.0.2/index");
+			@RequestParam(required = false, defaultValue = "100") int rows,
+			Message message) {
 
-		Message message = new Message();
+		ModelAndView result = new ModelAndView("i/message/1.0.2/index");
 
 		List<Message> list = messageService.findByMessage(message, page,
 				Integer.MAX_VALUE);
 		result.addObject("data_list", list);
-
-		// TODO
-		result.addObject("nav_choose", ",07,0702,");
 		result.addObject("data_user", session.getAttribute("session.user"));
+
+		result.addObject("nav_choose", ",07,0702,");
 		return result;
 	}
 
 	/**
 	 * 发起留言
 	 *
-	 * @param message
 	 * @param session
+	 * @param message
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/message/add" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_add(Message message, HttpSession session) {
+	public Map<String, Object> _i_add(HttpSession session, Message message) {
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
-		// TODO
 		return result;
 	}
 
