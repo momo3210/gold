@@ -293,11 +293,11 @@
 					success : function(data) {
 						if (data.success) {
 							alert('卖出鸡苗成功')
-							location.href = '${(conf_html_virtualPath)!}user/sellRecord';
-						}else{
-							if (data.msg) alert(data.msg[0]);
-							location.href = '${(conf_html_virtualPath)!}user/sellMo';
+							return location.href = '${(conf_html_virtualPath)!}user/sellRecord';
 						}
+
+						if (data.msg) alert(data.msg[0]);
+						location.href = '${(conf_html_virtualPath)!}user/sellMo';
 					},
 					error : function() {
 						alert(arguments[2]);

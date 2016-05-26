@@ -194,8 +194,13 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = { "/r" }, method = RequestMethod.GET)
-	public String _i_tUI(HttpSession session, Map<String, Object> map,
+	public String _i_rUI(HttpSession session, Map<String, Object> map,
 			@RequestParam(required = false) String t) {
+
+		session.removeAttribute("session.user");
+		session.removeAttribute("session.user.id");
+		session.removeAttribute("session.user.lv");
+		session.removeAttribute("session.time");
 
 		t = StringUtil.isEmpty(t);
 
