@@ -55,6 +55,7 @@ public class Match implements Serializable, IMatch {
 		// 获取买卖盘中未匹配的单据
 		List<BuySell> buySells = buySellService.selectBySellAndBuyId();
 		Calendar cr = Calendar.getInstance();
+		cr.add(Calendar.DAY_OF_MONTH, -1);
 		cr.set(Calendar.HOUR, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
