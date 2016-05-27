@@ -143,17 +143,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	<bean id="conversionQtzJobMethod"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">

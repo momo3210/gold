@@ -95,6 +95,10 @@ public class Match implements Serializable, IMatch {
 				if (buyMatchNum <= 0) {
 					continue;
 				}
+				//自己不能给自己匹配
+				if (sell.getUser_id().equals(buy.getUser_id())) {
+					continue;
+				}
 				entity = new BuySell();
 				entity.setId(genId());
 				entity.setCreate_time(new Date());
@@ -136,6 +140,7 @@ public class Match implements Serializable, IMatch {
 					entity.setP_buy_id("null");
 					entity.setStatus(0);
 					entity.setP_sell_user_id(sell.getUser_id());
+					entity.setP_buy_user_id("null");
 					entity.setNum_matching(sell.getNum_sell());
 					buySellService.save(entity);
 				});
@@ -153,6 +158,7 @@ public class Match implements Serializable, IMatch {
 					entity.setP_sell_id("null");
 					entity.setP_buy_id(buy.getId());
 					entity.setStatus(0);
+					entity.setP_sell_user_id("null");
 					entity.setP_buy_user_id(buy.getUser_id());
 					entity.setNum_matching(buy.getNum_buy());
 					buySellService.save(entity);
@@ -170,6 +176,10 @@ public class Match implements Serializable, IMatch {
 		BuySell entity = null;
 		for (Buy buy : buys) {
 			if (buy.getNum_buy() <= 0) {
+				continue;
+			}
+			//自己不能给自己匹配
+			if (buySell.getP_sell_user_id().equals(buy.getUser_id())) {
 				continue;
 			}
 			entity = new BuySell();
@@ -218,6 +228,10 @@ public class Match implements Serializable, IMatch {
 		BuySell entity = null;
 		for (Sell sell : sells) {
 			if (sell.getNum_sell() <= 0) {
+				continue;
+			}
+			//自己不能给自己匹配
+			if (buySell.getP_buy_user_id().equals(sell.getUser_id())) {
 				continue;
 			}
 			entity = new BuySell();
