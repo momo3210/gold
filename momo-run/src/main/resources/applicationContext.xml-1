@@ -231,7 +231,7 @@
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
 		<!-- 每天8-20点 每一小时执行一次-->
 		<!-- <property name="cronExpression" value="0 0 8-20 * * ?"></property> -->
-		<property name="cronExpression" value="0/11 * * * * ?"></property>
+		<property name="cronExpression" value="0/13 * * * * ?"></property>
 	</bean>
 
 
