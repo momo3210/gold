@@ -2,7 +2,7 @@
 					<#list doc.buys! as doc>
 					<div class="row-fluid">
 						<div class="span12">
-							<div class="widget-box collapsed">
+							<div class="widget-box">
 								<div class="widget-header header-color-red2">
 									<h4 class="smaller">
 										<i class="icon-sort"></i>
@@ -33,7 +33,7 @@
 													<div class="widget-header widget-header-small header-color-green2">
 														<h4 class="smaller">
 															<i class="icon-sort"></i>
-															P${(doc.id)!}
+															${(doc.id)!}
 															<small>
 															<#switch doc.status>
 																<#case 0>

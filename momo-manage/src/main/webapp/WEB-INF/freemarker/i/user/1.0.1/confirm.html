@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>确认打款 | 陌陌黄金农场</title>
+		<title>确认<#if ',05,0503,' == (nav_choose)!>打<#else>收</#if>款 | MOMO黄金农场</title>
 		<#include "/_pagelet/header.html"/>
 		<style>
 		.form-horizontal {
@@ -71,7 +71,7 @@
 								<i class="icon-angle-right arrow-icon"></i>
 							</span>
 						</li>
-						<li class="active">确认打款</li>
+						<li class="active">确认<#if ',05,0503,' == (nav_choose)!>打<#else>收</#if>款</li>
 					</ul><!--.breadcrumb-->
 
 				</div>
@@ -79,7 +79,7 @@
 				<div class="page-content">
 					<div class="page-header position-relative">
 						<h1>
-							确认打款
+							确认<#if ',05,0503,' == (nav_choose)!>打<#else>收</#if>款
 							<small>
 								<i class="icon-double-angle-right"></i>
 								Confirm
@@ -98,7 +98,7 @@
 											<li class="active">
 												<a data-toggle="tab" href="#home">
 													<!-- <i class="green icon-home bigger-110"></i> -->
-													确认打款
+													确认<#if ',05,0503,' == (nav_choose)!>打<#else>收</#if>款
 												</a>
 											</li>
 										</ul>
@@ -254,7 +254,7 @@
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
 						if (data.success) {
-							alert('确认打款成功');
+							alert('确认<#if ',05,0503,' == (nav_choose)!>打<#else>收</#if>款成功');
 							location.href = '${(conf_html_virtualPath)!}user/<#if ',05,0503,' == (nav_choose)!>buyRecord<#else>sellRecord</#if>';
 						}else{
 							if (data.msg) alert(data.msg[0]);

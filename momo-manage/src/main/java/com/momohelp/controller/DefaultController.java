@@ -20,6 +20,9 @@ import com.momohelp.model.User;
 import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.webservice.SmSWebService;
+import com.momohelp.util.webservice.SmSWebServiceSoap;
+import com.momohelp.util.webservice.WsSendResponse;
 
 /**
  *
@@ -44,12 +47,12 @@ public class DefaultController {
 	 * @return
 	 */
 	private String genSMS() {
-		// int i = (int) ((Math.random() * 5 + 1) * 1000);
-		// String id = String.valueOf(i);
-		// if (4 < id.length()) {
-		// id = id.substring(0, 4);
-		// }
-		return "1234";
+		int i = (int) ((Math.random() * 5 + 1) * 1000);
+		String id = String.valueOf(i);
+		if (4 < id.length()) {
+			id = id.substring(0, 4);
+		}
+		return id;
 	}
 
 	/**
@@ -76,13 +79,13 @@ public class DefaultController {
 
 		session.setAttribute("verify.sms", genSMS());
 
-		// SmSWebService service = new SmSWebService();
-		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
-		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
-		// "123456", mobile,
-		// "您本次验证码:" + session.getAttribute("verify.sms")
-		// + "，感谢您的支持，祝您生活愉快！！", "", "");
-		// result.put("code", response.getReturnStatus());
+		SmSWebService service = new SmSWebService();
+		SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
+				"123456", mobile,
+				"您本次验证码:" + session.getAttribute("verify.sms")
+						+ "，感谢您的支持，祝您生活愉快！！", "", "");
+		result.put("code", response.getReturnStatus());
 
 		result.put("success", true);
 		return result;
