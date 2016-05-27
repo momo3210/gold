@@ -59,7 +59,7 @@
 		<property name="viewResolvers">
 			<list>
 				<ref bean="freeMarkerViewResolver" />
-				<ref bean="jspViewResolver" />
+				<!-- <ref bean="jspViewResolver" /> -->
 			</list>
 		</property>
 		<property name="defaultViews">
@@ -70,14 +70,14 @@
 		</property>
 	</bean>
 	<!-- jsp视图解析器 -->
-	<bean id="jspViewResolver"
+	<!-- <bean id="jspViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.JstlView" />
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 		<property name="order" value="2"></property>
-	</bean>
+	</bean> -->
 	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
 	<!-- freemarker的配置 -->
 	<bean id="freemarkerConfigurer"

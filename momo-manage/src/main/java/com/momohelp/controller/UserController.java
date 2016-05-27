@@ -300,11 +300,11 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		// String[] verifyToken = verifyToken(session, verify_token);
-		// if (null != verifyToken) {
-		// result.put("msg", verifyToken);
-		// return result;
-		// }
+		String[] verifyToken = verifyToken(session, verify_token);
+		if (null != verifyToken) {
+			result.put("msg", verifyToken);
+			return result;
+		}
 
 		Map<String, Object> login = userService.login(user_name, user_pass);
 

@@ -54,7 +54,7 @@
 		<filter-class>com.momohelp.filter.PermitFilter</filter-class>
 		<init-param>
 			<param-name>url-suffix</param-name>
-			<param-value>js,css,html,jpg</param-value>
+			<param-value>js,css,html,jpg,ico</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
