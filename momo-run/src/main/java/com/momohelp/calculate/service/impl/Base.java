@@ -172,10 +172,7 @@ public class Base implements Ibase, Serializable {
 				farm.setFlag_calc_bonus(1);
 				farmService.updateNotNull(farm);
 			}
-		} else {
-			// 计算用户等级失败
-			return -1;
-		}
+		} 
 		return base;
 	}
 

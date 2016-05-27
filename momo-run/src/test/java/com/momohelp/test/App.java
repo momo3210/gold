@@ -1,6 +1,5 @@
 package com.momohelp.test;
 
-import java.util.Calendar;
 
 public class App {
 
@@ -28,10 +27,5 @@ public class App {
 		// job.runJob();
 		// org.apache.ibatis.type.JdbcType.INTEGER
 		// context.close();
-
-		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.DAY_OF_MONTH, -1);
-		System.err.println(cr.getTime());
-
 	}
 }
