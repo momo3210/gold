@@ -303,6 +303,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setNum_ticket(0);
 		user.setNum_food(0);
 
+		user.setLv("05");
+
 		return save_prev(user);
 	}
 
@@ -371,7 +373,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setEmail(user.getEmail());
 		_user.setNickname(user.getNickname());
 
-		_user.setLv("05");
+		_user.setLv(user.getLv());
+		_user.setBank(user.getBank());
+		_user.setBank_account(user.getBank_account());
+		_user.setBank_name(user.getBank_name());
 
 		_user.setNum_static(user.getNum_static());
 		_user.setNum_dynamic(user.getNum_dynamic());
@@ -399,24 +404,25 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
 	@Override
 	public String[] createUser(User user) {
-		if (null == user) {
-			return new String[] { "非法操作" };
+
+		user.setReal_name(StringUtil.isEmpty(user.getReal_name()));
+		if (null == user.getReal_name()) {
+			return new String[] { "姓名不能为空" };
 		}
 
-		/***** *****/
+		user.setUser_pass(StringUtil.isEmpty(user.getUser_pass()));
+		if (null == user.getUser_pass()) {
+			return new String[] { "登陆密码不能为空" };
+		}
+
+		user.setUser_pass_safe(StringUtil.isEmpty(user.getUser_pass_safe()));
+		if (null == user.getUser_pass_safe()) {
+			return new String[] { "安全密码不能为空" };
+		}
 
 		// 附加数据
-		user.setUser_pass(DEFAULT_USER_PASS);
-		user.setUser_pass_safe(DEFAULT_USER_PASS);
-		user.setStatus(1);
-
-		user.setNum_static(null == user.getNum_static() ? 0.00 : user
-				.getNum_static());
-		user.setNum_dynamic(null == user.getNum_dynamic() ? 0.00 : user
-				.getNum_dynamic());
-		user.setNum_ticket(null == user.getNum_ticket() ? 0 : user
-				.getNum_ticket());
-		user.setNum_food(null == user.getNum_food() ? 0 : user.getNum_food());
+		user.setUser_pass(MD5.encode(user.getUser_pass()));
+		user.setUser_pass_safe(MD5.encode(user.getUser_pass_safe()));
 
 		return save_prev(user);
 	}

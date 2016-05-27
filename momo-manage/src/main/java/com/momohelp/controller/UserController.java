@@ -1430,24 +1430,53 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 用户管理
+	 *
+	 * @param session
+	 * @param map
+	 * @return
+	 */
 	@RequestMapping(value = { "/manage/user/add" }, method = RequestMethod.GET)
-	public String _i_addtUI(Map<String, Object> map, HttpSession session) {
+	public String _manage_user_addUI(HttpSession session,
+			Map<String, Object> map) {
 		map.put("session_user", session.getAttribute("session.user"));
 		map.put("nav_choose", ",08,0801,");
 		return "m/user/add";
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/manage/user/add" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_add(HttpSession session, User user) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		user.setUser_pass("123456");
+		user.setUser_pass_safe("123456");
+
+		String[] msg = userService.createUser(user);
+
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
 	/**
 	 * 用户修改
 	 *
-	 * @param map
 	 * @param session
+	 * @param map
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.GET)
-	public String _i_editUI(HttpSession session, Map<String, Object> map,
-			@RequestParam(required = true) String id) {
+	public String _manage_user_editUI(HttpSession session,
+			Map<String, Object> map, @RequestParam(required = true) String id) {
 
 		User user = userService.selectByKey(id);
 		map.put("data_user", user);
@@ -1459,7 +1488,7 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/manage/user/edit" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_edit(User user, HttpSession session) {
+	public Map<String, Object> _manage_user_edit(HttpSession session, User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
@@ -1470,8 +1499,32 @@ public class UserController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = { "/manage/user/remove" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_remove(HttpSession session,
+			@RequestParam(required = true) String id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		userService.deleteByKeys(id);
+
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 登陆
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.GET)
+	public ModelAndView _manage_user_loginUI() {
+		ModelAndView result = new ModelAndView("m/user/login");
+		return result;
+	}
+
+	@ResponseBody
 	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _manage_login(HttpSession session,
+	public Map<String, Object> _manage_user_login(HttpSession session,
 			@RequestParam(required = true) String user_name,
 			@RequestParam(required = true) String user_pass) {
 
@@ -1498,50 +1551,14 @@ public class UserController {
 	}
 
 	/**
-	 * 登陆
-	 *
-	 * @return
-	 */
-	@RequestMapping(value = { "/manage/user/login" }, method = RequestMethod.GET)
-	public ModelAndView _manage_loginUI() {
-		ModelAndView result = new ModelAndView("m/user/login");
-		return result;
-	}
-
-	/**
 	 * 退出
 	 *
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = { "/manage/user/logout" }, method = RequestMethod.GET)
-	public String _manage_logoutUI(HttpSession session) {
+	public String _manage_user_logoutUI(HttpSession session) {
 		session.invalidate();
 		return "redirect:/manage/user/login";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = { "/manage/user/createAccount" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _manage_createAccount(HttpSession session,
-			User user) {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
-
-		// 我的信息
-		// user.setPid(session.getAttribute("session.user.id").toString());
-
-		user.setUser_pass("123456");
-		user.setUser_pass_safe("123456");
-
-		String[] msg = userService.register(user);
-
-		if (null != msg) {
-			result.put("msg", msg);
-			return result;
-		}
-
-		result.put("success", true);
-		return result;
 	}
 }

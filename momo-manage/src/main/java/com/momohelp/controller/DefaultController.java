@@ -116,31 +116,21 @@ public class DefaultController {
 				.getAttribute("session.user.id").toString());
 		result.addObject("data_sell_record", sell_record.getSells());
 
-		// 买盘
-		// List<Buy> list_buy =
-		// buyService.findUnFinishDeal(session.getAttribute(
-		// "session.user.id").toString());
-		// result.addObject("data_list_buy", list_buy);
-
-		// 卖盘
-		// List<Sell> list_sell = sellService.findUnFinishDeal(session
-		// .getAttribute("session.user.id").toString());
-		// result.addObject("data_list_sell", list_sell);
-
-		List<Prize> dongjieliebiao = prizeService.findByUserId(session
+		// 冻结列表
+		List<Prize> list_prize_freeze = prizeService.findByUserId(session
 				.getAttribute("session.user.id").toString());
 
 		double d = 0;
 
-		for (int i = 0; i < dongjieliebiao.size(); i++) {
-			Prize item = dongjieliebiao.get(i);
+		for (int i = 0; i < list_prize_freeze.size(); i++) {
+			Prize item = list_prize_freeze.get(i);
 
 			if (item.getFlag() == 0) {
 				d += item.getMoney();
 			}
 		}
 
-		result.addObject("data_dj", d);
+		result.addObject("data_num_freeze", d);
 
 		result.addObject("data_user", sell_record);
 		result.addObject("nav_choose", ",02,");

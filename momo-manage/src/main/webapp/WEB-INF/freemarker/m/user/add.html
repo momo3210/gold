@@ -82,7 +82,7 @@
 							添加新用户
 							<small>
 								<i class="icon-double-angle-right"></i>
-								My Profile
+								Create User
 							</small>
 						</h1>
 					</div><!--/.page-header-->
@@ -111,7 +111,7 @@
 											<li class="active">
 												<a data-toggle="tab" href="#home">
 													<!-- <i class="green icon-home bigger-110"></i> -->
-													个人资料
+													添加新用户
 												</a>
 											</li>
 										</ul>
@@ -142,20 +142,11 @@
 		<#include "/_pagelet/js.html"/>
 
 		<script>
-		$('#img_verifyCode').click(function(){
-			showVerifyCode();
-		});
-
-		function showVerifyCode(){
-			$('#img_verifyCode').attr('src', '/verifyCode.jpg?ts='+ (new Date()).valueOf());
-		}
-
 		$(function(){
-			showVerifyCode();
 
 			$('#btn_submit').click(function() {
 				$.ajax({
-					url : '${(conf_html_virtualPath)!}manage/user/createAccount',
+					url : '${(conf_html_virtualPath)!}manage/user/add',
 					type : 'POST',
 					dataType : 'JSON',
 					data : $('#frm').serializeObjectForm(),
@@ -164,7 +155,6 @@
 							alert('添加新用户成功')
 							return location.href = '${(conf_html_virtualPath)!}manage/user/';
 						}
-
 						if (data.msg) alert(data.msg[0]);
 					},
 					error : function() {
