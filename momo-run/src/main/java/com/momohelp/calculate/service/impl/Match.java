@@ -149,7 +149,6 @@ public class Match implements Serializable, IMatch {
 		sells.parallelStream().forEach(sell -> {
 			sellService.updateFlagCalc(sell.getId());
 		});
-
 		// 买盘清理
 		buys.parallelStream().filter(buy -> buy.getNum_buy() > 0)
 				.forEach(buy -> {

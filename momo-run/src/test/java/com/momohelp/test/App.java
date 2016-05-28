@@ -3,16 +3,14 @@ package com.momohelp.test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.momohelp.calculate.service.IMatch;
-import com.momohelp.calculate.service.Ibase;
+import com.momohelp.calculate.service.IStatic;
 
 
 public class App {
 
 	public static void main(String[] args) throws Exception {
-		 AbstractApplicationContext context = new
-		 ClassPathXmlApplicationContext(
-		 "applicationContext.xml");
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext(
+				"applicationContext.xml");
 		// Ibase match=context.getBean(Ibase.class);
 		// match.base();
 		// SchedulerFactoryBean bean=null;
@@ -33,7 +31,13 @@ public class App {
 		// job.runJob();
 		// org.apache.ibatis.type.JdbcType.INTEGER
 		// context.close();
-		 Ibase match=context.getBean(Ibase.class);
-		 match.base();
+		// Ibase match = context.getBean(Ibase.class);
+		// match.base();
+		// IConversion conversion=context.getBean(IConversion.class);
+		// conversion.triggerConversion();
+		// IForceLogout conversion=context.getBean(IForceLogout.class);
+		// conversion.calculateForceLogout();
+		IStatic conversion=context.getBean(IStatic.class);
+		conversion.calculation();
 	}
 }
