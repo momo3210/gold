@@ -1,3 +1,8 @@
+<style>
+#table_1 a {
+	text-decoration: underline;
+}
+</style>
 <table id="table_1"
 	class="table table-striped table-bordered table-hover">
 	<thead>
@@ -20,7 +25,7 @@
 					name='table_1_row' value='${(doc.id)!}'> <span
 					class="lbl"></span> </label></td>
 			<td class='hidden-480'>${(doc.id)!}</td>
-			<td class='hidden-480'>${(doc.real_name)!}</td>
+			<td class='hidden-480'><a href='./info?id=${(doc.id)!}'>${(doc.real_name)!}</a></td>
 			<td>${(doc.mobile)!}</td>
 
 			<td>${doc.num_static?string('0.00')}</td>

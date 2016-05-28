@@ -46,6 +46,11 @@ public class PermitFilter implements Filter {
 		// 获取此次的请求路径
 		String uri = hreq.getRequestURI();
 
+		if (isStatic(uri)) {
+			chain.doFilter(request, response);
+			return;
+		}
+
 		if ("/user/login".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
@@ -114,6 +119,10 @@ public class PermitFilter implements Filter {
 	 */
 	private boolean isManage(String uri) {
 		return 0 == uri.indexOf("/manage/");
+	}
+
+	private boolean isStatic(String uri) {
+		return 0 == uri.indexOf("/static/");
 	}
 
 }

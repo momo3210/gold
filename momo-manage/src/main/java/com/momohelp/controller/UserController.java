@@ -1674,6 +1674,31 @@ public class UserController {
 	}
 
 	/**
+	 * 会员详情
+	 *
+	 * @param session
+	 * @param map
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = { "/manage/user/info" }, method = RequestMethod.GET)
+	public String _manage_user_infoUI(HttpSession session,
+			Map<String, Object> map, @RequestParam(required = true) String id) {
+
+		User user = userService.selectByKey(id);
+
+		if (null == user) {
+			return "redirect:/manage/user/";
+		}
+
+		map.put("data_user", user);
+
+		map.put("session_user", session.getAttribute("session.user"));
+		map.put("nav_choose", ",08,0801,");
+		return "m/user/info";
+	}
+
+	/**
 	 * 用户修改
 	 *
 	 * @param session
@@ -1686,9 +1711,14 @@ public class UserController {
 			Map<String, Object> map, @RequestParam(required = true) String id) {
 
 		User user = userService.selectByKey(id);
-		map.put("data_user", user);
-		map.put("session_user", session.getAttribute("session.user"));
 
+		if (null == user) {
+			return "redirect:/manage/user/";
+		}
+
+		map.put("data_user", user);
+
+		map.put("session_user", session.getAttribute("session.user"));
 		map.put("nav_choose", ",08,0801,");
 		return "m/user/edit";
 	}
