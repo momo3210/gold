@@ -56,7 +56,7 @@ public class Match implements Serializable, IMatch {
 		List<BuySell> buySells = buySellService.selectBySellAndBuyId();
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.DAY_OF_MONTH, -1);
-		cr.set(Calendar.HOUR, 0);
+		cr.set(Calendar.HOUR_OF_DAY, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
 		// 卖盘数据
@@ -149,7 +149,6 @@ public class Match implements Serializable, IMatch {
 		sells.parallelStream().forEach(sell -> {
 			sellService.updateFlagCalc(sell.getId());
 		});
-
 		// 买盘清理
 		buys.parallelStream().filter(buy -> buy.getNum_buy() > 0)
 				.forEach(buy -> {

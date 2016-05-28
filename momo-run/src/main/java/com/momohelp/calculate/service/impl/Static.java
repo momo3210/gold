@@ -44,7 +44,7 @@ public class Static implements IStatic {
 		log.info("-------------静态余额孵化计算------------------------");
 		Example example = new Example(FarmHatch.class);
 		Calendar cr = Calendar.getInstance();
-		cr.set(Calendar.HOUR, 0);
+		cr.set(Calendar.HOUR_OF_DAY, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
 		example.createCriteria()

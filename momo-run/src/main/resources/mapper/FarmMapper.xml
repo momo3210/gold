@@ -33,6 +33,6 @@
 	<select id="selectForceLogout" resultType="farm">
 		SELECT w.* FROM
 		w_farm_chick as w WHERE ( w.time_out &lt;SYSDATE() AND
-		w.time_out&gt;#{0} )AND w.flag_out_p!='3'
+		w.time_out&gt;=#{0} )AND w.flag_out_p!='3'
 	</select>
 </mapper>

@@ -27,6 +27,7 @@ import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.UserService;
+
 @Service
 public class Base implements Ibase, Serializable {
 
@@ -66,13 +67,25 @@ public class Base implements Ibase, Serializable {
 	 * 
 	 * 成年鸡数量： 可能在喂养过程中卖掉成年鸡 ，需要每日计算
 	 */
+	/***
+	 * 提成基数计算
+	 * 
+	 * 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
+	 * 
+	 * 利息包含：
+	 * 
+	 * 1.幼鸡饲养利息：获取配置表中幼鸡饲养利率 * 幼鸡饲养周期
+	 * 
+	 * 2.成年下蛋利息：获取这一批次 * 时间
+	 * 
+	 */
 	@Override
 	public double base() {
 		double base = 0.00;
 		log.info("-------------------奖金基数计算------------------------");
 		List<Farm> farms = farmService.getUntreatedFarm();
 		// 用户等级计算
-		if (calculateLevel(farms)) {  
+		if (calculateLevel(farms)) {
 			// 计算奖金基数
 			for (Farm farm : farms) {
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
@@ -84,7 +97,7 @@ public class Base implements Ibase, Serializable {
 					continue;
 				}
 				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
-				if (leader==null) {
+				if (leader == null) {
 					continue;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
@@ -97,18 +110,7 @@ public class Base implements Ibase, Serializable {
 				}
 				if (f.getFlag_out_p() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
 												// 计算基数为0 也就不用计算了
-					/***
-					 * 提成基数计算
-					 * 
-					 * 计算公式：小端金额- 推荐人获取被推荐人最近一单的推荐奖-被推荐人当前单所得利息
-					 * 
-					 * 利息包含：
-					 * 
-					 * 1.幼鸡饲养利息：获取配置表中幼鸡饲养利率 * 幼鸡饲养周期
-					 * 
-					 * 2.成年下蛋利息：获取这一批次 * 时间
-					 * 
-					 */
+				
 					// 获得当前用户的上一单
 					Farm beforeFarm = farmService.selectByKey(farm.getPid());
 					Example example = new Example(Prize.class);
@@ -150,6 +152,10 @@ public class Base implements Ibase, Serializable {
 						continue;
 					}
 					int depth = temp - userTemp.getDepth();
+					// 判断等级与代数关系
+					if (prejudge(depth, userTemp.getLv())) {
+						continue;
+					}
 					double number = calculateRoyalty(tempBase,
 							userTemp.getLv(), depth);
 					entity = new Prize();
@@ -172,8 +178,30 @@ public class Base implements Ibase, Serializable {
 				farm.setFlag_calc_bonus(1);
 				farmService.updateNotNull(farm);
 			}
-		} 
+		}
 		return base;
+	}
+
+	private boolean prejudge(int depth, String lv) {
+		boolean bool = false;
+		switch (lv) {
+		case "05":
+            if (depth>=2) {
+            	bool=true;
+			}
+			break;
+		case "06":
+            if (depth>=3) {
+            	bool=true;
+			}
+			break;
+		case "07":
+            if (depth>=4) {
+            	bool=true;
+			}
+			break;
+		}
+		return bool;
 	}
 
 	// 用户等级计算
@@ -242,7 +270,7 @@ public class Base implements Ibase, Serializable {
 	 * 
 	 * @param base
 	 *            提成基数
-	 * @param uuid
+	 * @param lv
 	 *            当前等级lv编号
 	 * @param generation
 	 *            直系几代

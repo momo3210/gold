@@ -38,11 +38,10 @@ public class Conversion implements Serializable, IConversion {
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("flag", 0);
 		Calendar cr = Calendar.getInstance();
-		cr.set(Calendar.HOUR, 0);
+		cr.set(Calendar.HOUR_OF_DAY, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
-		criteria.andGreaterThan("trigger_time", cr.getTime());
-		criteria.andLessThan("trigger_time", Calendar.getInstance().getTime());
+		criteria.andBetween("trigger_time", cr.getTime(), Calendar.getInstance().getTime());
 		List<Prize> prizes = prizeService.selectByExample(example);
 		User userTemp = null;
 		for (Prize prize : prizes) {
