@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +17,16 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+
+import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Farm;
@@ -41,6 +46,8 @@ import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
 import com.momohelp.util.StringUtil;
 import com.momohelp.util.encryptUtil.MD5;
+
+import freemarker.template.Template;
 
 /**
  *
@@ -73,6 +80,9 @@ public class UserController {
 
 	@Autowired
 	private BuySellService buySellService;
+
+	@Autowired
+	private FreeMarkerConfigurer freemarkerConfigurer;
 
 	/**
 	 * 短信验证码
@@ -1552,16 +1562,79 @@ public class UserController {
 
 	/***** ***** ***** ***** ***** 后台 ***** ***** ***** ***** *****/
 
-	@RequestMapping(value = { "/manage/user/" }, method = RequestMethod.GET)
-	public ModelAndView _manage_userUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("m/user/index");
+	/**
+	 * 展示树用
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/manage/user/list" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_list(
+			@RequestParam(required = true) String pid,
+			@RequestParam(required = false, defaultValue = "1") int json) {
 
-		List<User> list = userService.selectByExample(null);
-		result.addObject("data_list", list);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", true);
 
-		result.addObject("session_user", session.getAttribute("session.user"));
-		result.addObject("nav_choose", ",08,0801,");
+		Example example = new Example(User.class);
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("pid", pid);
+		List<User> list = userService.selectByExample(example);
+
+		if (1 == json) {
+			result.put("data", list);
+		} else {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("data_grid_list", list);
+
+			try {
+				Template template = freemarkerConfigurer.getConfiguration()
+						.getTemplate("m/user/_pagelet/list.html");
+				result.put("data", FreeMarkerTemplateUtils
+						.processTemplateIntoString(template, map));
+			} catch (Exception ignore) {
+				result.put("success", false);
+			}
+		}
+
 		return result;
+	}
+
+	@RequestMapping(value = { "/manage/user/" }, method = RequestMethod.GET)
+	public String _manage_userUI(HttpSession session, Map<String, Object> map,
+			@RequestParam(required = false) String id) {
+
+		id = StringUtil.isEmpty(id);
+
+		// 树的数据
+		if (null == id) {
+
+			// 获取父id为0的
+			Example example = new Example(User.class);
+			Example.Criteria criteria = example.createCriteria();
+			criteria.andEqualTo("pid", "0");
+			List<User> list_user = userService.selectByExample(example);
+
+			map.put("data_tree_list", list_user);
+			map.put("data_grid_list", list_user);
+
+		} else {
+			// 查询用户主键
+			User user = userService.selectByKey(id);
+
+			if (null == user) {
+				return "redirect:/manage/user/";
+			}
+
+			List<User> list_user = new ArrayList<User>();
+			list_user.add(user);
+			map.put("data_tree_list", list_user);
+			map.put("data_grid_list", list_user);
+		}
+
+		map.put("search_user_id", id);
+
+		map.put("session_user", session.getAttribute("session.user"));
+		map.put("nav_choose", ",08,0801,");
+		return "m/user/index";
 	}
 
 	/**
