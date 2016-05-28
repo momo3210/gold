@@ -30,7 +30,7 @@
 								<div class="widget-body">
 									<div class="widget-main">
 										<p class="alert alert-info">
-											参加者：${(data_user.id)!}<br/>
+											参加者：${(doc.user_id)!}<br/>
 											请求援助数额：RMB ${doc.num_sell?string('#.00')}<br/>
 											排队日期：${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}<br/>
 											当前状态：<#if (doc.time_deal)??>已完成<#else>未完成</#if>
@@ -124,19 +124,19 @@
 																<tbody>
 																	<tr>
 																		<td class="">开户信息</td>
-																		<td>${(data_user.bank)!} / ${(data_user.real_name)!}</td>
+																		<td>${(doc.p_sell_user.bank)!} / ${(doc.p_sell_user.real_name)!}</td>
 																	</tr>
 																	<tr>
 																		<td class="">开户帐户</td>
-																		<td>${(data_user.bank_account)!}</td>
+																		<td>${(doc.p_sell_user.bank_account)!}</td>
 																	</tr>
 																	<tr>
 																		<td class="">支行名称</td>
-																		<td>${(data_user.bank_name)!}</td>
+																		<td>${(doc.p_sell_user.bank_name)!}</td>
 																	</tr>
 																	<tr>
 																		<td class="">支付宝</td>
-																		<td>${(data_user.alipay_account)!} / ${(data_user.real_name)!} <font color='red'>（支付宝转账优先）</font></td>
+																		<td>${(doc.p_sell_user.alipay_account)!} / ${(doc.p_sell_user.real_name)!} <font color='red'>（支付宝转账优先）</font></td>
 																	</tr>
 																	<tr>
 																		<td class="">联络打款人</td>

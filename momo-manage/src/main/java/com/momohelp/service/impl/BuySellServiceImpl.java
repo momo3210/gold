@@ -59,6 +59,8 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 			BuySell buySell = list.get(i);
 			buySell.setP_buy_user(userService.getMeAndParent__4(buySell
 					.getP_buy_user_id()));
+			buySell.setP_sell_user(userService.selectByKey(buySell
+					.getP_sell_user_id()));
 		}
 
 		return list;
