@@ -141,6 +141,7 @@ public class DefaultController {
 	public ModelAndView _manage_indexUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("m/default/index");
 		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",10,");
 		return result;
 	}
 
