@@ -106,15 +106,15 @@
 										<div class="tab-content">
 											<#if (data_buySell.status)?? && 0 == (data_buySell.status)!>
 											<div class="tab-pane in active">
-												<form class="form-horizontal" id='upfrm'>
+												<form class="form-horizontal" method="post" enctype="multipart/form-data" id='upfrm'>
 													<div class="control-group">
 														<label class="control-label" for="upfrm_p_buy_user_img">打款图片</label>
 
 														<div class="controls">
-															<input class="span6" multiple="" type="file" id="upfrm_p_buy_user_img" accept='.jpg' />
+															<input class="span6" type="file" id="upfrm_p_buy_user_img" name='file' accept='.jpg' data-url="/user/confirm_upload" />
 														</div>
 													</div>
-													<div class="control-group">
+													<!-- <div class="control-group">
 														<label class="control-label"></label>
 
 														<div class="controls">
@@ -123,7 +123,7 @@
 																开始上传
 															</button>
 														</div>
-													</div>
+													</div> -->
 												</form>
 											</div>
 											</#if>
@@ -203,6 +203,9 @@
 		</a>
 
 		<#include "/_pagelet/js.html"/>
+
+		<script type='text/javascript' src='${(conf_html_cdn)!}js/jquery/fileupload/jquery.fileupload.js'></script>
+
 		<script>
 		$('#img_verifyCode').click(function(){
 			showVerifyCode();
@@ -267,9 +270,13 @@
 				});
 			});
 
-			$('#btn_upload').click(function() {
-				alert('上传成功');
-			});
+			// 上传初始化
+			$('#upfrm_p_buy_user_img').fileupload({
+		        dataType: 'json',
+		        done: function (e, data) {
+		            console.log(data.result)
+		        }
+		    });
 		});
 		</script>
 	</body>

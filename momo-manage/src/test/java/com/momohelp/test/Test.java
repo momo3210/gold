@@ -1,6 +1,12 @@
 package com.momohelp.test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Test {
+
+	private static final SimpleDateFormat sdf = new SimpleDateFormat(
+			"yyyyMMddHHmmss");
 
 	/**
 	 * @param args
@@ -26,6 +32,8 @@ public class Test {
 		String b = null;
 
 		System.out.println(a.equals(b));
+
+		System.out.println(sdf.format(new Date()));
 
 	}
 

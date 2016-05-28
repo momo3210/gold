@@ -48,7 +48,6 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("p_sell_id", sell_id);
 		criteria.andNotEqualTo("p_buy_id", "null");
-		criteria.andNotEqualTo("p_buy_user_id", "null");
 
 		List<BuySell> list = selectByExample(example);
 
@@ -77,7 +76,6 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("p_buy_id", buy_id);
 		criteria.andNotEqualTo("p_sell_id", "null");
-		criteria.andNotEqualTo("p_sell_user_id", "null");
 
 		List<BuySell> list = selectByExample(example);
 
@@ -252,7 +250,6 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		// farmService.updateNotNull(_farm);
 		// }
 		//
-		// // TODO
 		// _buySell.setP_sell_user_time(new Date());
 		// _buySell.setStatus(2);
 		// } else {

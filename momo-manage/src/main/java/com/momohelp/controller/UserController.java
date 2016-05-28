@@ -1,5 +1,7 @@
 package com.momohelp.controller;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.BuySell;
@@ -507,6 +510,60 @@ public class UserController {
 		map.put("verify_token", genVerifyToken(session));
 		map.put("data_user", session.getAttribute("session.user"));
 		return "i/user/1.0.1/confirm";
+	}
+
+	private static final SimpleDateFormat sdf_2 = new SimpleDateFormat(
+			"yyyyMMddHHmmss");
+	private static final SimpleDateFormat sdf_1 = new SimpleDateFormat(
+			"yyyyMMdd");
+
+	/**
+	 * 上传图片
+	 *
+	 * @param session
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(path = "/user/confirm_upload", method = RequestMethod.POST)
+	public Map<String, Object> _i_confirm_upload(HttpSession session,
+			@RequestParam(value = "file") MultipartFile file) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		if (file.isEmpty()) {
+			result.put("msg", "请选择图片");
+			return result;
+		}
+
+		Date date = new Date();
+
+		String date_1 = sdf_1.format(date);
+
+		File folder = new File("c://momohelp/" + date_1);
+		// 如果文件夹不存在则创建
+		if (!folder.exists() && !folder.isDirectory()) {
+			folder.mkdir();
+		}
+
+		String date_2 = sdf_2.format(date);
+
+		String file_name = session.getAttribute("session.user.id").toString()
+				+ "_" + date_2;
+
+		// byte[] bytes = file.getBytes();
+		try {
+			file.transferTo(new File("c://momohelp/" + date_1 + "/" + file_name
+					+ ".jpg"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", "上传图片失败");
+			return result;
+		}
+
+		result.put("data", file_name);
+		result.put("success", true);
+		return result;
 	}
 
 	/**
