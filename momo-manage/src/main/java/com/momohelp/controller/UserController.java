@@ -1268,8 +1268,8 @@ public class UserController {
 
 		User user = userService.sell_record__list__4(session.getAttribute(
 				"session.user.id").toString());
-
 		result.addObject("data_sell_record", user.getSells());
+
 		result.addObject("data_user", user);
 
 		result.addObject("nav_choose", ",05,0504,");
@@ -1692,6 +1692,14 @@ public class UserController {
 		}
 
 		map.put("data_user", user);
+
+		// 买盘
+		User buy_record = userService.buy_record__list__4(user.getId());
+		map.put("data_buy_record", buy_record.getFarms());
+
+		// 卖盘
+		User sell_record = userService.sell_record__list__4(user.getId());
+		map.put("data_sell_record", sell_record.getSells());
 
 		map.put("session_user", session.getAttribute("session.user"));
 		map.put("nav_choose", ",08,0801,");
