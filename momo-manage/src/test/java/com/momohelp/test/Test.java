@@ -35,6 +35,13 @@ public class Test {
 
 		System.out.println(sdf.format(new Date()));
 
+		String s = "M08151306_20160528155.853.jpg";
+		int i = s.lastIndexOf(".");
+		if (-1 == i) {
+
+		}
+		System.out.println((-1 == i) ? "" : s.substring(i));
+
 	}
 
 }

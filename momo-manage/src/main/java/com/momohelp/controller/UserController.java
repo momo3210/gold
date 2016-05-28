@@ -1,12 +1,17 @@
 package com.momohelp.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -518,6 +523,65 @@ public class UserController {
 			"yyyyMMdd");
 
 	/**
+	 * 文件后缀
+	 *
+	 * @param file_name
+	 * @return
+	 */
+	private String getExtName(String file_name) {
+		int i = file_name.lastIndexOf(".");
+		String ext = (-1 == i) ? "" : file_name.substring(i);
+		return ext.toLowerCase();
+	}
+
+	/**
+	 * 浏览图片
+	 *
+	 * @param session
+	 * @param id
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(path = "/user/confirm_upload", method = RequestMethod.GET)
+	public String _i_confirm_uploadUI(HttpSession session,
+			@RequestParam(required = true) String id,
+			HttpServletResponse response) throws IOException {
+
+		BuySell buySell = buySellService.selectByKey(id);
+
+		if (null == buySell) {
+			return "redirect:/";
+		}
+
+		String user_id = session.getAttribute("session.user.id").toString();
+
+		if (user_id.equals(buySell.getP_buy_user_id())) {
+		} else if (user_id.equals(buySell.getP_sell_user_id())) {
+		} else {
+			return "redirect:/";
+		}
+
+		response.setContentType("image/jpeg");
+		File file = new File("C:/momohelp/" + buySell.getP_buy_user_img());
+
+		if (!file.exists()) {
+			return null;
+		}
+
+		InputStream in = new FileInputStream(file);
+		OutputStream os = response.getOutputStream();
+		byte[] b = new byte[1024];
+		while (in.read(b) != -1) {
+			os.write(b);
+		}
+		in.close();
+		os.flush();
+		os.close();
+		return null;
+	}
+
+	/**
 	 * 上传图片
 	 *
 	 * @param session
@@ -536,6 +600,19 @@ public class UserController {
 			return result;
 		}
 
+		// 文件后缀
+		String file_ext = getExtName(file.getOriginalFilename());
+
+		if ("".equals(file_ext)) {
+			result.put("msg", "请选择图片");
+			return result;
+		}
+
+		if (!".jpg".equals(file_ext)) {
+			result.put("msg", "请选择正确的图片格式");
+			return result;
+		}
+
 		Date date = new Date();
 
 		String date_1 = sdf_1.format(date);
@@ -549,19 +626,19 @@ public class UserController {
 		String date_2 = sdf_2.format(date);
 
 		String file_name = session.getAttribute("session.user.id").toString()
-				+ "_" + date_2;
+				+ "_" + date_2 + file_ext;
 
 		// byte[] bytes = file.getBytes();
+
 		try {
-			file.transferTo(new File("c://momohelp/" + date_1 + "/" + file_name
-					+ ".jpg"));
+			file.transferTo(new File("c://momohelp/" + date_1 + "/" + file_name));
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("msg", "上传图片失败");
 			return result;
 		}
 
-		result.put("data", file_name);
+		result.put("data", date_1 + "/" + file_name);
 		result.put("success", true);
 		return result;
 	}

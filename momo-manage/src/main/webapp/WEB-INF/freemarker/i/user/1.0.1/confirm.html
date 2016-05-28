@@ -132,14 +132,14 @@
 												<form class="form-horizontal" id='frm'>
 													<input type="hidden" name='verify_token' value='${(verify_token)!}' />
 													<input type="hidden" name='id' value='${(data_buySell.id)!}' />
-													<input type="hidden" id='frm_confirm_img' name='confirm_img' />
+													<input type="hidden" id='frm_p_buy_user_img' name='p_buy_user_img' />
 
 													<#if (data_buySell.status)?? && 1 == (data_buySell.status)!>
 													<div class="control-group">
 														<label class="control-label">打款图片</label>
 
 														<div class="controls">
-															<img style='width:300px;height:200px' src='${(data_buySell.p_buy_user_img)!}' />
+															<img style='width:300px;height:400px' src='/user/confirm_upload?id=${(data_buySell.id)!}' />
 														</div>
 													</div>
 													</#if>
@@ -148,7 +148,7 @@
 														<label class="control-label" for="frm_p_buy_user_content">确认内容</label>
 
 														<div class="controls">
-															<textarea class="span6" id="frm_p_buy_user_content" name='p_buy_user_content'<#if 1 == (data_buySell.status)!> disabled</#if>>${(data_buySell.p_buy_user_content)!}</textarea>
+															<textarea class="span6" id="frm_p_buy_user_content" placeholder='这家伙很懒' name='p_buy_user_content'<#if 1 == (data_buySell.status)!> disabled</#if>>${(data_buySell.p_buy_user_content)!}</textarea>
 														</div>
 													</div>
 
@@ -274,7 +274,11 @@
 			$('#upfrm_p_buy_user_img').fileupload({
 		        dataType: 'json',
 		        done: function (e, data) {
-		            console.log(data.result)
+					if(!data.result.success){
+						return alert(data.result.msg);
+					}
+					$('#frm_p_buy_user_img').val(data.result.data);
+		            // console.log(data.result)
 		        }
 		    });
 		});
