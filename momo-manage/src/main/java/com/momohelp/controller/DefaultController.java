@@ -76,10 +76,10 @@ public class DefaultController {
 		if (null != last_time) {
 			// 当前时间加2分钟
 			Calendar c = Calendar.getInstance();
-			c.set(Calendar.MINUTE, -2);
+			c.add(Calendar.MINUTE, -2);
 
 			if (c.getTime().before((Date) last_time)) {
-				result.put("msg", new String[] { "请不要重复发送短信验证码" });
+				result.put("msg", new String[] { "请不要频繁发送，稍等2分钟" });
 				return result;
 			}
 		}
