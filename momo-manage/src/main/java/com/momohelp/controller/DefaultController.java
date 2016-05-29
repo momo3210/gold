@@ -1,5 +1,7 @@
 package com.momohelp.controller;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +74,18 @@ public class DefaultController {
 		Object last_time = session.getAttribute("verify.sms.lastTime");
 
 		if (null != last_time) {
-			// TODO
+			// 当前时间加2分钟
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.MINUTE, -2);
+
+			if (c.getTime().before((Date) last_time)) {
+				result.put("msg", new String[] { "请不要重复发送短信验证码" });
+				return result;
+			}
 		}
 
 		session.setAttribute("verify.sms", genSMS());
+		session.setAttribute("verify.sms.lastTime", new Date());
 
 		// SmSWebService service = new SmSWebService();
 		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
