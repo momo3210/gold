@@ -167,9 +167,9 @@ public class Base implements Ibase, Serializable {
 					entity.setUser_id(userTemp.getId());
 					Calendar cr = Calendar.getInstance();
 					if (depth == 1) {
-						cr.add(Calendar.DAY_OF_MONTH, 7);
+						cr.add(Calendar.DAY_OF_MONTH, Integer.parseInt(cfgService.selectByKey("3001").getValue_()));
 					} else {
-						cr.add(Calendar.DAY_OF_MONTH, 15);
+						cr.add(Calendar.DAY_OF_MONTH, Integer.parseInt(cfgService.selectByKey("3002").getValue_()));
 					}
 					entity.setTrigger_time(cr.getTime());
 					entity.setRelation_id(farm.getId());
