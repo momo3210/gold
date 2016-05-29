@@ -18,6 +18,9 @@
 .pagination {
 	margin-bottom: 0;
 }
+#table_1 a {
+	text-decoration: underline;
+}
 </style>
 <style>
 ul.ztree {
@@ -148,7 +151,9 @@ ul.ztree * {
 					</div>
 
 					<div class="span9 widget-container-span">
-						<#include "_pagelet/list.html"/>
+						<table id="table_1" class="table table-striped table-bordered table-hover">
+							<#include "_pagelet/list.html"/>
+						</table>
 					</div>
 				</div>
 
