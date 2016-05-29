@@ -1774,7 +1774,17 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		userService.deleteByKeys(user.getId());
+		User _user = userService.selectByKey(user.getId());
+
+		if (null == _user) {
+			result.put("msg", "修改状态失败");
+			return result;
+		}
+
+		User __user = new User();
+		__user.setId(_user.getId());
+		__user.setStatus((1 == _user.getStatus()) ? 0 : 1);
+		userService.updateNotNull(__user);
 
 		result.put("success", true);
 		return result;

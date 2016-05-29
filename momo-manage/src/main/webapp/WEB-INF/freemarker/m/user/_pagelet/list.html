@@ -9,6 +9,7 @@
 		<th>动态钱包</th>
 		<th>门票</th>
 		<th>饲料</th>
+		<th>状态</th>
 	</tr>
 </thead>
 <tbody>
@@ -25,6 +26,7 @@
 		<td>${doc.num_dynamic?string('0.00')}</td>
 		<td>${doc.num_ticket?string('0.00')}</td>
 		<td>${doc.num_food?string('0.00')}</td>
+		<td><@status.m status="${(doc.status)!}"/></td>
 	</tr>
 	</#list>
 </tbody>
