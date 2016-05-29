@@ -33,7 +33,7 @@
 											参加者：${(doc.user_id)!}<br/>
 											请求援助数额：RMB ${doc.num_sell?string('#.00')}<br/>
 											排队日期：${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}<br/>
-											当前状态：<#if (doc.time_deal)??>已完成<#else>未完成</#if>
+											当前状态：<#if doc.num_sell == doc.num_deal>已完成<#else>未完成</#if>
 										</p>
 
 										<#-- <!-- <p class="alert alert-success">
