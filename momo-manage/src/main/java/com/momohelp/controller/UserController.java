@@ -1743,14 +1743,38 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 重置密码123456
+	 *
+	 * @param session
+	 * @param user
+	 * @return
+	 */
 	@ResponseBody
-	@RequestMapping(value = { "/manage/user/remove" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _manage_user_remove(HttpSession session,
-			@RequestParam(required = true) String id) {
+	@RequestMapping(value = { "/manage/user/resetPwd" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_resetPwd(HttpSession session,
+			User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		userService.deleteByKeys(id);
+		User _user = new User();
+		_user.setId(user.getId());
+		_user.setUser_pass(MD5.encode("123456"));
+		_user.setUser_pass_safe(_user.getUser_pass());
+		userService.updateNotNull(_user);
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/manage/user/remove" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_remove(HttpSession session,
+			User user) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		userService.deleteByKeys(user.getId());
 
 		result.put("success", true);
 		return result;

@@ -126,6 +126,7 @@ ul.ztree * {
 							<a class="btn btn-small btn-success" href='/manage/user/add'>添加</a>
 							<a class="btn btn-small btn-primary" href='javascript:edit();'>编辑</a>
 							<a class="btn btn-small btn-danger" href='javascript:remove();'>删除</a>
+							<a class="btn btn-small btn-warning" href='javascript:resetPwd();'>重置密码</a>
 						</p>
 					</div>
 				</div>
@@ -203,6 +204,30 @@ ul.ztree * {
 			}
 		}
 
+		function resetPwd(){
+			var val = $("input[name='table_1_row']:checked").val();
+			if(!val) return;
+
+			if (confirm('你确定要执行该操作吗？')) {
+				$.ajax({
+					url : '${(conf_html_virtualPath)!}manage/user/resetPwd',
+					type : 'POST',
+					dataType : 'JSON',
+					data : { id: val },
+					success : function(data) {
+						if (data.success) {
+							alert('重置密码成功')
+							return location.href = '${(conf_html_virtualPath)!}manage/user/';
+						}
+						if (data.msg) alert(data.msg[0]);
+					},
+					error : function() {
+						alert(arguments[2]);
+					}
+				});
+			}
+		}
+
 		$(function(){
 			var ajax = function(params, cb) {
 				$.ajax({
@@ -237,7 +262,7 @@ ul.ztree * {
 									id: doc.id,
 									pId: treeNode.id,
 									isParent: true,
-									name: doc.mobile +' '+ doc.nickname
+									name: doc.mobile +' '+ doc.real_name
 								});
 							}
 						});
@@ -262,7 +287,7 @@ ul.ztree * {
 			}<#list data_tree_list as doc>,{
 				id: '${(doc.id)!}',
 				pId: '0',
-				name: '${(doc.mobile)!} ${(doc.nickname)!}',
+				name: '${(doc.mobile)!} ${(doc.real_name)!}',
 				isParent: true
 			}</#list>];
 
