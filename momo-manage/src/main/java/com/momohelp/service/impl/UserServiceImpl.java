@@ -303,6 +303,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setNum_ticket(0);
 		user.setNum_food(0);
 
+		user.setTotal_dynamic(0.00);
+		user.setTotal_food(0);
+		user.setTotal_static(0.00);
+		user.setTotal_ticket(0);
+
 		user.setLv("05");
 
 		return save_prev(user);
@@ -378,15 +383,17 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setBank_account(user.getBank_account());
 		_user.setBank_name(user.getBank_name());
 
-		_user.setNum_static(user.getNum_static());
-		_user.setNum_dynamic(user.getNum_dynamic());
+		_user.setNum_static(null == user.getNum_static() ? 0.00 : user
+				.getNum_static());
+		_user.setNum_dynamic(null == user.getNum_dynamic() ? 0.00 : user
+				.getNum_dynamic());
 		_user.setNum_ticket(user.getNum_ticket());
 		_user.setNum_food(user.getNum_food());
 
-		_user.setTotal_static(user.getNum_static());
-		_user.setTotal_dynamic(user.getNum_dynamic());
-		_user.setTotal_ticket(user.getNum_ticket());
-		_user.setTotal_food(user.getNum_food());
+		_user.setTotal_static(_user.getNum_static());
+		_user.setTotal_dynamic(_user.getNum_dynamic());
+		_user.setTotal_ticket(_user.getNum_ticket());
+		_user.setTotal_food(_user.getNum_food());
 
 		_user.setCreate_time(new Date());
 
@@ -394,7 +401,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setUser_pass_safe(user.getUser_pass_safe());
 
 		_user.setDepth(1 + p_user.getDepth());
-		_user.setFamily_id(p_user.getFamily_id());
+		_user.setFamily_id("0".equals(p_user.getFamily_id()) ? p_user.getId()
+				: p_user.getFamily_id());
 
 		super.save(_user);
 		return null;

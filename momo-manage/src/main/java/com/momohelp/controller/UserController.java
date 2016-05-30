@@ -1617,8 +1617,14 @@ public class UserController {
 			map.put("data_grid_list", list_user);
 
 		} else {
-			// 查询用户主键
-			User user = userService.selectByKey(id);
+
+			Example example = new Example(User.class);
+			Example.Criteria criteria = example.createCriteria();
+			// 查询用户昵称
+			criteria.andEqualTo("mobile", id);
+			List<User> list = userService.selectByExample(example);
+
+			User user = (null == list || 1 != list.size()) ? null : list.get(0);
 
 			if (null == user) {
 				return "redirect:/manage/user/";
