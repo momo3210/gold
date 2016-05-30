@@ -1,12 +1,9 @@
 package com.momohelp.test;
 
-import java.util.Calendar;
-
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.momohelp.calculate.service.IMatch;
-import com.momohelp.calculate.service.IStatic;
 
 
 public class App {
