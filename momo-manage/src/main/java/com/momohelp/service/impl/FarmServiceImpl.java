@@ -62,7 +62,6 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		_farm.setNum_current(_farm.getNum_buy());
 		_farm.setNum_deal(0);
 		_farm.setFlag_calc_bonus(0);
-		_farm.setNum_reward(0);
 
 		/**/
 
@@ -74,6 +73,9 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		if (0 != _farm.getNum_buy() % 100) {
 			return new String[] { "买入数量请输入100的倍数" };
 		}
+
+		// 奖金
+		_farm.setNum_reward(_farm.getNum_buy() / 100);
 
 		/**/
 
