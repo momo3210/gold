@@ -96,7 +96,7 @@ public class Match implements Serializable, IMatch {
 				if (buyMatchNum <= 0) {
 					continue;
 				}
-				//自己不能给自己匹配
+				// 自己不能给自己匹配
 				if (sell.getUser_id().equals(buy.getUser_id())) {
 					continue;
 				}
@@ -111,7 +111,7 @@ public class Match implements Serializable, IMatch {
 				if (sellMatchNum > buyMatchNum) {// 卖家大于买家
 					entity.setNum_matching(buyMatchNum);
 					sell.setNum_sell(sellMatchNum - buyMatchNum);
-					sellMatchNum=sell.getNum_sell();
+					sellMatchNum = sell.getNum_sell();
 					buy.setNum_buy(0);
 					buySellService.save(entity);
 				} else if (sellMatchNum < buyMatchNum) {// 卖家小于买家
@@ -132,41 +132,39 @@ public class Match implements Serializable, IMatch {
 
 		// 自动匹配结束后 未处理的数据转入买卖交易中
 		// 卖盘清理
-		sells.parallelStream().filter(sell -> sell.getNum_sell() > 0)
-				.forEach(sell -> {
-					BuySell entity = new BuySell();
-					entity.setId(genId());
-					entity.setCreate_time(new Date());
-					entity.setP_sell_id(sell.getId());
-					entity.setP_buy_id("null");
-					entity.setStatus(0);
-					entity.setP_sell_user_id(sell.getUser_id());
-					entity.setP_buy_user_id("null");
-					entity.setNum_matching(sell.getNum_sell());
-					buySellService.save(entity);
-				});
 		// 计算标志设置
-		sells.parallelStream().forEach(sell -> {
-			sellService.updateFlagCalc(sell.getId());
-		});
+		for (Sell sell2 : sells) {
+			if (sell2.getNum_sell() > 0) {
+				BuySell entity = new BuySell();
+				entity.setId(genId());
+				entity.setCreate_time(new Date());
+				entity.setP_sell_id(sell2.getId());
+				entity.setP_buy_id("null");
+				entity.setStatus(0);
+				entity.setP_sell_user_id(sell2.getUser_id());
+				entity.setP_buy_user_id("null");
+				entity.setNum_matching(sell2.getNum_sell());
+				buySellService.save(entity);
+			}
+			sellService.updateFlagCalc(sell2.getId());
+		}
 		// 买盘清理
-		buys.parallelStream().filter(buy -> buy.getNum_buy() > 0)
-				.forEach(buy -> {
-					BuySell entity = new BuySell();
-					entity.setId(genId());
-					entity.setCreate_time(new Date());
-					entity.setP_sell_id("null");
-					entity.setP_buy_id(buy.getId());
-					entity.setStatus(0);
-					entity.setP_sell_user_id("null");
-					entity.setP_buy_user_id(buy.getUser_id());
-					entity.setNum_matching(buy.getNum_buy());
-					buySellService.save(entity);
-				});
 		// 计算标志设置
-		buys.parallelStream().forEach(buy -> {
-			buyService.updateFlagCalc(buy.getId());
-		});
+		for (Buy buy2 : buys) {
+			if (buy2.getNum_buy() > 0) {
+				BuySell entity = new BuySell();
+				entity.setId(genId());
+				entity.setCreate_time(new Date());
+				entity.setP_sell_id("null");
+				entity.setP_buy_id(buy2.getId());
+				entity.setStatus(0);
+				entity.setP_sell_user_id("null");
+				entity.setP_buy_user_id(buy2.getUser_id());
+				entity.setNum_matching(buy2.getNum_buy());
+				buySellService.save(entity);
+			}
+			buyService.updateFlagCalc(buy2.getId());
+		}
 	}
 
 	private void sellDataHandle(BuySell buySell, List<Buy> buys) {
@@ -178,7 +176,7 @@ public class Match implements Serializable, IMatch {
 			if (buy.getNum_buy() <= 0) {
 				continue;
 			}
-			//自己不能给自己匹配
+			// 自己不能给自己匹配
 			if (buySell.getP_sell_user_id().equals(buy.getUser_id())) {
 				continue;
 			}
@@ -211,13 +209,13 @@ public class Match implements Serializable, IMatch {
 				break;
 			}
 		}
-		
+
 		if (buySell.getNum_matching() > 0) {
-			buySell.setCreate_time(new Date());
+			//buySell.setCreate_time(new Date());
 			buySellService.updateNotNull(buySell);
-		}else {
+		} else {
 			buySellService.delete(buySell.getId());
-		} 
+		}
 		buySell = null;
 	}
 
@@ -230,7 +228,7 @@ public class Match implements Serializable, IMatch {
 			if (sell.getNum_sell() <= 0) {
 				continue;
 			}
-			//自己不能给自己匹配
+			// 自己不能给自己匹配
 			if (buySell.getP_buy_user_id().equals(sell.getUser_id())) {
 				continue;
 			}
@@ -262,12 +260,12 @@ public class Match implements Serializable, IMatch {
 				buySellService.save(entity);
 				break;
 			}
-			
+
 		}
 		if (buySell.getNum_matching() > 0) {
-			buySell.setCreate_time(new Date());
+			//buySell.setCreate_time(new Date());
 			buySellService.updateNotNull(buySell);
-		}else {
+		} else {
 			buySellService.delete(buySell.getId());
 		}
 		buySell = null;

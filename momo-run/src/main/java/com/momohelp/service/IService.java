@@ -3,7 +3,6 @@ package com.momohelp.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -26,6 +25,5 @@ public interface IService<T> {
 
 	List<T> selectByExample(Object example);
 
-	@Transactional
 	int deleteByKeys(String keys);
 }
