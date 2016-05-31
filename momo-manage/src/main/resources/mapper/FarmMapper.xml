@@ -38,8 +38,14 @@
 	<select id="findHatchByUserId" resultMap="baseResultMap"
 		parameterType="java.util.Map">
 
-		SELECT * FROM w_farm_chick WHERE user_id=#{user_id} AND
+		<!-- SELECT * FROM w_farm_chick WHERE user_id=#{user_id} AND
 		num_current>#{num_current} AND num_buy=num_deal ORDER BY create_time
+		DESC -->
+
+		SELECT * FROM w_farm_chick WHERE user_id=#{user_id}
+		 AND num_buy=num_deal
+		 AND (num_current > #{num_current} OR time_deal > DATE_SUB(NOW(),INTERVAL 1 DAY))
+		ORDER BY create_time
 		DESC
 	</select>
 

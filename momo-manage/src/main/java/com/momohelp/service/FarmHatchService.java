@@ -31,4 +31,12 @@ public interface FarmHatchService extends IService<FarmHatch> {
 	 */
 	@Transactional
 	String[] hatch(FarmHatch farmHatch);
+
+	/**
+	 * 获取 flag_is_last 为1的（最后一笔孵化）
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<FarmHatch> findFlagByUserId___4(String user_id);
 }

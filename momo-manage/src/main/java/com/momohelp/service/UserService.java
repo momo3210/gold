@@ -13,6 +13,13 @@ import com.momohelp.model.User;
 public interface UserService extends IService<User> {
 
 	/**
+	 * 获取用户的冻结金额
+	 *
+	 * @return
+	 */
+	double getFreezeByUserId__4(String user_id);
+
+	/**
 	 * 买入操作时使用
 	 *
 	 * @param id

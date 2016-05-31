@@ -106,4 +106,18 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		return selectByExample(example);
 	}
 
+	@Override
+	public List<FarmHatch> findFlagByUserId___4(String user_id) {
+
+		Example example = new Example(FarmHatch.class);
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andEqualTo("flag_is_last", 1);
+		criteria.andEqualTo("flag_calc_bonus", 0);
+
+		return selectByExample(example);
+
+	}
+
 }

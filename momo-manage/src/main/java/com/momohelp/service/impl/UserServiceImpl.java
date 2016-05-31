@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.model.Farm;
+import com.momohelp.model.FarmFeed;
+import com.momohelp.model.FarmHatch;
 import com.momohelp.model.User;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
@@ -652,5 +655,38 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		user.setMonthSells(sellService.findMonthSellByUserId____4(id));
 
 		return user;
+	}
+
+	@Override
+	public double getFreezeByUserId__4(String user_id) {
+
+		List<FarmHatch> list = farmHatchService.findFlagByUserId___4(user_id);
+
+		if (null == list) {
+			return 0.00;
+		}
+
+		double sum = 0.00;
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			FarmHatch farmHatch = list.get(i);
+
+			// 获取鸡苗批次
+			Farm farm = farmService.selectByKey(farmHatch.getW_farm_chick_id());
+			// 本金
+			sum += Double.valueOf(farm.getNum_buy());
+			// 奖金
+			sum += farm.getNum_reward();
+
+			List<FarmFeed> list_farmFeed = farmFeedService
+					.findByFarmId___4(farm.getId());
+
+			for (int m = 0, n = list_farmFeed.size(); m < n; m++) {
+				FarmFeed farmFeed = list_farmFeed.get(m);
+				sum += farmFeed.getPrice();
+			}
+		}
+
+		return sum;
 	}
 }

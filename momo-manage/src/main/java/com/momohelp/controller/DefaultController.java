@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Notice;
-import com.momohelp.model.Prize;
 import com.momohelp.model.User;
 import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
@@ -125,20 +124,23 @@ public class DefaultController {
 		result.addObject("data_sell_record", sell_record.getSells());
 
 		// 冻结列表
-		List<Prize> list_prize_freeze = prizeService.findByUserId(session
-				.getAttribute("session.user.id").toString());
+		// List<Prize> list_prize_freeze = prizeService.findByUserId(session
+		// .getAttribute("session.user.id").toString());
+		//
+		// double d = 0;
+		//
+		// for (int i = 0; i < list_prize_freeze.size(); i++) {
+		// Prize item = list_prize_freeze.get(i);
+		//
+		// if (item.getFlag() == 0) {
+		// d += item.getMoney();
+		// }
+		// }
 
-		double d = 0;
-
-		for (int i = 0; i < list_prize_freeze.size(); i++) {
-			Prize item = list_prize_freeze.get(i);
-
-			if (item.getFlag() == 0) {
-				d += item.getMoney();
-			}
-		}
-
-		result.addObject("data_num_freeze", d);
+		result.addObject(
+				"data_num_freeze",
+				userService.getFreezeByUserId__4(session.getAttribute(
+						"session.user.id").toString()));
 
 		result.addObject("data_user", sell_record);
 		result.addObject("nav_choose", ",02,");
@@ -152,6 +154,38 @@ public class DefaultController {
 		ModelAndView result = new ModelAndView("m/default/index");
 		result.addObject("session_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",10,");
+		return result;
+	}
+
+	@RequestMapping(value = { "/manage/matching_1" }, method = RequestMethod.GET)
+	public ModelAndView _manage_matching_1UI(HttpSession session) {
+		ModelAndView result = new ModelAndView("m/default/matching_1");
+		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",1101,");
+		return result;
+	}
+
+	@RequestMapping(value = { "/manage/matching_2" }, method = RequestMethod.GET)
+	public ModelAndView _manage_matching_2UI(HttpSession session) {
+		ModelAndView result = new ModelAndView("m/default/matching_2");
+		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",1102,");
+		return result;
+	}
+
+	@RequestMapping(value = { "/manage/matching_3" }, method = RequestMethod.GET)
+	public ModelAndView _manage_matching_3UI(HttpSession session) {
+		ModelAndView result = new ModelAndView("m/default/matching_3");
+		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",1103,");
+		return result;
+	}
+
+	@RequestMapping(value = { "/manage/matching_4" }, method = RequestMethod.GET)
+	public ModelAndView _manage_matching_4UI(HttpSession session) {
+		ModelAndView result = new ModelAndView("m/default/matching_4");
+		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",1104,");
 		return result;
 	}
 

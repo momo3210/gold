@@ -199,7 +199,7 @@ public class UserController {
 			return new String[] { "请刷新页面" };
 		}
 
-		return verify.toString().equals(imgCode) ? null
+		return verify.toString().equals(imgCode.toLowerCase()) ? null
 				: new String[] { "图形验证码输入错误" };
 	}
 
