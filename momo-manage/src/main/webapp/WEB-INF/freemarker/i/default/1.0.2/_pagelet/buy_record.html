@@ -76,25 +76,31 @@
 																援助者：${(doc.p_sell_user_id)!}<br/>
 																匹配日期：${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}<br/>
 																匹配金额：RMB ${doc.num_matching?string('#.00')}<font color='red'>（3小时内打款奖励1%）</font><br/>
-																打款倒计时：<span id='countdown_${(doc.id)!}'></span>
+																<#if 0 == (doc.status)!><span id='countdown_${(doc.id)!}'></span></#if>
 															</p>
 
 															<script>
 															(function(){
+																var originalTime = new Date('${(doc.create_time?string("yyyy/MM/dd HH:mm:ss"))!}');
+																// 48小时
+																var endTime = new Date(originalTime.getTime() + 48 * 60 * 60 * 1000);
+
 																function getRTime(){
-																	var originalTime = new Date('${(doc.create_time?string("yyyy/MM/dd HH:mm:ss"))!}');
-																	var endTime = new Date(originalTime.getTime() + 48 * 60 * 60 * 1000);
-																	//var endTime = new Date('2017/05/1 10:00:00');
 																	var nowTime = new Date();
+
 																	var t = endTime.getTime() - nowTime.getTime();
+
+																	if(0 > t) return $('#countdown_${(doc.id)!}').remove();
 
 																	var h = Math.floor(t/1000/60/60);
 																	var m = Math.floor(t/1000/60%60);
 																	var s = Math.floor(t/1000%60);
 
-																    $('#countdown_${(doc.id)!}').html(h + "时"+ m + "分"+s + "秒");
+																    $('#countdown_${(doc.id)!}').html('打款倒计时：'+ h +"时"+ m +"分"+ s +"秒");
+																	setTimeout(getRTime, 1000);
 																}
-																setInterval(getRTime, 1000);
+
+																setTimeout(getRTime, 1000);
 															})();
 															</script>
 
