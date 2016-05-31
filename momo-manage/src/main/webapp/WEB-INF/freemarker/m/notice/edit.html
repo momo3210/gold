@@ -140,14 +140,14 @@
 
 			$('#btn_submit').click(function() {
 				$.ajax({
-					url : '${(conf_html_virtualPath)!}manage/user/edit',
+					url : '${(conf_html_virtualPath)!}manage/notice/edit',
 					type : 'POST',
 					dataType : 'JSON',
 					data : $('#frm').serializeObjectForm(),
 					success : function(data) {
 						if (data.success) {
 							alert('修改公告成功')
-							location.href = '${(conf_html_virtualPath)!}manage/user/';
+							location.href = '${(conf_html_virtualPath)!}manage/notice/';
 							return;
 						} // END
 						if (data.msg)

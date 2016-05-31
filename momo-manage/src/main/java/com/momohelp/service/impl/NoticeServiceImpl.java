@@ -2,6 +2,7 @@ package com.momohelp.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class NoticeServiceImpl extends BaseService<Notice> implements
 	@Override
 	public int save(Notice entity) {
 		entity.setCreate_time(new Date());
+		entity.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		return super.save(entity);
 	}
 

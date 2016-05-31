@@ -49,7 +49,7 @@ public class NoticeController {
 		List<Notice> list = noticeService.findByNotice(notice, page,
 				Integer.MAX_VALUE);
 		result.addObject("data_list", list);
-		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("session_user", session.getAttribute("session.user"));
 
 		result.addObject("nav_choose", ",07,0701,");
 		return result;
@@ -74,7 +74,7 @@ public class NoticeController {
 		}
 
 		map.put("data_doc", notice);
-		map.put("data_user", session.getAttribute("session.user"));
+		map.put("session_user", session.getAttribute("session.user"));
 
 		map.put("nav_choose", ",07,0701,");
 		return "i/notice/1.0.2/info";
@@ -95,8 +95,8 @@ public class NoticeController {
 		List<Notice> list = noticeService.findByNotice(notice, page,
 				Integer.MAX_VALUE);
 		result.addObject("data_list", list);
-		result.addObject("data_user", session.getAttribute("session.user"));
 
+		result.addObject("session_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",09,0901,");
 		return result;
 	}
@@ -110,15 +110,16 @@ public class NoticeController {
 	@RequestMapping(value = { "/manage/notice/add" }, method = RequestMethod.GET)
 	public ModelAndView _manage_addUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("m/notice/add");
-		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("session_user", session.getAttribute("session.user"));
 		return result;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/manage/notice/add" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _manage_add(Notice notice, HttpSession session) {
+	public Map<String, Object> _manage_add(HttpSession session, Notice notice) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
+		noticeService.save(notice);
+		result.put("success", true);
 		return result;
 	}
 
@@ -133,16 +134,17 @@ public class NoticeController {
 	public ModelAndView _manage_editUI(HttpSession session,
 			@RequestParam(required = true) String id) {
 		ModelAndView result = new ModelAndView("m/notice/edit");
-
-		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("data_notice", noticeService.selectByKey(id));
+		result.addObject("session_user", session.getAttribute("session.user"));
 		return result;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = { "/manage/notice/edit" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _manage_edit(Notice notice, HttpSession session) {
+	public Map<String, Object> _manage_edit(HttpSession session, Notice notice) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
+		noticeService.updateNotNull(notice);
+		result.put("success", true);
 		return result;
 	}
 
@@ -157,7 +159,8 @@ public class NoticeController {
 	public Map<String, Object> _manage_remove(
 			@RequestParam(required = true) String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("success", false);
+		noticeService.deleteByKeys(id);
+		result.put("success", true);
 		return result;
 	}
 }
