@@ -331,4 +331,14 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		sell.setNum_deal(num_deal);
 		((SellMapper) getMapper()).updateNum_deal(sell);
 	}
+
+	@Override
+	public List<Sell> findBySell__4(Sell sell, int page, int rows) {
+
+		Example example = new Example(Sell.class);
+		example.setOrderByClause("create_time desc");
+
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
+	}
 }

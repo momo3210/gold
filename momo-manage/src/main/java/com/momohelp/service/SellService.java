@@ -13,6 +13,8 @@ import com.momohelp.model.Sell;
  */
 public interface SellService extends IService<Sell> {
 
+	List<Sell> findBySell__4(Sell sell, int page, int rows);
+
 	/**
 	 * 获取未成交的卖盘
 	 *

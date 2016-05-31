@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.github.pagehelper.PageHelper;
 import com.momohelp.mapper.BuyMapper;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
@@ -164,5 +165,15 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 		buy.setId(id);
 		buy.setNum_deal(num_deal);
 		((BuyMapper) getMapper()).updateNum_deal(buy);
+	}
+
+	@Override
+	public List<Buy> findByBuy__4(Buy buy, int page, int rows) {
+
+		Example example = new Example(Buy.class);
+		example.setOrderByClause("create_time desc");
+
+		PageHelper.startPage(page, rows);
+		return selectByExample(example);
 	}
 }
