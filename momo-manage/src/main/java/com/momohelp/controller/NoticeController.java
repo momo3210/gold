@@ -84,13 +84,20 @@ public class NoticeController {
 
 	/**
 	 * 网站公告（列表）
-	 *
-	 * @param session
-	 * @return
 	 */
 	@RequestMapping(value = { "/manage/notice/" }, method = RequestMethod.GET)
-	public ModelAndView _manage_indexUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("manage/notice/1.0.2/index");
+	public ModelAndView _manage_indexUI(HttpSession session,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "100") int rows,
+			Notice notice) {
+		ModelAndView result = new ModelAndView("m/notice/index");
+
+		List<Notice> list = noticeService.findByNotice(notice, page,
+				Integer.MAX_VALUE);
+		result.addObject("data_list", list);
+		result.addObject("data_user", session.getAttribute("session.user"));
+
+		result.addObject("nav_choose", ",09,0901,");
 		return result;
 	}
 
@@ -102,7 +109,8 @@ public class NoticeController {
 	 */
 	@RequestMapping(value = { "/manage/notice/add" }, method = RequestMethod.GET)
 	public ModelAndView _manage_addUI(HttpSession session) {
-		ModelAndView result = new ModelAndView("manage/notice/1.0.2/add");
+		ModelAndView result = new ModelAndView("m/notice/add");
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -118,11 +126,15 @@ public class NoticeController {
 	 * 修改公告
 	 *
 	 * @param session
+	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = { "/manage/notice/edit" }, method = RequestMethod.GET)
-	public ModelAndView _manage_editUI(@RequestParam(required = true) String id) {
-		ModelAndView result = new ModelAndView("manage/notice/1.0.2/edit");
+	public ModelAndView _manage_editUI(HttpSession session,
+			@RequestParam(required = true) String id) {
+		ModelAndView result = new ModelAndView("m/notice/edit");
+
+		result.addObject("data_user", session.getAttribute("session.user"));
 		return result;
 	}
 
@@ -131,7 +143,6 @@ public class NoticeController {
 	public Map<String, Object> _manage_edit(Notice notice, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
-		// TODO
 		return result;
 	}
 
@@ -147,7 +158,6 @@ public class NoticeController {
 			@RequestParam(required = true) String id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
-		// TODO
 		return result;
 	}
 }

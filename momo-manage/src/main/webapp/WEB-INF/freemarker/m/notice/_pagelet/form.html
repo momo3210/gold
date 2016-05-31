@@ -1,0 +1,31 @@
+<form id='frm' class="form-horizontal">
+	<input type='hidden' id='frm_id' name='id' value='${(data_user.id)!}' />
+
+	<div class="control-group">
+		<label class="control-label" for='frm_title'>标题</label>
+
+		<div class="controls">
+			<input type="text" class='span6' id="frm_title" name='title' placeholder="标题" value='${(data_notice.title)!}' />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for='frm_content'>内容</label>
+
+		<div class="controls">
+			<textarea class="span6" id="frm_content" name='content' placeholder='内容' style='height:100px'>${(data_notice.content)!}</textarea>
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button class="btn btn-info" type="button" id='btn_submit'>
+			<i class="icon-ok bigger-110"></i>
+			提交
+		</button>
+
+		&nbsp; &nbsp; &nbsp;
+		<button class="btn" type="reset">
+			<i class="icon-undo bigger-110"></i>
+			重置
+		</button>
+	</div>
+</form>

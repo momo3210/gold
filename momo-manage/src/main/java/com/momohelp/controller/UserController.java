@@ -1743,6 +1743,7 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
+		user.setPid(null);
 		userService.updateNotNull(user);
 
 		result.put("success", true);
