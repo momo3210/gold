@@ -3,6 +3,7 @@ package com.momohelp.test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.momohelp.calculate.service.ILockAccount;
 import com.momohelp.calculate.service.IMatch;
 
 
@@ -20,6 +21,8 @@ public class App {
 		// conversion.calculation();
 		IMatch match= context.getBean(IMatch.class);
 		
-		match.automatch();
+		//match.automatch();
+		ILockAccount account=context.getBean(ILockAccount.class);
+		account.lockAccount();
 	}
 }

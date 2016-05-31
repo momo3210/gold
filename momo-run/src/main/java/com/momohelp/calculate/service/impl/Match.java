@@ -53,7 +53,13 @@ public class Match implements Serializable, IMatch {
 		log.info("-----------买卖盘自动匹配---------------");
 		boolean bool = false;
 		// 获取买卖盘中未匹配的单据
-		List<BuySell> buySells = buySellService.selectBySellAndBuyId();
+
+		List<BuySell> buyList = buySellService.selectByBuy();
+		List<BuySell> sellList = buySellService.selectBySell();
+		selfMactch(buyList, sellList);
+
+		// List<BuySell> buySells = buySellService.selectBySellAndBuyId();
+
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.DAY_OF_MONTH, -1);
 		cr.set(Calendar.HOUR_OF_DAY, 0);
@@ -65,25 +71,90 @@ public class Match implements Serializable, IMatch {
 		// 买盘数据
 		List<Buy> buys = buyService.selectByCycles(cr.getTime(), Calendar
 				.getInstance().getTime());
-		for (BuySell buySell : buySells) {
-			if (!buySell.getP_buy_id().equals("null")) {// 说明是买盘剩余数据
-				buyDataHandle(buySell, sells);
-			} else {// 说明是卖盘剩余数据
-				sellDataHandle(buySell, buys);
-			}
+		for (BuySell sell : sellList) {// 说明是卖盘剩余数据
+			sellDataHandle(sell, buys);
 		}
+		for (BuySell buy : buyList) {// 说明是买盘剩余数据
+			buyDataHandle(buy, sells);
+		}
+		// for (BuySell buySell : buySells) {
+		// if (!buySell.getP_buy_id().equals("null")) {// 说明是买盘剩余数据
+		// buyDataHandle(buySell, sells);
+		// } else {// 说明是卖盘剩余数据
+		// sellDataHandle(buySell, buys);
+		// }
+		// }
 		buyAndSellHandle(sells, buys);
 		bool = true;
 		return bool;
 	}
 
+	private void selfMactch(List<BuySell> buyList, List<BuySell> sellList) {
+		for (BuySell sell : sellList) {
+			int selltemp = sell.getNum_matching();
+			if (selltemp > 0) {
+				BuySell entity = null;
+				for (BuySell buy : buyList) {
+					if (sell.getP_sell_user_id().equals(buy.getP_buy_user_id())) {
+						continue;
+					}
+					int buytemp = buy.getNum_matching();
+					entity = new BuySell();
+					entity.setId(genId());
+					entity.setCreate_time(new Date());
+					entity.setP_sell_id(sell.getP_sell_id());
+					entity.setP_buy_id(buy.getP_buy_id());
+					entity.setStatus(0);
+					entity.setP_buy_user_id(buy.getP_buy_user_id());
+					entity.setP_sell_user_id(sell.getP_sell_user_id());
+					if (buytemp > 0) {
+						if (selltemp > buytemp) {
+							entity.setNum_matching(buytemp);
+							sell.setNum_matching(selltemp - buytemp);
+							selltemp = sell.getNum_matching();
+							buy.setNum_matching(0);
+							buySellService.save(entity);
+							continue;
+						} else if (selltemp < buytemp) {
+							entity.setNum_matching(selltemp);
+							sell.setNum_matching(0);
+							buy.setNum_matching(buytemp - selltemp);
+							buySellService.save(entity);
+							break;
+						} else {
+							entity.setNum_matching(buytemp);
+							sell.setNum_matching(0);
+							buy.setNum_matching(0);
+							buySellService.save(entity);
+							break;
+						}
+					}
+				}
+			}
+		}
+		// 自动匹配结束后 未处理的数据转入买卖交易中
+		// 卖盘中间数据清理
+		// 计算标志设置
+		for (BuySell sell2 : sellList) {
+			if (sell2.getNum_matching() > 0) {
+				buySellService.updateNotNull(sell2);
+			}else{
+				buySellService.deleteByKeys(sell2.getId());
+			}
+		}
+		// 买盘中间数据清理
+		// 计算标志设置
+		for (BuySell buy2 : buyList) {
+			if (buy2.getNum_matching() > 0) {
+				buySellService.updateNotNull(buy2);
+			}else{
+				buySellService.deleteByKeys(buy2.getId());
+			}
+		}
+	}
+
 	private void buyAndSellHandle(List<Sell> sells, List<Buy> buys) {
-		if (sells == null || sells.size() == 0) {
-			return;
-		}
-		if (buys == null || buys.size() == 0) {
-			return;
-		}
+
 		// 以卖家为主
 		for (Sell sell : sells) {
 			int sellMatchNum = sell.getNum_sell();//
@@ -211,7 +282,7 @@ public class Match implements Serializable, IMatch {
 		}
 
 		if (buySell.getNum_matching() > 0) {
-			//buySell.setCreate_time(new Date());
+			// buySell.setCreate_time(new Date());
 			buySellService.updateNotNull(buySell);
 		} else {
 			buySellService.delete(buySell.getId());
@@ -263,7 +334,7 @@ public class Match implements Serializable, IMatch {
 
 		}
 		if (buySell.getNum_matching() > 0) {
-			//buySell.setCreate_time(new Date());
+			// buySell.setCreate_time(new Date());
 			buySellService.updateNotNull(buySell);
 		} else {
 			buySellService.delete(buySell.getId());

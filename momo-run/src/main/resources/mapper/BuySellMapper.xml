@@ -49,7 +49,18 @@
 	<select id="selectBySellAndBuyId" resultType="buySell">
 		SELECT * FROM
 		p_buy_sell as p WHERE (p.p_buy_id ='null' or p.p_sell_id='null') and
-		p.status='0'  ORDER BY p.create_time ASC
+		p.status='0' ORDER BY p.create_time ASC
 	</select>
-
+	<select id="selectBySell" resultType="buySell">
+		SELECT * FROM
+		p_buy_sell as
+		p WHERE p.p_buy_id='null' and
+		p.status='0' ORDER BY p.create_time ASC
+	</select>
+	<select id="selectByBuy" resultType="buySell">
+		SELECT * FROM
+		p_buy_sell as p
+		WHERE p.p_sell_id ='null' and
+		p.status='0' ORDER BY p.create_time ASC
+	</select>
 </mapper>

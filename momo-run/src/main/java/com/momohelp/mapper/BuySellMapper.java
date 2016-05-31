@@ -17,4 +17,16 @@ public interface BuySellMapper extends MyMapper<BuySell> {
 	 * @return
 	 */
 	List<BuySell> selectBySellAndBuyId();
+	
+	/***
+	 * 获取当前卖明细中，还没有通过匹配记录
+	 * @return
+	 */
+	List<BuySell> selectBySell();
+	
+	/***
+	 * 获取当前买明细中，还没有通过匹配记录
+	 * @return
+	 */
+	List<BuySell> selectByBuy();
 }

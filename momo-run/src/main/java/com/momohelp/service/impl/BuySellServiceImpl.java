@@ -22,4 +22,15 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		return ((BuySellMapper) mapper).selectBySellAndBuyId();
 	}
 
+	@Override
+	public List<BuySell> selectBySell() {
+		
+		return ((BuySellMapper) mapper).selectBySell();
+	}
+
+	@Override
+	public List<BuySell> selectByBuy() {
+		return ((BuySellMapper) mapper).selectByBuy();
+	}
+
 }
