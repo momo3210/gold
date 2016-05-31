@@ -21,6 +21,7 @@ import com.momohelp.service.BuySellService;
 import com.momohelp.service.MaterialRecordService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
 
 /**
  *
@@ -338,7 +339,24 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		Example example = new Example(Sell.class);
 		example.setOrderByClause("create_time desc");
 
+		if (null != sell) {
+			Example.Criteria criteria = example.createCriteria();
+
+			String user_id = StringUtil.isEmpty(sell.getUser_id());
+			if (null != user_id) {
+				criteria.andEqualTo("user_id", user_id);
+			}
+		}
+
 		PageHelper.startPage(page, rows);
-		return selectByExample(example);
+
+		List<Sell> list = selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Sell item = list.get(i);
+			item.setUser(userService.selectByKey(item.getUser_id()));
+		}
+
+		return list;
 	}
 }

@@ -13,6 +13,8 @@ import com.momohelp.model.BuySell;
  */
 public interface BuySellService extends IService<BuySell> {
 
+	List<BuySell> findByBuySell__4(BuySell buySell, int page, int rows);
+
 	BuySell getId__4(String id);
 
 	/**

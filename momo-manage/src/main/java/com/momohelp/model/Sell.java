@@ -51,6 +51,17 @@ public class Sell implements Serializable {
 	@Transient
 	private List<BuySell> buySells;
 
+	@Transient
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Integer getNum_deal() {
 		return num_deal;
 	}

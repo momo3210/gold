@@ -72,6 +72,14 @@ public class User implements Serializable {
 	private String wx_account;
 
 	private Date create_time;
+
+	/**
+	 * 0禁用不能登陆
+	 *
+	 * 1正常状态
+	 *
+	 * 2能进系统，但是只能访问工单
+	 */
 	private Integer status;
 
 	private String apikey;

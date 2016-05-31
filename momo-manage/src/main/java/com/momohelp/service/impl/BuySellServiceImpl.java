@@ -8,12 +8,15 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.github.pagehelper.PageHelper;
 import com.momohelp.model.BuySell;
+import com.momohelp.model.Sell;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
 
 /**
  *
@@ -306,5 +309,44 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		buySell.setBuy(buyService.selectByKey(buySell.getP_buy_id()));
 
 		return buySell;
+	}
+
+	@Override
+	public List<BuySell> findByBuySell__4(BuySell buySell, int page, int rows) {
+
+		Example example = new Example(BuySell.class);
+		example.setOrderByClause("create_time desc");
+
+		if (null != buySell) {
+			Example.Criteria criteria = example.createCriteria();
+
+			String p_buy_user_id = StringUtil.isEmpty(buySell
+					.getP_buy_user_id());
+			if (null != p_buy_user_id) {
+				criteria.andEqualTo("p_buy_user_id", p_buy_user_id);
+			}
+
+			String p_sell_user_id = StringUtil.isEmpty(buySell
+					.getP_sell_user_id());
+			if (null != p_sell_user_id) {
+				criteria.andEqualTo("p_sell_user_id", p_sell_user_id);
+			}
+		}
+
+		PageHelper.startPage(page, rows);
+
+		List<BuySell> list = selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			BuySell item = list.get(i);
+			Sell sell = sellService.selectByKey(item.getP_sell_id());
+			item.setSell(sell);
+
+			item.setP_buy_user(userService.selectByKey(item.getP_buy_user_id()));
+			item.setP_sell_user(userService.selectByKey(item
+					.getP_sell_user_id()));
+		}
+
+		return list;
 	}
 }

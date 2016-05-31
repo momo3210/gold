@@ -112,7 +112,7 @@
 									<thead>
 										<tr>
 											<th>#</th>
-											<th>卖家编号</th>
+											<th>卖家昵称</th>
 											<th>卖出数量</th>
 											<th>成交时间</th>
 											<th>成交数量</th>
@@ -125,7 +125,7 @@
 									<#list data_list! as doc>
 										<tr>
 											<td>${doc_index+1}</td>
-											<td>${(doc.user_id)!}</td>
+											<td><a href='#${(doc.user_id)!}'>${(doc.user.nickname)!}</a></td>
 											<td>${(doc.num_sell)!}</td>
 											<td>${(doc.time_deal?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 											<td>${(doc.num_deal)!}</td>
@@ -138,19 +138,21 @@
 								</table>
 								<div class="pagination">
 									<ul>
-										<li class="disabled">
-											<a href="#">
+										<li<#if (1 == (page_current)!)> class="disabled"</#if>>
+											<a href="?page=${(page_prev)!}&user_id=${(search_user_id)!}">
 												<i class="icon-double-angle-left"></i>
+												上页
 											</a>
 										</li>
 
 										<li class="active">
-											<a href="#">1</a>
+											<a href="javascript:;">${(page_current)!}</a>
 										</li>
 
 										<li>
-											<a href="#">
+											<a href="?page=${(page_next)!}&user_id=${(search_user_id)!}">
 												<i class="icon-double-angle-right"></i>
+												下页
 											</a>
 										</li>
 									</ul>
@@ -171,7 +173,9 @@
 
 		<script>
 		function search(){
-			console.log(123);
+			var user_id = $('#searchFrm_user_id').val().trim();
+			if('' === user_id) return location.href = '/manage/matching_1';
+			location.href = '/manage/matching_1?user_id='+ user_id;
 		}
 		</script>
 	</body>

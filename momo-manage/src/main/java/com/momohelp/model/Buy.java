@@ -67,6 +67,17 @@ public class Buy implements Serializable {
 	@Transient
 	private Farm farm;
 
+	@Transient
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Integer getNum_deal() {
 		return num_deal;
 	}

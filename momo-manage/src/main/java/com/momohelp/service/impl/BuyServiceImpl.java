@@ -19,6 +19,7 @@ import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.FarmService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
 
 /**
  *
@@ -171,9 +172,26 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 	public List<Buy> findByBuy__4(Buy buy, int page, int rows) {
 
 		Example example = new Example(Buy.class);
-		example.setOrderByClause("create_time desc");
+		example.setOrderByClause("create_time DESC, is_deposit DESC");
+
+		if (null != buy) {
+			Example.Criteria criteria = example.createCriteria();
+
+			String user_id = StringUtil.isEmpty(buy.getUser_id());
+			if (null != user_id) {
+				criteria.andEqualTo("user_id", user_id);
+			}
+		}
 
 		PageHelper.startPage(page, rows);
-		return selectByExample(example);
+
+		List<Buy> list = selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Buy item = list.get(i);
+			item.setUser(userService.selectByKey(item.getUser_id()));
+		}
+
+		return list;
 	}
 }

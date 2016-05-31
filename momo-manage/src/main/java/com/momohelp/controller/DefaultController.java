@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Buy;
+import com.momohelp.model.BuySell;
 import com.momohelp.model.Notice;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
@@ -48,6 +50,9 @@ public class DefaultController {
 
 	@Autowired
 	private BuyService buyService;
+
+	@Autowired
+	private BuySellService buySellService;
 
 	/**
 	 * 生成短信验证码
@@ -170,13 +175,19 @@ public class DefaultController {
 	@RequestMapping(value = { "/manage/matching_1" }, method = RequestMethod.GET)
 	public ModelAndView _manage_matching_1UI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
-			@RequestParam(required = false, defaultValue = "100") int rows,
+			@RequestParam(required = false, defaultValue = "10") int rows,
 			Sell sell) {
 		ModelAndView result = new ModelAndView("m/default/matching_1");
 		result.addObject("session_user", session.getAttribute("session.user"));
 
 		List<Sell> list = sellService.findBySell__4(sell, page, rows);
 		result.addObject("data_list", list);
+
+		result.addObject("search_user_id", sell.getUser_id());
+
+		result.addObject("page_prev", page - 1);
+		result.addObject("page_current", page);
+		result.addObject("page_next", page + 1);
 
 		result.addObject("nav_choose", ",11,1101,");
 		return result;
@@ -185,7 +196,7 @@ public class DefaultController {
 	@RequestMapping(value = { "/manage/matching_2" }, method = RequestMethod.GET)
 	public ModelAndView _manage_matching_2UI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
-			@RequestParam(required = false, defaultValue = "100") int rows,
+			@RequestParam(required = false, defaultValue = "10") int rows,
 			Buy buy) {
 		ModelAndView result = new ModelAndView("m/default/matching_2");
 		result.addObject("session_user", session.getAttribute("session.user"));
@@ -193,14 +204,35 @@ public class DefaultController {
 		List<Buy> list = buyService.findByBuy__4(buy, page, rows);
 		result.addObject("data_list", list);
 
+		result.addObject("search_user_id", buy.getUser_id());
+
+		result.addObject("page_prev", page - 1);
+		result.addObject("page_current", page);
+		result.addObject("page_next", page + 1);
+
 		result.addObject("nav_choose", ",11,1102,");
 		return result;
 	}
 
 	@RequestMapping(value = { "/manage/matching_3" }, method = RequestMethod.GET)
-	public ModelAndView _manage_matching_3UI(HttpSession session) {
+	public ModelAndView _manage_matching_3UI(HttpSession session,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "10") int rows,
+			BuySell buySell) {
 		ModelAndView result = new ModelAndView("m/default/matching_3");
 		result.addObject("session_user", session.getAttribute("session.user"));
+
+		List<BuySell> list = buySellService.findByBuySell__4(buySell, page,
+				rows);
+		result.addObject("data_list", list);
+
+		result.addObject("search_buy_user_id", buySell.getP_buy_user_id());
+		result.addObject("search_sell_user_id", buySell.getP_sell_user_id());
+
+		result.addObject("page_prev", page - 1);
+		result.addObject("page_current", page);
+		result.addObject("page_next", page + 1);
+
 		result.addObject("nav_choose", ",11,1103,");
 		return result;
 	}

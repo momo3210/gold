@@ -114,6 +114,17 @@ public class BuySell implements Serializable {
 	@Transient
 	private Buy buy;
 
+	@Transient
+	private Sell sell;
+
+	public Sell getSell() {
+		return sell;
+	}
+
+	public void setSell(Sell sell) {
+		this.sell = sell;
+	}
+
 	public Buy getBuy() {
 		return buy;
 	}
