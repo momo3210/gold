@@ -101,6 +101,9 @@ public class Base implements Ibase, Serializable {
 					continue;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
+				if (f==null) {
+					continue;
+				}
 				double tempBase = 0.00;
 				// 小端金额
 				if (farm.getNum_buy() >= f.getNum_buy()) {
@@ -110,7 +113,6 @@ public class Base implements Ibase, Serializable {
 				}
 				if (f.getFlag_out_p() == 2) {// 领导排单已经出局 f.getFlag_out()==3时
 												// 计算基数为0 也就不用计算了
-				
 					// 获得当前用户的上一单
 					Farm beforeFarm = farmService.selectByKey(farm.getPid());
 					Example example = new Example(Prize.class);

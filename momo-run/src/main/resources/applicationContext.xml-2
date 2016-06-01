@@ -109,17 +109,18 @@
 		</entry> </map> </property> </bean> -->
 	<!-- 方式二：使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法 -->
 	<!-- 定义目标bean和bean中的方法 -->
-	<!-- <bean id="SpringQtzJob" class="com.momohelp.calculate.service.impl.DynamicCalculation" /> -->
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<!-- <bean id="SpringQtzJob" class="com.momohelp.calculate.service.impl.DynamicCalculation" 
+		/> -->
+
+
+
+
+
+
+
+
+
+
 	<bean id="baseQtzJobMethod"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -143,17 +144,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	<bean id="conversionQtzJobMethod"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -170,8 +160,7 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="conversionQtzJobMethod"></property>
 		<!-- 每天夜里1点执行一次 -->
-		<!-- <property name="cronExpression" value="0 20 1 * * ?"></property> -->
-		<property name="cronExpression" value="0/7 * * * * ?"></property>
+		<property name="cronExpression" value="59 59 23 * * ? *"></property>
 	</bean>
 
 
@@ -198,9 +187,8 @@
 	<bean id="forceLogoutCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="forceLogoutQtzJobMethod"></property>
-		<!-- 每天夜里1点执行一次 -->
-		<!-- <property name="cronExpression" value="0 0 1 * * ?"></property> -->
-		<property name="cronExpression" value="0/9 * * * * ?"></property>
+		<!-- 每天夜里23点59分59秒 -->
+		<property name="cronExpression" value="59 59 23 * * ?"></property>
 	</bean>
 
 
@@ -229,9 +217,9 @@
 	<bean id="matchCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
-		<!-- 每天8-20点 每一小时执行一次-->
-		<!-- <property name="cronExpression" value="0 0 8-20 * * ?"></property> -->
-		<property name="cronExpression" value="0/13 * * * * ?"></property>
+		<!-- 每天8-20点 每一小时执行一次 -->
+		<property name="cronExpression"
+			value="0 0 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ?"></property>
 	</bean>
 
 
@@ -260,33 +248,50 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
 		<!-- 每天夜里1点30分执行一次 -->
-		<!-- <property name="cronExpression" value="0 30 1 * * ?"></property> -->
-		<property name="cronExpression" value="0/13 * * * * ?"></property>
+		<property name="cronExpression" value="59 59 23 * * ?"></property>
+	</bean>
+
+
+	<bean id="lockAccountQtzJobMethod"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="lockAccount" />
+		</property>
+		<property name="concurrent" value="false" />
+		<property name="targetMethod">  <!-- 要执行的方法名称 -->
+			<value>lockAccount</value>
+		</property>
+	</bean>
+
+	<!-- ======================== 调度触发器 ======================== -->
+	<bean id="lockAccountCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="lockAccountQtzJobMethod"></property>
+		<!-- 每天夜里1点30分执行一次 -->
+		<property name="cronExpression" value="0/5 * * * * ?"></property>
 	</bean>
 
 
 
 
-
-
-
 	<!-- ======================== 调度工厂 ======================== -->
-	<!-- <bean id="SpringJobSchedulerFactoryBean"
+	<bean id="SpringJobSchedulerFactoryBean"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
 		lazy-init="false" init-method="start" destroy-method="stop">
 		<property name="triggers">
 			<list>
-				<ref bean="baseCronTriggerBean"/>
-				<ref bean="conversionCronTriggerBean"/>
-				<ref bean="forceLogoutCronTriggerBean"/>
+				<ref bean="baseCronTriggerBean" />
+				<ref bean="conversionCronTriggerBean" />
+				<ref bean="forceLogoutCronTriggerBean" />
 				<ref bean="matchCronTriggerBean" />
-				<ref bean="myStaticCronTriggerBean"/>
+				<ref bean="myStaticCronTriggerBean" />
+				<ref bean="lockAccountCronTriggerBean"/>
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />
 		<property name="schedulerName" value="cronScheduler" />
 		<property name="startupDelay" value="1" />
-	</bean> -->
+	</bean>
 
 
 
