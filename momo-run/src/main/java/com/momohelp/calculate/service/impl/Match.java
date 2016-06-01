@@ -61,7 +61,7 @@ public class Match implements Serializable, IMatch {
 		// List<BuySell> buySells = buySellService.selectBySellAndBuyId();
 
 		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.DAY_OF_MONTH, -1);
+		cr.add(Calendar.DAY_OF_MONTH, -8);
 		cr.set(Calendar.HOUR_OF_DAY, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
