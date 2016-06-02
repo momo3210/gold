@@ -154,8 +154,9 @@ public class Base implements Ibase, Serializable {
 						continue;
 					}
 					int depth = temp - userTemp.getDepth();
+					String lv=userTemp.getLv();
 					// 判断等级与代数关系
-					if (prejudge(depth, userTemp.getLv())) {
+					if (0==depth||prejudge(depth, lv)) {
 						continue;
 					}
 					double number = calculateRoyalty(tempBase,
