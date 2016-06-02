@@ -61,7 +61,7 @@ public class Match implements Serializable, IMatch {
 		// List<BuySell> buySells = buySellService.selectBySellAndBuyId();
 
 		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.DAY_OF_MONTH, -8);
+		cr.add(Calendar.DAY_OF_MONTH, -25);
 		cr.set(Calendar.HOUR_OF_DAY, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
@@ -77,16 +77,78 @@ public class Match implements Serializable, IMatch {
 		for (BuySell buy : buyList) {// 说明是买盘剩余数据
 			buyDataHandle(buy, sells);
 		}
-		// for (BuySell buySell : buySells) {
-		// if (!buySell.getP_buy_id().equals("null")) {// 说明是买盘剩余数据
-		// buyDataHandle(buySell, sells);
-		// } else {// 说明是卖盘剩余数据
-		// sellDataHandle(buySell, buys);
-		// }
-		// }
 		buyAndSellHandle(sells, buys);
+		
+		//清理剩余数据
+		clearBuyOrSellData(sells, buys);
+		
+		clearBuyAndSellData(sellList, buyList);
+
 		bool = true;
 		return bool;
+	}
+
+	private void clearBuyOrSellData(List<Sell> sells, List<Buy> buys) {
+
+		// 自动匹配结束后 未处理的数据转入买卖交易中
+		// 卖盘清理
+		// 计算标志设置
+		for (Sell sell2 : sells) {
+			if (sell2.getNum_sell() > 0) {
+				BuySell entity = new BuySell();
+				entity.setId(genId());
+				entity.setCreate_time(new Date());
+				entity.setP_sell_id(sell2.getId());
+				entity.setP_buy_id("null");
+				entity.setStatus(0);
+				entity.setP_sell_user_id(sell2.getUser_id());
+				entity.setP_buy_user_id("null");
+				entity.setNum_matching(sell2.getNum_sell());
+				buySellService.save(entity);
+			}
+			sellService.updateFlagCalc(sell2.getId());
+		}
+		// 买盘清理
+		// 计算标志设置
+		for (Buy buy2 : buys) {
+			if (buy2.getNum_buy() > 0) {
+				BuySell entity = new BuySell();
+				entity.setId(genId());
+				entity.setCreate_time(new Date());
+				entity.setP_sell_id("null");
+				entity.setP_buy_id(buy2.getId());
+				entity.setStatus(0);
+				entity.setP_sell_user_id("null");
+				entity.setP_buy_user_id(buy2.getUser_id());
+				entity.setNum_matching(buy2.getNum_buy());
+				buySellService.save(entity);
+			}
+			buyService.updateFlagCalc(buy2.getId());
+		}
+
+	}
+
+	private void clearBuyAndSellData(List<BuySell> sellList, List<BuySell> buyList) {
+		// 自动匹配结束后 未处理的数据转入买卖交易中
+		// 卖盘中间数据清理
+		// 计算标志设置
+		for (BuySell sell2 : sellList) {
+			if (sell2.getNum_matching() > 0) {
+				buySellService.updateNotNull(sell2);
+			} else {
+				buySellService.deleteByKeys(sell2.getId());
+			}
+		}
+		// 买盘中间数据清理
+		// 计算标志设置
+		for (BuySell buy2 : buyList) {
+			if (buy2.getNum_matching() > 0) {
+				buySellService.updateNotNull(buy2);
+			} else {
+				buySellService.deleteByKeys(buy2.getId());
+			}
+		}
+
 	}
 
 	private void selfMactch(List<BuySell> buyList, List<BuySell> sellList) {
@@ -130,25 +192,6 @@ public class Match implements Serializable, IMatch {
 						}
 					}
 				}
-			}
-		}
-		// 自动匹配结束后 未处理的数据转入买卖交易中
-		// 卖盘中间数据清理
-		// 计算标志设置
-		for (BuySell sell2 : sellList) {
-			if (sell2.getNum_matching() > 0) {
-				buySellService.updateNotNull(sell2);
-			}else{
-				buySellService.deleteByKeys(sell2.getId());
-			}
-		}
-		// 买盘中间数据清理
-		// 计算标志设置
-		for (BuySell buy2 : buyList) {
-			if (buy2.getNum_matching() > 0) {
-				buySellService.updateNotNull(buy2);
-			}else{
-				buySellService.deleteByKeys(buy2.getId());
 			}
 		}
 	}
@@ -201,41 +244,6 @@ public class Match implements Serializable, IMatch {
 			}
 		}
 
-		// 自动匹配结束后 未处理的数据转入买卖交易中
-		// 卖盘清理
-		// 计算标志设置
-		for (Sell sell2 : sells) {
-			if (sell2.getNum_sell() > 0) {
-				BuySell entity = new BuySell();
-				entity.setId(genId());
-				entity.setCreate_time(new Date());
-				entity.setP_sell_id(sell2.getId());
-				entity.setP_buy_id("null");
-				entity.setStatus(0);
-				entity.setP_sell_user_id(sell2.getUser_id());
-				entity.setP_buy_user_id("null");
-				entity.setNum_matching(sell2.getNum_sell());
-				buySellService.save(entity);
-			}
-			sellService.updateFlagCalc(sell2.getId());
-		}
-		// 买盘清理
-		// 计算标志设置
-		for (Buy buy2 : buys) {
-			if (buy2.getNum_buy() > 0) {
-				BuySell entity = new BuySell();
-				entity.setId(genId());
-				entity.setCreate_time(new Date());
-				entity.setP_sell_id("null");
-				entity.setP_buy_id(buy2.getId());
-				entity.setStatus(0);
-				entity.setP_sell_user_id("null");
-				entity.setP_buy_user_id(buy2.getUser_id());
-				entity.setNum_matching(buy2.getNum_buy());
-				buySellService.save(entity);
-			}
-			buyService.updateFlagCalc(buy2.getId());
-		}
 	}
 
 	private void sellDataHandle(BuySell buySell, List<Buy> buys) {
