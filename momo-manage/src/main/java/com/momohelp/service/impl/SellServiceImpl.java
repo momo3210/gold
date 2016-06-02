@@ -165,6 +165,13 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 
 		saveMaterialRecord___4(_sell, user);
+
+		// 动态冻结3天
+		Calendar c = Calendar.getInstance();
+		c.setTime(_sell.getCreate_time());
+		c.add(Calendar.DAY_OF_MONTH, (1 == _sell.getType_id()) ? 0 : 3);
+		_sell.setCalc_time(c.getTime());
+
 		_sell.setId(genId());
 		save(_sell);
 		return null;

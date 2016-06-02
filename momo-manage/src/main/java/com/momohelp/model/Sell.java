@@ -37,6 +37,12 @@ public class Sell implements Serializable {
 	 * 卖出时间
 	 */
 	private Date create_time;
+
+	/**
+	 * 计算时间
+	 */
+	private Date calc_time;
+
 	private String user_id;
 
 	/**
@@ -53,6 +59,14 @@ public class Sell implements Serializable {
 
 	@Transient
 	private User user;
+
+	public Date getCalc_time() {
+		return calc_time;
+	}
+
+	public void setCalc_time(Date calc_time) {
+		this.calc_time = calc_time;
+	}
 
 	public User getUser() {
 		return user;
