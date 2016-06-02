@@ -176,7 +176,6 @@ public class Match implements Serializable, IMatch {
 							selltemp = sell.getNum_matching();
 							buy.setNum_matching(0);
 							buySellService.save(entity);
-							continue;
 						} else if (selltemp < buytemp) {
 							entity.setNum_matching(selltemp);
 							sell.setNum_matching(0);
