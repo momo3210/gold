@@ -89,19 +89,22 @@ public class Base implements Ibase, Serializable {
 			// 计算奖金基数
 			for (Farm farm : farms) {
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
-				if (farm.getPid_higher_ups() == null
+				if ("0".equals(farm.getPid_higher_ups())||farm.getPid_higher_ups() == null
 						|| farm.getPid_higher_ups().trim().length() == 0) {
-					continue;
-				}
-				if ("0".equals(farm.getPid_higher_ups())) {
+					farm.setFlag_calc_bonus(1);
+					farmService.updateNotNull(farm);
 					continue;
 				}
 				User leader = userService.selectByKey(user.getPid());// 获取当前排单的用户的领导
 				if (leader == null) {
+					farm.setFlag_calc_bonus(1);
+					farmService.updateNotNull(farm);
 					continue;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
 				if (f==null) {
+					farm.setFlag_calc_bonus(1);
+					farmService.updateNotNull(farm);
 					continue;
 				}
 				double tempBase = 0.00;
@@ -154,8 +157,9 @@ public class Base implements Ibase, Serializable {
 						continue;
 					}
 					int depth = temp - userTemp.getDepth();
+					String lv=userTemp.getLv();
 					// 判断等级与代数关系
-					if (prejudge(depth, userTemp.getLv())) {
+					if (0==depth||prejudge(depth, lv)) {
 						continue;
 					}
 					double number = calculateRoyalty(tempBase,

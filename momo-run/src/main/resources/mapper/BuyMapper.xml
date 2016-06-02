@@ -28,7 +28,7 @@
 	<select id="selectByCycles" resultType="buy">
 		<!-- 由于系统时间以及管理员可以修改计算时间  -->
 		SELECT * FROM p_buy as p WHERE p.calc_time between #{0} and #{1} and
-		p.flag_calc_bonus='0' ORDER BY p.create_time
+		p.flag_calc_bonus='0' ORDER BY p.create_time ASC
 	</select>
 	<update id="updateFlagCalc">
 		update p_buy as p SET p.flag_calc_bonus=1 where p.id=#{0}
