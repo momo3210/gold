@@ -63,6 +63,12 @@ public class PermitFilter implements Filter {
 		} else if ("/r".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
+		} else if ("/user/logout".equals(uri)) {
+			chain.doFilter(request, response);
+			return;
+		} else if ("/manage/user/logout".equals(uri)) {
+			chain.doFilter(request, response);
+			return;
 		}
 
 		HttpSession session = hreq.getSession();
@@ -91,6 +97,13 @@ public class PermitFilter implements Filter {
 			if (2 != lv) {
 				hres.sendRedirect("/user/login");
 				return;
+			}
+
+			if (!"/message/".equals(uri)) {
+				if (2 == (Integer) session.getAttribute("session.user.status")) {
+					hres.sendRedirect("/message/");
+					return;
+				}
 			}
 		}
 

@@ -218,6 +218,7 @@ public class UserController {
 		session.removeAttribute("session.user");
 		session.removeAttribute("session.user.id");
 		session.removeAttribute("session.user.lv");
+		session.removeAttribute("session.user.status");
 		session.removeAttribute("session.time");
 
 		t = StringUtil.isEmpty(t);
@@ -337,6 +338,7 @@ public class UserController {
 		session.setAttribute("session.user", user);
 		session.setAttribute("session.user.id", user.getId());
 		session.setAttribute("session.user.lv", 2);
+		session.setAttribute("session.user.status", user.getStatus());
 		session.setAttribute("session.time", (new Date()).toString());
 
 		result.put("success", true);
