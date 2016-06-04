@@ -56,10 +56,7 @@ public class Match implements Serializable, IMatch {
 
 		List<BuySell> buyList = buySellService.selectByBuy();
 		List<BuySell> sellList = buySellService.selectBySell();
-		selfMactch(buyList, sellList);
-
 		// List<BuySell> buySells = buySellService.selectBySellAndBuyId();
-
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.DAY_OF_MONTH, -25);
 		cr.set(Calendar.HOUR_OF_DAY, 0);
@@ -77,6 +74,7 @@ public class Match implements Serializable, IMatch {
 		for (BuySell buy : buyList) {// 说明是买盘剩余数据
 			buyDataHandle(buy, sells);
 		}
+		selfMactch(buyList, sellList);
 		buyAndSellHandle(sells, buys);
 		
 		//清理剩余数据

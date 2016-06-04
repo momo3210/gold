@@ -248,7 +248,7 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
 		<!-- 每天夜里1点30分执行一次 -->
-		<property name="cronExpression" value="59 59 23 * * ?"></property>
+		<property name="cronExpression" value="0/7 * * * * ?"></property>
 	</bean>
 
 
