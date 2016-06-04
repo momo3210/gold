@@ -1,5 +1,6 @@
 package com.momohelp.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
-import com.github.pagehelper.PageHelper;
 import com.momohelp.mapper.BuyMapper;
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
@@ -168,6 +168,9 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 		((BuyMapper) getMapper()).updateNum_deal(buy);
 	}
 
+	private static final SimpleDateFormat sdf_2 = new SimpleDateFormat(
+			"yyyy-MM-dd");
+
 	@Override
 	public List<Buy> findByBuy__4(Buy buy, int page, int rows) {
 
@@ -181,9 +184,12 @@ public class BuyServiceImpl extends BaseService<Buy> implements BuyService {
 			if (null != user_id) {
 				criteria.andEqualTo("user_id", user_id);
 			}
+
+			criteria.andLike("create_time", sdf_2.format(buy.getCreate_time())
+					+ "%");
 		}
 
-		PageHelper.startPage(page, rows);
+		// PageHelper.startPage(page, rows);
 
 		List<Buy> list = selectByExample(example);
 

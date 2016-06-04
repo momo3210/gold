@@ -340,6 +340,9 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		((SellMapper) getMapper()).updateNum_deal(sell);
 	}
 
+	private static final SimpleDateFormat sdf_2 = new SimpleDateFormat(
+			"yyyy-MM-dd");
+
 	@Override
 	public List<Sell> findBySell__4(Sell sell, int page, int rows) {
 
@@ -353,9 +356,12 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 			if (null != user_id) {
 				criteria.andEqualTo("user_id", user_id);
 			}
+
+			criteria.andLike("create_time", sdf_2.format(sell.getCreate_time())
+					+ "%");
 		}
 
-		PageHelper.startPage(page, rows);
+		// PageHelper.startPage(page, rows);
 
 		List<Sell> list = selectByExample(example);
 

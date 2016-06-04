@@ -1,5 +1,7 @@
 package com.momohelp.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
 import com.momohelp.service.UserService;
+import com.momohelp.util.StringUtil;
 import com.momohelp.util.webservice.SmSWebService;
 import com.momohelp.util.webservice.SmSWebServiceSoap;
 import com.momohelp.util.webservice.WsSendResponse;
@@ -175,18 +178,31 @@ public class DefaultController {
 		return result;
 	}
 
+	private static final SimpleDateFormat sdf = new SimpleDateFormat(
+			"yyyy-MM-dd");
+
 	@RequestMapping(value = { "/manage/matching_1" }, method = RequestMethod.GET)
 	public ModelAndView _manage_matching_1UI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "10") int rows,
-			Sell sell) {
+			@RequestParam(required = false) String create_time,
+			@RequestParam(required = false) String user_id)
+			throws ParseException {
 		ModelAndView result = new ModelAndView("m/default/matching_1");
 		result.addObject("session_user", session.getAttribute("session.user"));
+
+		Sell sell = new Sell();
+		sell.setUser_id(user_id);
+
+		create_time = StringUtil.isEmpty(create_time);
+		sell.setCreate_time((null == create_time) ? new Date() : sdf
+				.parse(create_time));
 
 		List<Sell> list = sellService.findBySell__4(sell, page, rows);
 		result.addObject("data_list", list);
 
 		result.addObject("search_user_id", sell.getUser_id());
+		result.addObject("search_create_time", sell.getCreate_time());
 
 		result.addObject("page_prev", page - 1);
 		result.addObject("page_current", page);
@@ -200,14 +216,24 @@ public class DefaultController {
 	public ModelAndView _manage_matching_2UI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "10") int rows,
-			Buy buy) {
+			@RequestParam(required = false) String create_time,
+			@RequestParam(required = false) String user_id)
+			throws ParseException {
 		ModelAndView result = new ModelAndView("m/default/matching_2");
 		result.addObject("session_user", session.getAttribute("session.user"));
+
+		Buy buy = new Buy();
+		buy.setUser_id(user_id);
+
+		create_time = StringUtil.isEmpty(create_time);
+		buy.setCreate_time((null == create_time) ? new Date() : sdf
+				.parse(create_time));
 
 		List<Buy> list = buyService.findByBuy__4(buy, page, rows);
 		result.addObject("data_list", list);
 
 		result.addObject("search_user_id", buy.getUser_id());
+		result.addObject("search_create_time", buy.getCreate_time());
 
 		result.addObject("page_prev", page - 1);
 		result.addObject("page_current", page);
@@ -221,9 +247,20 @@ public class DefaultController {
 	public ModelAndView _manage_matching_3UI(HttpSession session,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "10") int rows,
-			BuySell buySell) {
+			@RequestParam(required = false) String create_time,
+			@RequestParam(required = false) String p_buy_user_id,
+			@RequestParam(required = false) String p_sell_user_id)
+			throws ParseException {
 		ModelAndView result = new ModelAndView("m/default/matching_3");
 		result.addObject("session_user", session.getAttribute("session.user"));
+
+		BuySell buySell = new BuySell();
+		buySell.setP_buy_user_id(p_buy_user_id);
+		buySell.setP_sell_user_id(p_sell_user_id);
+
+		create_time = StringUtil.isEmpty(create_time);
+		buySell.setCreate_time((null == create_time) ? new Date() : sdf
+				.parse(create_time));
 
 		List<BuySell> list = buySellService.findByBuySell__4(buySell, page,
 				rows);
@@ -231,6 +268,7 @@ public class DefaultController {
 
 		result.addObject("search_buy_user_id", buySell.getP_buy_user_id());
 		result.addObject("search_sell_user_id", buySell.getP_sell_user_id());
+		result.addObject("search_create_time", buySell.getCreate_time());
 
 		result.addObject("page_prev", page - 1);
 		result.addObject("page_current", page);

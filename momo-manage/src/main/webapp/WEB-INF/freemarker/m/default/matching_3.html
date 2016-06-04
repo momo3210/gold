@@ -14,6 +14,11 @@
 		.pagination {
 			margin-bottom: 0;
 		}
+		.WdatePicker {
+			background: #fff
+				url('${(conf_html_cdn)!}js/My97DatePicker/4.8-Beta4/skin/datePicker.gif')
+				no-repeat right;
+		}
 		</style>
 	</head>
 
@@ -105,7 +110,16 @@
 											placeholder="卖家编号" class="input-small nav-search-input"
 											value='${(search_sell_user_id)!}' id="searchFrm_sell_user_id"
 											autocomplete="off" /> <i class="icon-search nav-search-icon"></i>
-										</span> <a class="btn btn-mini btn-danger" href='javascript:search();'>查询</a>
+										</span>
+
+										<span class="input-icon">
+											<input type='text' class='input-small WdatePicker' name='create_time'
+												placeholder='选择日期' id="searchFrm_create_time"
+												value='${(search_create_time?string("yyyy-MM-dd"))!}'
+												onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+										</span>
+
+										<a class="btn btn-mini btn-danger" href='javascript:search();'>查询</a>
 									</form>
 								</div>
 							</div>
@@ -133,9 +147,9 @@
 											<td>${doc_index+1}</td>
 											<td>${(doc.num_matching)!}</td>
 											<td>${(doc.p_buy_id)!}</td>
-											<td><a href='#${(doc.p_buy_user_id)!}'>${(doc.p_buy_user.nickname)!}</a></td>
+											<td><a href='./user/info?id=${(doc.p_buy_user_id)!}'>${(doc.p_buy_user.nickname)!}</a></td>
 											<td>${(doc.p_sell_id)!}</td>
-											<td><a href='#${(doc.p_sell_user_id)!}'>${(doc.p_sell_user.nickname)!}</a></td>
+											<td><a href='./user/info?id=${(doc.p_sell_user_id)!}'>${(doc.p_sell_user.nickname)!}</a></td>
 											<td>${(doc.sell.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 											<td>${(doc.p_sell_user_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 											<td><@status.m status="${(doc.status)!}"/></td>
@@ -144,7 +158,7 @@
 									</#list>
 									</tbody>
 								</table>
-								<div class="pagination">
+								<!-- <div class="pagination">
 									<ul>
 										<li<#if (1 == (page_current)!)> class="disabled"</#if>>
 											<a href="?page=${(page_prev)!}&p_buy_user_id=${(search_buy_user_id)!}&p_sell_user_id=${(search_sell_user_id)!}">
@@ -164,7 +178,7 @@
 											</a>
 										</li>
 									</ul>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -179,11 +193,15 @@
 
 		<#include "/_pagelet/js.html"/>
 
+		<script type='text/javascript'
+			src='${(conf_html_cdn)!}js/My97DatePicker/4.8-Beta4/WdatePicker.js'></script>
+
 		<script>
 		function search(){
 			var buy_user_id = $('#searchFrm_buy_user_id').val().trim();
 			var sell_user_id = $('#searchFrm_sell_user_id').val().trim();
-			location.href = '/manage/matching_3?&p_buy_user_id='+ buy_user_id +'&p_sell_user_id='+ sell_user_id;
+			var create_time = $('#searchFrm_create_time').val().trim();
+			location.href = '/manage/matching_3?create_time='+ create_time +'&p_buy_user_id='+ buy_user_id +'&p_sell_user_id='+ sell_user_id;
 		}
 		</script>
 	</body>

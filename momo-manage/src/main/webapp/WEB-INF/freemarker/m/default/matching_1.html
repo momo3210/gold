@@ -14,6 +14,11 @@
 		.pagination {
 			margin-bottom: 0;
 		}
+		.WdatePicker {
+			background: #fff
+				url('${(conf_html_cdn)!}js/My97DatePicker/4.8-Beta4/skin/datePicker.gif')
+				no-repeat right;
+		}
 		</style>
 	</head>
 
@@ -100,7 +105,16 @@
 											placeholder="会员编号" class="input-small nav-search-input"
 											value='${(search_user_id)!}' id="searchFrm_user_id"
 											autocomplete="off" /> <i class="icon-search nav-search-icon"></i>
-										</span> <a class="btn btn-mini btn-danger" href='javascript:search();'>查询</a>
+										</span>
+
+										<span class="input-icon">
+											<input type='text' class='input-small WdatePicker' name='create_time'
+												placeholder='选择日期' id="searchFrm_create_time"
+												value='${(search_create_time?string("yyyy-MM-dd"))!}'
+												onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+										</span>
+
+										<a class="btn btn-mini btn-danger" href='javascript:search();'>查询</a>
 									</form>
 								</div>
 							</div>
@@ -125,7 +139,7 @@
 									<#list data_list! as doc>
 										<tr>
 											<td>${doc_index+1}</td>
-											<td><a href='#${(doc.user_id)!}'>${(doc.user.nickname)!}</a></td>
+											<td><a href='./user/info?id=${(doc.user_id)!}'>${(doc.user.nickname)!}</a></td>
 											<td>${(doc.num_sell)!}</td>
 											<td>${(doc.time_deal?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 											<td>${(doc.num_deal)!}</td>
@@ -136,7 +150,7 @@
 									</#list>
 									</tbody>
 								</table>
-								<div class="pagination">
+								<!-- <div class="pagination">
 									<ul>
 										<li<#if (1 == (page_current)!)> class="disabled"</#if>>
 											<a href="?page=${(page_prev)!}&user_id=${(search_user_id)!}">
@@ -156,7 +170,7 @@
 											</a>
 										</li>
 									</ul>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -171,11 +185,15 @@
 
 		<#include "/_pagelet/js.html"/>
 
+		<script type='text/javascript'
+			src='${(conf_html_cdn)!}js/My97DatePicker/4.8-Beta4/WdatePicker.js'></script>
+
 		<script>
 		function search(){
 			var user_id = $('#searchFrm_user_id').val().trim();
-			if('' === user_id) return location.href = '/manage/matching_1';
-			location.href = '/manage/matching_1?user_id='+ user_id;
+			var create_time = $('#searchFrm_create_time').val().trim();
+			// if('' === user_id) return location.href = '/manage/matching_1';
+			location.href = '/manage/matching_1?create_time='+ create_time +'&user_id='+ user_id;
 		}
 		</script>
 	</body>
