@@ -55,7 +55,7 @@
 		SELECT * FROM
 		p_buy_sell as
 		p WHERE p.p_buy_id='null' and
-		p.status='0' ORDER BY p.create_time DESC
+		p.status='0' ORDER BY p.create_time ASC
 	</select>
 	<select id="selectByBuy" resultType="buySell">
 		SELECT * FROM

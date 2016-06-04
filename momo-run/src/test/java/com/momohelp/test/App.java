@@ -3,7 +3,7 @@ package com.momohelp.test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.momohelp.calculate.service.IMatch;
+import com.momohelp.calculate.service.IStatic;
 
 public class App {
 
@@ -15,15 +15,15 @@ public class App {
 		// conversion.triggerConversion();
 		// IForceLogout conversion=context.getBean(IForceLogout.class);
 		// conversion.calculateForceLogout();
-		// IStatic conversion=context.getBean(IStatic.class);
-		// conversion.calculation();
+		 IStatic conversion=context.getBean(IStatic.class);
+		 conversion.calculation();
 //		 Ibase base=context.getBean(Ibase.class);
 //		
 //		 base.base();
 
-		 IMatch match= context.getBean(IMatch.class);
-		
-		 match.automatch();
+//		 IMatch match= context.getBean(IMatch.class);
+//		
+//		 match.automatch();
 		//
 		// ILockAccount account=context.getBean(ILockAccount.class);
 		// account.lockAccount();

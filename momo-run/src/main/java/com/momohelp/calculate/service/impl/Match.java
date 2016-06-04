@@ -152,6 +152,9 @@ public class Match implements Serializable, IMatch {
 	}
 
 	private void selfMactch(List<BuySell> buyList, List<BuySell> sellList) {
+		if((sellList==null||sellList.size()==0)||(buyList==null||buyList.size()==0)){
+			return ;
+		}
 		for (BuySell sell : sellList) {
 			int selltemp = sell.getNum_matching();
 			if (selltemp > 0) {
@@ -273,6 +276,7 @@ public class Match implements Serializable, IMatch {
 				buySell.setNum_matching(sellMatcheNum - buyMatcheNum);
 				buy.setNum_buy(0);
 				buySellService.save(entity);
+				continue;
 			} else if (sellMatcheNum < buyMatcheNum) {// 卖家数据小于买家数据
 				entity.setNum_matching(sellMatcheNum);
 				buySell.setNum_matching(0);

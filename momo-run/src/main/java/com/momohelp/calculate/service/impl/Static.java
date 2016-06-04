@@ -44,6 +44,7 @@ public class Static implements IStatic {
 		log.info("-------------静态余额孵化计算------------------------");
 		Example example = new Example(FarmHatch.class);
 		Calendar cr = Calendar.getInstance();
+		cr.add(Calendar.DAY_OF_MONTH, -25);
 		cr.set(Calendar.HOUR_OF_DAY, 0);
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
@@ -63,7 +64,7 @@ public class Static implements IStatic {
 				example2.createCriteria().andEqualTo("w_farm_chick_id",
 						farmHatch.getW_farm_chick_id());
 				List<FarmFeed> farmFeeds = farmFeedService
-						.selectByExample(example);
+						.selectByExample(example2);
 				for (FarmFeed farmFeed : farmFeeds) {
 					temp = temp + farmFeed.getPrice();
 				}
