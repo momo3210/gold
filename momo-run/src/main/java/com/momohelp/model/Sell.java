@@ -37,6 +37,12 @@ public class Sell implements Serializable {
 	 * 卖出时间
 	 */
 	private Date create_time;
+
+	/**
+	 * 计算时间
+	 */
+	private Date calc_time;
+
 	private String user_id;
 
 	/**
@@ -47,20 +53,8 @@ public class Sell implements Serializable {
 	private Integer type_id;
 
 	private Integer num_deal;
-	
-	
-	/**
-	 * 计算标志
-	 *
-	 * 0未计算
-	 *
-	 * 1已计算
-	 */
-	private Integer flag_calc_bonus=0;
-	
 
-	@Transient
-	private List<BuySell> buySells;
+	private Integer flag_calc_bonus;
 
 	public Integer getFlag_calc_bonus() {
 		return flag_calc_bonus;
@@ -68,6 +62,28 @@ public class Sell implements Serializable {
 
 	public void setFlag_calc_bonus(Integer flag_calc_bonus) {
 		this.flag_calc_bonus = flag_calc_bonus;
+	}
+
+	@Transient
+	private List<BuySell> buySells;
+
+	@Transient
+	private User user;
+
+	public Date getCalc_time() {
+		return calc_time;
+	}
+
+	public void setCalc_time(Date calc_time) {
+		this.calc_time = calc_time;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Integer getNum_deal() {

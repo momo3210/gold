@@ -41,10 +41,12 @@ public class LockAccount implements ILockAccount {
 	public void lockAccount() {
 		log.info("----------------锁定账号并且重新排卖家数据----------------------");
 		int data = Integer.parseInt(cfgService.selectByKey("4001").getValue_());
+		int sellData = Integer.parseInt(cfgService.selectByKey("4002")
+				.getValue_());
 		Example example = new Example(BuySell.class);
 		Calendar cr = Calendar.getInstance();
 		cr.add(Calendar.HOUR_OF_DAY, -(data));//
-		//cr.add(Calendar.HOUR_OF_DAY, -(96));//
+		// cr.add(Calendar.HOUR_OF_DAY, -(96));//
 		cr.set(Calendar.MINUTE, 0);
 		cr.set(Calendar.SECOND, 0);
 		Calendar cr2 = Calendar.getInstance();
@@ -53,8 +55,6 @@ public class LockAccount implements ILockAccount {
 				.andNotEqualTo("p_sell_id", "null").andEqualTo("status", 0)
 				.andBetween("create_time", cr.getTime(), cr2.getTime());
 		List<BuySell> buySells = buySellService.selectByExample(example);
-		int sellData = Integer.parseInt(cfgService.selectByKey("4002")
-				.getValue_());
 		for (BuySell buySell : buySells) {
 			buySell.setStatus(3);// 标志为问题单
 			buySellService.updateNotNull(buySell);
