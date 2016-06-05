@@ -950,6 +950,34 @@ public class UserController {
 	 * @return
 	 */
 	@ResponseBody
+	@RequestMapping(value = { "/user/feedMo2" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_feedMo2(HttpSession session,
+			@RequestParam(required = true) String user_pass_safe,
+			FarmFeed farmFeed) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 安全密码验证
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("msg", verifyPassSafe);
+			return result;
+		}
+
+		farmFeed.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = farmFeedService.feed(farmFeed);
+		if (null != msg) {
+			result.put("msg", msg);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
 	@RequestMapping(value = { "/user/feedMo" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _i_feedMo(HttpSession session,
 			@RequestParam(required = true) String verify_token,
@@ -985,6 +1013,31 @@ public class UserController {
 		if (null != msg) {
 			result.put("msg", msg);
 			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/json/farm/feed" }, produces = "application/json")
+	public Map<String, Object> _json_farm_feed(HttpSession session,
+			@RequestParam(required = false) String id) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		id = StringUtil.isEmpty(id);
+
+		if (null == id) {
+			result.put(
+					"data",
+					farmService.feedMo_list___4(session.getAttribute(
+							"session.user.id").toString()));
+		} else {
+			Farm farm = farmService.feedMo_farm_feed_list___4(id, session
+					.getAttribute("session.user.id").toString());
+			result.put("data", farm.getFarmFeeds());
 		}
 
 		result.put("success", true);

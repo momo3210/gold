@@ -166,6 +166,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setUser_id(farm.getUser_id());
 		buy.setIs_deposit(0);
 		buy.setNum_deal(0);
+		buy.setFlag_calc_bonus(0);
 
 		// 第七天开始计算
 		Calendar c = Calendar.getInstance();
@@ -192,6 +193,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		buy.setUser_id(farm.getUser_id());
 		buy.setIs_deposit(1);
 		buy.setNum_deal(0);
+		buy.setFlag_calc_bonus(0);
 
 		// 第二天开始计算
 		Calendar c = Calendar.getInstance();
@@ -487,14 +489,14 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 
 		List<Farm> list = selectByExample(example);
 
-		// if (null == list) {
-		// return null;
-		// }
-		//
-		// for (int i = 0, j = list.size(); i < j; i++) {
-		// Farm farm = list.get(i);
-		// farm.setFarmFeeds(farmFeedService.findByFarmId__1(farm.getId()));
-		// }
+		if (null == list) {
+			return null;
+		}
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			Farm farm = list.get(i);
+			farm.setFarmFeeds(farmFeedService.findByFarmId___4(farm.getId()));
+		}
 
 		return list;
 	}

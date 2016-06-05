@@ -36,7 +36,7 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		// 冻结24小时
 		Calendar c = Calendar.getInstance();
 		c.setTime(_farmHatch.getCreate_time());
-		c.add(Calendar.HOUR_OF_DAY, 24);
+		c.add(Calendar.HOUR_OF_DAY, 48);
 		_farmHatch.setFreeze_time(c.getTime());
 
 		_farmHatch.setNum_hatch((null == farmHatch.getNum_hatch()) ? 0

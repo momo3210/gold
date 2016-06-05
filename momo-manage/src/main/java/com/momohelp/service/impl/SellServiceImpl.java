@@ -169,10 +169,11 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		// 动态冻结3天
 		Calendar c = Calendar.getInstance();
 		c.setTime(_sell.getCreate_time());
-		c.add(Calendar.DAY_OF_MONTH, (1 == _sell.getType_id()) ? 0 : 3);
+		c.add(Calendar.DAY_OF_MONTH, (1 == _sell.getType_id()) ? 0 : 5);
 		_sell.setCalc_time(c.getTime());
 
 		_sell.setCreate_time(_sell.getCalc_time());
+		_sell.setFlag_calc_bonus(0);
 
 		_sell.setId(genId());
 		save(_sell);
