@@ -1,6 +1,7 @@
 package com.momohelp.calculate.service.impl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -66,7 +67,7 @@ public class LockAccount implements ILockAccount {
 		Calendar cr3 = Calendar.getInstance();
 		cr3.add(Calendar.HOUR_OF_DAY, sellData);//
 		Sell sell = sellService.selectByKey(buySell.getP_sell_id());
-		sell.setCreate_time(Calendar.getInstance().getTime());
+		sell.setCreate_time(new Date());
 		sell.setId(genId());
 		sell.setNum_sell(buySell.getNum_matching());
 		sell.setNum_deal(0);
