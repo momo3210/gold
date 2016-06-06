@@ -1068,6 +1068,11 @@ public class UserController {
 			result.put("data", farm.getFarmFeeds());
 		}
 
+		User user = (User) session.getAttribute("session.user");
+
+		result.put("data_user_mobile", user.getId());
+		result.put("data_user_lv", user.getLv());
+
 		result.put("success", true);
 		return result;
 	}
