@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import tk.mybatis.mapper.entity.Example;
-
 import com.momohelp.calculate.service.ILockAccount;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Sell;
@@ -43,18 +41,7 @@ public class LockAccount implements ILockAccount {
 		int data = Integer.parseInt(cfgService.selectByKey("4001").getValue_());
 		int sellData = Integer.parseInt(cfgService.selectByKey("4002")
 				.getValue_());
-		Example example = new Example(BuySell.class);
-		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.HOUR_OF_DAY, -(data));//
-		// cr.add(Calendar.HOUR_OF_DAY, -(96));//
-		cr.set(Calendar.MINUTE, 0);
-		cr.set(Calendar.SECOND, 0);
-		Calendar cr2 = Calendar.getInstance();
-		cr2.add(Calendar.HOUR_OF_DAY, -(data));
-		example.createCriteria().andNotEqualTo("p_buy_id", "null")
-				.andNotEqualTo("p_sell_id", "null").andEqualTo("status", 0)
-				.andBetween("create_time", cr.getTime(), cr2.getTime());
-		List<BuySell> buySells = buySellService.selectByExample(example);
+		List<BuySell> buySells = buySellService.lockAccount(data);
 		for (BuySell buySell : buySells) {
 			buySell.setStatus(3);// 标志为问题单
 			buySellService.updateNotNull(buySell);
@@ -64,10 +51,11 @@ public class LockAccount implements ILockAccount {
 			Calendar cr3 = Calendar.getInstance();
 			cr3.add(Calendar.HOUR_OF_DAY, sellData);//
 			Sell sell = sellService.selectByKey(buySell.getP_sell_id());
-			sell.setCreate_time(cr3.getTime());
+			sell.setCreate_time(Calendar.getInstance().getTime());
 			sell.setId(genId());
 			sell.setNum_sell(buySell.getNum_matching());
 			sell.setNum_deal(0);
+			sell.setCalc_time(cr3.getTime());
 			sell.setFlag_calc_bonus(0);
 			sellService.save(sell);
 		}

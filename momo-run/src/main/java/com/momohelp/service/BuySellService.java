@@ -28,5 +28,12 @@ public interface BuySellService extends IService<BuySell> {
 	 * @return
 	 */
 	List<BuySell> selectByBuy();
+	
+	
+	/***
+	 * 获取当前买明细中，已经匹配但是超过48小时 还没有打款的数据
+	 * @return
+	 */
+	List<BuySell> lockAccount(int hour);
 
 }

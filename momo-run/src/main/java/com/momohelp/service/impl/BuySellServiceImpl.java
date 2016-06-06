@@ -33,4 +33,9 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		return ((BuySellMapper) mapper).selectByBuy();
 	}
 
+	@Override
+	public List<BuySell> lockAccount(int hour) {
+		return ((BuySellMapper) mapper).lockAccount( hour);
+	}
+
 }
