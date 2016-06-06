@@ -217,9 +217,9 @@
 	<bean id="matchCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
-		<!-- 每天8-20点 每一小时执行一次 -->
+		<!-- 每天8-20点 每13分钟执行一次 -->
 		<property name="cronExpression"
-			value="0 0 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ?"></property>
+			value="0 0/13 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ? "></property>
 	</bean>
 
 
