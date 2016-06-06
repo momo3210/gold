@@ -83,13 +83,22 @@ public class Base implements Ibase, Serializable {
 	public double base() {
 		double base = 0.00;
 		log.info("-------------------奖金基数计算------------------------");
+		int feedDay = Integer.parseInt(cfgService.selectByKey("0205")
+				.getValue_());
+		int manageFreezeDay=Integer
+				.parseInt(cfgService.selectByKey("3001")
+						.getValue_());
+		int freezeDay=Integer
+				.parseInt(cfgService.selectByKey("3002")
+						.getValue_());
 		List<Farm> farms = farmService.getUntreatedFarm();
 		// 用户等级计算
 		if (calculateLevel(farms)) {
 			// 计算奖金基数
 			for (Farm farm : farms) {
 				User user = userService.selectByKey(farm.getUser_id());// 获取当前排单的用户
-				if ("0".equals(farm.getPid_higher_ups())||farm.getPid_higher_ups() == null
+				if ("0".equals(farm.getPid_higher_ups())
+						|| farm.getPid_higher_ups() == null
 						|| farm.getPid_higher_ups().trim().length() == 0) {
 					farm.setFlag_calc_bonus(1);
 					farmService.updateNotNull(farm);
@@ -102,7 +111,7 @@ public class Base implements Ibase, Serializable {
 					continue;
 				}
 				Farm f = farmService.selectByKey(farm.getPid_higher_ups());// 领导最近一单
-				if (f==null) {
+				if (f == null) {
 					farm.setFlag_calc_bonus(1);
 					farmService.updateNotNull(farm);
 					continue;
@@ -137,9 +146,8 @@ public class Base implements Ibase, Serializable {
 						chicken = farmFeed.getPrice() + chicken;
 					}
 					// 获得当前单饲养利息总和
-					double deposit = beforeFarm.getNum_buy()
-							* Integer.parseInt(cfgService.selectByKey("0205")
-									.getValue_()) + chicken;
+					double deposit = beforeFarm.getNum_buy() * feedDay
+							+ chicken;
 					tempBase = tempBase - money - deposit;
 				}
 				if (tempBase <= 0.0) {
@@ -157,9 +165,9 @@ public class Base implements Ibase, Serializable {
 						continue;
 					}
 					int depth = temp - userTemp.getDepth();
-					String lv=userTemp.getLv();
+					String lv = userTemp.getLv();
 					// 判断等级与代数关系
-					if (0==depth||prejudge(depth, lv)) {
+					if (0 == depth || prejudge(depth, lv)) {
 						continue;
 					}
 					double number = calculateRoyalty(tempBase,
@@ -173,9 +181,9 @@ public class Base implements Ibase, Serializable {
 					entity.setUser_id(userTemp.getId());
 					Calendar cr = Calendar.getInstance();
 					if (depth == 1) {
-						cr.add(Calendar.DAY_OF_MONTH, Integer.parseInt(cfgService.selectByKey("3001").getValue_()));
+						cr.add(Calendar.DAY_OF_MONTH, manageFreezeDay);
 					} else {
-						cr.add(Calendar.DAY_OF_MONTH, Integer.parseInt(cfgService.selectByKey("3002").getValue_()));
+						cr.add(Calendar.DAY_OF_MONTH, freezeDay);
 					}
 					entity.setTrigger_time(cr.getTime());
 					entity.setRelation_id(farm.getId());
@@ -192,18 +200,18 @@ public class Base implements Ibase, Serializable {
 		boolean bool = false;
 		switch (lv) {
 		case "05":
-            if (depth>=2) {
-            	bool=true;
+			if (depth >= 2) {
+				bool = true;
 			}
 			break;
 		case "06":
-            if (depth>=3) {
-            	bool=true;
+			if (depth >= 3) {
+				bool = true;
 			}
 			break;
 		case "07":
-            if (depth>=4) {
-            	bool=true;
+			if (depth >= 4) {
+				bool = true;
 			}
 			break;
 		}

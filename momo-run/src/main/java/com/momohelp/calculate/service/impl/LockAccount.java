@@ -41,36 +41,49 @@ public class LockAccount implements ILockAccount {
 	public void lockAccount() {
 		log.info("----------------锁定账号并且重新排卖家数据----------------------");
 		int data = Integer.parseInt(cfgService.selectByKey("4001").getValue_());
-		Example example = new Example(BuySell.class);
-		Calendar cr = Calendar.getInstance();
-		cr.add(Calendar.HOUR_OF_DAY, -(data));//
-		//cr.add(Calendar.HOUR_OF_DAY, -(96));//
-		cr.set(Calendar.MINUTE, 0);
-		cr.set(Calendar.SECOND, 0);
-		Calendar cr2 = Calendar.getInstance();
-		cr2.add(Calendar.HOUR_OF_DAY, -(data));
-		example.createCriteria().andNotEqualTo("p_buy_id", "null")
-				.andNotEqualTo("p_sell_id", "null").andEqualTo("status", 0)
-				.andBetween("create_time", cr.getTime(), cr2.getTime());
-		List<BuySell> buySells = buySellService.selectByExample(example);
 		int sellData = Integer.parseInt(cfgService.selectByKey("4002")
 				.getValue_());
+		List<BuySell> buySells = buySellService.lockAccount(data);
 		for (BuySell buySell : buySells) {
-			buySell.setStatus(3);// 标志为问题单
-			buySellService.updateNotNull(buySell);
-			User user = userService.selectByKey(buySell.getP_buy_user_id());
-			user.setStatus(2);// 冻结账号
-			userService.updateNotNull(user);// 冻结用户 但是可以登录申诉中心
-			Calendar cr3 = Calendar.getInstance();
-			cr3.add(Calendar.HOUR_OF_DAY, sellData);//
-			Sell sell = sellService.selectByKey(buySell.getP_sell_id());
-			sell.setCreate_time(cr3.getTime());
-			sell.setId(genId());
-			sell.setNum_sell(buySell.getNum_matching());
-			sell.setNum_deal(0);
-			sell.setFlag_calc_bonus(0);
-			sellService.save(sell);
+			upateBuySellStatus(buySell,sellData);// 更新当前用户对应单据的状态为0单据 设置为问题单==3
+			updateUserStatus(buySell.getP_buy_user_id());// 更新当前用户状态
 		}
+	}
+	private void upateBuySellStatus(BuySell buySell,int sellData) {
+		if (null != buySell) {
+			Example example = new Example(BuySell.class);
+			example.createCriteria().andEqualTo("status", 0)
+					.andEqualTo("p_buy_user_id", buySell.getP_buy_user_id());
+			List<BuySell> buySells= buySellService.selectByExample(example);
+			for (BuySell buySell2 : buySells) {
+				buySell2.setStatus(3);// 标志为问题单
+				buySellService.updateNotNull(buySell2);
+				insertIntoSell(buySell2, sellData);// 重新生成卖单数据 重新排单开始时间==当前时间延迟24小时
+			}
+		}
+	}
+	private void insertIntoSell(BuySell buySell, int sellData) {
+		Calendar cr3 = Calendar.getInstance();
+		cr3.add(Calendar.HOUR_OF_DAY, sellData);//
+		Sell sell = sellService.selectByKey(buySell.getP_sell_id());
+		sell.setCreate_time(Calendar.getInstance().getTime());
+		sell.setId(genId());
+		sell.setNum_sell(buySell.getNum_matching());
+		sell.setNum_deal(0);
+		sell.setCalc_time(cr3.getTime());
+		sell.setFlag_calc_bonus(0);
+		sellService.save(sell);
+
+	}
+	private void updateUserStatus(String p_buy_user_id) {
+		if (null != p_buy_user_id && p_buy_user_id.trim().length() > 0) {
+			User user = userService.selectByKey(p_buy_user_id);
+			if (null != user) {
+				user.setStatus(2);// 冻结账号
+				userService.updateNotNull(user);// 冻结用户 但是可以登录申诉中心
+			}
+		}
+
 	}
 
 	/**

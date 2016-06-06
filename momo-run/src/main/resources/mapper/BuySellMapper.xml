@@ -63,4 +63,8 @@
 		WHERE p.p_sell_id ='null' and
 		p.status='0' ORDER BY p.create_time ASC
 	</select>
+	<select id="lockAccount" resultType="buySell">
+		SELECT * FROM p_buy_sell where TIMESTAMPDIFF(HOUR,create_time,SYSDATE())>=#{0}
+		and `status`=0 and p_buy_id !='null' and p_sell_id!='null'
+	</select>
 </mapper>
