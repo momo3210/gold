@@ -96,17 +96,17 @@ public class UserController {
 		sms = StringUtil.isEmpty(sms);
 
 		if (null == sms) {
-			return new String[] { "请输入短信验证码" };
+			return new String[] { "请输入短信验证码", "001" };
 		}
 
 		Object verify = session.getAttribute("verify.sms");
 
 		if (null == verify) {
-			return new String[] { "请获取短信验证码" };
+			return new String[] { "请获取短信验证码", "002" };
 		}
 
 		if (!sms.equals(verify.toString())) {
-			return new String[] { "短信验证失败" };
+			return new String[] { "短信验证失败", "003" };
 		}
 
 		session.removeAttribute("verify.sms");
@@ -168,14 +168,14 @@ public class UserController {
 		user_pass_safe = StringUtil.isEmpty(user_pass_safe);
 
 		if (null == user_pass_safe) {
-			return new String[] { "请输入安全密码" };
+			return new String[] { "请输入安全密码", "101" };
 		}
 
 		User user = userService.selectByKey(session.getAttribute(
 				"session.user.id").toString());
 
 		return user.getUser_pass_safe().equals(MD5.encode(user_pass_safe)) ? null
-				: new String[] { "安全密码输入错误" };
+				: new String[] { "安全密码输入错误", "102" };
 	}
 
 	/**
@@ -339,6 +339,7 @@ public class UserController {
 		session.setAttribute("session.user.id", user.getId());
 		session.setAttribute("session.user.lv", 2);
 		session.setAttribute("session.user.status", user.getStatus());
+		session.setAttribute("session.user.mobile", user.getMobile());
 		session.setAttribute("session.time", (new Date()).toString());
 
 		result.put("success", true);
@@ -939,6 +940,33 @@ public class UserController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/flash/buyMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _flash_buyMo(HttpSession session,
+			@RequestParam(required = true) String user_pass_safe, Farm farm) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 安全密码验证
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("code", verifyPassSafe[1]);
+			return result;
+		}
+
+		farm.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = farmService.buy(farm);
+		if (null != msg) {
+			result.put("code", msg[1]);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
 	/**
 	 * 喂养鸡苗
 	 *
@@ -950,8 +978,8 @@ public class UserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = { "/user/feedMo2" }, method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> _i_feedMo2(HttpSession session,
+	@RequestMapping(value = { "/flash/farm/feedMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _flash_farm_feedMo(HttpSession session,
 			@RequestParam(required = true) String user_pass_safe,
 			FarmFeed farmFeed) {
 
@@ -961,7 +989,7 @@ public class UserController {
 		// 安全密码验证
 		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
 		if (null != verifyPassSafe) {
-			result.put("msg", verifyPassSafe);
+			result.put("code", verifyPassSafe[1]);
 			return result;
 		}
 
@@ -969,7 +997,7 @@ public class UserController {
 
 		String[] msg = farmFeedService.feed(farmFeed);
 		if (null != msg) {
-			result.put("msg", msg);
+			result.put("code", msg[1]);
 			return result;
 		}
 
@@ -1020,8 +1048,8 @@ public class UserController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "/json/farm/feed" }, produces = "application/json")
-	public Map<String, Object> _json_farm_feed(HttpSession session,
+	@RequestMapping(value = { "/flash/farm/feed" }, produces = "application/json")
+	public Map<String, Object> _flash_farm_feed(HttpSession session,
 			@RequestParam(required = false) String id) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -1038,6 +1066,91 @@ public class UserController {
 			Farm farm = farmService.feedMo_farm_feed_list___4(id, session
 					.getAttribute("session.user.id").toString());
 			result.put("data", farm.getFarmFeeds());
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/flash/farm/hatch" }, produces = "application/json")
+	public Map<String, Object> _i_hatchMoUI(HttpSession session,
+			@RequestParam(required = false) String id) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		id = StringUtil.isEmpty(id);
+
+		if (null == id) {
+
+			List<Farm> list = farmService.hatchMo_list__4(session.getAttribute(
+					"session.user.id").toString());
+			result.put("data", list);
+
+		} else {
+
+			Farm farm = farmService.hatchMo_farm_hatch_list___4(id, session
+					.getAttribute("session.user.id").toString());
+
+			result.put("data", farm.getFarmHatchs());
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/flash/farm/hatchMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _flash_farm_hatchMo(HttpSession session,
+			@RequestParam(required = true) String user_pass_safe,
+			FarmHatch farmHatch) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 安全密码验证
+		String[] verifyPassSafe = verifyPassSafe(session, user_pass_safe);
+		if (null != verifyPassSafe) {
+			result.put("code", verifyPassSafe[1]);
+			return result;
+		}
+
+		farmHatch
+				.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = farmHatchService.hatch(farmHatch);
+
+		if (null != msg) {
+			result.put("code", msg[1]);
+			return result;
+		}
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/flash/sellMo" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _i_sellMo(HttpSession session,
+			@RequestParam(required = true) String verify_sms, Sell sell) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		String[] verifySMS = verifySMS(session, verify_sms);
+		if (null != verifySMS) {
+			result.put("code", verifySMS[1]);
+			return result;
+		}
+
+		sell.setUser_id(session.getAttribute("session.user.id").toString());
+
+		String[] msg = sellService.sell(sell);
+
+		if (null != msg) {
+			result.put("code", msg[1]);
+			return result;
 		}
 
 		result.put("success", true);

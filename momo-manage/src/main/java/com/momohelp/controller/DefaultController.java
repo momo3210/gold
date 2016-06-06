@@ -66,13 +66,13 @@ public class DefaultController {
 	 * @return
 	 */
 	private String genSMS() {
-		int i = (int) ((Math.random() * 5 + 1) * 1000);
-		String id = String.valueOf(i);
-		if (4 < id.length()) {
-			id = id.substring(0, 4);
-		}
-		return id;
-		// return "1234";
+		// int i = (int) ((Math.random() * 5 + 1) * 1000);
+		// String id = String.valueOf(i);
+		// if (4 < id.length()) {
+		// id = id.substring(0, 4);
+		// }
+		// return id;
+		return "1234";
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class DefaultController {
 			c.add(Calendar.MINUTE, -2);
 
 			if (c.getTime().before((Date) last_time)) {
-				result.put("msg", new String[] { "请不要频繁发送，稍等2分钟" });
+				result.put("msg", new String[] { "请不要频繁发送，稍等2分钟", "004" });
 				return result;
 			}
 		}
@@ -114,6 +114,43 @@ public class DefaultController {
 				"您本次验证码:" + session.getAttribute("verify.sms")
 						+ "，感谢您的支持，祝您生活愉快！！", "", "");
 		result.put("code", response.getReturnStatus());
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = { "/sendSMS2" }, produces = "application/json")
+	public Map<String, Object> _i_sendSMS2(HttpSession session) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		// 获取最后一次发送短信的时间
+		Object last_time = session.getAttribute("verify.sms.lastTime");
+
+		if (null != last_time) {
+			// 当前时间加2分钟
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.MINUTE, -2);
+
+			if (c.getTime().before((Date) last_time)) {
+				result.put("code", "004");
+				return result;
+			}
+		}
+
+		session.setAttribute("verify.sms", genSMS());
+		session.setAttribute("verify.sms.lastTime", new Date());
+
+		// SmSWebService service = new SmSWebService();
+		// SmSWebServiceSoap serviceSoap = service.getSmSWebServiceSoap();
+		// WsSendResponse response = serviceSoap.sendSms("154", "MOMO668",
+		// "123456", session.getAttribute("session.user.mobile")
+		// .toString(),
+		// "您本次验证码:" + session.getAttribute("verify.sms")
+		// + "，感谢您的支持，祝您生活愉快！！", "", "");
+		// result.put("code", response.getReturnStatus());
 
 		result.put("success", true);
 		return result;

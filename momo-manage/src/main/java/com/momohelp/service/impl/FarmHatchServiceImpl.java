@@ -48,12 +48,12 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		/**/
 
 		if (1 > _farmHatch.getNum_hatch()) {
-			return new String[] { "孵化数量必须大于0" };
+			return new String[] { "孵化数量必须大于0", "401" };
 		}
 
 		// 100的倍数
 		if (0 != _farmHatch.getNum_hatch() % 100) {
-			return new String[] { "请输入规定的数量" };
+			return new String[] { "请输入规定的数量", "402" };
 		}
 
 		/**/
@@ -63,22 +63,22 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 				_farmHatch.getW_farm_chick_id(), _farmHatch.getUser_id());
 
 		if (null == farm) {
-			return new String[] { "数据查询异常" };
+			return new String[] { "数据查询异常", "403" };
 		}
 
 		/**/
 
 		// 未完全交易成功，所以不能孵化
 		if (farm.getNum_buy().intValue() != farm.getNum_deal().intValue()) {
-			return new String[] { "不能孵化" };
+			return new String[] { "不能孵化", "404" };
 		}
 
 		if (0 == farm.getNum_current()) {
-			return new String[] { "库存不足" };
+			return new String[] { "库存不足", "405" };
 		}
 
 		if (_farmHatch.getNum_hatch() > farm.getNum_current()) {
-			return new String[] { "待孵化数量不足" };
+			return new String[] { "待孵化数量不足", "406" };
 		}
 
 		// 更新鸡苗孵化之后的剩余数量

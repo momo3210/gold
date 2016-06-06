@@ -66,12 +66,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		/**/
 
 		if (1 > _farm.getNum_buy()) {
-			return new String[] { "买入鸡苗数量必须大于 0" };
+			return new String[] { "买入鸡苗数量必须大于 0", "201" };
 		}
 
 		// 100的倍数
 		if (0 != _farm.getNum_buy() % 100) {
-			return new String[] { "买入数量请输入100的倍数" };
+			return new String[] { "买入数量请输入100的倍数", "202" };
 		}
 
 		// 奖金
@@ -83,19 +83,19 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		User user = userService.buyTime___4(_farm.getUser_id());
 
 		if (null == user) {
-			return new String[] { "非法操作" };
+			return new String[] { "非法操作", "203" };
 		}
 
 		/**/
 
 		// 1张门票可以买100只鸡
 		if ((_farm.getNum_buy() / 100) > user.getNum_ticket()) {
-			return new String[] { "门票数量不足，请购买" };
+			return new String[] { "门票数量不足，请购买", "204" };
 		}
 
 		if (_farm.getNum_buy() < user.getBuyMo().getMin()
 				|| _farm.getNum_buy() > user.getBuyMo().getMax()) {
-			return new String[] { "请输入正确的数量范围" };
+			return new String[] { "请输入正确的数量范围", "205" };
 		}
 
 		// 用户的最后一次排单（鸡苗批次）
@@ -104,7 +104,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		if (null != last_farm) {
 			if (last_farm.getNum_buy().intValue() != last_farm.getNum_deal()
 					.intValue()) {
-				return new String[] { "有未完成的排单" };
+				return new String[] { "有未完成的排单", "206" };
 			}
 		}
 
@@ -121,7 +121,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		try {
 			tomorrow = getTomorrow__4(_farm.getCreate_time());
 		} catch (ParseException e) {
-			return new String[] { "日期数据异常" };
+			return new String[] { "日期数据异常", "207" };
 		}
 
 		_farm.setId(UUID.randomUUID().toString().replaceAll("-", ""));

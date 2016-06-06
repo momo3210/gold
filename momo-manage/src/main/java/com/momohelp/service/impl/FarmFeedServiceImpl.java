@@ -54,12 +54,12 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		/**/
 
 		if (1 > _farmFeed.getNum_feed()) {
-			return new String[] { "喂养数量必须大于0" };
+			return new String[] { "喂养数量必须大于0", "301" };
 		}
 
 		// 100的倍数
 		if (0 != _farmFeed.getNum_feed() % 100) {
-			return new String[] { "请输入规定的数量" };
+			return new String[] { "请输入规定的数量", "302" };
 		}
 
 		/**/
@@ -69,30 +69,30 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 				_farmFeed.getW_farm_chick_id(), _farmFeed.getUser_id());
 
 		if (null == farm) {
-			return new String[] { "数据查询异常" };
+			return new String[] { "数据查询异常", "303" };
 		}
 
 		/**/
 
 		// 喂鸡的数量大于当前鸡苗批次的数量
 		if (_farmFeed.getNum_feed() > farm.getNum_current()) {
-			return new String[] { "非法操作" };
+			return new String[] { "非法操作", "304" };
 		}
 
 		// 当前时间 <--出局时间（理论）
 		if (_farmFeed.getCreate_time().after(farm.getTime_out())) {
-			return new String[] { "已经出局了" };
+			return new String[] { "已经出局了", "305" };
 		}
 
 		// 该批次的鸡都卖完了
 		if (0 == farm.getNum_current()) {
-			return new String[] { "没有鸡可以喂了" };
+			return new String[] { "没有鸡可以喂了", "306" };
 		}
 
 		// 买入当天不能喂鸡
 		if (sdf.format(farm.getCreate_time()).equals(
 				sdf.format(_farmFeed.getCreate_time()))) {
-			return new String[] { "买入当天不能喂鸡" };
+			return new String[] { "买入当天不能喂鸡", "307" };
 		}
 
 		// 判断今天是否已经喂过该批次的鸡苗了
@@ -107,7 +107,7 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		User user = userService.selectByKey(_farmFeed.getUser_id());
 
 		if ((_farmFeed.getNum_feed() / 100) > user.getNum_food()) {
-			return new String[] { "饲料不足，请购买饲料" };
+			return new String[] { "饲料不足，请购买饲料", "308" };
 		}
 
 		// 1饲料喂100只鸡
@@ -169,7 +169,8 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		// 当前时间
 		String date_2 = sdf.format(new Date());
 
-		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了" } : null;
+		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了", "309" }
+				: null;
 	}
 
 	@Override
@@ -196,7 +197,8 @@ public class FarmFeedServiceImpl extends BaseService<FarmFeed> implements
 		// 当前时间
 		String date_2 = sdf.format(new Date());
 
-		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了" } : null;
+		return date_1.equals(date_2) ? new String[] { "今天已经喂过鸡了", "309" }
+				: null;
 	}
 
 }

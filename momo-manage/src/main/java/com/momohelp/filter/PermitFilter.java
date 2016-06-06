@@ -57,6 +57,9 @@ public class PermitFilter implements Filter {
 		} else if ("/sendSMS".equals(uri)) {
 			chain.doFilter(request, response);
 			return;
+		} else if ("/sendSMS2".equals(uri)) {
+			chain.doFilter(request, response);
+			return;
 		} else if ("/manage/user/login".equals(uri)) {
 			chain.doFilter(request, response);
 			return;

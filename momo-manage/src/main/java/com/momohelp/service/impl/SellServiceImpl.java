@@ -103,7 +103,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		case 2:
 			break;
 		default:
-			return new String[] { "非法操作" };
+			return new String[] { "非法操作", "501" };
 		}
 
 		/**/
@@ -118,11 +118,11 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		/**/
 
 		if (1 > _sell.getNum_sell()) {
-			return new String[] { "卖出鸡苗数量必须大于0" };
+			return new String[] { "卖出鸡苗数量必须大于0", "502" };
 		}
 
 		if (0 != (_sell.getNum_sell() % ((1 == _sell.getType_id()) ? 10 : 500))) {
-			return new String[] { "请输入规定的数量" };
+			return new String[] { "请输入规定的数量", "503" };
 		}
 
 		String[] checkDealTime = checkDealTime___4();
@@ -132,7 +132,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 
 		if (2 == _sell.getType_id()) {
 			if (5000 < _sell.getNum_sell()) {
-				return new String[] { "动态钱包上限不能大于 5000" };
+				return new String[] { "动态钱包上限不能大于5000", "504" };
 			}
 		}
 
@@ -142,15 +142,15 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		User user = userService.sellTime___4(_sell.getUser_id());
 
 		if (null == user) {
-			return new String[] { "非法操作" };
+			return new String[] { "非法操作", "505" };
 		}
 
 		/**/
 
 		if (_sell.getNum_sell() > ((1 == _sell.getType_id()) ? user
 				.getNum_static() : user.getNum_dynamic())) {
-			return new String[] { (1 == _sell.getType_id() ? "静" : "动")
-					+ "态钱包余额不足" };
+			return new String[] {
+					(1 == _sell.getType_id() ? "静" : "动") + "态钱包余额不足", "506" };
 		}
 
 		String[] checkTodaySell = checkTodaySell____4(_sell, user.getLastSell());
@@ -172,7 +172,6 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		c.add(Calendar.DAY_OF_MONTH, (1 == _sell.getType_id()) ? 0 : 5);
 		_sell.setCalc_time(c.getTime());
 
-		_sell.setCreate_time(_sell.getCalc_time());
 		_sell.setFlag_calc_bonus(0);
 
 		_sell.setId(genId());
@@ -230,11 +229,11 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 	private String[] checkMonthCeiling___4(Sell sell, List<Sell> monthSells) {
 
 		if (null == monthSells) {
-			return new String[] { "数据查询异常" };
+			return new String[] { "数据查询异常", "507" };
 		}
 
 		if (12 == monthSells.size()) {
-			return new String[] { "每月卖出鸡苗上限不能超过12次" };
+			return new String[] { "每月卖出鸡苗上限不能超过12次", "508" };
 		}
 
 		// 每月卖出的静态总数、动态总数
@@ -251,7 +250,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		}
 
 		if (60000 < (num_dynamic + sell.getNum_sell())) {
-			return new String[] { "动态钱包每月卖出不能超过60000" };
+			return new String[] { "动态钱包每月卖出不能超过60000", "509" };
 		}
 
 		return null;
@@ -274,7 +273,7 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		c_23.set(Calendar.HOUR_OF_DAY, 23);
 
 		return (date.after(c_1.getTime()) && date.before(c_23.getTime())) ? null
-				: new String[] { "交易时间：凌晨01点至午夜23点" };
+				: new String[] { "交易时间：凌晨01点至午夜23点", "510" };
 	}
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
@@ -300,7 +299,8 @@ public class SellServiceImpl extends BaseService<Sell> implements SellService {
 		// 取最后一次卖盘的创建时间
 		String date_2 = sdf.format(last_sell.getCreate_time());
 
-		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了" } : null;
+		return (date_1.equals(date_2)) ? new String[] { "今天已经卖出过鸡苗了", "511" }
+				: null;
 	}
 
 	@Override
