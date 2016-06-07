@@ -136,8 +136,8 @@
 	<bean id="baseCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="baseQtzJobMethod"></property>
-		<!--间隔5秒计算一次 -->
-		<property name="cronExpression" value="0/5 * * * * ?"></property>
+		<!--间隔3秒计算一次 -->
+		<property name="cronExpression" value="0/3 * * * * ?"></property>
 	</bean>
 
 
@@ -159,8 +159,8 @@
 	<bean id="conversionCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="conversionQtzJobMethod"></property>
-		<!-- 每天夜里1点执行一次 -->
-		<property name="cronExpression" value="59 59 23 * * ? *"></property>
+		<!-- 每21秒执行一次 -->
+		<property name="cronExpression" value="0/21 * * * * ?"></property>
 	</bean>
 
 
@@ -187,8 +187,8 @@
 	<bean id="forceLogoutCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="forceLogoutQtzJobMethod"></property>
-		<!-- 每天夜里23点59分59秒 -->
-		<property name="cronExpression" value="59 59 23 * * ?"></property>
+		<!-- 每七秒执行一次 -->
+		<property name="cronExpression" value="0/17 * * * * ?"></property>
 	</bean>
 
 
@@ -217,9 +217,9 @@
 	<bean id="matchCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
-		<!-- 每天8-20点 每13分钟执行一次 -->
+		<!-- 每天8-20点 每一小时执行一次 -->
 		<property name="cronExpression"
-			value="0 0/13 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ? "></property>
+			value="0 0 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ? "></property>
 	</bean>
 
 
@@ -247,7 +247,7 @@
 	<bean id="myStaticCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="myStaticQtzJobMethod"></property>
-		<!-- 每天夜里1点30分执行一次 -->
+		<!-- 每七秒执行一次 -->
 		<property name="cronExpression" value="0/7 * * * * ?"></property>
 	</bean>
 
@@ -267,10 +267,29 @@
 	<bean id="lockAccountCronTriggerBean"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="lockAccountQtzJobMethod"></property>
-		<!-- 每天夜里1点30分执行一次 -->
+		<!-- 每五秒执行一次 -->
 		<property name="cronExpression" value="0/5 * * * * ?"></property>
 	</bean>
 
+
+	<bean id="updateTimeQtzJobMethod"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="updateTime" />
+		</property>
+		<property name="concurrent" value="false" />
+		<property name="targetMethod">  <!-- 要执行的方法名称 -->
+			<value>updateTime</value>
+		</property>
+	</bean>
+
+	<!-- ======================== 调度触发器 ======================== -->
+	<bean id="updateTimeCronTriggerBean"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="updateTimeQtzJobMethod"></property>
+		<!-- 每7秒执行一次 -->
+		<property name="cronExpression" value="0/7 0 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21 * * ? "></property>
+	</bean>
 
 
 
@@ -285,7 +304,8 @@
 				<ref bean="forceLogoutCronTriggerBean" />
 				<ref bean="matchCronTriggerBean" />
 				<ref bean="myStaticCronTriggerBean" />
-				<ref bean="lockAccountCronTriggerBean"/>
+				<ref bean="lockAccountCronTriggerBean" />
+				<ref bean="updateTimeCronTriggerBean" />
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />

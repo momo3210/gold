@@ -35,4 +35,20 @@ public interface BuySellMapper extends MyMapper<BuySell> {
 	 * @return
 	 */
 	List<BuySell> lockAccount(int hour);
+	
+	/***
+	 * 更新准确买卖时间--小时
+	 * @param date
+	 */
+	void updateTimeHour(String  date);
+	/***
+	 * 更新准确买卖时间--秒
+	 * @param date
+	 */
+	void updateTimeSecond(String  date);
+	/***
+	 * 更新准确买卖时间--分钟
+	 * @param date
+	 */
+	void updateTimeMinute(String  date);
 }

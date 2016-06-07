@@ -64,7 +64,30 @@
 		p.status='0' ORDER BY p.create_time ASC
 	</select>
 	<select id="lockAccount" resultType="buySell">
-		SELECT * FROM p_buy_sell where TIMESTAMPDIFF(HOUR,create_time,SYSDATE())>=#{0}
-		and `status`=0 and p_buy_id !='null' and p_sell_id!='null'
+		SELECT * FROM p_buy_sell
+		where TIMESTAMPDIFF(HOUR,create_time,SYSDATE())>=#{0}
+		and `status`=0
+		and p_buy_id !='null' and p_sell_id!='null'
+	</select>
+	<select id="updateTimeHour">
+		update p_buy_sell as bs , p_sell as s set
+		bs.create_time=DATE_ADD(bs.create_time,INTERVAL HOUR(s.create_time)
+		HOUR)
+		where bs.create_time like #{0} and bs.p_buy_id='null' and
+		s.id=bs.p_sell_id;
+	</select>
+	<select id="updateTimeSecond">
+		update p_buy_sell as bs , p_sell as s set
+		bs.create_time=DATE_ADD(bs.create_time,INTERVAL SECOND(s.create_time)
+		SECOND)
+		where bs.create_time like #{0} and bs.p_buy_id='null' and
+		s.id=bs.p_sell_id;
+	</select>
+	<select id="updateTimeMinute">
+		update p_buy_sell as bs , p_sell as s set
+		bs.create_time=DATE_ADD(bs.create_time,INTERVAL MINUTE(s.create_time)
+		MINUTE)
+		where bs.create_time like #{0} and bs.p_buy_id='null' and
+		s.id=bs.p_sell_id;
 	</select>
 </mapper>

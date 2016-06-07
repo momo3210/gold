@@ -38,4 +38,23 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		return ((BuySellMapper) mapper).lockAccount( hour);
 	}
 
+
+	@Override
+	public void updateTimeHour(String date) {
+		((BuySellMapper) mapper).updateTimeHour(date);
+		
+	}
+
+	@Override
+	public void updateTimeSecond(String date) {
+		((BuySellMapper) mapper).updateTimeSecond(date);
+		
+	}
+
+	@Override
+	public void updateTimeMinute(String date) {
+		((BuySellMapper) mapper).updateTimeMinute(date);
+		
+	}
+
 }
