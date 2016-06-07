@@ -569,4 +569,19 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return farm;
 	}
 
+	@Override
+	public List<Farm> findRewardByUserId__4(String user_id) {
+
+		Example example = new Example(Farm.class);
+		example.setOrderByClause("create_time asc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("user_id", user_id);
+		criteria.andGreaterThan("num_current", 0);
+
+		List<Farm> list = selectByExample(example);
+
+		return list;
+	}
+
 }

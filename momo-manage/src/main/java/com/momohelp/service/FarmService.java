@@ -67,6 +67,14 @@ public interface FarmService extends IService<Farm> {
 	List<Farm> findFeedByUserId__3(String user_id);
 
 	/**
+	 * 奖金
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findRewardByUserId__4(String user_id);
+
+	/**
 	 * 查找目前可以喂的批次（展示使用）
 	 *
 	 * @param user_id

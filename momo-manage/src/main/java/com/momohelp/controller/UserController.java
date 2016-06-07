@@ -1429,6 +1429,25 @@ public class UserController {
 	}
 
 	/**
+	 * 诚信奖金
+	 *
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = { "/user/reward" }, method = RequestMethod.GET)
+	public ModelAndView _i_rewardUI(HttpSession session) {
+
+		ModelAndView result = new ModelAndView("i/user/1.0.1/reward");
+
+		List<Farm> list = farmService.findRewardByUserId__4(session
+				.getAttribute("session.user.id").toString());
+		result.addObject("data_list", list);
+
+		result.addObject("nav_choose", ",05,0504,");
+		return result;
+	}
+
+	/**
 	 * 卖出记录
 	 *
 	 * @param session
