@@ -4,6 +4,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.momohelp.calculate.service.ILockAccount;
+import com.momohelp.calculate.service.IUpdateTime;
 
 public class App {
 
@@ -25,8 +26,9 @@ public class App {
 //		
 //		 match.automatch();
 		
-		 ILockAccount account=context.getBean(ILockAccount.class);
-		 account.lockAccount();
-
+//		 ILockAccount account=context.getBean(ILockAccount.class);
+//		 account.lockAccount();
+		IUpdateTime iUpdateTime= context.getBean(IUpdateTime.class);
+		iUpdateTime.updateTime();
 	}
 }
