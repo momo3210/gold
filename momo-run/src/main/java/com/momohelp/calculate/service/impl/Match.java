@@ -81,9 +81,47 @@ public class Match implements Serializable, IMatch {
 		clearBuyOrSellData(sells, buys);
 		
 		clearBuyAndSellData(sellList, buyList);
-
+        updateTime_Second();
 		bool = true;
 		return bool;
+	}
+
+	private void updateTime_Second() {
+		Calendar  cr=Calendar.getInstance();
+		StringBuffer  dates=new StringBuffer();
+		dates.append(cr.get(Calendar.YEAR));
+		dates.append("-");
+		int month=cr.get(Calendar.MONTH)+1;
+		if (month>9) {
+			dates.append(month+"");
+		}else{
+			dates.append("0"+month);
+		}
+		dates.append("-");
+		int day=cr.get(Calendar.DAY_OF_MONTH);
+		if (month>9) {
+			dates.append(day+"");
+		}else{
+			dates.append("0"+day);
+		}
+		dates.append(" ");
+		int hour =cr.get(Calendar.HOUR_OF_DAY);
+		if (hour>9) {
+			dates.append(hour+"");
+		}else{
+			dates.append("0"+hour);
+		}
+		dates.append(":");
+		int minute =cr.get(Calendar.MINUTE);
+		if (hour>9) {
+			dates.append(minute+"");
+		}else{
+			dates.append("0"+minute);
+		}
+		dates.append("%");
+		String date=dates.toString();
+		buySellService.updateTimeSecond(date);
+		
 	}
 
 	private void clearBuyOrSellData(List<Sell> sells, List<Buy> buys) {
