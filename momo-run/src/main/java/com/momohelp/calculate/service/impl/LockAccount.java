@@ -1,7 +1,6 @@
 package com.momohelp.calculate.service.impl;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,7 +12,6 @@ import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.calculate.service.ILockAccount;
 import com.momohelp.model.BuySell;
-import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.CfgService;
@@ -59,21 +57,31 @@ public class LockAccount implements ILockAccount {
 			for (BuySell buySell2 : buySells) {
 				buySell2.setStatus(3);// 标志为问题单
 				buySellService.updateNotNull(buySell2);
+			}
+			for (BuySell buySell2 : buySells) {
 				insertIntoSell(buySell2, sellData);// 重新生成卖单数据 重新排单开始时间==当前时间延迟24小时
 			}
 		}
 	}
 	private void insertIntoSell(BuySell buySell, int sellData) {
 		Calendar cr3 = Calendar.getInstance();
-		cr3.add(Calendar.HOUR_OF_DAY, sellData);//
-		Sell sell = sellService.selectByKey(buySell.getP_sell_id());
-		sell.setCreate_time(new Date());
-		sell.setId(genId());
-		sell.setNum_sell(buySell.getNum_matching());
-		sell.setNum_deal(0);
-		sell.setCalc_time(cr3.getTime());
-		sell.setFlag_calc_bonus(0);
-		sellService.save(sell);
+		if (sellData!=0) {
+			cr3.add(Calendar.HOUR_OF_DAY, sellData);//
+		}
+		buySell.setId(genId());
+		buySell.setP_buy_id("null");
+		buySell.setP_buy_user_id("null");
+		buySell.setCreate_time(cr3.getTime()); 
+		buySell.setStatus(0);
+		buySellService.save(buySell);
+//		Sell sell = sellService.selectByKey(buySell.getP_sell_id());
+//		sell.setCreate_time(new Date());
+//		sell.setId(genId());
+//		sell.setNum_sell(buySell.getNum_matching());
+//		sell.setNum_deal(0);
+//		sell.setCalc_time(cr3.getTime());
+//		sell.setFlag_calc_bonus(0);
+//		sellService.save(sell);
 
 	}
 	private void updateUserStatus(String p_buy_user_id) {
@@ -86,7 +94,6 @@ public class LockAccount implements ILockAccount {
 		}
 
 	}
-
 	/**
 	 * 生成主键
 	 *
@@ -94,7 +101,7 @@ public class LockAccount implements ILockAccount {
 	 */
 	private String genId() {
 		String id = null;
-		Sell sell = null;
+		BuySell buySell = null;
 		do {
 			// 算法
 			int i = (int) ((Math.random() * 10 + 1) * 100000000);
@@ -102,9 +109,9 @@ public class LockAccount implements ILockAccount {
 			if (9 < id.length()) {
 				id = id.substring(0, 9);
 			}
-			id = "S" + id;
-			sell = sellService.selectByKey(id);
-		} while (null != sell);
+			id = "P" + id;
+			buySell = buySellService.selectByKey(id);
+		} while (null != buySell);
 		return id;
 	}
 }

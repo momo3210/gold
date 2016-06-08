@@ -219,7 +219,7 @@
 		<property name="jobDetail" ref="matchQtzJobMethod"></property>
 		<!-- 每天8-20点 每一小时执行一次 -->
 		<property name="cronExpression"
-			value="0 0 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ? "></property>
+			value="0 0/1 8,9,10,11,12,13,14,15,16,17,18,19,20 * * ? "></property>
 	</bean>
 
 
@@ -305,7 +305,7 @@
 				<ref bean="matchCronTriggerBean" />
 				<ref bean="myStaticCronTriggerBean" />
 				<ref bean="lockAccountCronTriggerBean" />
-				<ref bean="updateTimeCronTriggerBean" />
+				<!-- <ref bean="updateTimeCronTriggerBean" /> -->
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />
