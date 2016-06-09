@@ -1973,6 +1973,23 @@ public class UserController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = { "/manage/user/reset" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_reset(HttpSession session,
+			BuySell buySell) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		BuySell _buySell = new BuySell();
+		_buySell.setId(buySell.getId());
+		_buySell.setStatus(0);
+
+		buySellService.updateNotNull(_buySell);
+
+		result.put("success", true);
+		return result;
+	}
+
+	@ResponseBody
 	@RequestMapping(value = { "/manage/user/remove" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _manage_user_remove(HttpSession session,
 			User user) {

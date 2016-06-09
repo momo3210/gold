@@ -127,24 +127,15 @@
 																setTimeout(getRTime, 1000);
 															})();
 															</script>
-
-															<!-- <p>
+<p>
 															<#switch doc.status>
 																<#case 0>
-																	<a class="btn btn-warning btn-small" href='/user/tip_off?id=${(doc.id)!}'>举报</a>
-																	<#break>
 																<#case 1>
-																	<a class="btn btn-info btn-small" href='/user/confirm?id=${(doc.id)!}'>确认收款</a>
-																	<a class="btn btn-warning btn-small" href='/user/tip_off?id=${(doc.id)!}'>举报</a>
-																	<#break>
-																<#case 2>
-																	<#break>
 																<#case 3>
+																	<a class="btn btn-info btn-small" href='javascript:reset("${(doc.id)!}")'>状态重置</a>
 																	<#break>
-																<#default>
-																	数据异常
 															</#switch>
-															</p> -->
+															</p>
 
 															<table class="table table-striped table-bordered table-hover">
 																<tbody>
@@ -306,3 +297,25 @@
 						</div><!--/span-->
 					</div>
 					</#list>
+					<script>
+					function reset(id){
+						if (confirm('你确定要执行该操作吗？')) {
+							$.ajax({
+								url : '${(conf_html_virtualPath)!}manage/user/reset',
+								type : 'POST',
+								dataType : 'JSON',
+								data : { id: id },
+								success : function(data) {
+									if (data.success) {
+										alert('状态重置成功')
+										return location.reload();
+									}
+									if (data.msg) alert(data.msg[0]);
+								},
+								error : function() {
+									alert(arguments[2]);
+								}
+							});
+						}
+					}
+					</script>
