@@ -9,4 +9,39 @@
 		<result column="email" property="email" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<select id="findCommission" resultType="com.momohelp.model.Commission"
+		parameterType="java.util.Map">
+		SELECT
+		u.id,u.total_dynamic,p.flag
+		,p.depth,p.relation_id,p.trigger_time,p.money FROM
+		s_user as u ,t_prize
+		as p where u.id=#{user_id} and u.id=p.user_id ORDER BY p.trigger_time
+		DESC
+	</select>
+
+	<select id="findRecommend" resultType="com.momohelp.model.UserRecommend"
+		parameterType="java.util.Map">
+		SELECT a.*,1 moCount, (SELECT count(1) FROM s_user b
+		where b.pid=a.id) teamCount FROM s_user a where a.pid=#{user_id} ORDER
+		BY a.create_time DESC
+	</select>
+
+	<select id="findUserCount" resultType="com.momohelp.model.UserCount"
+		parameterType="java.util.Map">
+		SELECT
+
+		(SELECT count(1) FROM s_user WHERE
+		pid=#{user_id})
+		ztslqb,
+
+		0 ztslhg,
+
+		(SELECT count(1) FROM s_user where
+		family_id=(SELECT
+		family_id FROM
+		s_user WHERE id=#{user_id})) tdslqb,
+
+		0 tdslhg
+	</select>
+
 </mapper>

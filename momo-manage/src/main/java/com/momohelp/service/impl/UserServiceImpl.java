@@ -11,10 +11,14 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
+import com.momohelp.mapper.UserMapper;
+import com.momohelp.model.Commission;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
 import com.momohelp.model.FarmHatch;
 import com.momohelp.model.User;
+import com.momohelp.model.UserCount;
+import com.momohelp.model.UserRecommend;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
@@ -688,5 +692,26 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		}
 
 		return sum;
+	}
+
+	@Override
+	public List<Commission> findCommission__4(String user_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		return ((UserMapper) mapper).findCommission(map);
+	}
+
+	@Override
+	public UserCount findUserCount(String user_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		return ((UserMapper) mapper).findUserCount(map);
+	}
+
+	@Override
+	public List<UserRecommend> findRecommend(String user_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		return ((UserMapper) mapper).findRecommend(map);
 	}
 }

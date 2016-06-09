@@ -94,6 +94,24 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		return null;
 	}
 
+	/**
+	 * 计算奖金（买方3小时内打款则有1%的奖金，在最后一笔孵化的时候产生）
+	 */
+	private void calcReward(String farm_id) {
+
+	}
+
+	/**
+	 * 动态奖金清零（根据最后一笔孵化才执行，判断是否有新的排单）
+	 */
+	private void clearZeroByDynamic(String farm_id, String user_id) {
+		Example example = new Example(FarmHatch.class);
+		example.setOrderByClause("create_time desc");
+
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("w_farm_chick_id", farm_id);
+	}
+
 	@Override
 	public List<FarmHatch> findByFarmId___4(String farm_id) {
 

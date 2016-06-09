@@ -3,7 +3,10 @@ package com.momohelp.service;
 import java.util.List;
 import java.util.Map;
 
+import com.momohelp.model.Commission;
 import com.momohelp.model.User;
+import com.momohelp.model.UserCount;
+import com.momohelp.model.UserRecommend;
 
 /**
  *
@@ -11,6 +14,30 @@ import com.momohelp.model.User;
  *
  */
 public interface UserService extends IService<User> {
+
+	/**
+	 * 用户推荐清单
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<UserRecommend> findRecommend(String user_id);
+
+	/**
+	 * 首页显示的直推、团队等数量
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	UserCount findUserCount(String user_id);
+
+	/**
+	 * 佣金清单
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Commission> findCommission__4(String user_id);
 
 	/**
 	 * 获取用户的冻结金额

@@ -29,6 +29,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import tk.mybatis.mapper.entity.Example;
 
 import com.momohelp.model.BuySell;
+import com.momohelp.model.Commission;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
 import com.momohelp.model.FarmHatch;
@@ -36,6 +37,7 @@ import com.momohelp.model.Manager;
 import com.momohelp.model.MaterialRecord;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.model.UserRecommend;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.FarmFeedService;
 import com.momohelp.service.FarmHatchService;
@@ -879,9 +881,8 @@ public class UserController {
 
 		ModelAndView result = new ModelAndView("i/user/1.0.1/recommend");
 
-		List<User> list = userService.findChildren___4(
-				session.getAttribute("session.user.id").toString(), page,
-				Integer.MAX_VALUE);
+		List<UserRecommend> list = userService.findRecommend(session
+				.getAttribute("session.user.id").toString());
 		result.addObject("data_list", list);
 
 		result.addObject("data_user", session.getAttribute("session.user"));
@@ -1672,6 +1673,11 @@ public class UserController {
 	@RequestMapping(value = { "/user/commission" }, method = RequestMethod.GET)
 	public ModelAndView _i_commissionUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/commission");
+
+		List<Commission> list = userService.findCommission__4(session
+				.getAttribute("session.user.id").toString());
+		result.addObject("data_list", list);
+
 		result.addObject("data_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",06,0606,");
 		return result;

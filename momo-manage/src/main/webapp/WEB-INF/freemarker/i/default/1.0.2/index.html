@@ -154,9 +154,9 @@
 												</tr>
 												<tr>
 													<td class='tit'>直推数量</td>
-													<td style='text-align:center'>全部0  合格0</td>
+													<td style='text-align:center'>全部${(data_userCount.ztslqb)!}  合格${(data_userCount.ztslqb)!}</td>
 													<td class='tit'>团队数量</td>
-													<td style='text-align:center'>全部0  合格0</td>
+													<td style='text-align:center'>全部${(data_userCount.tdslqb)!}  合格${(data_userCount.tdslqb)!}</td>
 												</tr>
 												<tr>
 													<td class='tit'>静态余额</td>
@@ -164,14 +164,14 @@
 														<span style="color:green;">
 															<i class='icon-credit-card'></i>
 														</span>
-														${data_user.num_static?string('#.00')}
+														${data_user.num_static?string('0.00')!}
 													</td>
 													<td class='tit'>动态余额</td>
 													<td style='text-align:center'>
 														<span style="color:green;">
 															<i class='icon-credit-card'></i>
 														</span>
-														${data_user.num_dynamic?string('#.00')}
+														${data_user.num_dynamic?string('0.00')!}
 													</td>
 												</tr>
 												<tr>
@@ -180,7 +180,7 @@
 														<span style="color:green;">
 															<i class='icon-credit-card'></i>
 														</span>
-														${(data_user.num_ticket)!}
+														${data_user.num_ticket?string('0.00')!}
 														<a style='text-decoration: underline;' href="/user/buyTicket">充值</a>
 													</td>
 													<td class='tit'>冻结数额</td>
@@ -188,7 +188,7 @@
 														<span style="color:green;">
 															<i class='icon-credit-card'></i>
 														</span>
-														${data_num_freeze?string('0.00')}
+														${data_num_freeze?string('0.00')!}
 													</td>
 												</tr>
 												<tr>

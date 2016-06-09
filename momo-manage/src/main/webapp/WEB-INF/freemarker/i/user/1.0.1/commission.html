@@ -125,15 +125,25 @@
 													<th>冻结状态</th>
 													<th>会员编号</th>
 
-													<th>直推</th>
-													<th>管理</th>
+													<!-- <th>直推</th>
+													<th>管理</th> -->
 
 													<th>当期余额</th>
-													<th>来源详情</th>
 													<th>发放日期</th>
-													<th>其它操作</th>
 												</tr>
 											</thead>
+											<tbody>
+											<#list data_list! as doc>
+												<tr>
+													<td>${doc_index+1}</td>
+													<td>正常</td>
+													<td>正常</td>
+													<td>${(doc.id)!}</td>
+													<td>${doc.money?string('0.00')}</td>
+													<td>${(doc.trigger_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
+												</tr>
+											</#list>
+											</tbody>
 											<!-- <tbody>
 												<tr>
 													<td class='tit'>帐户编号</td>

@@ -23,6 +23,7 @@ import com.momohelp.model.BuySell;
 import com.momohelp.model.Notice;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
+import com.momohelp.model.UserCount;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
 import com.momohelp.service.NoticeService;
@@ -199,6 +200,14 @@ public class DefaultController {
 				"data_num_freeze",
 				userService.getFreezeByUserId__4(session.getAttribute(
 						"session.user.id").toString()));
+
+		// 直推数量
+
+		UserCount userCount = userService.findUserCount(session.getAttribute(
+				"session.user.id").toString());
+		result.addObject("data_userCount", userCount);
+
+		// 团队数量
 
 		result.addObject("data_user", sell_record);
 		result.addObject("nav_choose", ",02,");
