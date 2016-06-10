@@ -572,14 +572,22 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 	@Override
 	public List<Farm> findRewardByUserId__4(String user_id) {
 
-		Example example = new Example(Farm.class);
-		example.setOrderByClause("create_time asc");
+		// Example example = new Example(Farm.class);
+		// example.setOrderByClause("create_time asc");
+		//
+		// Example.Criteria criteria = example.createCriteria();
+		// criteria.andEqualTo("user_id", user_id);
+		// criteria.andGreaterThan("num_current", 0);
 
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("user_id", user_id);
-		criteria.andGreaterThan("num_current", 0);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		List<Farm> list = ((FarmMapper) getMapper()).findRewardByUserId(map);
 
-		List<Farm> list = selectByExample(example);
+		// if (null == list) {
+		// return null;
+		// }
+		//
+		// List<Farm> list = selectByExample(example);
 
 		return list;
 	}

@@ -1489,7 +1489,8 @@ public class UserController {
 				.getAttribute("session.user.id").toString());
 		result.addObject("data_list", list);
 
-		result.addObject("nav_choose", ",05,0504,");
+		result.addObject("data_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",06,0611,");
 		return result;
 	}
 

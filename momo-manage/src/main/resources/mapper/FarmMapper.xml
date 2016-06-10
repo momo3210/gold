@@ -26,6 +26,15 @@
 		<result column="num_reward" property="num_reward" />
 	</resultMap>
 
+	<select id="findRewardByUserId" resultMap="baseResultMap"
+		parameterType="java.util.Map">
+		SELECT * FROM w_farm_chick WHERE id in
+		(
+		SELECT w_farm_chick_id from w_farm_hatch where flag_is_last=1 and user_id=#{user_id}
+		)
+		ORDER BY create_time DESC
+	</select>
+
 	<select id="findUnDealByUserId" resultMap="baseResultMap"
 		parameterType="java.util.Map">
 

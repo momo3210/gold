@@ -13,6 +13,8 @@ import com.momohelp.util.MyMapper;
  */
 public interface FarmMapper extends MyMapper<Farm> {
 
+	List<Farm> findRewardByUserId(Map<String, Object> map);
+
 	List<Farm> findUnDealByUserId(Map<String, Object> map);
 
 	List<Farm> findHatchByUserId(Map<String, Object> map);
