@@ -125,6 +125,16 @@ public class User implements Serializable {
 	private Integer total_ticket;
 	private Integer total_food;
 
+	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	/**
 	 * 父对象
 	 */

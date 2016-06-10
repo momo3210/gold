@@ -115,7 +115,7 @@ ul.ztree * {
 					<div class='span12'>
 						<form class="form-search" onsubmit='return false' id='searchFrm'>
 							<span class="input-icon"> <input type="text"
-								placeholder="手机号" class="input-small nav-search-input"
+								placeholder="昵称" class="input-small nav-search-input"
 								value='${(search_user_id)!}' id="searchFrm_user_id"
 								autocomplete="off" /> <i class="icon-search nav-search-icon"></i>
 							</span> <a class="btn btn-mini btn-danger" href='javascript:search();'>查询</a>
@@ -176,7 +176,7 @@ ul.ztree * {
 		function search(){
 			var user_id = $('#searchFrm_user_id').val().trim();
 			if('' === user_id) return location.href = '${(conf_html_virtualPath)!}manage/user/';
-			location.href = '${(conf_html_virtualPath)!}manage/user/?id='+ user_id;
+			location.href = '${(conf_html_virtualPath)!}manage/user/?id='+ escape(encodeURIComponent(user_id));
 		}
 
 		function edit(){

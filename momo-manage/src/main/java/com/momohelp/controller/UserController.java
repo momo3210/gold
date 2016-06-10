@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1798,7 +1800,8 @@ public class UserController {
 
 	@RequestMapping(value = { "/manage/user/" }, method = RequestMethod.GET)
 	public String _manage_userUI(HttpSession session, Map<String, Object> map,
-			@RequestParam(required = false) String id) {
+			@RequestParam(required = false) String id)
+			throws UnsupportedEncodingException {
 
 		id = StringUtil.isEmpty(id);
 
@@ -1816,10 +1819,12 @@ public class UserController {
 
 		} else {
 
+			id = URLDecoder.decode(id, "UTF-8");
+
 			Example example = new Example(User.class);
 			Example.Criteria criteria = example.createCriteria();
 			// 查询用户昵称
-			criteria.andEqualTo("mobile", id);
+			criteria.andEqualTo("nickname", id);
 			List<User> list = userService.selectByExample(example);
 
 			User user = (null == list || 1 != list.size()) ? null : list.get(0);
