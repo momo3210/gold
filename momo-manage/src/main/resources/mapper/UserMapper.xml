@@ -34,14 +34,14 @@
 		pid=#{user_id})
 		ztslqb,
 
-		0 ztslhg,
+		(SELECT count(1) FROM s_user WHERE
+		pid=#{user_id} and
+		total_static>0) ztslhg,
 
-		(SELECT count(1) FROM s_user where
-		family_id=(SELECT
-		family_id FROM
-		s_user WHERE id=#{user_id})) tdslqb,
+		(SELECT count(1) FROM s_user WHERE path like (SELECT CONCAT(path,',%') from s_user where id=#{user_id})) tdslqb,
 
-		0 tdslhg
+		(SELECT count(1) FROM s_user WHERE path like (SELECT CONCAT(path,',%') from s_user where id=#{user_id}) and total_static>0)
+		tdslhg
 	</select>
 
 </mapper>

@@ -310,7 +310,50 @@ public class UserController {
 	public ModelAndView _i_loginUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("i/user/1.0.1/login");
 		result.addObject("verify_token", genVerifyToken(session));
+
+		// digui("0");
+
 		return result;
+	}
+
+	/**
+	 * 重置用户的path
+	 *
+	 * @param pid
+	 */
+	private void digui(String pid) {
+		Example example = new Example(User.class);
+		Example.Criteria criteria = example.createCriteria();
+
+		criteria.andEqualTo("pid", pid);
+
+		List<User> list = userService.selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			User u = list.get(i);
+			digui2(u);
+		}
+	}
+
+	private void digui2(User user) {
+
+		Example example = new Example(User.class);
+		Example.Criteria criteria = example.createCriteria();
+
+		criteria.andEqualTo("pid", user.getId());
+
+		List<User> list = userService.selectByExample(example);
+
+		for (int i = 0, j = list.size(); i < j; i++) {
+			User u = list.get(i);
+
+			User _u = new User();
+			_u.setId(u.getId());
+			_u.setPath(user.getPath() + "," + user.getId());
+			userService.updateNotNull(_u);
+
+			digui2(u);
+		}
 	}
 
 	@ResponseBody

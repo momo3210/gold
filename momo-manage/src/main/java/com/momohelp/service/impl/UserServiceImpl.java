@@ -411,6 +411,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		_user.setFamily_id("0".equals(p_user.getFamily_id()) ? p_user.getId()
 				: p_user.getFamily_id());
 
+		_user.setPath(p_user.getPath() + "," + p_user.getId());
+
 		super.save(_user);
 		return null;
 	}
