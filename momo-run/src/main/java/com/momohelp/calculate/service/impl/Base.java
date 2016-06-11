@@ -132,8 +132,11 @@ public class Base implements Ibase, Serializable {
 							.andEqualTo("relation_id", beforeFarm.getId())
 							.andEqualTo("user_id", leader.getId());
 					// 获取当前用户排单上一单 领导拿到的提成--推荐奖
-					double money = prizeService.selectByExample(example).get(0)
-							.getMoney();//
+					List<Prize> prizes= prizeService.selectByExample(example);
+					double money =0.0d;
+					if (prizes!=null&&prizes.size()>0) {
+						 money = prizes.get(0).getMoney();
+					} 
 					// 获得当前用户的上一单饲养成年鸡利息
 					Example example2 = new Example(FarmFeed.class);
 					example2.createCriteria().andEqualTo("w_farm_chick_id",

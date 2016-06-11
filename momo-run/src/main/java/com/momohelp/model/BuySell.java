@@ -50,6 +50,7 @@ public class BuySell implements Serializable {
 	 * 2B确认
 	 *
 	 * 3问题单（双方谁不确认都会变成问题单）
+	 * 4 匹配48小时不打款单据状态
 	 */
 	private Integer status;
 

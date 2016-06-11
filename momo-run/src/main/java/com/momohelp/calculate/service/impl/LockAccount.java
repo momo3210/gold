@@ -55,7 +55,7 @@ public class LockAccount implements ILockAccount {
 					.andEqualTo("p_buy_user_id", buySell.getP_buy_user_id());
 			List<BuySell> buySells= buySellService.selectByExample(example);
 			for (BuySell buySell2 : buySells) {
-				buySell2.setStatus(3);// 标志为问题单
+				buySell2.setStatus(4);// 标志为匹配48小时不打款
 				buySellService.updateNotNull(buySell2);
 			}
 			for (BuySell buySell2 : buySells) {
