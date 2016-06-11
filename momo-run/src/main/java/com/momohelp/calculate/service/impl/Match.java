@@ -76,52 +76,54 @@ public class Match implements Serializable, IMatch {
 		}
 		selfMactch(buyList, sellList);
 		buyAndSellHandle(sells, buys);
-		
-		//清理剩余数据
+
+		// 清理剩余数据
 		clearBuyOrSellData(sells, buys);
-		
+
 		clearBuyAndSellData(sellList, buyList);
-        updateTime_Second();
+		if (null != sells && sells.size() > 0) {
+			updateTime_Second();
+		}
 		bool = true;
 		return bool;
 	}
 
-	private void updateTime_Second() {
-		Calendar  cr=Calendar.getInstance();
-		StringBuffer  dates=new StringBuffer();
+	public void updateTime_Second() {
+		Calendar cr = Calendar.getInstance();
+		StringBuffer dates = new StringBuffer();
 		dates.append(cr.get(Calendar.YEAR));
 		dates.append("-");
-		int month=cr.get(Calendar.MONTH)+1;
-		if (month>9) {
-			dates.append(month+"");
-		}else{
-			dates.append("0"+month);
+		int month = cr.get(Calendar.MONTH) + 1;
+		if (month > 9) {
+			dates.append(month + "");
+		} else {
+			dates.append("0" + month);
 		}
 		dates.append("-");
-		int day=cr.get(Calendar.DAY_OF_MONTH);
-		if (month>9) {
-			dates.append(day+"");
-		}else{
-			dates.append("0"+day);
+		int day = cr.get(Calendar.DAY_OF_MONTH);
+		if (month > 9) {
+			dates.append(day + "");
+		} else {
+			dates.append("0" + day);
 		}
 		dates.append(" ");
-		int hour =cr.get(Calendar.HOUR_OF_DAY);
-		if (hour>9) {
-			dates.append(hour+"");
-		}else{
-			dates.append("0"+hour);
+		int hour = cr.get(Calendar.HOUR_OF_DAY);
+		if (hour > 9) {
+			dates.append(hour + "");
+		} else {
+			dates.append("0" + hour);
 		}
 		dates.append(":");
-		int minute =cr.get(Calendar.MINUTE);
-		if (hour>9) {
-			dates.append(minute+"");
-		}else{
-			dates.append("0"+minute);
+		int minute = cr.get(Calendar.MINUTE);
+		if (hour > 9) {
+			dates.append(minute + "");
+		} else {
+			dates.append("0" + minute);
 		}
 		dates.append("%");
-		String date=dates.toString();
+		String date = dates.toString();
 		buySellService.updateTimeSecond(date);
-		
+
 	}
 
 	private void clearBuyOrSellData(List<Sell> sells, List<Buy> buys) {
@@ -133,7 +135,7 @@ public class Match implements Serializable, IMatch {
 			if (sell2.getNum_sell() > 0) {
 				BuySell entity = new BuySell();
 				entity.setId(genId());
-				entity.setCreate_time(new Date());
+				entity.setCreate_time(sell2.getCalc_time());
 				entity.setP_sell_id(sell2.getId());
 				entity.setP_buy_id("null");
 				entity.setStatus(0);
@@ -150,7 +152,7 @@ public class Match implements Serializable, IMatch {
 			if (buy2.getNum_buy() > 0) {
 				BuySell entity = new BuySell();
 				entity.setId(genId());
-				entity.setCreate_time(new Date());
+				entity.setCreate_time(buy2.getCalc_time());
 				entity.setP_sell_id("null");
 				entity.setP_buy_id(buy2.getId());
 				entity.setStatus(0);
@@ -164,7 +166,8 @@ public class Match implements Serializable, IMatch {
 
 	}
 
-	private void clearBuyAndSellData(List<BuySell> sellList, List<BuySell> buyList) {
+	private void clearBuyAndSellData(List<BuySell> sellList,
+			List<BuySell> buyList) {
 		// 自动匹配结束后 未处理的数据转入买卖交易中
 		// 卖盘中间数据清理
 		// 计算标志设置
@@ -188,8 +191,9 @@ public class Match implements Serializable, IMatch {
 	}
 
 	private void selfMactch(List<BuySell> buyList, List<BuySell> sellList) {
-		if((sellList==null||sellList.size()==0)||(buyList==null||buyList.size()==0)){
-			return ;
+		if ((sellList == null || sellList.size() == 0)
+				|| (buyList == null || buyList.size() == 0)) {
+			return;
 		}
 		for (BuySell sell : sellList) {
 			int selltemp = sell.getNum_matching();
@@ -312,7 +316,6 @@ public class Match implements Serializable, IMatch {
 				buySell.setNum_matching(sellMatcheNum - buyMatcheNum);
 				buy.setNum_buy(0);
 				buySellService.save(entity);
-				continue;
 			} else if (sellMatcheNum < buyMatcheNum) {// 卖家数据小于买家数据
 				entity.setNum_matching(sellMatcheNum);
 				buySell.setNum_matching(0);
