@@ -38,9 +38,9 @@
 		pid=#{user_id} and
 		total_static>0) ztslhg,
 
-		(SELECT count(1) FROM s_user WHERE path like (SELECT CONCAT(path,',%') from s_user where id=#{user_id})) tdslqb,
+		(SELECT count(1) FROM s_user WHERE path like (SELECT CONCAT(path, ',', #{user_id}, '%') from s_user where id=#{user_id})) tdslqb,
 
-		(SELECT count(1) FROM s_user WHERE path like (SELECT CONCAT(path,',%') from s_user where id=#{user_id}) and total_static>0)
+		(SELECT count(1) FROM s_user WHERE path like (SELECT CONCAT(path, ',', #{user_id}, '%') from s_user where id=#{user_id}) and total_static>0)
 		tdslhg
 	</select>
 

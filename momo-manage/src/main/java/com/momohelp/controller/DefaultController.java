@@ -224,6 +224,14 @@ public class DefaultController {
 		return result;
 	}
 
+	@RequestMapping(value = { "/manage/settings" }, method = RequestMethod.GET)
+	public ModelAndView _manage_settingsUI(HttpSession session) {
+		ModelAndView result = new ModelAndView("m/default/settings");
+		result.addObject("session_user", session.getAttribute("session.user"));
+		result.addObject("nav_choose", ",08,0802,");
+		return result;
+	}
+
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd");
 

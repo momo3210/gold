@@ -16,6 +16,13 @@
 		</a>
 
 		<ul class="submenu">
+			<li<#if nav_choose?? && nav_choose?index_of(",0802,") != -1> class='active'</#if>>
+				<a href="/manage/settings">
+					<i class="icon-double-angle-right"></i>
+					系统参数
+				</a>
+			</li>
+
 			<li<#if nav_choose?? && nav_choose?index_of(",0801,") != -1> class='active'</#if>>
 				<a href="/manage/user/">
 					<i class="icon-double-angle-right"></i>
