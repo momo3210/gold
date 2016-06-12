@@ -20,12 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.momohelp.model.Buy;
 import com.momohelp.model.BuySell;
+import com.momohelp.model.Cfg;
 import com.momohelp.model.Notice;
 import com.momohelp.model.Sell;
 import com.momohelp.model.User;
 import com.momohelp.model.UserCount;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.BuyService;
+import com.momohelp.service.CfgService;
 import com.momohelp.service.NoticeService;
 import com.momohelp.service.PrizeService;
 import com.momohelp.service.SellService;
@@ -60,6 +62,9 @@ public class DefaultController {
 
 	@Autowired
 	private BuySellService buySellService;
+
+	@Autowired
+	private CfgService cfgService;
 
 	/**
 	 * 生成短信验证码
@@ -227,6 +232,10 @@ public class DefaultController {
 	@RequestMapping(value = { "/manage/settings" }, method = RequestMethod.GET)
 	public ModelAndView _manage_settingsUI(HttpSession session) {
 		ModelAndView result = new ModelAndView("m/default/settings");
+
+		List<Cfg> list = cfgService.selectByExample(null);
+		result.addObject("data_list", list);
+
 		result.addObject("session_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",08,0802,");
 		return result;

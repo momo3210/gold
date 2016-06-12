@@ -21,7 +21,17 @@ public class Cfg implements Serializable {
 
 	private String value_;
 
+	private String comment;
+
 	private Date create_time;
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
 	public String getKey_() {
 		return key_;
