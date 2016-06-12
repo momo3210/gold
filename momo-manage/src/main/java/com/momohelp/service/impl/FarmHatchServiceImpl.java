@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.momohelp.model.BuySell;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmHatch;
+import com.momohelp.service.BuySellService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
 
@@ -25,6 +27,9 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 
 	@Autowired
 	private FarmService farmService;
+
+	@Autowired
+	private BuySellService buySellService;
 
 	@Override
 	public String[] hatch(FarmHatch farmHatch) {
@@ -90,6 +95,9 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		// 最后一笔孵化
 		_farmHatch.setFlag_is_last(0 == _farm.getNum_current() ? 1 : 0);
 
+		// 计算奖金
+		calcReward(_farmHatch.getW_farm_chick_id());
+
 		save(_farmHatch);
 		return null;
 	}
@@ -99,6 +107,30 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 	 */
 	private void calcReward(String farm_id) {
 
+		// 根据 farm_id 获取所有匹配记录
+		List<BuySell> list_buySell = buySellService.findByFarmId__4(farm_id);
+
+		for (int i = 0, j = list_buySell.size(); i < j; i++) {
+			BuySell buySell = list_buySell.get(i);
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(buySell.getCreate_time());
+			// 创建时间加3小时
+			c.add(Calendar.HOUR_OF_DAY, 3);
+
+			// 加上3小时的时间在买家打款之前，说明买家在3小时之后打的款
+			if (c.getTime().before(buySell.getP_buy_user_time())) {
+				return;
+			}
+		}
+
+		Farm _farm = farmService.selectByKey(farm_id);
+
+		Farm farm = new Farm();
+		farm.setId(farm_id);
+		farm.setNum_reward(_farm.getNum_buy() / 100);
+
+		farmService.updateNotNull(farm);
 	}
 
 	/**

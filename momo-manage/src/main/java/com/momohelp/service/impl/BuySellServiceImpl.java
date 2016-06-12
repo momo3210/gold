@@ -2,13 +2,16 @@ package com.momohelp.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.momohelp.mapper.BuySellMapper;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Sell;
 import com.momohelp.service.BuySellService;
@@ -354,5 +357,12 @@ public class BuySellServiceImpl extends BaseService<BuySell> implements
 		}
 
 		return list;
+	}
+
+	@Override
+	public List<BuySell> findByFarmId__4(String farm_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("farm_id", farm_id);
+		return ((BuySellMapper) mapper).findByFarmId(map);
 	}
 }

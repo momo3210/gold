@@ -75,7 +75,7 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		}
 
 		// 奖金
-		_farm.setNum_reward(_farm.getNum_buy() / 100);
+		_farm.setNum_reward(0);
 
 		/**/
 
