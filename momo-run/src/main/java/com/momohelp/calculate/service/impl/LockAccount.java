@@ -1,6 +1,6 @@
 package com.momohelp.calculate.service.impl;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -40,11 +40,10 @@ public class LockAccount implements ILockAccount {
 	public void lockAccount() {
 		log.info("----------------锁定账号并且重新排卖家数据----------------------");
 		int data = Integer.parseInt(cfgService.selectByKey("4001").getValue_());
-		int sellData = Integer.parseInt(cfgService.selectByKey("4002")
-				.getValue_());
+		int sellData = Integer.parseInt(cfgService.selectByKey("4002").getValue_());
 		List<BuySell> buySells = buySellService.lockAccount(data);
 		for (BuySell buySell : buySells) {
-			upateBuySellStatus(buySell,sellData);// 更新当前用户对应单据的状态为0单据 设置为问题单==3
+			upateBuySellStatus(buySell,sellData);// 更新当前用户对应单据的状态为0单据 设置为问题单==4
 			updateUserStatus(buySell.getP_buy_user_id());// 更新当前用户状态
 		}
 	}
@@ -63,15 +62,15 @@ public class LockAccount implements ILockAccount {
 			}
 		}
 	}
-	private void insertIntoSell(BuySell buySell, int sellData) {
-		Calendar cr3 = Calendar.getInstance();
-		if (sellData!=0) {
-			cr3.add(Calendar.HOUR_OF_DAY, sellData);//
-		}
+	private void insertIntoSell(BuySell buySell,int sellData) {
+//		Calendar cr3 = Calendar.getInstance();
+//		if (sellData!=0) {
+//			cr3.add(Calendar.HOUR_OF_DAY, sellData);//
+//		}
 		buySell.setId(genId());
 		buySell.setP_buy_id("null");
 		buySell.setP_buy_user_id("null");
-		buySell.setCreate_time(cr3.getTime()); 
+		buySell.setCreate_time(calcTime(buySell.getP_sell_id())); 
 		buySell.setStatus(0);
 		buySellService.save(buySell);
 //		Sell sell = sellService.selectByKey(buySell.getP_sell_id());
@@ -83,6 +82,9 @@ public class LockAccount implements ILockAccount {
 //		sell.setFlag_calc_bonus(0);
 //		sellService.save(sell);
 
+	}
+	private Date calcTime(String p_sell_id) {
+		return sellService.selectByKey(p_sell_id).getCalc_time();
 	}
 	private void updateUserStatus(String p_buy_user_id) {
 		if (null != p_buy_user_id && p_buy_user_id.trim().length() > 0) {
