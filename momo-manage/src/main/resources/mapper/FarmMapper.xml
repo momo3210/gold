@@ -26,6 +26,12 @@
 		<result column="num_reward" property="num_reward" />
 	</resultMap>
 
+	<select id="findNewByUserId" resultMap="baseResultMap"
+		parameterType="java.util.Map">
+
+		SELECT * FROM w_farm_chick WHERE num_buy=num_current AND num_buy!=num_deal and user_id=#{user_id}
+	</select>
+
 	<select id="findRewardByUserId" resultMap="baseResultMap"
 		parameterType="java.util.Map">
 		SELECT * FROM w_farm_chick WHERE id in

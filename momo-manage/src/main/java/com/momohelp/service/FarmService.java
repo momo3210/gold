@@ -14,6 +14,14 @@ import com.momohelp.model.Farm;
 public interface FarmService extends IService<Farm> {
 
 	/**
+	 * 查找用户是否有新的排单
+	 *
+	 * @param user_id
+	 * @return
+	 */
+	List<Farm> findNewByUserId__4(String user_id);
+
+	/**
 	 * 孵化时使用
 	 *
 	 * @param id

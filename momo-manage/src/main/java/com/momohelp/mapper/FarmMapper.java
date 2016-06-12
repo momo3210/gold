@@ -13,6 +13,14 @@ import com.momohelp.util.MyMapper;
  */
 public interface FarmMapper extends MyMapper<Farm> {
 
+	/**
+	 * 查找用户是否有新的排单
+	 *
+	 * @param map
+	 * @return
+	 */
+	List<Farm> findNewByUserId(Map<String, Object> map);
+
 	List<Farm> findRewardByUserId(Map<String, Object> map);
 
 	List<Farm> findUnDealByUserId(Map<String, Object> map);

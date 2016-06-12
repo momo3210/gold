@@ -592,4 +592,12 @@ public class FarmServiceImpl extends BaseService<Farm> implements FarmService {
 		return list;
 	}
 
+	@Override
+	public List<Farm> findNewByUserId__4(String user_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		List<Farm> list = ((FarmMapper) getMapper()).findNewByUserId(map);
+		return list;
+	}
+
 }

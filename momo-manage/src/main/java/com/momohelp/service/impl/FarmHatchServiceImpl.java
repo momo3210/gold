@@ -12,9 +12,11 @@ import tk.mybatis.mapper.entity.Example;
 import com.momohelp.model.BuySell;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmHatch;
+import com.momohelp.model.User;
 import com.momohelp.service.BuySellService;
 import com.momohelp.service.FarmHatchService;
 import com.momohelp.service.FarmService;
+import com.momohelp.service.UserService;
 
 /**
  *
@@ -30,6 +32,9 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 
 	@Autowired
 	private BuySellService buySellService;
+
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public String[] hatch(FarmHatch farmHatch) {
@@ -95,6 +100,11 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 		// 最后一笔孵化
 		_farmHatch.setFlag_is_last(0 == _farm.getNum_current() ? 1 : 0);
 
+		// 判断是否是最后一笔
+		if (1 == _farmHatch.getFlag_is_last()) {
+			clearZeroByDynamic(_farmHatch.getUser_id());
+		}
+
 		// 计算奖金
 		calcReward(_farmHatch.getW_farm_chick_id());
 
@@ -136,12 +146,23 @@ public class FarmHatchServiceImpl extends BaseService<FarmHatch> implements
 	/**
 	 * 动态奖金清零（根据最后一笔孵化才执行，判断是否有新的排单）
 	 */
-	private void clearZeroByDynamic(String farm_id, String user_id) {
-		Example example = new Example(FarmHatch.class);
-		example.setOrderByClause("create_time desc");
+	private void clearZeroByDynamic(String user_id) {
+		// Example example = new Example(FarmHatch.class);
+		// example.setOrderByClause("create_time desc");
+		//
+		// Example.Criteria criteria = example.createCriteria();
+		// criteria.andEqualTo("w_farm_chick_id", farm_id);
 
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("w_farm_chick_id", farm_id);
+		List<Farm> list = farmService.findNewByUserId__4(user_id);
+
+		// 没有新的排单，动态奖金清零
+		if (0 == list.size()) {
+			User _user = new User();
+			_user.setId(user_id);
+			_user.setNum_dynamic(0.00);
+
+			userService.updateNotNull(_user);
+		}
 	}
 
 	@Override
