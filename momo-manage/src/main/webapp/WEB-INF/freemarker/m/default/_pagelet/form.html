@@ -6,11 +6,12 @@
 
 		<div class="controls">
 			<input type="text" class='input-large' id="frm_${(doc.key_)!}" name='${(doc.key_)!}' placeholder="${(doc.comment)!}" value='${(doc.value_)!}' />
+			<a class="btn btn-mini btn-info" href='javascript:resetSetting("${(doc.key_)!}");'>保存</a>
 		</div>
 	</div>
 	</#list>
 
-	<div class="form-actions">
+	<!-- <div class="form-actions">
 		<button class="btn btn-info" type="button" id='btn_submit'>
 			<i class="icon-ok bigger-110"></i>
 			提交
@@ -21,7 +22,7 @@
 			<i class="icon-undo bigger-110"></i>
 			重置
 		</button>
-	</div>
+	</div> -->
 </form>
 <script>
 $(function(){

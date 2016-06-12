@@ -142,6 +142,30 @@
 		<#include "/_pagelet/js.html"/>
 
 		<script>
+		function resetSetting(key){
+			// alert($('#'+ key).val());
+
+			$.ajax({
+				url : '${(conf_html_virtualPath)!}manage/settings',
+				type : 'POST',
+				dataType : 'JSON',
+				data : {
+					key_: key,
+					value_: $('input[name="'+ key +'"]').val()
+				},
+				success : function(data) {
+					if (data.success) {
+						alert('系统参数成功')
+						return location.href = '${(conf_html_virtualPath)!}manage/settings';
+					}
+					if (data.msg) alert(data.msg[0]);
+				},
+				error : function() {
+					alert(arguments[2]);
+				}
+			});
+		}
+
 		$(function(){
 
 			$('#btn_submit').click(function() {

@@ -241,6 +241,18 @@ public class DefaultController {
 		return result;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = { "/manage/settings" }, method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> _manage_user_edit(HttpSession session, Cfg cfg) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", false);
+
+		cfgService.updateNotNull(cfg);
+
+		result.put("success", true);
+		return result;
+	}
+
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd");
 
