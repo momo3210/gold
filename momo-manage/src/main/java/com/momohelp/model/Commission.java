@@ -20,7 +20,17 @@ public class Commission implements Serializable {
 	private String relation_id;
 	private Date trigger_time;
 
+	private String relation_user_id;
+
 	private Double money;
+
+	public String getRelation_user_id() {
+		return relation_user_id;
+	}
+
+	public void setRelation_user_id(String relation_user_id) {
+		this.relation_user_id = relation_user_id;
+	}
 
 	public Double getMoney() {
 		return money;

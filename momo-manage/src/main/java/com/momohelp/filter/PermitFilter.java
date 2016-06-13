@@ -103,7 +103,9 @@ public class PermitFilter implements Filter {
 			}
 
 			if (!"/message/".equals(uri)) {
-				if (2 == (Integer) session.getAttribute("session.user.status")) {
+				if (2 == (Integer) session.getAttribute("session.user.status")
+						|| 3 == (Integer) session
+								.getAttribute("session.user.status")) {
 					hres.sendRedirect("/message/");
 					return;
 				}
