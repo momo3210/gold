@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.momohelp.model.Commission;
+import com.momohelp.model.SysCount;
 import com.momohelp.model.User;
 import com.momohelp.model.UserCount;
 import com.momohelp.model.UserRecommend;
@@ -39,4 +40,6 @@ public interface UserMapper extends MyMapper<User> {
 	 * @return
 	 */
 	UserCount findUserCount(Map<String, Object> map);
+
+	SysCount findSysCount(Map<String, Object> map);
 }

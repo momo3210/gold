@@ -16,6 +16,7 @@ import com.momohelp.model.Commission;
 import com.momohelp.model.Farm;
 import com.momohelp.model.FarmFeed;
 import com.momohelp.model.FarmHatch;
+import com.momohelp.model.SysCount;
 import com.momohelp.model.User;
 import com.momohelp.model.UserCount;
 import com.momohelp.model.UserRecommend;
@@ -715,5 +716,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_id", user_id);
 		return ((UserMapper) mapper).findRecommend(map);
+	}
+
+	@Override
+	public SysCount findSysCount() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		return ((UserMapper) mapper).findSysCount(map);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.momohelp.model.Commission;
+import com.momohelp.model.SysCount;
 import com.momohelp.model.User;
 import com.momohelp.model.UserCount;
 import com.momohelp.model.UserRecommend;
@@ -30,6 +31,8 @@ public interface UserService extends IService<User> {
 	 * @return
 	 */
 	UserCount findUserCount(String user_id);
+
+	SysCount findSysCount();
 
 	/**
 	 * 佣金清单

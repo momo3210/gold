@@ -55,4 +55,18 @@
 		tdslhg
 	</select>
 
+	<select id="findSysCount" resultType="com.momohelp.model.SysCount"
+		parameterType="java.util.Map">
+		SELECT
+		1 hyzs,
+		2 jrwjs,
+		3 jrfhs,
+		4 ljmps,
+		5 ljsls,
+		6 jtqb,
+		7 pdl,
+		8 mpl,
+		9 ppl
+	</select>
+
 </mapper>

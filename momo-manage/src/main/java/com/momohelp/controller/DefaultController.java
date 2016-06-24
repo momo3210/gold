@@ -23,6 +23,7 @@ import com.momohelp.model.BuySell;
 import com.momohelp.model.Cfg;
 import com.momohelp.model.Notice;
 import com.momohelp.model.Sell;
+import com.momohelp.model.SysCount;
 import com.momohelp.model.User;
 import com.momohelp.model.UserCount;
 import com.momohelp.service.BuySellService;
@@ -226,6 +227,10 @@ public class DefaultController {
 		ModelAndView result = new ModelAndView("m/default/index");
 		result.addObject("session_user", session.getAttribute("session.user"));
 		result.addObject("nav_choose", ",10,");
+
+		SysCount sysCount = userService.findSysCount();
+		result.addObject("data_sysCount", sysCount);
+
 		return result;
 	}
 
