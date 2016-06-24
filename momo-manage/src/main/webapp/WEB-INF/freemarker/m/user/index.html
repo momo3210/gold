@@ -130,6 +130,7 @@ ul.ztree * {
 							<a class="btn btn-small btn-primary" href='javascript:edit();'>编辑</a>
 							<a class="btn btn-small btn-danger" href='javascript:remove();'>修改状态</a>
 							<a class="btn btn-small btn-warning" href='javascript:resetPwd();'>重置密码</a>
+							<a class="btn btn-small btn-primary" href='javascript:loginUser();'>登陆用户帐户</a>
 						</p>
 					</div>
 				</div>
@@ -183,6 +184,14 @@ ul.ztree * {
 			var val = $("input[name='table_1_row']:checked").val();
 			if(!val) return;
 			location.href = '${(conf_html_virtualPath)!}manage/user/edit?id='+ val;
+		}
+
+		function loginUser(){
+			var val = $("input[name='table_1_row']:checked").val();
+			if(!val) return;
+			if (confirm('你确定要执行该操作吗？')) {
+				location.href = '${(conf_html_virtualPath)!}manage/user/loginUser?id='+ val;
+			}
 		}
 
 		function remove(){

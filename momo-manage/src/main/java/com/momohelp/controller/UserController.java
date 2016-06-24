@@ -2111,4 +2111,22 @@ public class UserController {
 		session.invalidate();
 		return "redirect:/manage/user/login";
 	}
+
+	@RequestMapping(value = { "/manage/user/loginUser" }, method = RequestMethod.GET)
+	public String _manage_user_loginUserUI(HttpSession session,
+			@RequestParam(required = true) String id) {
+
+		// session.invalidate();
+
+		User user = userService.selectByKey(id);
+
+		session.setAttribute("session.user", user);
+		session.setAttribute("session.user.id", user.getId());
+		session.setAttribute("session.user.lv", 2);
+		session.setAttribute("session.user.status", user.getStatus());
+		session.setAttribute("session.user.mobile", user.getMobile());
+		session.setAttribute("session.time", (new Date()).toString());
+
+		return "redirect:/";
+	}
 }
