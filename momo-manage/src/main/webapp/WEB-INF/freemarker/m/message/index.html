@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>在线工单 | MOMO黄金农场</title>
+		<title>在线工单 | 管理后台 | MOMO黄金农场</title>
 		<#include "/_pagelet/header.html"/>
 		<style>
 		#table_1 th {
@@ -20,7 +20,7 @@
 	<body>
 		<div class="navbar">
 			<div class="navbar-inner">
-				<#include "../../default/1.0.2/_pagelet/banner.html"/>
+				<#include "../default/_pagelet/banner.html"/>
 			</div><!--/.navbar-inner-->
 		</div>
 
@@ -60,7 +60,7 @@
 					</div>
 				</div><!--#sidebar-shortcuts-->
 
-				<#include "../../default/1.0.2/_pagelet/nav.html"/>
+				<#include "../default/_pagelet/nav.html"/>
 			</div>
 
 			<div class="main-content">
@@ -85,19 +85,19 @@
 							在线工单
 							<small>
 								<i class="icon-double-angle-right"></i>
-								Message List
+								Message
 							</small>
 						</h1>
 					</div><!--/.page-header-->
 
-					<div class="row-fluid">
+					<!-- <div class="row-fluid">
 						<div class='span2'>
 							<a href='./add' class="btn btn-danger btn-block btn-small" style='border-radius:4px'>
 								<i class="icon-bullhorn"></i>
 								我要发起留言
 							</a>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="space"></div>
 
@@ -133,23 +133,25 @@
 											<thead>
 												<tr>
 													<th>#</th>
+													<th>发件人</th>
 													<th>工单类型</th>
 													<th>标题</th>
 													<th>发起时间</th>
-													<th>收件人</th>
 													<th>回复时间</th>
 													<th>回复内容</th>
+													<th>回复</th>
 												</tr>
 											</thead><tbody>
 											<#list data_list! as doc>
 												<tr>
 													<td>${doc_index+1}</td>
+													<td><a href='/manage/user/info?id=${(doc.user_id)!}'>${(doc.user_id)!}</a></td>
 													<td><@type.m status="${(doc.type_id)!}"/></td>
 													<td>${(doc.title)!}</td>
 													<td>${(doc.create_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
-													<td>管理员</td>
 													<td>${(doc.reply_time?string("yyyy-MM-dd HH:mm:ss"))!}</td>
 													<td>${(doc.reply_content)!}</td>
+													<td><a href='./edit?id=${(doc.id)!}'>回复</a></td>
 												</tr>
 											</#list>
 											</tbody>

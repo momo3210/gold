@@ -38,6 +38,11 @@ public class MessageServiceImpl extends BaseService<Message> implements
 	public List<Message> findByMessage(Message message, int page, int rows) {
 		Example example = new Example(Message.class);
 		example.setOrderByClause("create_time desc");
+
+		if (null != message.getUser_id()) {
+			Example.Criteria criteria = example.createCriteria();
+			criteria.andEqualTo("user_id", message.getUser_id());
+		}
 		// TODO
 		PageHelper.startPage(page, rows);
 		return selectByExample(example);
