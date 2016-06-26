@@ -266,6 +266,29 @@
 
 					<#include "./_pagelet/sell_record.html"/>
 
+					<script>
+					function reset(id, status){
+						if (confirm('你确定要执行该操作吗？')) {
+							$.ajax({
+								url : '${(conf_html_virtualPath)!}manage/user/reset',
+								type : 'POST',
+								dataType : 'JSON',
+								data : { id: id, status: status },
+								success : function(data) {
+									if (data.success) {
+										alert('操作成功')
+										return location.reload();
+									}
+									if (data.msg) alert(data.msg[0]);
+								},
+								error : function() {
+									alert(arguments[2]);
+								}
+							});
+						}
+					}
+					</script>
+
 				</div><!--/.page-content-->
 
 				<#-- <!-- <div class="ace-settings-container" id="ace-settings-container">

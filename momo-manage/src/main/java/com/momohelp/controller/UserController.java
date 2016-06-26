@@ -2021,6 +2021,27 @@ public class UserController {
 		return result;
 	}
 
+	/**
+	 * 生成主键
+	 *
+	 * @return
+	 */
+	private String genId() {
+		String id = null;
+		BuySell buySell = null;
+		do {
+			// 算法
+			int i = (int) ((Math.random() * 10 + 1) * 100000000);
+			id = String.valueOf(i);
+			if (9 < id.length()) {
+				id = id.substring(0, 9);
+			}
+			id = "P" + id;
+			buySell = buySellService.selectByKey(id);
+		} while (null != buySell);
+		return id;
+	}
+
 	@ResponseBody
 	@RequestMapping(value = { "/manage/user/reset" }, method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> _manage_user_reset(HttpSession session,
@@ -2028,11 +2049,33 @@ public class UserController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", false);
 
-		BuySell _buySell = new BuySell();
-		_buySell.setId(buySell.getId());
-		_buySell.setStatus(0);
+		switch (buySell.getStatus()) {
+		case 1:
+			break;
+		case 2:
+			BuySell _buySell = new BuySell();
+			_buySell.setId(buySell.getId());
+			_buySell.setStatus(0);
+			buySellService.updateNotNull(_buySell);
+			break;
+		case 3:
+			BuySell __buySell = buySellService.selectByKey(buySell.getId());
 
-		buySellService.updateNotNull(_buySell);
+			Sell sell = sellService.selectByKey(__buySell.getP_sell_id());
+
+			BuySell ___buySell = new BuySell();
+			___buySell.setNum_matching(__buySell.getNum_matching());
+			___buySell.setCreate_time(sell.getCreate_time());
+			___buySell.setP_buy_id("null");
+			___buySell.setP_sell_id(__buySell.getP_sell_id());
+			___buySell.setP_buy_user_id("null");
+			___buySell.setP_sell_user_id(__buySell.getP_buy_user_id());
+			___buySell.setStatus(0);
+			___buySell.setId(genId());
+			buySellService.save(___buySell);
+
+			break;
+		}
 
 		result.put("success", true);
 		return result;
